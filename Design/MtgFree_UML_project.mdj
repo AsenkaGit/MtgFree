@@ -7736,7 +7736,7 @@
 									"containerExtending": false,
 									"left": 1147.5,
 									"top": 391,
-									"width": 284,
+									"width": 285,
 									"height": 25,
 									"autoResize": false,
 									"stereotypeLabel": {
@@ -17753,7 +17753,7 @@
 									"containerExtending": false,
 									"left": 1304,
 									"top": 132.5,
-									"width": 229,
+									"width": 230,
 									"height": 25,
 									"autoResize": false,
 									"stereotypeLabel": {
@@ -20085,30 +20085,7 @@
 								{
 									"_type": "UMLRegionView",
 									"_id": "AAAAAAFd0M1hTcPG7t8=",
-									"_parent": {
-										"$ref": "AAAAAAFd0M1hLMOp9zU="
-									},
-									"model": {
-										"$ref": "AAAAAAFd0M1hK8OgNmk="
-									},
-									"containedViews": [
-										{
-											"$ref": "AAAAAAFd0J5eRsELbuU="
-										},
-										{
-											"$ref": "AAAAAAFd0H/ogbuhrFE="
-										},
-										{
-											"$ref": "AAAAAAFd0H1eaLqb+jY="
-										},
-										{
-											"$ref": "AAAAAAFd0HzXmLpfH8U="
-										},
-										{
-											"$ref": "AAAAAAFd0Ikqg72Dopk="
-										}
-									],
-									"visible": true,
+									"containedViews": [],
 									"enabled": true,
 									"lineColor": "#000000",
 									"fillColor": "#ffffff",
@@ -20211,11 +20188,11 @@
 													"containerExtending": false,
 													"left": 128,
 													"top": -384,
-													"width": 38.27001953125,
+													"width": 124,
 													"height": 13,
 													"autoResize": false,
 													"underline": false,
-													"text": "(from )",
+													"text": "(from MtgCardStates)",
 													"horizontalAlignment": 2,
 													"verticalAlignment": 5,
 													"wordWrap": false
@@ -20450,15 +20427,15 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 69.194091796875,
+											"left": 53,
 											"top": 596,
-											"width": 42.61181640625,
+											"width": 75,
 											"height": 13,
 											"autoResize": false,
 											"alpha": 2.356194490192345,
 											"distance": 20,
 											"underline": false,
-											"text": "START",
+											"text": "GameBegins",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5,
 											"wordWrap": false
@@ -20577,9 +20554,9 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 147,
+											"left": 146,
 											"top": 578,
-											"width": 59.97265625,
+											"width": 60,
 											"height": 13,
 											"autoResize": false,
 											"alpha": 1.13888328628889,
@@ -20612,7 +20589,7 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 180,
+											"left": 179,
 											"top": 558,
 											"width": 0,
 											"height": 13,
@@ -20646,7 +20623,7 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 161,
+											"left": 162,
 											"top": 599,
 											"width": 0,
 											"height": 13,
@@ -20679,7 +20656,7 @@
 										"$ref": "AAAAAAFd0HsSyLpK05U="
 									},
 									"lineStyle": 3,
-									"points": "116:613;168:592;215:613",
+									"points": "116:613;168:592;215:612",
 									"stereotypeDisplay": "label",
 									"showVisibility": true,
 									"showProperty": true,
@@ -20805,11 +20782,11 @@
 													"containerExtending": false,
 													"left": -32,
 													"top": 168,
-													"width": 38.27001953125,
+													"width": 169,
 													"height": 13,
 													"autoResize": false,
 													"underline": false,
-													"text": "(from )",
+													"text": "(from MtgCardInGameStates)",
 													"horizontalAlignment": 2,
 													"verticalAlignment": 5,
 													"wordWrap": false
@@ -20927,21 +20904,13 @@
 											"subViews": [
 												{
 													"_type": "UMLRegionView",
-													"_id": "AAAAAAFd0J5eaMEwFUY=",
+													"_id": "AAAAAAFd0nbu4iih7Sg=",
 													"_parent": {
 														"$ref": "AAAAAAFd0J5eR8ETeU8="
 													},
 													"model": {
 														"$ref": "AAAAAAFd0J5eRsEK8gk="
 													},
-													"containedViews": [
-														{
-															"$ref": "AAAAAAFd0KI0OMFfqrk="
-														},
-														{
-															"$ref": "AAAAAAFd0KJ4UsGCK2w="
-														}
-													],
 													"visible": true,
 													"enabled": true,
 													"lineColor": "#000000",
@@ -20954,7 +20923,7 @@
 													"left": 936,
 													"top": 337,
 													"width": 233,
-													"height": 64,
+													"height": 50,
 													"autoResize": false
 												}
 											],
@@ -20970,7 +20939,7 @@
 											"left": 936,
 											"top": 337,
 											"width": 233,
-											"height": 64,
+											"height": 50,
 											"autoResize": false
 										}
 									],
@@ -21130,11 +21099,11 @@
 													"containerExtending": false,
 													"left": 286.58203125,
 													"top": -512,
-													"width": 38.27001953125,
+													"width": 169,
 													"height": 13,
 													"autoResize": false,
 													"underline": false,
-													"text": "(from )",
+													"text": "(from MtgCardInGameStates)",
 													"horizontalAlignment": 2,
 													"verticalAlignment": 5,
 													"wordWrap": false
@@ -21455,11 +21424,11 @@
 													"containerExtending": false,
 													"left": 516.7509765625,
 													"top": 687,
-													"width": 38.27001953125,
+													"width": 169,
 													"height": 13,
 													"autoResize": false,
 													"underline": false,
-													"text": "(from )",
+													"text": "(from MtgCardInGameStates)",
 													"horizontalAlignment": 2,
 													"verticalAlignment": 5,
 													"wordWrap": false
@@ -21722,7 +21691,7 @@
 													"containerExtending": false,
 													"left": 221,
 													"top": 615,
-													"width": 55.62451171875,
+													"width": 57,
 													"height": 13,
 													"autoResize": false,
 													"underline": false,
@@ -21748,11 +21717,11 @@
 													"containerExtending": false,
 													"left": 260,
 													"top": 471,
-													"width": 38.27001953125,
+													"width": 169,
 													"height": 13,
 													"autoResize": false,
 													"underline": false,
-													"text": "(from )",
+													"text": "(from MtgCardInGameStates)",
 													"horizontalAlignment": 2,
 													"verticalAlignment": 5,
 													"wordWrap": false
@@ -21794,7 +21763,7 @@
 											"containerExtending": false,
 											"left": 216,
 											"top": 608,
-											"width": 65.62451171875,
+											"width": 67,
 											"height": 25,
 											"autoResize": false,
 											"stereotypeLabel": {
@@ -21878,7 +21847,7 @@
 											"containerExtending": false,
 											"left": 216,
 											"top": 633,
-											"width": 65.62451171875,
+											"width": 67,
 											"height": 0,
 											"autoResize": false
 										}
@@ -21897,7 +21866,7 @@
 									"containerExtending": false,
 									"left": 216,
 									"top": 608,
-									"width": 65.62451171875,
+									"width": 67,
 									"height": 40,
 									"autoResize": false,
 									"stereotypeDisplay": "label",
@@ -22346,7 +22315,7 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 1498,
+											"left": 1490,
 											"top": -4,
 											"width": 10,
 											"height": 10,
@@ -22370,7 +22339,7 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 1498,
+											"left": 1490,
 											"top": -4,
 											"width": 10,
 											"height": 10,
@@ -22499,7 +22468,7 @@
 													"containerExtending": false,
 													"left": 693,
 													"top": 351,
-													"width": 75.87353515625,
+													"width": 78,
 													"height": 13,
 													"autoResize": false,
 													"underline": false,
@@ -22525,11 +22494,11 @@
 													"containerExtending": false,
 													"left": -272,
 													"top": 104,
-													"width": 38.27001953125,
+													"width": 169,
 													"height": 13,
 													"autoResize": false,
 													"underline": false,
-													"text": "(from )",
+													"text": "(from MtgCardInGameStates)",
 													"horizontalAlignment": 2,
 													"verticalAlignment": 5,
 													"wordWrap": false
@@ -22571,7 +22540,7 @@
 											"containerExtending": false,
 											"left": 688,
 											"top": 344,
-											"width": 85.87353515625,
+											"width": 88,
 											"height": 25,
 											"autoResize": false,
 											"stereotypeLabel": {
@@ -22655,7 +22624,7 @@
 											"containerExtending": false,
 											"left": 688,
 											"top": 369,
-											"width": 85.87353515625,
+											"width": 88,
 											"height": 0,
 											"autoResize": false
 										}
@@ -22674,7 +22643,7 @@
 									"containerExtending": false,
 									"left": 688,
 									"top": 344,
-									"width": 85.87353515625,
+									"width": 88,
 									"height": 40,
 									"autoResize": false,
 									"stereotypeDisplay": "label",
@@ -23043,11 +23012,11 @@
 													"containerExtending": false,
 													"left": 1845,
 													"top": 506,
-													"width": 50,
+													"width": 120,
 													"height": 13,
 													"autoResize": false,
 													"underline": false,
-													"text": "(from )",
+													"text": "(from Visible/Hidden)",
 													"horizontalAlignment": 2,
 													"verticalAlignment": 5,
 													"wordWrap": false
@@ -23302,11 +23271,11 @@
 													"containerExtending": false,
 													"left": 1553,
 													"top": 499,
-													"width": 50,
+													"width": 120,
 													"height": 13,
 													"autoResize": false,
 													"underline": false,
-													"text": "(from )",
+													"text": "(from Visible/Hidden)",
 													"horizontalAlignment": 2,
 													"verticalAlignment": 5,
 													"wordWrap": false
@@ -23535,7 +23504,7 @@
 													"containerExtending": false,
 													"left": 469,
 													"top": 167,
-													"width": 59.94091796875,
+													"width": 61,
 													"height": 13,
 													"autoResize": false,
 													"underline": false,
@@ -23607,7 +23576,7 @@
 											"containerExtending": false,
 											"left": 464,
 											"top": 160,
-											"width": 69.94091796875,
+											"width": 71,
 											"height": 25,
 											"autoResize": false,
 											"stereotypeLabel": {
@@ -23691,7 +23660,7 @@
 											"containerExtending": false,
 											"left": 464,
 											"top": 185,
-											"width": 69.94091796875,
+											"width": 71,
 											"height": 0,
 											"autoResize": false
 										}
@@ -23710,7 +23679,7 @@
 									"containerExtending": false,
 									"left": 464,
 									"top": 160,
-									"width": 69.94091796875,
+									"width": 71,
 									"height": 40,
 									"autoResize": false,
 									"stereotypeDisplay": "label",
@@ -23862,7 +23831,7 @@
 										"$ref": "AAAAAAFd0IBPDLvTI50="
 									},
 									"lineStyle": 3,
-									"points": "463:193;408:216;380:198",
+									"points": "463:194;408:216;380:198",
 									"stereotypeDisplay": "label",
 									"showVisibility": true,
 									"showProperty": true,
@@ -24422,13 +24391,13 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 287,
+											"left": 271,
 											"top": 640,
-											"width": 56.3544921875,
+											"width": 120,
 											"height": 13,
 											"autoResize": false,
-											"alpha": -2.929592715970653,
-											"distance": 37.48332962798263,
+											"alpha": -2.812055714509795,
+											"distance": 21.840329667841555,
 											"hostEdge": {
 												"$ref": "AAAAAAFd0H44GrrCdn8="
 											},
@@ -24524,7 +24493,7 @@
 										"$ref": "AAAAAAFd0HzXmLpfH8U="
 									},
 									"lineStyle": 3,
-									"points": "282:631;352:640;391:642",
+									"points": "283:631;352:640;391:642",
 									"stereotypeDisplay": "label",
 									"showVisibility": true,
 									"showProperty": true,
@@ -24568,7 +24537,7 @@
 											"containerExtending": false,
 											"left": 321,
 											"top": 472,
-											"width": 62.1435546875,
+											"width": 63,
 											"height": 13,
 											"autoResize": false,
 											"alpha": -3.075599006194687,
@@ -24812,7 +24781,7 @@
 										"$ref": "AAAAAAFd0ID8arv/wGU="
 									},
 									"lineStyle": 3,
-									"points": "380:165;408:152;463:169",
+									"points": "380:165;408:152;463:168",
 									"stereotypeDisplay": "label",
 									"showVisibility": true,
 									"showProperty": true,
@@ -24854,9 +24823,9 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 624,
+											"left": 623,
 											"top": 352,
-											"width": 15.16455078125,
+											"width": 16,
 											"height": 13,
 											"autoResize": false,
 											"alpha": 0.5631241798278591,
@@ -25820,7 +25789,7 @@
 										"$ref": "AAAAAAFd0H1eaLqb+jY="
 									},
 									"lineStyle": 3,
-									"points": "617:597;696:576;727:384",
+									"points": "617:597;696:576;728:384",
 									"stereotypeDisplay": "label",
 									"showVisibility": true,
 									"showProperty": true,
@@ -26150,9 +26119,9 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 840,
+											"left": 839,
 											"top": 272,
-											"width": 65.03173828125,
+											"width": 66,
 											"height": 13,
 											"autoResize": false,
 											"alpha": -1.34294708100553,
@@ -26726,8 +26695,8 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 814,
-											"top": 407,
+											"left": 815,
+											"top": 408,
 											"width": 80.21533203125,
 											"height": 13,
 											"autoResize": false,
@@ -26828,7 +26797,7 @@
 										"$ref": "AAAAAAFd0J5eRsELbuU="
 									},
 									"lineStyle": 3,
-									"points": "935:393;824:416;767:384",
+									"points": "935:393;824:416;768:384",
 									"stereotypeDisplay": "label",
 									"showVisibility": true,
 									"showProperty": true,
@@ -26972,7 +26941,7 @@
 										"$ref": "AAAAAAFd0Ikqg72Dopk="
 									},
 									"lineStyle": 3,
-									"points": "774:355;872:336;967:369",
+									"points": "776:354;872:336;967:369",
 									"stereotypeDisplay": "label",
 									"showVisibility": true,
 									"showProperty": true,
@@ -27116,7 +27085,7 @@
 										"$ref": "AAAAAAFd0Ikqg72Dopk="
 									},
 									"lineStyle": 3,
-									"points": "700:384;472:544;437:623",
+									"points": "701:384;472:544;437:623",
 									"stereotypeDisplay": "label",
 									"showVisibility": true,
 									"showProperty": true,
@@ -27158,9 +27127,9 @@
 											"showShadow": true,
 											"containerChangeable": false,
 											"containerExtending": false,
-											"left": 784,
+											"left": 783,
 											"top": 584,
-											"width": 65.03173828125,
+											"width": 66,
 											"height": 13,
 											"autoResize": false,
 											"alpha": -4.518562212882217,
@@ -27574,6 +27543,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFd0Hr8sroV4JA="
 							},
+							"name": "MtgCardStates",
 							"visibility": "public",
 							"vertices": [
 								{
@@ -27582,7 +27552,7 @@
 									"_parent": {
 										"$ref": "AAAAAAFd0Hr8sroWQCY="
 									},
-									"name": "START",
+									"name": "GameBegins",
 									"visibility": "public",
 									"kind": "initial"
 								},
@@ -27592,7 +27562,7 @@
 									"_parent": {
 										"$ref": "AAAAAAFd0Hr8sroWQCY="
 									},
-									"name": "END",
+									"name": "GameEnds",
 									"visibility": "public"
 								},
 								{
@@ -27610,6 +27580,7 @@
 											"_parent": {
 												"$ref": "AAAAAAFd0M1hK8Ofog0="
 											},
+											"name": "MtgCardInGameStates",
 											"visibility": "public",
 											"vertices": [
 												{
@@ -27627,6 +27598,7 @@
 															"_parent": {
 																"$ref": "AAAAAAFd0J5eRcEJ0cQ="
 															},
+															"name": "Visible/Hidden",
 															"visibility": "public",
 															"vertices": [
 																{
@@ -27727,6 +27699,7 @@
 														"$ref": "AAAAAAFd0M1hK8OgNmk="
 													},
 													"name": "InPlayerHand",
+													"documentation": "State of a card when it is in the player hand.\n\nIt could be either Secret or Revealed. Most of the time the card remains Secret.",
 													"visibility": "public",
 													"regions": [
 														{
@@ -27745,6 +27718,7 @@
 																		"$ref": "AAAAAAFd0J/v4cFHzUk="
 																	},
 																	"name": "Secret",
+																	"documentation": "The normal state of a card when it is in the player's hand.",
 																	"visibility": "public"
 																},
 																{
@@ -27754,6 +27728,7 @@
 																		"$ref": "AAAAAAFd0J/v4cFHzUk="
 																	},
 																	"name": "Revealed",
+																	"documentation": "The player can decide to reveal a card from its hand to the opponent.  In that case, the card becomes \"Revealed\".",
 																	"visibility": "public"
 																}
 															]
@@ -27767,6 +27742,7 @@
 														"$ref": "AAAAAAFd0M1hK8OgNmk="
 													},
 													"name": "InLibrary",
+													"documentation": "When the game starts, all the cards are supposed to be in the players' libraries.\n\nNothing can be done until the card is drawn ",
 													"visibility": "public"
 												},
 												{
@@ -27806,6 +27782,7 @@
 									"_parent": {
 										"$ref": "AAAAAAFd0Hr8sroWQCY="
 									},
+									"name": "drawCard",
 									"source": {
 										"$ref": "AAAAAAFd0HzXmLpexUU="
 									},
@@ -27813,19 +27790,7 @@
 										"$ref": "AAAAAAFd0MjpPsLqMTA="
 									},
 									"visibility": "public",
-									"kind": "external",
-									"triggers": [
-										{
-											"_type": "UMLEvent",
-											"_id": "AAAAAAFd0H5zw7rUrAA=",
-											"_parent": {
-												"$ref": "AAAAAAFd0H44GrrBpcg="
-											},
-											"name": "drawCard",
-											"visibility": "public",
-											"kind": "anyReceive"
-										}
-									]
+									"kind": "external"
 								},
 								{
 									"_type": "UMLTransition",
@@ -28424,16 +28389,6 @@
 							]
 						}
 					]
-				},
-				{
-					"_type": "UMLStateMachine",
-					"_id": "AAAAAAFd0JGj4r8HIlk=",
-					"_parent": {
-						"$ref": "AAAAAAFd0HiiVbmDmMI="
-					},
-					"name": "StateMachine1",
-					"visibility": "public",
-					"isReentrant": true
 				}
 			],
 			"visibility": "public"
