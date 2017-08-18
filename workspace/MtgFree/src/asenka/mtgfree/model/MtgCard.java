@@ -15,17 +15,35 @@ import java.util.*;
  * @author Asenka
  */
 public class MtgCard {
-
+	
+	// ##########################################################
+	// #														#
+	// #				Enumerations							#
+	// #														#
+	// ##########################################################
+	
 	/**
-	 * Default constructor
+	 * The rarity of a card.
 	 */
-	public MtgCard() {
-	}
+	public enum MtgRarity { COMMON, UNCOMMON, RARE, MYHTIC }
 
+	// ##########################################################
+	// #														#
+	// #				Static members							#
+	// #														#
+	// ##########################################################
+	
 	/**
 	 * A static field storing the default back image. Like this, the back image is loaded only once.
 	 */
-	private static Image DEFAULT_BACK_IMAGE;
+	public static final Image DEFAULT_BACK_IMAGE = null; // TODO create an image loader for the back
+
+	// ##########################################################
+	// #														#
+	// #				Class parameters						#
+	// #														#
+	// ##########################################################
+
 
 	/**
 	 * The unique id of a card (based on the ID in the database)
@@ -54,8 +72,6 @@ public class MtgCard {
 
 	/**
 	 * The text about the Mtg background. Useless for the game but it is part of the Mtg lore (localized).
-	 * 
-	 * It has to be written with italic font (like on the cards).
 	 */
 	private String backgroundText;
 
@@ -85,8 +101,8 @@ public class MtgCard {
 	private String comments;
 
 	/**
-	 * The loyalty value  for the planewalkers (only). 
-	 * {k >= 0 if and only if card type is Planewalker}
+	 * The loyalty value  for the planeswalkers (only). 
+	 * {k >= 0 if and only if card type is Planeswalker}
 	 * {k = -1 otherwise}
 	 */
 	private int loyalty;
@@ -109,17 +125,8 @@ public class MtgCard {
 	/**
 	 * 
 	 */
-	private Set<MtgAbility> abilities;
-
-	/**
-	 * 
-	 */
 	private MtgCardState state;
-
-	/**
-	 * 
-	 */
-	private Set<MtgFormat> formats;
+	
 
 	/**
 	 * 
@@ -127,15 +134,328 @@ public class MtgCard {
 	private MtgRarity rarity;
 
 
+	/**
+	 * 
+	 */
+	private List<MtgFormat> formats;
+	
+	/**
+	 * 
+	 */
+	private List<MtgAbility> abilities;
+	
+	// ##########################################################
+	// #														#
+	// #				Constructors							#
+	// #														#
+	// ##########################################################
 
 	/**
-	 * The rarity of a card.
+	 * Default constructor
 	 */
-	public enum MtgRarity {
-		COMMON,
-		UNCOMMON,
-		RARE,
-		MYHTIC
+	public MtgCard() {
+		super();
 	}
+
+	
+
+	/**
+	 * 
+	 * @param id
+	 * @param language
+	 */
+	public MtgCard(int id, String language) {
+		super();
+		this.id = id;
+		this.language = language;
+	}
+
+
+
+	/**
+	 * @param id
+	 * @param name
+	 * @param rulesText
+	 * @param backgroundText
+	 * @param power
+	 * @param toughness
+	 * @param imageFront
+	 * @param imageBack
+	 * @param comments
+	 * @param loyalty
+	 * @param language
+	 * @param type
+	 * @param collection
+	 * @param state
+	 * @param rarity
+	 */
+	public MtgCard(int id, String name, String rulesText, String backgroundText, String power, String toughness,
+			Image imageFront, Image imageBack, String comments, int loyalty, String language, MtgType type,
+			MtgCollection collection, MtgCardState state, MtgRarity rarity) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.rulesText = rulesText;
+		this.backgroundText = backgroundText;
+		this.power = power;
+		this.toughness = toughness;
+		this.imageFront = imageFront;
+		this.imageBack = imageBack;
+		this.comments = comments;
+		this.loyalty = loyalty;
+		this.language = language;
+		this.type = type;
+		this.collection = collection;
+		this.state = state;
+		this.rarity = rarity;
+	}
+
+
+
+	// ##########################################################
+	// #														#
+	// #				Methods									#
+	// #														#
+	// ##########################################################
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the rulesText
+	 */
+	public String getRulesText() {
+		return rulesText;
+	}
+
+	/**
+	 * @param rulesText the rulesText to set
+	 */
+	public void setRulesText(String rulesText) {
+		this.rulesText = rulesText;
+	}
+
+	/**
+	 * @return the backgroundText
+	 */
+	public String getBackgroundText() {
+		return backgroundText;
+	}
+
+	/**
+	 * @param backgroundText the backgroundText to set
+	 */
+	public void setBackgroundText(String backgroundText) {
+		this.backgroundText = backgroundText;
+	}
+
+	/**
+	 * @return the power
+	 */
+	public String getPower() {
+		return power;
+	}
+
+	/**
+	 * @param power the power to set
+	 */
+	public void setPower(String power) {
+		this.power = power;
+	}
+
+	/**
+	 * @return the toughness
+	 */
+	public String getToughness() {
+		return toughness;
+	}
+
+	/**
+	 * @param toughness the toughness to set
+	 */
+	public void setToughness(String toughness) {
+		this.toughness = toughness;
+	}
+
+	/**
+	 * @return the imageFront
+	 */
+	public Image getImageFront() {
+		return imageFront;
+	}
+
+	/**
+	 * @param imageFront the imageFront to set
+	 */
+	public void setImageFront(Image imageFront) {
+		this.imageFront = imageFront;
+	}
+
+	/**
+	 * @return the imageBack
+	 */
+	public Image getImageBack() {
+		return imageBack;
+	}
+
+	/**
+	 * @param imageBack the imageBack to set
+	 */
+	public void setImageBack(Image imageBack) {
+		this.imageBack = imageBack;
+	}
+
+	/**
+	 * @return the comments
+	 */
+	public String getComments() {
+		return comments;
+	}
+
+	/**
+	 * @param comments the comments to set
+	 */
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+
+	/**
+	 * @return the loyalty
+	 */
+	public int getLoyalty() {
+		return loyalty;
+	}
+
+	/**
+	 * @param loyalty the loyalty to set
+	 */
+	public void setLoyalty(int loyalty) {
+		this.loyalty = loyalty;
+	}
+
+	/**
+	 * @return the language
+	 */
+	public String getLanguage() {
+		return language;
+	}
+
+	/**
+	 * @param language the language to set
+	 */
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public MtgType getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(MtgType type) {
+		this.type = type;
+	}
+
+	/**
+	 * @return the collection
+	 */
+	public MtgCollection getCollection() {
+		return collection;
+	}
+
+	/**
+	 * @param collection the collection to set
+	 */
+	public void setCollection(MtgCollection collection) {
+		this.collection = collection;
+	}
+
+	/**
+	 * @return the state
+	 */
+	public MtgCardState getState() {
+		return state;
+	}
+
+	/**
+	 * @param state the state to set
+	 */
+	public void setState(MtgCardState state) {
+		this.state = state;
+	}
+
+	/**
+	 * @return the rarity
+	 */
+	public MtgRarity getRarity() {
+		return rarity;
+	}
+
+	/**
+	 * @param rarity the rarity to set
+	 */
+	public void setRarity(MtgRarity rarity) {
+		this.rarity = rarity;
+	}
+
+	/**
+	 * @return the formats
+	 */
+	public List<MtgFormat> getFormats() {
+		return formats;
+	}
+
+	/**
+	 * @param formats the formats to set
+	 */
+	public void setFormats(List<MtgFormat> formats) {
+		this.formats = formats;
+	}
+
+	/**
+	 * @return the abilities
+	 */
+	public List<MtgAbility> getAbilities() {
+		return abilities;
+	}
+
+	/**
+	 * @param abilities the abilities to set
+	 */
+	public void setAbilities(List<MtgAbility> abilities) {
+		this.abilities = abilities;
+	}
+
+	
+	
 
 }

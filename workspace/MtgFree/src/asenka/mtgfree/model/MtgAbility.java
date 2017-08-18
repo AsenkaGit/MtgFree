@@ -3,10 +3,18 @@ package asenka.mtgfree.model;
 
 /**
  * This class represents a card ability (fly, deathtouch, hexproof, etc...)
+ * 
+ * 
  * @author Asenka
  */
 public class MtgAbility {
 
+	// ##########################################################
+	// #														#
+	// #				Class parameters						#
+	// #														#
+	// ##########################################################
+	
 	/**
 	 * 
 	 */
@@ -22,6 +30,17 @@ public class MtgAbility {
 	 */
 	private String description;
 	
+	/**
+	 * 
+	 */
+	private String language;
+	
+	
+	// ##########################################################
+	// #														#
+	// #				Constructors							#
+	// #														#
+	// ##########################################################
 	
 	/**
 	 * Default constructor
@@ -46,7 +65,11 @@ public class MtgAbility {
 	}
 
 
-
+	// ##########################################################
+	// #														#
+	// #					Methods	(public)					#
+	// #														#
+	// ##########################################################
 
 	/**
 	 * @return the id
@@ -94,10 +117,22 @@ public class MtgAbility {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
-	
-	
-	
 
+
+
+	/**
+	 * @return the language
+	 */
+	public String getLanguage() {
+		return language;
+	}
+
+
+
+	/**
+	 * @param language the language to set
+	 */
+	public void setLanguage(String language) {
+		this.language = language;
+	}
 }

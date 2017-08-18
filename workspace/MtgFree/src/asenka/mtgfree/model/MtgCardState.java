@@ -1,8 +1,6 @@
 package asenka.mtgfree.model;
 
 
-import java.util.*;
-
 /**
  * This card manage the card state :
  * > tapped/untapped (only on battlefield)
@@ -19,6 +17,14 @@ public class MtgCardState {
 	public MtgCardState() {
 	}
 
+	
+	// ##########################################################
+	// #														#
+	// #				Class parameters						#
+	// #														#
+	// ##########################################################
+	
+	
 	/**
 	 * isTapped = false
 	 * isVisible = false
