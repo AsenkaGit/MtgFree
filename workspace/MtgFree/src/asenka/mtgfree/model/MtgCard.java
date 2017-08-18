@@ -17,20 +17,25 @@ import java.util.*;
 public class MtgCard {
 	
 	// ##########################################################
-	// #														#
-	// #				Enumerations							#
-	// #														#
+	// #														
+	// #				Enumerations							
+	// #														
 	// ##########################################################
 	
 	/**
 	 * The rarity of a card.
 	 */
 	public enum MtgRarity { COMMON, UNCOMMON, RARE, MYHTIC }
+	
+	/**
+	 * 
+	 */
+	public enum MtgColor {RED, GREEN, BLUE, BLACK, WHITE, NOCOLOR, MULTI}
 
 	// ##########################################################
-	// #														#
-	// #				Static members							#
-	// #														#
+	// #														
+	// #				Static attributes							
+	// #														
 	// ##########################################################
 	
 	/**
@@ -39,9 +44,9 @@ public class MtgCard {
 	public static final Image DEFAULT_BACK_IMAGE = null; // TODO create an image loader for the back
 
 	// ##########################################################
-	// #														#
-	// #				Class parameters						#
-	// #														#
+	// #														
+	// #				Attributes						
+	// #														
 	// ##########################################################
 
 
@@ -74,6 +79,11 @@ public class MtgCard {
 	 * The text about the Mtg background. Useless for the game but it is part of the Mtg lore (localized).
 	 */
 	private String backgroundText;
+	
+	/**
+	 * 
+	 */
+	private MtgColor color;
 
 	/**
 	 * If the card is a creature, it has power and toughness. The power is stored as a string because sometimes this stat is  not expressed by a number.
@@ -274,6 +284,24 @@ public class MtgCard {
 	}
 
 	/**
+	 * @return the color
+	 */
+	public MtgColor getColor() {
+		return color;
+	}
+
+
+
+	/**
+	 * @param color the color to set
+	 */
+	public void setColor(MtgColor color) {
+		this.color = color;
+	}
+
+
+
+	/**
 	 * @return the power
 	 */
 	public String getPower() {
@@ -455,7 +483,130 @@ public class MtgCard {
 		this.abilities = abilities;
 	}
 
-	
-	
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "MtgCard [id=" + id + ", name=" + name + ", rulesText=" + rulesText + ", backgroundText="
+				+ backgroundText + ", color=" + color + ", power=" + power + ", toughness=" + toughness + ", comments="
+				+ comments + ", loyalty=" + loyalty + ", language=" + language + ", type=" + type + ", collection="
+				+ collection + ", state=" + state + ", rarity=" + rarity + ", formats=" + formats + ", abilities="
+				+ abilities + "]";
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((abilities == null) ? 0 : abilities.hashCode());
+		result = prime * result + ((backgroundText == null) ? 0 : backgroundText.hashCode());
+		result = prime * result + ((collection == null) ? 0 : collection.hashCode());
+		result = prime * result + ((color == null) ? 0 : color.hashCode());
+		result = prime * result + ((comments == null) ? 0 : comments.hashCode());
+		result = prime * result + ((formats == null) ? 0 : formats.hashCode());
+		result = prime * result + id;
+		result = prime * result + ((language == null) ? 0 : language.hashCode());
+		result = prime * result + loyalty;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((power == null) ? 0 : power.hashCode());
+		result = prime * result + ((rarity == null) ? 0 : rarity.hashCode());
+		result = prime * result + ((rulesText == null) ? 0 : rulesText.hashCode());
+		result = prime * result + ((state == null) ? 0 : state.hashCode());
+		result = prime * result + ((toughness == null) ? 0 : toughness.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MtgCard other = (MtgCard) obj;
+		if (abilities == null) {
+			if (other.abilities != null)
+				return false;
+		} else if (!abilities.equals(other.abilities))
+			return false;
+		if (backgroundText == null) {
+			if (other.backgroundText != null)
+				return false;
+		} else if (!backgroundText.equals(other.backgroundText))
+			return false;
+		if (collection == null) {
+			if (other.collection != null)
+				return false;
+		} else if (!collection.equals(other.collection))
+			return false;
+		if (color != other.color)
+			return false;
+		if (comments == null) {
+			if (other.comments != null)
+				return false;
+		} else if (!comments.equals(other.comments))
+			return false;
+		if (formats == null) {
+			if (other.formats != null)
+				return false;
+		} else if (!formats.equals(other.formats))
+			return false;
+		if (id != other.id)
+			return false;
+		if (language == null) {
+			if (other.language != null)
+				return false;
+		} else if (!language.equals(other.language))
+			return false;
+		if (loyalty != other.loyalty)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (power == null) {
+			if (other.power != null)
+				return false;
+		} else if (!power.equals(other.power))
+			return false;
+		if (rarity != other.rarity)
+			return false;
+		if (rulesText == null) {
+			if (other.rulesText != null)
+				return false;
+		} else if (!rulesText.equals(other.rulesText))
+			return false;
+		if (state == null) {
+			if (other.state != null)
+				return false;
+		} else if (!state.equals(other.state))
+			return false;
+		if (toughness == null) {
+			if (other.toughness != null)
+				return false;
+		} else if (!toughness.equals(other.toughness))
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		return true;
+	}
 }
