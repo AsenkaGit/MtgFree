@@ -46,12 +46,12 @@ public class MtgDeck {
 	/**
 	 * The cards meant to go to the player library during a Mtg game.
 	 */
-	private List<MtgCard> mainCards;
+	private ArrayList<MtgCard> mainCards;
 
 	/**
 	 * The cards that will not be played, but it is nice to have them remembered because they may work with this deck.
 	 */
-	private List<MtgCard> sideCards;
+	private ArrayList<MtgCard> sideCards;
 
 	/**
 	 * The owner of the deck.
@@ -161,7 +161,7 @@ public class MtgDeck {
 	/**
 	 * @return the sideCards
 	 */
-	public List<MtgCard> getSideCards() {
+	public ArrayList<MtgCard> getSideCards() {
 		return sideCards;
 	}
 

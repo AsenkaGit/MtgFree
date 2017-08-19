@@ -84,12 +84,14 @@ public class MtgFormat {
 		this.description = description;
 	}
 
+
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "MtgFormat [id=" + id + ", name=" + name + ", description=" + description + "]";
+		return "[" + id + ", " + name + ", " + description + "]";
 	}
 
 	/* (non-Javadoc)

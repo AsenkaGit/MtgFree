@@ -1,6 +1,7 @@
 package asenka.mtgfree.model;
 
 import asenka.mtgfree.model.exceptions.MtgContextException;
+import asenka.mtgfree.utilities.Location;
 
 /**
  * This card manage the card state :<br />
@@ -11,24 +12,7 @@ import asenka.mtgfree.model.exceptions.MtgContextException;
  * 
  * @author Asenka
  */
-public class MtgCardState {
-
-	// ##########################################################
-	// #
-	// #				Enumerations
-	// #							
-	// ##########################################################
-
-	/**
-	 * All the possible locations for the cards :
-	 * > player's library
-	 * > player's hand
-	 * > battlefield
-	 * > player's graveyard
-	 * > player's exile area
-	 */
-	public static enum MtgContext {LIBRARY, HAND, BATTLEFIELD, GRAVEYARD, EXILE}
-	
+public class MtgCardState {	
 
 	// ##########################################################
 	// #			
@@ -50,6 +34,11 @@ public class MtgCardState {
 	 * if true => the card is revealed. It means that the card  should be visible for all players/viewers. It should be false if the card is not in the player's hand.
 	 */
 	private boolean isRevealed;
+	
+	/**
+	 * Location of the card on the battlefield (only when context = BATTLEFIELD)
+	 */
+	private Location location;
 
 	/**
 	 * The context (or location) of the card
@@ -69,12 +58,13 @@ public class MtgCardState {
 	 * @param isRevealed
 	 * @param context
 	 */
-	public MtgCardState(boolean isTapped, boolean isVisible, boolean isRevealed, MtgContext context) {
+	public MtgCardState(boolean isTapped, boolean isVisible, boolean isRevealed, MtgContext context, Location location) {
 		super();
 		this.isTapped = isTapped;
 		this.isVisible = isVisible;
 		this.isRevealed = isRevealed;
 		this.context = context;
+		this.location = location;
 	}
 
 	// ##########################################################
@@ -146,6 +136,31 @@ public class MtgCardState {
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public Location getLocation() {
+		return location;
+	}
+
+	/**
+	 * 
+	 * @param location
+	 */
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 */
+	public void setLocation(int x, int y) {
+		this.location.setX(x);
+		this.location.setY(y);
+	}
 
 	/**
 	 * @return the context
@@ -159,11 +174,12 @@ public class MtgCardState {
 	 * Change the context of the card. Updating the context change also the values
 	 * of the booleans parameters of the card state.<br />
 	 * <br />
-	 * e.g. <br />
-	 * <i>Setting the context to HAND, will change the parameters like this:<br />
+	 * <i>e.g.</i> 
+	 * Setting the context to HAND, will change the parameters like this:<br />
 	 * <code>isRevealed = false</code><br />
 	 * <code>isVisible = false</code><br />
-	 * <code>isTapped = false</code></i>
+	 * <code>location = null</code><br />
+	 * <code>isTapped = false</code>
 	 * @param context the context of the card
 	 */
 	public void setContext(MtgContext context) {
@@ -173,11 +189,13 @@ public class MtgCardState {
 			this.isRevealed = false;
 			this.isTapped = false;
 			this.isVisible = false;
+			this.location = null;
 			break;
 		case HAND:
 			this.isRevealed = false;
 			this.isTapped = false;
 			this.isVisible = false;
+			this.location = null;
 			break;
 		case BATTLEFIELD:
 			this.isRevealed = false;
@@ -199,21 +217,14 @@ public class MtgCardState {
 		this.context = context;
 	}
 
-
-	
-	
-	
-	
-	/**
-	 * 
-	 * @return 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "MtgCardState [isTapped=" + isTapped + ", isVisible=" + isVisible + ", isRevealed=" + isRevealed
-				+ ", " + context + "]";
+		return "[isTapped=" + isTapped + ", isVisible=" + isVisible + ", isRevealed=" + isRevealed
+				+ ", " + location + ", " + context + "]";
 	}
-
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -226,9 +237,9 @@ public class MtgCardState {
 		result = prime * result + (isRevealed ? 1231 : 1237);
 		result = prime * result + (isTapped ? 1231 : 1237);
 		result = prime * result + (isVisible ? 1231 : 1237);
+		result = prime * result + ((location == null) ? 0 : location.hashCode());
 		return result;
 	}
-
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -250,6 +261,18 @@ public class MtgCardState {
 			return false;
 		if (isVisible != other.isVisible)
 			return false;
+		if (location == null) {
+			if (other.location != null)
+				return false;
+		} else if (!location.equals(other.location))
+			return false;
 		return true;
 	}
+
+
+	
+	
+	
+	
+
 }

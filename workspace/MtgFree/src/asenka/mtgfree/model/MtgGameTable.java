@@ -2,6 +2,8 @@ package asenka.mtgfree.model;
 
 import java.util.*;
 
+import asenka.mtgfree.model.exceptions.MtgGameException;
+
 /**
  * This class represents a game table. i.e. the virtual place where the game is played.
  * 
@@ -14,44 +16,59 @@ import java.util.*;
  */
 public class MtgGameTable {
 
-	/**
-	 * Default constructor
-	 */
-	public MtgGameTable() {
-	}
 
 	/**
 	 * The maximum number of player on the game table.
-	 * 
-	 * For the moment one assume it will be only two players. But the model should allow to play with more than 2.
-	 */
+	*/
 	private int maxPlayers;
 
 	/**
 	 * The cards on the battlefield for this game.
 	 */
-	private Set<MtgCard> cards;
+	private ArrayList<MtgCard> cards;
 
 	/**
 	 * 
 	 */
-	private MtgPlayer players;
+	private ArrayList<MtgPlayer> players;
+	
+	
+	
 
+	/**
+	 * 
+	 */
+	public MtgGameTable() {
+		super();
+		this.maxPlayers = 2; // TODO this value should be managed by a configuration tool
+	}
+	
+	
+
+	public ArrayList<MtgPlayer> getPlayers() {
+		return players;
+	}
 
 	/**
 	 * @param player 
 	 * @return
+	 * @throws MtgGameException 
 	 */
-	public void addPlayer(MtgPlayer player) {
-		// TODO implement here
+	public void addPlayer(MtgPlayer player) throws MtgGameException {
+		
+		if(this.players.size() < maxPlayers) {
+			this.players.add(player);
+		} else {
+			throw new MtgGameException("This table has already reached the maximum number of players");
+		}
 	}
 
 	/**
 	 * @param player 
 	 * @return
 	 */
-	public void removePlayer(MtgPlayer player) {
-		// TODO implement here
+	public boolean removePlayer(MtgPlayer player) {
+		return this.players.remove(player);
 	}
 
 	/**
@@ -59,15 +76,15 @@ public class MtgGameTable {
 	 * @return
 	 */
 	public void addCardToBattlefield(MtgCard card) {
-		// TODO implement here
+		this.cards.add(card);
 	}
 
 	/**
 	 * @param card 
 	 * @return
 	 */
-	public void removeCardFromBattlefield(MtgCard card) {
-		// TODO implement here
+	public boolean removeCardFromBattlefield(MtgCard card) {
+		return this.cards.remove(card);
 	}
 
 }

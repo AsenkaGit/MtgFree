@@ -43,6 +43,7 @@ public class MtgLibrary {
 
 
 	/**
+	 * 
 	 * @param cards the cards to set
 	 */
 	public void setCards(Collection<MtgCard> cards) {
@@ -88,9 +89,10 @@ public class MtgLibrary {
 	/**
 	 * 
 	 * @param card
+	 * @return
 	 */
-	public void removeCard(MtgCard card) {
-		this.cards.remove(card);
+	public boolean removeCard(MtgCard card) {
+		return this.cards.remove(card);
 	}
 	
 	/**
@@ -100,12 +102,29 @@ public class MtgLibrary {
 	 */
 	public void moveCard(int currentIndex, int newIndex) {
 		
-		int maxIndex = this.cards.size();
+		final int maxIndex = this.cards.size();
 		
+		// If the indexes are not in the list boundaries
 		if(currentIndex < 0 || newIndex < 0 || currentIndex >= maxIndex || newIndex >= maxIndex) {
 			throw new IllegalArgumentException("Wrong indexes");
-		} else {
+		} else if (currentIndex != newIndex) {
 			this.cards.add(newIndex, this.cards.remove(currentIndex));
+		}
+	}
+	
+	/**
+	 * 
+	 * @param card
+	 * @param newIndex
+	 */
+	public void moveCard(final MtgCard card, int newIndex) {
+		
+		int currentIndex = this.cards.indexOf(card);
+		
+		if(currentIndex < 0) {
+			throw new IllegalArgumentException("The card " + card + "is not in this library : " + this);
+		} else {
+			this.moveCard(currentIndex, newIndex);
 		}
 	}
 	

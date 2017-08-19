@@ -130,11 +130,6 @@ public class MtgCard {
 	/**
 	 * 
 	 */
-	private MtgCollection collection;
-
-	/**
-	 * 
-	 */
 	private MtgCardState state;
 	
 
@@ -169,16 +164,6 @@ public class MtgCard {
 
 	
 
-	/**
-	 * 
-	 * @param id
-	 * @param language
-	 */
-	public MtgCard(int id, String language) {
-		super();
-		this.id = id;
-		this.language = language;
-	}
 
 
 
@@ -215,7 +200,6 @@ public class MtgCard {
 		this.loyalty = loyalty;
 		this.language = language;
 		this.type = type;
-		this.collection = collection;
 		this.state = state;
 		this.rarity = rarity;
 	}
@@ -414,20 +398,6 @@ public class MtgCard {
 	}
 
 	/**
-	 * @return the collection
-	 */
-	public MtgCollection getCollection() {
-		return collection;
-	}
-
-	/**
-	 * @param collection the collection to set
-	 */
-	public void setCollection(MtgCollection collection) {
-		this.collection = collection;
-	}
-
-	/**
 	 * @return the state
 	 */
 	public MtgCardState getState() {
@@ -485,18 +455,17 @@ public class MtgCard {
 
 
 
+
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "MtgCard [id=" + id + ", name=" + name + ", rulesText=" + rulesText + ", backgroundText="
-				+ backgroundText + ", color=" + color + ", power=" + power + ", toughness=" + toughness + ", comments="
-				+ comments + ", loyalty=" + loyalty + ", language=" + language + ", type=" + type + ", collection="
-				+ collection + ", state=" + state + ", rarity=" + rarity + ", formats=" + formats + ", abilities="
-				+ abilities + "]";
+		return "[" + id + ", " + name + ", " + rulesText + ", " + backgroundText + ", " + color + ", " + power + ", "
+				+ toughness + ", " + comments + ", " + loyalty + ", " + language + ", " + type + ", " 
+				+ ", " + state + ", " + rarity + ", " + formats + ", " + abilities + "]";
 	}
-
 
 
 	/* (non-Javadoc)
@@ -508,7 +477,6 @@ public class MtgCard {
 		int result = 1;
 		result = prime * result + ((abilities == null) ? 0 : abilities.hashCode());
 		result = prime * result + ((backgroundText == null) ? 0 : backgroundText.hashCode());
-		result = prime * result + ((collection == null) ? 0 : collection.hashCode());
 		result = prime * result + ((color == null) ? 0 : color.hashCode());
 		result = prime * result + ((comments == null) ? 0 : comments.hashCode());
 		result = prime * result + ((formats == null) ? 0 : formats.hashCode());
@@ -548,11 +516,6 @@ public class MtgCard {
 			if (other.backgroundText != null)
 				return false;
 		} else if (!backgroundText.equals(other.backgroundText))
-			return false;
-		if (collection == null) {
-			if (other.collection != null)
-				return false;
-		} else if (!collection.equals(other.collection))
 			return false;
 		if (color != other.color)
 			return false;
