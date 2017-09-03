@@ -45,7 +45,14 @@ public class MtgCollection {
 	/**
 	 * 
 	 */
-	private List<MtgCard> cards;
+	private Set<MtgCard> cards;
+	
+	/**
+	 * 
+	 */
+	private Comparator<MtgCard> comparator;
+	
+	
 	
 	// ##########################################################
 	// #
@@ -67,10 +74,22 @@ public class MtgCollection {
 		this.name = name;
 		this.description = description;
 		this.block = block;
-		this.cards = new ArrayList<MtgCard>();
+		this.cards = new TreeSet<MtgCard>();
+		this.comparator = null;
 	}
+	
+	
 
 	
+	public MtgCollection(int id, String name, String description, String block, String language, Set<MtgCard> cards,
+			Comparator<MtgCard> comparator) {
+		this(id, name, description, block);
+		this.comparator = comparator;
+	}
+
+
+
+
 	// ##########################################################
 	// #
 	// #				Methods
@@ -154,7 +173,7 @@ public class MtgCollection {
 	/**
 	 * @return an ArrayList of MtgCards
 	 */
-	public List<MtgCard> getCards() {
+	public Set<MtgCard> getCards() {
 		return cards;
 	}
 
@@ -244,5 +263,15 @@ public class MtgCollection {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+
+	public Comparator<MtgCard> getComparator() {
+		return comparator;
+	}
+
+
+	public void setComparator(Comparator<MtgCard> comparator) {
+		this.comparator = comparator;
 	}
 }

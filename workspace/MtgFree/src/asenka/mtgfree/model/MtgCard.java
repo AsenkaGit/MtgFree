@@ -1,54 +1,111 @@
 package asenka.mtgfree.model;
 
-
 import java.awt.Image;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
- * This class represents a Mtg Card. It stores all the necessary data about the cards :
- * > Images,
- * > Texts,
- * > Type,
- * > Stats,
- * > Abilities,
- * > etc...
+ * This class represents a Mtg Card. It stores all the necessary data about the
+ * cards : > Images, > Texts, > Type, > Stats, > Abilities, > etc...
+ * 
  * @author Asenka
  */
-public class MtgCard {
-	
+public class MtgCard implements Comparable<MtgCard> {
+
 	// ##########################################################
-	// #														
-	// #				Enumerations							
-	// #														
+	// #
+	// # Enumerations / Inner classes
+	// #
 	// ##########################################################
-	
+
 	/**
 	 * The rarity of a card.
 	 */
-	public enum MtgRarity { COMMON, UNCOMMON, RARE, MYHTIC }
+	public enum MtgRarity {
+		COMMON, UNCOMMON, RARE, MYHTIC
+	}
+
+	/**
+	 * 
+	 */
+	private class CardIdComparator implements Comparator<MtgCard> {
+
+		@Override
+		public int compare(MtgCard card1, MtgCard card2) {
+
+			return card1.id - card2.id;
+		}
+	}
 	
 	/**
 	 * 
 	 */
-	public enum MtgColor {RED, GREEN, BLUE, BLACK, WHITE, NOCOLOR, MULTI}
+	private class CardNameComparator implements Comparator<MtgCard> {
 
-	// ##########################################################
-	// #														
-	// #				Static attributes							
-	// #														
-	// ##########################################################
+		@Override
+		public int compare(MtgCard card1, MtgCard card2) {
+
+			return card1.name.compareTo(card2.name);
+		}
+	}
+	
 	
 	/**
-	 * A static field storing the default back image. Like this, the back image is loaded only once.
+	 * 
 	 */
-	public static final Image DEFAULT_BACK_IMAGE = null; // TODO create an image loader for the back
+	private class CardReverseNameComparator implements Comparator<MtgCard> {
+
+		@Override
+		public int compare(MtgCard card1, MtgCard card2) {
+
+			return card2.name.compareTo(card1.name);
+		}
+	}
+	
+	
+	/**
+	 * 
+	 */
+	private class CardCostComparator implements Comparator<MtgCard> {
+
+		@Override
+		public int compare(MtgCard card1, MtgCard card2) {
+
+			return card2.name.compareTo(card1.name);
+		}
+	}
+
+
+	/**
+	 * 
+	 */
+	public enum MtgColor {
+		// TODO La valeur MULTI va poser un problème : ok c'est multi mais multi de quoi ??? 
+		// TODO Peut être qu'il faudrait que la couleur soit stockée dans un tableau ou une liste.
+		RED, GREEN, BLUE, BLACK, WHITE, NOCOLOR, MULTI
+	}
 
 	// ##########################################################
-	// #														
-	// #				Attributes						
-	// #														
+	// #
+	// # Static attributes
+	// #
 	// ##########################################################
 
+	/**
+	 * A static field storing the default back image. Like this, the back image
+	 * is loaded only once.
+	 */
+	public static final Image DEFAULT_BACK_IMAGE = null; // TODO create an image
+															// loader for the
+															// back
+	
+	private static Logger logs
+
+	// ##########################################################
+	// #
+	// # Attributes
+	// #
+	// ##########################################################
 
 	/**
 	 * The unique id of a card (based on the ID in the database)
@@ -63,35 +120,35 @@ public class MtgCard {
 	/**
 	 * The text explaining the effect of the card (localized).
 	 * 
-	 * NOTE :
-	 * These text needs to have some symbols:
-	 * > tap : {t}
-	 * > untap : {u}
-	 * > X not colored mana : {<X>} (where X is an integer between 0 and 99)
-	 * > red|blue|black|green|white mana : {r} | {b} | {k} | {g} | {w}
-	 * > uncolored mana : {m}
-	 * > energy counter : {e}
-	 * > poison counter : {p}
+	 * NOTE : These text needs to have some symbols: > tap : {t} > untap : {u} >
+	 * X not colored mana : {<X>} (where X is an integer between 0 and 99) >
+	 * red|blue|black|green|white mana : {r} | {b} | {k} | {g} | {w} > uncolored
+	 * mana : {m} > energy counter : {e} > poison counter : {p}
 	 */
 	private String rulesText;
 
 	/**
-	 * The text about the Mtg background. Useless for the game but it is part of the Mtg lore (localized).
+	 * The text about the Mtg background. Useless for the game but it is part of
+	 * the Mtg lore (localized).
 	 */
 	private String backgroundText;
-	
+
 	/**
 	 * 
 	 */
-	private MtgColor color;
+	private EnumSet<MtgColor> colors;
 
 	/**
-	 * If the card is a creature, it has power and toughness. The power is stored as a string because sometimes this stat is  not expressed by a number.
+	 * If the card is a creature, it has power and toughness. The power is
+	 * stored as a string because sometimes this stat is not expressed by a
+	 * number.
 	 */
 	private String power;
 
 	/**
-	 * If the card is a creature, it has power and toughness. The toughness is stored as a string because sometimes this stat is  not expressed by a number.
+	 * If the card is a creature, it has power and toughness. The toughness is
+	 * stored as a string because sometimes this stat is not expressed by a
+	 * number.
 	 */
 	private String toughness;
 
@@ -106,14 +163,15 @@ public class MtgCard {
 	private Image imageBack;
 
 	/**
-	 * This value is not mandatory. But it could be interesting to have some comments about the card. To add some details about the cards (not localized).
+	 * This value is not mandatory. But it could be interesting to have some
+	 * comments about the card. To add some details about the cards (not
+	 * localized).
 	 */
 	private String comments;
 
 	/**
-	 * The loyalty value  for the planeswalkers (only). 
-	 * {k >= 0 if and only if card type is Planeswalker}
-	 * {k = -1 otherwise}
+	 * The loyalty value for the planeswalkers (only). {k >= 0 if and only if
+	 * card type is Planeswalker} {k = -1 otherwise}
 	 */
 	private int loyalty;
 
@@ -131,28 +189,26 @@ public class MtgCard {
 	 * 
 	 */
 	private MtgCardState state;
-	
 
 	/**
 	 * 
 	 */
 	private MtgRarity rarity;
 
-
 	/**
 	 * 
 	 */
 	private List<MtgFormat> formats;
-	
+
 	/**
 	 * 
 	 */
 	private List<MtgAbility> abilities;
-	
+
 	// ##########################################################
-	// #														#
-	// #				Constructors							#
-	// #														#
+	// # #
+	// # Constructors #
+	// # #
 	// ##########################################################
 
 	/**
@@ -161,11 +217,6 @@ public class MtgCard {
 	public MtgCard() {
 		super();
 	}
-
-	
-
-
-
 
 	/**
 	 * @param id
@@ -204,12 +255,10 @@ public class MtgCard {
 		this.rarity = rarity;
 	}
 
-
-
 	// ##########################################################
-	// #														#
-	// #				Methods									#
-	// #														#
+	// # #
+	// # Methods #
+	// # #
 	// ##########################################################
 	/**
 	 * @return the id
@@ -219,7 +268,8 @@ public class MtgCard {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -233,7 +283,8 @@ public class MtgCard {
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -247,7 +298,8 @@ public class MtgCard {
 	}
 
 	/**
-	 * @param rulesText the rulesText to set
+	 * @param rulesText
+	 *            the rulesText to set
 	 */
 	public void setRulesText(String rulesText) {
 		this.rulesText = rulesText;
@@ -261,7 +313,8 @@ public class MtgCard {
 	}
 
 	/**
-	 * @param backgroundText the backgroundText to set
+	 * @param backgroundText
+	 *            the backgroundText to set
 	 */
 	public void setBackgroundText(String backgroundText) {
 		this.backgroundText = backgroundText;
@@ -270,20 +323,45 @@ public class MtgCard {
 	/**
 	 * @return the color
 	 */
-	public MtgColor getColor() {
-		return color;
+	public EnumSet<MtgColor> getColor() {
+		return this.colors;
 	}
-
-
 
 	/**
-	 * @param color the color to set
+	 * @param colors
+	 *            the color to set
 	 */
-	public void setColor(MtgColor color) {
-		this.color = color;
+	public void setColors(EnumSet<MtgColor> colors) {
+		this.colors = colors;
 	}
-
-
+	
+	/**
+	 * 
+	 * @param colors
+	 */
+	public void setColors(MtgColor... colors) {
+		
+		if(colors != null) {
+			
+			this.colors.clear();
+			
+			for (MtgColor color : colors) {
+				this.colors.add(color);
+			}
+		} else {
+			// TODO logs
+		}
+	}
+	
+	/**
+	 * 
+	 * @param color
+	 * @return
+	 */
+	public boolean isColor(MtgColor color) {
+		
+		return this.colors.contains(color);
+	}
 
 	/**
 	 * @return the power
@@ -293,7 +371,8 @@ public class MtgCard {
 	}
 
 	/**
-	 * @param power the power to set
+	 * @param power
+	 *            the power to set
 	 */
 	public void setPower(String power) {
 		this.power = power;
@@ -307,7 +386,8 @@ public class MtgCard {
 	}
 
 	/**
-	 * @param toughness the toughness to set
+	 * @param toughness
+	 *            the toughness to set
 	 */
 	public void setToughness(String toughness) {
 		this.toughness = toughness;
@@ -321,7 +401,8 @@ public class MtgCard {
 	}
 
 	/**
-	 * @param imageFront the imageFront to set
+	 * @param imageFront
+	 *            the imageFront to set
 	 */
 	public void setImageFront(Image imageFront) {
 		this.imageFront = imageFront;
@@ -335,7 +416,8 @@ public class MtgCard {
 	}
 
 	/**
-	 * @param imageBack the imageBack to set
+	 * @param imageBack
+	 *            the imageBack to set
 	 */
 	public void setImageBack(Image imageBack) {
 		this.imageBack = imageBack;
@@ -349,7 +431,8 @@ public class MtgCard {
 	}
 
 	/**
-	 * @param comments the comments to set
+	 * @param comments
+	 *            the comments to set
 	 */
 	public void setComments(String comments) {
 		this.comments = comments;
@@ -363,7 +446,8 @@ public class MtgCard {
 	}
 
 	/**
-	 * @param loyalty the loyalty to set
+	 * @param loyalty
+	 *            the loyalty to set
 	 */
 	public void setLoyalty(int loyalty) {
 		this.loyalty = loyalty;
@@ -377,7 +461,8 @@ public class MtgCard {
 	}
 
 	/**
-	 * @param language the language to set
+	 * @param language
+	 *            the language to set
 	 */
 	public void setLanguage(String language) {
 		this.language = language;
@@ -391,7 +476,8 @@ public class MtgCard {
 	}
 
 	/**
-	 * @param type the type to set
+	 * @param type
+	 *            the type to set
 	 */
 	public void setType(MtgType type) {
 		this.type = type;
@@ -405,7 +491,8 @@ public class MtgCard {
 	}
 
 	/**
-	 * @param state the state to set
+	 * @param state
+	 *            the state to set
 	 */
 	public void setState(MtgCardState state) {
 		this.state = state;
@@ -419,7 +506,8 @@ public class MtgCard {
 	}
 
 	/**
-	 * @param rarity the rarity to set
+	 * @param rarity
+	 *            the rarity to set
 	 */
 	public void setRarity(MtgRarity rarity) {
 		this.rarity = rarity;
@@ -433,7 +521,8 @@ public class MtgCard {
 	}
 
 	/**
-	 * @param formats the formats to set
+	 * @param formats
+	 *            the formats to set
 	 */
 	public void setFormats(List<MtgFormat> formats) {
 		this.formats = formats;
@@ -447,28 +536,41 @@ public class MtgCard {
 	}
 
 	/**
-	 * @param abilities the abilities to set
+	 * @param abilities
+	 *            the abilities to set
 	 */
 	public void setAbilities(List<MtgAbility> abilities) {
 		this.abilities = abilities;
 	}
 
+	/**
+	 * The default card way to compare
+	 * @param card
+	 * @return
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(MtgCard card) {
+		
+		
+		return 0;
+	}
 
-
-
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "[" + id + ", " + name + ", " + rulesText + ", " + backgroundText + ", " + color + ", " + power + ", "
-				+ toughness + ", " + comments + ", " + loyalty + ", " + language + ", " + type + ", " 
-				+ ", " + state + ", " + rarity + ", " + formats + ", " + abilities + "]";
+		return "[" + id + ", " + name + ", " + rulesText + ", " + backgroundText + ", " + colors + ", " + power + ", "
+				+ toughness + ", " + comments + ", " + loyalty + ", " + language + ", " + type + ", " + ", " + state
+				+ ", " + rarity + ", " + formats + ", " + abilities + "]";
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -477,7 +579,7 @@ public class MtgCard {
 		int result = 1;
 		result = prime * result + ((abilities == null) ? 0 : abilities.hashCode());
 		result = prime * result + ((backgroundText == null) ? 0 : backgroundText.hashCode());
-		result = prime * result + ((color == null) ? 0 : color.hashCode());
+		result = prime * result + ((colors == null) ? 0 : colors.hashCode());
 		result = prime * result + ((comments == null) ? 0 : comments.hashCode());
 		result = prime * result + ((formats == null) ? 0 : formats.hashCode());
 		result = prime * result + id;
@@ -493,9 +595,9 @@ public class MtgCard {
 		return result;
 	}
 
-
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -517,7 +619,7 @@ public class MtgCard {
 				return false;
 		} else if (!backgroundText.equals(other.backgroundText))
 			return false;
-		if (color != other.color)
+		if (colors != other.colors)
 			return false;
 		if (comments == null) {
 			if (other.comments != null)
