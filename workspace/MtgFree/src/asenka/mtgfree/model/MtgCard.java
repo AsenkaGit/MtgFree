@@ -1,8 +1,13 @@
 package asenka.mtgfree.model;
 
 import java.awt.Image;
-import java.util.*;
-import java.util.logging.Logger;
+import java.util.Comparator;
+import java.util.EnumSet;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import asenka.mtgfree.model.exceptions.MtgModelException;
 
 /**
  * This class represents a Mtg Card. It stores all the necessary data about the
@@ -25,6 +30,13 @@ public class MtgCard implements Comparable<MtgCard> {
 		COMMON, UNCOMMON, RARE, MYHTIC
 	}
 
+
+	public enum MtgCardsComparator {
+		CARD_ID_COMPARATOR, CARD_NAME_COMPARATOR;
+
+	}
+
+
 	/**
 	 * 
 	 */
@@ -36,7 +48,8 @@ public class MtgCard implements Comparable<MtgCard> {
 			return card1.id - card2.id;
 		}
 	}
-	
+
+
 	/**
 	 * 
 	 */
@@ -48,8 +61,8 @@ public class MtgCard implements Comparable<MtgCard> {
 			return card1.name.compareTo(card2.name);
 		}
 	}
-	
-	
+
+
 	/**
 	 * 
 	 */
@@ -61,8 +74,8 @@ public class MtgCard implements Comparable<MtgCard> {
 			return card2.name.compareTo(card1.name);
 		}
 	}
-	
-	
+
+
 	/**
 	 * 
 	 */
@@ -71,7 +84,7 @@ public class MtgCard implements Comparable<MtgCard> {
 		@Override
 		public int compare(MtgCard card1, MtgCard card2) {
 
-			return card2.name.compareTo(card1.name);
+			return 0;
 		}
 	}
 
@@ -80,8 +93,10 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * 
 	 */
 	public enum MtgColor {
-		// TODO La valeur MULTI va poser un problème : ok c'est multi mais multi de quoi ??? 
-		// TODO Peut être qu'il faudrait que la couleur soit stockée dans un tableau ou une liste.
+		// TODO La valeur MULTI va poser un problème : ok c'est multi mais multi de quoi
+		// ???
+		// TODO Peut être qu'il faudrait que la couleur soit stockée dans un tableau ou
+		// une liste.
 		RED, GREEN, BLUE, BLACK, WHITE, NOCOLOR, MULTI
 	}
 
@@ -92,14 +107,12 @@ public class MtgCard implements Comparable<MtgCard> {
 	// ##########################################################
 
 	/**
-	 * A static field storing the default back image. Like this, the back image
-	 * is loaded only once.
+	 * A static field storing the default back image. Like this, the back image is
+	 * loaded only once.
 	 */
 	public static final Image DEFAULT_BACK_IMAGE = null; // TODO create an image
 															// loader for the
 															// back
-	
-	private static Logger logs
 
 	// ##########################################################
 	// #
@@ -118,37 +131,60 @@ public class MtgCard implements Comparable<MtgCard> {
 	private String name;
 
 	/**
+	 * The cost of a card is represented by an array of string because
+	 * each symbol needs a string representation :
+	 * <ul>
+	 * 	<li><code>"{&lt;<i>n</i>&gt;}"</code> (with <code>n</code> an integer between 0 and 99) for the 
+	 * uncolored mana cost</li>
+	 * <li><code>"{X}"</code> for <code>X</code> uncolored mana</li>
+	 * <li><code>"{u}"</code> for one strict uncolored mana (the one with the uncolored symbol)</li>
+	 * <li><code>"{r}"</code> for one red mana</li>
+	 * <li><code>"{u}"</code> for one blue mana</li>
+	 * <li><code>"{b}"</code> for one black mana</li>
+	 * <li><code>"{g}"</code> for one green mana</li>
+	 * <li><code>"{w}"</code> for one white mana</li>
+	 * <li><code>"{rb}"</code> for one red or blue mana</li>
+	 * <li><code>"{rk}"</code> for one red or black mana</li>
+	 * <li><code>"{rg}"</code> for one red or green mana</li>
+	 * <li>...</li>
+	 */
+	private String[] cost;
+
+	/**
 	 * The text explaining the effect of the card (localized).
 	 * 
-	 * NOTE : These text needs to have some symbols: > tap : {t} > untap : {u} >
-	 * X not colored mana : {<X>} (where X is an integer between 0 and 99) >
-	 * red|blue|black|green|white mana : {r} | {b} | {k} | {g} | {w} > uncolored
+	 * NOTE : These text needs to have some symbols: > tap : {t} > untap : {u} > X
+	 * not colored mana : {<X>} (where X is an integer between 0 and 99) >
+	 * red|blue|black|green|white mana : {r} | {u} | {b} | {g} | {w} > uncolored
 	 * mana : {m} > energy counter : {e} > poison counter : {p}
 	 */
 	private String rulesText;
 
 	/**
-	 * The text about the Mtg background. Useless for the game but it is part of
-	 * the Mtg lore (localized).
+	 * The text about the Mtg background. Useless for the game but it is part of the
+	 * Mtg lore (localized).
 	 */
 	private String backgroundText;
 
 	/**
-	 * 
+	 * A card usually have one color : red, blue, green, black or white. But it can also have
+	 * no color (like most of the artifacts) or also like some Eldrazi creatures. Also, it can
+	 * have more than one color if the mana cost of a card include more than one color of mana. 
+	 * That is the reason why the color is an EnumSet of MtgColor
+	 * @see EnumSet
+	 * @see MtgColor
 	 */
 	private EnumSet<MtgColor> colors;
 
 	/**
-	 * If the card is a creature, it has power and toughness. The power is
-	 * stored as a string because sometimes this stat is not expressed by a
-	 * number.
+	 * If the card is a creature, it has power and toughness. The power is stored as
+	 * a string because sometimes this stat is not expressed by a number.
 	 */
 	private String power;
 
 	/**
 	 * If the card is a creature, it has power and toughness. The toughness is
-	 * stored as a string because sometimes this stat is not expressed by a
-	 * number.
+	 * stored as a string because sometimes this stat is not expressed by a number.
 	 */
 	private String toughness;
 
@@ -164,14 +200,13 @@ public class MtgCard implements Comparable<MtgCard> {
 
 	/**
 	 * This value is not mandatory. But it could be interesting to have some
-	 * comments about the card. To add some details about the cards (not
-	 * localized).
+	 * comments about the card. To add some details about the cards (not localized).
 	 */
 	private String comments;
 
 	/**
-	 * The loyalty value for the planeswalkers (only). {k >= 0 if and only if
-	 * card type is Planeswalker} {k = -1 otherwise}
+	 * The loyalty value for the planeswalkers (only). {k >= 0 if and only if card
+	 * type is Planeswalker} {k = -1 otherwise}
 	 */
 	private int loyalty;
 
@@ -215,6 +250,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * Default constructor
 	 */
 	public MtgCard() {
+
 		super();
 	}
 
@@ -238,6 +274,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	public MtgCard(int id, String name, String rulesText, String backgroundText, String power, String toughness,
 			Image imageFront, Image imageBack, String comments, int loyalty, String language, MtgType type,
 			MtgCollection collection, MtgCardState state, MtgRarity rarity) {
+
 		super();
 		this.id = id;
 		this.name = name;
@@ -264,6 +301,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * @return the id
 	 */
 	public int getId() {
+
 		return id;
 	}
 
@@ -272,6 +310,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 *            the id to set
 	 */
 	public void setId(int id) {
+
 		this.id = id;
 	}
 
@@ -279,6 +318,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * @return the name
 	 */
 	public String getName() {
+
 		return name;
 	}
 
@@ -287,13 +327,41 @@ public class MtgCard implements Comparable<MtgCard> {
 	 *            the name to set
 	 */
 	public void setName(String name) {
+
 		this.name = name;
+	}
+
+	/**
+	 * @return the cost
+	 */
+	public String[] getCost() {
+
+		return cost;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getConvertedCost() {
+
+		return 0;
+	}
+
+	/**
+	 * @param cost
+	 *            the cost to set
+	 */
+	public void setCost(String[] cost) {
+
+		this.cost = cost;
 	}
 
 	/**
 	 * @return the rulesText
 	 */
 	public String getRulesText() {
+
 		return rulesText;
 	}
 
@@ -302,6 +370,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 *            the rulesText to set
 	 */
 	public void setRulesText(String rulesText) {
+
 		this.rulesText = rulesText;
 	}
 
@@ -309,6 +378,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * @return the backgroundText
 	 */
 	public String getBackgroundText() {
+
 		return backgroundText;
 	}
 
@@ -317,6 +387,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 *            the backgroundText to set
 	 */
 	public void setBackgroundText(String backgroundText) {
+
 		this.backgroundText = backgroundText;
 	}
 
@@ -324,6 +395,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * @return the color
 	 */
 	public EnumSet<MtgColor> getColor() {
+
 		return this.colors;
 	}
 
@@ -332,34 +404,43 @@ public class MtgCard implements Comparable<MtgCard> {
 	 *            the color to set
 	 */
 	public void setColors(EnumSet<MtgColor> colors) {
+
 		this.colors = colors;
 	}
-	
+
 	/**
+	 * Set the card's color(s).
 	 * 
 	 * @param colors
+	 *            Several way to use this method :<br />
+	 *            - A single color (MtgColor) <br />
+	 *            - An array of colors (MtgColor)<br />
+	 *            - several colors separated by a comma <br />
+	 * @throws IllegalArgumentException
+	 *             if colors is null
 	 */
 	public void setColors(MtgColor... colors) {
-		
-		if(colors != null) {
-			
+
+		if (colors != null) {
+
 			this.colors.clear();
-			
+
 			for (MtgColor color : colors) {
 				this.colors.add(color);
 			}
 		} else {
-			// TODO logs
+			throw new IllegalArgumentException(
+					"[" + MtgCard.class.getSimpleName() + "]" + " null value in the colors parameter");
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param color
 	 * @return
 	 */
 	public boolean isColor(MtgColor color) {
-		
+
 		return this.colors.contains(color);
 	}
 
@@ -367,6 +448,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * @return the power
 	 */
 	public String getPower() {
+
 		return power;
 	}
 
@@ -375,6 +457,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 *            the power to set
 	 */
 	public void setPower(String power) {
+
 		this.power = power;
 	}
 
@@ -382,6 +465,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * @return the toughness
 	 */
 	public String getToughness() {
+
 		return toughness;
 	}
 
@@ -390,6 +474,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 *            the toughness to set
 	 */
 	public void setToughness(String toughness) {
+
 		this.toughness = toughness;
 	}
 
@@ -397,6 +482,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * @return the imageFront
 	 */
 	public Image getImageFront() {
+
 		return imageFront;
 	}
 
@@ -405,6 +491,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 *            the imageFront to set
 	 */
 	public void setImageFront(Image imageFront) {
+
 		this.imageFront = imageFront;
 	}
 
@@ -412,6 +499,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * @return the imageBack
 	 */
 	public Image getImageBack() {
+
 		return imageBack;
 	}
 
@@ -420,6 +508,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 *            the imageBack to set
 	 */
 	public void setImageBack(Image imageBack) {
+
 		this.imageBack = imageBack;
 	}
 
@@ -427,6 +516,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * @return the comments
 	 */
 	public String getComments() {
+
 		return comments;
 	}
 
@@ -435,6 +525,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 *            the comments to set
 	 */
 	public void setComments(String comments) {
+
 		this.comments = comments;
 	}
 
@@ -442,6 +533,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * @return the loyalty
 	 */
 	public int getLoyalty() {
+
 		return loyalty;
 	}
 
@@ -450,6 +542,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 *            the loyalty to set
 	 */
 	public void setLoyalty(int loyalty) {
+
 		this.loyalty = loyalty;
 	}
 
@@ -457,6 +550,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * @return the language
 	 */
 	public String getLanguage() {
+
 		return language;
 	}
 
@@ -465,6 +559,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 *            the language to set
 	 */
 	public void setLanguage(String language) {
+
 		this.language = language;
 	}
 
@@ -472,6 +567,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * @return the type
 	 */
 	public MtgType getType() {
+
 		return type;
 	}
 
@@ -480,6 +576,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 *            the type to set
 	 */
 	public void setType(MtgType type) {
+
 		this.type = type;
 	}
 
@@ -487,6 +584,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * @return the state
 	 */
 	public MtgCardState getState() {
+
 		return state;
 	}
 
@@ -495,6 +593,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 *            the state to set
 	 */
 	public void setState(MtgCardState state) {
+
 		this.state = state;
 	}
 
@@ -502,6 +601,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * @return the rarity
 	 */
 	public MtgRarity getRarity() {
+
 		return rarity;
 	}
 
@@ -510,6 +610,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 *            the rarity to set
 	 */
 	public void setRarity(MtgRarity rarity) {
+
 		this.rarity = rarity;
 	}
 
@@ -517,6 +618,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * @return the formats
 	 */
 	public List<MtgFormat> getFormats() {
+
 		return formats;
 	}
 
@@ -525,6 +627,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 *            the formats to set
 	 */
 	public void setFormats(List<MtgFormat> formats) {
+
 		this.formats = formats;
 	}
 
@@ -532,6 +635,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 * @return the abilities
 	 */
 	public List<MtgAbility> getAbilities() {
+
 		return abilities;
 	}
 
@@ -540,19 +644,20 @@ public class MtgCard implements Comparable<MtgCard> {
 	 *            the abilities to set
 	 */
 	public void setAbilities(List<MtgAbility> abilities) {
+
 		this.abilities = abilities;
 	}
 
 	/**
 	 * The default card way to compare
+	 * 
 	 * @param card
 	 * @return
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	@Override
 	public int compareTo(MtgCard card) {
-		
-		
+
 		return 0;
 	}
 
@@ -563,6 +668,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 */
 	@Override
 	public String toString() {
+
 		return "[" + id + ", " + name + ", " + rulesText + ", " + backgroundText + ", " + colors + ", " + power + ", "
 				+ toughness + ", " + comments + ", " + loyalty + ", " + language + ", " + type + ", " + ", " + state
 				+ ", " + rarity + ", " + formats + ", " + abilities + "]";
@@ -575,6 +681,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 */
 	@Override
 	public int hashCode() {
+
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((abilities == null) ? 0 : abilities.hashCode());
@@ -602,6 +709,7 @@ public class MtgCard implements Comparable<MtgCard> {
 	 */
 	@Override
 	public boolean equals(Object obj) {
+
 		if (this == obj)
 			return true;
 		if (obj == null)
