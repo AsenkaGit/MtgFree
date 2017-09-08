@@ -55,7 +55,8 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	/**
 	 * The name of the card collection.
 	 */
-	private String collectionName; // I don't to use an MtgCollection here to avoid circular references
+	private String collectionName; // I don't to use an MtgCollection here to
+									// avoid circular references
 
 	/**
 	 * If the card is a creature, it has power and toughness. The power is stored as a string because sometimes this stat is not
@@ -117,26 +118,39 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	 */
 	private transient Collator collator;
 
-	// /**
-	// *
-	// */
-	// private static ManaManager manaManager = ManaManager.getInstance();
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 * @param name
+	 * @param collectionName
+	 * @param color
+	 * @param type
+	 * @param rarity
+	 * @param locale
+	 */
+	public MtgCard(int id, String name, String collectionName, MtgColor color, MtgType type, MtgRarity rarity, Locale locale) {
+
+		this(id, name, "", "", "", null, collectionName, "", "", -1, type, null, rarity, new HashSet<MtgFormat>(),
+				new HashSet<MtgAbility>(), "", locale);
+		this.setColors(color);
+	}
 
 	/**
 	 * Constructor
 	 * 
 	 * @param id
 	 * @param name
-	 * @param color
+	 * @param collectionName
+	 * @param cost
 	 * @param type
 	 * @param rarity
 	 * @param locale
 	 */
-	public MtgCard(int id, String name, MtgColor color, MtgType type, MtgRarity rarity, Locale locale) {
+	public MtgCard(int id, String name, String collectionName, String cost, MtgType type, MtgRarity rarity, Locale locale) {
 
-		this(id, name, null, "", "", null, "", "", "", -1, type, null, rarity, new HashSet<MtgFormat>(), new HashSet<MtgAbility>(), "",
-				locale);
-		this.setColors(color);
+		this(id, name, cost, "", "", ManaManager.getInstance().getColors(cost), collectionName, "", "", -1, type, null, rarity,
+				new HashSet<MtgFormat>(), new HashSet<MtgAbility>(), "", locale);
 	}
 
 	/**
@@ -336,7 +350,7 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 		}
 
 		// Check if the cost and the new card's colors are still matching.
-		if (this.colors.equals(ManaManager.getInstance().getColors(this.cost))) {
+		if (!this.cost.isEmpty() && this.colors.equals(ManaManager.getInstance().getColors(this.cost))) {
 			throw new IllegalArgumentException("The new color(s) " + colors + " do not match the card cost : " + cost);
 		}
 	}
@@ -351,6 +365,7 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 
 	/**
 	 * Set the collectionName
+	 * 
 	 * @param collectionName the localized name of the card's collection
 	 */
 	public void setCollectionName(String collectionName) {
@@ -360,6 +375,7 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 
 	/**
 	 * Get the card's power. It the card is not a creature or a vehicle it returns an empty string
+	 * 
 	 * @return the card power.
 	 */
 	public String getPower() {
@@ -369,6 +385,7 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 
 	/**
 	 * set the card's power
+	 * 
 	 * @param power a string with a number from 0 to 99 or X or * or a combination of the previous
 	 */
 	public void setPower(String power) {
@@ -507,20 +524,15 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	@Override
 	public Locale getLocale() {
 
-		// TODO Auto-generated method stub
-		return null;
+		return this.locale;
 	}
 
 	@Override
 	public String toString() {
 
-		return "[" + id + ", " + (name != null ? name + ", " : "") + (cost != null ? cost + ", " : "")
-				+ (rulesText != null ? rulesText + ", " : "") + (backgroundText != null ? backgroundText + ", " : "")
-				+ (colors != null ? colors + ", " : "") + (collectionName != null ? collectionName + ", " : "")
-				+ (power != null ? power + ", " : "") + (toughness != null ? toughness + ", " : "") + loyalty + ", "
-				+ (type != null ? type + ", " : "") + (state != null ? state + ", " : "") + (rarity != null ? rarity + ", " : "")
-				+ (formats != null ? formats + ", " : "") + (abilities != null ? abilities + ", " : "")
-				+ (comments != null ? comments + ", " : "") + (locale != null ? locale : "") + "]";
+		return "[" + id + ", " + name + ", " + cost + ", " + rulesText + ", " + backgroundText + ", " + colors + ", " + collectionName
+				+ ", " + power + ", " + toughness + ", " + loyalty + ", " + type + ", " + state + ", " + rarity + ", " + formats + ", "
+				+ abilities + ", " + comments + ", " + locale + "]";
 	}
 
 	@Override

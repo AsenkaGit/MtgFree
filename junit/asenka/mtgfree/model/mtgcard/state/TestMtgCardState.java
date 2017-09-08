@@ -1,4 +1,4 @@
-package asenka.mtgfree.model;
+package asenka.mtgfree.model.mtgcard.state;
 
 import static org.junit.Assert.*;
 
