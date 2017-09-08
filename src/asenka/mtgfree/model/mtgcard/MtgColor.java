@@ -9,7 +9,7 @@ import asenka.mtgfree.model.utilities.Localized;
  * configuration file to get the localized name of the color.<br />
  * <br />
  * 
- * @author Asenka
+ * @author asenka
  */
 public enum MtgColor implements Localized {
 
