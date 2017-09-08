@@ -1,4 +1,4 @@
-package asenka.mtgfree.model;
+package asenka.mtgfree.model.utilities;
 
 import java.util.Locale;
 

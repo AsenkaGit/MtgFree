@@ -4,6 +4,8 @@ import java.text.Collator;
 import java.util.Comparator;
 import java.util.Locale;
 
+import asenka.mtgfree.model.utilities.Localized;
+
 /**
  * A type of magic cards. They are several types of cards. But a type can be
  * decomposed into global type (creature, instant, artefact, etc...). But it can
