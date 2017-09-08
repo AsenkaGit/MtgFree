@@ -8,7 +8,7 @@ import org.junit.Test;
 import asenka.mtgfree.model.MtgCardState;
 import asenka.mtgfree.model.MtgContext;
 import asenka.mtgfree.model.exceptions.MtgContextException;
-import asenka.mtgfree.utilities.Location;
+import asenka.mtgfree.model.utilities.Location;
 
 /**
  * 

@@ -4,7 +4,7 @@ import java.awt.Image;
 import java.util.HashSet;
 import java.util.Set;
 
-import asenka.mtgfree.utilities.ManaManager;
+import asenka.mtgfree.model.utilities.ManaManager;
 
 /**
  * This class represents a Mtg Card. It stores all the necessary data about the cards

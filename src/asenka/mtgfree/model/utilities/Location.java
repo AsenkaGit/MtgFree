@@ -1,4 +1,4 @@
-package asenka.mtgfree.utilities;
+package asenka.mtgfree.model.utilities;
 
 /**
  * Class used to store a position/location of a card on the battlefield

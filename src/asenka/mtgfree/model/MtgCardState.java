@@ -1,7 +1,7 @@
 package asenka.mtgfree.model;
 
 import asenka.mtgfree.model.exceptions.MtgContextException;
-import asenka.mtgfree.utilities.Location;
+import asenka.mtgfree.model.utilities.Location;
 
 /**
  * This card manage the card state :<br />
