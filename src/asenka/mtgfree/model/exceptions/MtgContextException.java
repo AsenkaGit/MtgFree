@@ -1,6 +1,6 @@
 package asenka.mtgfree.model.exceptions;
 
-import asenka.mtgfree.model.MtgCardState;
+import asenka.mtgfree.model.mtgcard.MtgCardState;
 
 /**
  * 

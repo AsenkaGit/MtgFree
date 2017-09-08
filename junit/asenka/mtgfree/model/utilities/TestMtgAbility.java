@@ -10,7 +10,7 @@ import java.util.Locale;
 import org.junit.Before;
 import org.junit.Test;
 
-import asenka.mtgfree.model.MtgAbility;
+import asenka.mtgfree.model.mtgcard.MtgAbility;
 
 /**
  * 
@@ -27,8 +27,8 @@ public class TestMtgAbility {
 	public void testSorting() {
 		
 		MtgAbility a1 = new MtgAbility(1, "Vol", Locale.FRENCH);
-		MtgAbility a2 = new MtgAbility(2, "Piétinement", Locale.FRENCH);
-		MtgAbility a3 = new MtgAbility(3, "Défence talismanique", Locale.FRENCH);
+		MtgAbility a2 = new MtgAbility(2, "Piï¿½tinement", Locale.FRENCH);
+		MtgAbility a3 = new MtgAbility(3, "Dï¿½fence talismanique", Locale.FRENCH);
 		MtgAbility a4 = new MtgAbility(4, "Initiative", Locale.FRENCH);
 		MtgAbility a5 = new MtgAbility(5, "Double initiative", Locale.FRENCH);
 		MtgAbility a6 = new MtgAbility(6, "Contact Mortel", Locale.FRENCH);

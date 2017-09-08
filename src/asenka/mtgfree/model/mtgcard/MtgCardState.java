@@ -1,4 +1,4 @@
-package asenka.mtgfree.model;
+package asenka.mtgfree.model.mtgcard;
 
 import asenka.mtgfree.model.exceptions.MtgContextException;
 import asenka.mtgfree.model.utilities.Location;
@@ -10,26 +10,23 @@ import asenka.mtgfree.model.utilities.Location;
  * > secret/revealed (only in the player's hand)<br />
  * > the context of the card : Library, Hand, Graveyard, etc...)<br />
  * 
- * @author Asenka
+ * @author asenka
  */
 public class MtgCardState {
 
 	/**
-	 * if true => the card is tapped. If the card is not on the battlefield, this
-	 * value should be false.
+	 * if true => the card is tapped. If the card is not on the battlefield, this value should be false.
 	 */
 	private boolean isTapped;
 
 	/**
-	 * If true => the card is visible. Should be false if the card is neither on the
-	 * battlefield or the exile area.
+	 * If true => the card is visible. Should be false if the card is neither on the battlefield or the exile area.
 	 */
 	private boolean isVisible;
 
 	/**
-	 * if true => the card is revealed. It means that the card should be visible for
-	 * all players/viewers. It should be false if the card is not in the player's
-	 * hand.
+	 * if true => the card is revealed. It means that the card should be visible for all players/viewers. It should be false if
+	 * the card is not in the player's hand.
 	 */
 	private boolean isRevealed;
 
@@ -50,8 +47,7 @@ public class MtgCardState {
 	 * @param context
 	 * @param location
 	 */
-	public MtgCardState(boolean isTapped, boolean isVisible, boolean isRevealed, MtgContext context,
-			Location location) {
+	public MtgCardState(boolean isTapped, boolean isVisible, boolean isRevealed, MtgContext context, Location location) {
 
 		super();
 		this.isTapped = isTapped;
@@ -70,10 +66,8 @@ public class MtgCardState {
 	}
 
 	/**
-	 * @param isTapped <code>true</code> if you want to tap a card on the
-	 *            battlefield
-	 * @throws MtgContextException if you try to tap a card that is not on the
-	 *             battlefield
+	 * @param isTapped <code>true</code> if you want to tap a card on the battlefield
+	 * @throws MtgContextException if you try to tap a card that is not on the battlefield
 	 */
 	public void setTapped(boolean isTapped) {
 
@@ -94,12 +88,10 @@ public class MtgCardState {
 	}
 
 	/**
-	 * @param isVisible <code>true</code> if you want to make visible a card on the
-	 *            battlefield or in the exile context
+	 * @param isVisible <code>true</code> if you want to make visible a card on the battlefield or in the exile context
 	 */
 	public void setVisible(boolean isVisible) {
 
-		// TODO Do I need to have a control here throwing a MtgContextException ?
 		this.isVisible = isVisible;
 	}
 
@@ -112,11 +104,10 @@ public class MtgCardState {
 	}
 
 	/**
-	 * @param isRevealed <code>true</code> if you want to reveal a card in a
-	 *            player's hand. <code>false</code> to go back to the default secret
-	 *            state.
-	 * @throws MtgContextException if you try to reveal a card than is not in the
-	 *             HAND context
+	 * 
+	 * @param isRevealed <code>true</code> if you want to reveal a card in a player's hand. <code>false</code> to go back to the
+	 *        default secret state.
+	 * @throws MtgContextException if you try to reveal a card than is not in the HAND context
 	 */
 	public void setRevealed(boolean isRevealed) {
 
@@ -169,11 +160,10 @@ public class MtgCardState {
 	}
 
 	/**
-	 * Change the context of the card. Updating the context change also the values
-	 * of the booleans parameters of the card state. <br />
+	 * Change the context of the card. Updating the context change also the values of the booleans parameters of the card state.
 	 * <br />
-	 * <i>e.g.</i> Setting the context to HAND, will change the parameters like
-	 * this:<br />
+	 * <br />
+	 * <i>e.g.</i> Setting the context to HAND, will change the parameters like this:<br />
 	 * <code>isRevealed = false</code><br />
 	 * <code>isVisible = false</code><br />
 	 * <code>location = null</code><br />
@@ -222,8 +212,7 @@ public class MtgCardState {
 	@Override
 	public String toString() {
 
-		return "[isTapped=" + isTapped + ", isVisible=" + isVisible + ", isRevealed=" + isRevealed + ", " + location
-				+ ", " + context + "]";
+		return "[isTapped=" + isTapped + ", isVisible=" + isVisible + ", isRevealed=" + isRevealed + ", " + location + ", " + context + "]";
 	}
 
 	/*
@@ -276,10 +265,10 @@ public class MtgCardState {
 	}
 
 	/**
-	 * Returns the initial state for the card when the game starts :<br />
+	 * Returns a new initial state (for the card when the game starts) :<br />
 	 * <ul>
 	 * <li><code>isTapped = false</code></li>
-	 * <li><code>isVisible = true</code></li>
+	 * <li><code>isVisible = false</code></li>
 	 * <li><code>isRevealed = false</code></li>
 	 * <li><code>context = LIBRARY</code></li>
 	 * <li><code>location = null</code></li>
@@ -287,8 +276,8 @@ public class MtgCardState {
 	 * 
 	 * @return a initial card state (when the cards are in the library)
 	 */
-	public static MtgCardState createInitialState() {
+	public static MtgCardState getNewInitialState() {
 
-		return new MtgCardState(false, true, false, MtgContext.LIBRARY, null);
+		return new MtgCardState(false, false, false, MtgContext.LIBRARY, null);
 	}
 }

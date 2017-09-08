@@ -3,10 +3,11 @@ package asenka.mtgfree.model.utilities;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
-import asenka.mtgfree.model.MtgColor;
+
+import asenka.mtgfree.model.mtgcard.MtgColor;
 import asenka.mtgfree.model.utilities.ManaManager;
 
-import static asenka.mtgfree.model.MtgColor.*;
+import static asenka.mtgfree.model.mtgcard.MtgColor.*;
 import static asenka.mtgfree.model.utilities.ManaManager.*;
 import static org.junit.Assert.*;
 

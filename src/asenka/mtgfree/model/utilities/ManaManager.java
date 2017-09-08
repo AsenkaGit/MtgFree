@@ -5,8 +5,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-import asenka.mtgfree.model.MtgCard;
-import asenka.mtgfree.model.MtgColor;
+
+import asenka.mtgfree.model.mtgcard.MtgCard;
+import asenka.mtgfree.model.mtgcard.MtgColor;
 
 /**
  * Class to use when you need to get info about a mana cost. A mana cost is always represented by a String with this format :

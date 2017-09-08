@@ -1,7 +1,6 @@
-package asenka.mtgfree.model;
+package asenka.mtgfree.model.mtgcard;
 
 import java.text.Collator;
-import java.util.Comparator;
 import java.util.Locale;
 
 import asenka.mtgfree.model.utilities.Localized;
@@ -13,47 +12,65 @@ import asenka.mtgfree.model.utilities.Localized;
  * 
  * @author Asenka
  */
-public class MtgType implements Comparable<MtgType>, Comparator<MtgType>, Localized {
+public class MtgType implements Comparable<MtgType>, Localized {
 
 	/**
-	 * The unique id of a type (based on the ID in the database)
+	 * The type id (from the database primary key)
 	 */
 	private int id;
 
 	/**
-	 * This attribute stores the basic type for a card
+	 * Basic type of a card (Creature, Instant, Sort, Artefact, etc.)
 	 */
-	private String type;
+	private String mainType;
 
 	/**
-	 * The detailed type contains exactly what taht's written on the card
+	 * The card sub type (Creature : dwarf, Enchant : aura and curse, Artefact : Vehicle, etc.)
 	 */
 	private String subType;
 
 	/**
-	 * This field give detailed about a type (localized)
+	 * Description of the type
 	 */
 	private String description;
 
 	/**
-	 * 
+	 * The language used to display the type data
 	 */
 	private Locale locale;
+	
+	/**
+	 * the collator used to compare the type's names
+	 */
+	private transient Collator collator;
 
 	/**
+	 * Constructor
 	 * 
 	 * @param id
 	 * @param type
-	 * @param detailedType
+	 * @param locale
+	 */
+	public MtgType(int id, String type, Locale locale) {
+		
+		this(id, type, type, "", locale);
+	}
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param id 
+	 * @param mainType
+	 * @param subType
 	 * @param description
 	 * @param locale
 	 */
-	public MtgType(int id, String type, String detailedType, String description, Locale locale) {
+	public MtgType(int id, String mainType, String subType, String description, Locale locale) {
 
 		super();
 		this.id = id;
-		this.type = type;
-		this.subType = detailedType;
+		this.mainType = mainType;
+		this.subType = subType;
 		this.description = description;
 		this.locale = locale;
 	}
@@ -77,17 +94,17 @@ public class MtgType implements Comparable<MtgType>, Comparator<MtgType>, Locali
 	/**
 	 * @return the type
 	 */
-	public String getType() {
+	public String getMainType() {
 
-		return type;
+		return mainType;
 	}
 
 	/**
-	 * @param type the type to set
+	 * @param mainType the type to set
 	 */
-	public void setType(String type) {
+	public void setMainType(String mainType) {
 
-		this.type = type;
+		this.mainType = mainType;
 	}
 
 	/**
@@ -122,24 +139,16 @@ public class MtgType implements Comparable<MtgType>, Comparator<MtgType>, Locali
 		this.description = description;
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public Locale getLocale() {
 
-		return locale;
+		return this.locale;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 
-		return "[" + id + ", " + type + ", " + subType + ", " + description + "]";
+		return "[" + id + ", " + mainType + ", " + subType + ", " + description + ", " + locale + "]";
 	}
 
 	@Override
@@ -151,7 +160,7 @@ public class MtgType implements Comparable<MtgType>, Comparator<MtgType>, Locali
 		result = prime * result + id;
 		result = prime * result + ((locale == null) ? 0 : locale.hashCode());
 		result = prime * result + ((subType == null) ? 0 : subType.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((mainType == null) ? 0 : mainType.hashCode());
 		return result;
 	}
 
@@ -182,37 +191,27 @@ public class MtgType implements Comparable<MtgType>, Comparator<MtgType>, Locali
 				return false;
 		} else if (!subType.equals(other.subType))
 			return false;
-		if (type == null) {
-			if (other.type != null)
+		if (mainType == null) {
+			if (other.mainType != null)
 				return false;
-		} else if (!type.equals(other.type))
+		} else if (!mainType.equals(other.mainType))
 			return false;
 		return true;
 	}
 
-	/**
-	 * 
-	 */
 	@Override
-	public int compareTo(MtgType o) {
+	public int compareTo(MtgType type) {
 
-		return this.compare(this, o);
-	}
-
-	/**
-	 * 
-	 */
-	@Override
-	public int compare(MtgType type1, MtgType type2) {
-
-		Collator collator = Collator.getInstance(locale);
-		int result = collator.compare(type1.type, type2.type);
+		if(this.collator == null) {
+			this.collator = Collator.getInstance(this.locale);
+		}
+		int result = this.collator.compare(this.mainType, type.mainType);
 
 		if (result == 0) {
-			result = collator.compare(type1.subType, type2.subType);
+			result = this.collator.compare(this.subType, type.subType);
 
 			if (result == 0) {
-				result = type1.id - type2.id;
+				result = this.id - type.id;
 			}
 		}
 		return result;

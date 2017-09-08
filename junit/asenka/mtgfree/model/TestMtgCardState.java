@@ -5,9 +5,9 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import asenka.mtgfree.model.MtgCardState;
-import asenka.mtgfree.model.MtgContext;
 import asenka.mtgfree.model.exceptions.MtgContextException;
+import asenka.mtgfree.model.mtgcard.MtgCardState;
+import asenka.mtgfree.model.mtgcard.MtgContext;
 import asenka.mtgfree.model.utilities.Location;
 
 /**
@@ -22,14 +22,14 @@ public class TestMtgCardState {
 	@Before
 	public void setUp() {
 
-		this.testedState = MtgCardState.createInitialState();
+		this.testedState = MtgCardState.getNewInitialState();
 	}
 
 	@Test
 	public void testEquals() {
 
-		assertEquals(MtgCardState.createInitialState(), MtgCardState.createInitialState());
-		assertEquals(this.testedState, MtgCardState.createInitialState());
+		assertEquals(MtgCardState.getNewInitialState(), MtgCardState.getNewInitialState());
+		assertEquals(this.testedState, MtgCardState.getNewInitialState());
 		assertEquals(new MtgCardState(true, true, true, MtgContext.BATTLEFIELD, null),
 				new MtgCardState(true, true, true, MtgContext.BATTLEFIELD, null));
 		assertNotEquals(new MtgCardState(true, true, true, MtgContext.BATTLEFIELD, null),

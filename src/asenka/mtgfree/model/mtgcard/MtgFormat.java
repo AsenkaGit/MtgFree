@@ -1,4 +1,4 @@
-package asenka.mtgfree.model;
+package asenka.mtgfree.model.mtgcard;
 
 import java.text.Collator;
 import java.util.Locale;
@@ -6,46 +6,46 @@ import java.util.Locale;
 import asenka.mtgfree.model.utilities.Localized;
 
 /**
- * This class represents a card ability (fly, deathtouch, hexproof, etc...)
+ * This class represent a magic format (e.g. Standard, Modern, Legacy, etc...).
  * 
- * @author asenka
+ * @author Asenka
  */
-public class MtgAbility implements Comparable<MtgAbility>, Localized {
+public class MtgFormat implements Comparable<MtgFormat>, Localized {
+
+	// This class could have been a enumeration. But I want to anticipate the creation
+	// of another format and I want this data stored in the database.
 
 	/**
-	 * The ability id (from the database primary key)
+	 * The format id (same as the primary key in the database)
 	 */
 	private int id;
 
 	/**
-	 * The ability name
+	 * The name of the format
 	 */
 	private String name;
 
 	/**
-	 * A description of the ability
+	 * A description about the format
 	 */
 	private String description;
 
 	/**
-	 * The language used to display the ability data
+	 * The language used to initialize this object's values.
 	 */
 	private Locale locale;
 
 	/**
-	 * Collator used to compare an ability's name with another
+	 * The collator used to compare the format's name
 	 */
-	private Collator collator;
+	private transient Collator collator;
 
 	/**
-	 * Constructor
 	 * 
-	 * @param id the ability id (> 0)
-	 * @param name the ability name (not null)
-	 * @param locale the language used (not null)
-	 * @see Locale
+	 * @param id
+	 * @param name
 	 */
-	public MtgAbility(int id, String name, Locale locale) {
+	public MtgFormat(int id, String name, Locale locale) {
 
 		this(id, name, "", locale);
 	}
@@ -53,20 +53,17 @@ public class MtgAbility implements Comparable<MtgAbility>, Localized {
 	/**
 	 * Constructor
 	 * 
-	 * @param id the ability id (> 0)
-	 * @param name the ability name (not null)
-	 * @param description the ability description (not null)
-	 * @param locale the language used (not null)
-	 * @see Locale
+	 * @param id
+	 * @param name
+	 * @param description
 	 */
-	public MtgAbility(int id, String name, String description, Locale locale) {
+	public MtgFormat(int id, String name, String description, Locale locale) {
 
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.locale = locale;
-		this.collator = Collator.getInstance(this.locale);
 	}
 
 	/**
@@ -78,7 +75,7 @@ public class MtgAbility implements Comparable<MtgAbility>, Localized {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id the id of the format (it should reflect the database id)
 	 */
 	public void setId(int id) {
 
@@ -86,7 +83,7 @@ public class MtgAbility implements Comparable<MtgAbility>, Localized {
 	}
 
 	/**
-	 * @return the name
+	 * @return the name of the format
 	 */
 	public String getName() {
 
@@ -102,7 +99,7 @@ public class MtgAbility implements Comparable<MtgAbility>, Localized {
 	}
 
 	/**
-	 * @return the description
+	 * @return the description the format description
 	 */
 	public String getDescription() {
 
@@ -123,10 +120,13 @@ public class MtgAbility implements Comparable<MtgAbility>, Localized {
 		return this.locale;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public String toString() {
 
-		return "[" + id + ", " + name + ", " + description + ", " + locale + "]";
+		return "[" + id + ", " + name + ", " + description + "]";
 	}
 
 	@Override
@@ -150,7 +150,7 @@ public class MtgAbility implements Comparable<MtgAbility>, Localized {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		MtgAbility other = (MtgAbility) obj;
+		MtgFormat other = (MtgFormat) obj;
 		if (description == null) {
 			if (other.description != null)
 				return false;
@@ -172,8 +172,11 @@ public class MtgAbility implements Comparable<MtgAbility>, Localized {
 	}
 
 	@Override
-	public int compareTo(MtgAbility o) {
+	public int compareTo(MtgFormat format) {
 
-		return this.collator.compare(this.name, o.name);
+		if (this.collator == null) {
+			this.collator = Collator.getInstance(this.locale);
+		}
+		return this.collator.compare(this.name, format.name);
 	}
 }
