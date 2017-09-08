@@ -99,7 +99,7 @@ public class ManaManager {
 	/**
 	 * Returns the unique instance of the ManaManager
 	 * 
-	 * @return A ManaManager
+	 * @return A ManaManager that helps you manage the mana cost of a card
 	 */
 	public static ManaManager getInstance() {
 
@@ -112,8 +112,8 @@ public class ManaManager {
 	/**
 	 * Check if the mana cost string is correct.
 	 * 
-	 * @param cost
-	 * @return
+	 * @param cost s string representing a mana cost for a mtg card
+	 * @return <code>true</code> if the string <code>cost</code> is correct and can be use as a cost on a card
 	 */
 	public boolean isCorrectCost(String cost) {
 
@@ -155,7 +155,7 @@ public class ManaManager {
 		if (tokenizer.countTokens() == 0) {
 			throw new IllegalArgumentException("The mana string [" + cost + "] is not correct");
 		}
-		int ccm = 0; // ccm => Converted Cost Mana
+		int ccm = 0; // ccm <=> Converted Cost Mana
 
 		while (tokenizer.hasMoreTokens()) {
 
@@ -194,21 +194,24 @@ public class ManaManager {
 	 * @param cost a string representing the mana cost of a card
 	 * @return a set of colors (MtgColor)
 	 * @see MtgColor
-	 * @throws IllegalArgumentException
+	 * @throws IllegalArgumentException if cost is null, empty or if it contains some illegal values
 	 */
 	public Set<MtgColor> getColors(String cost) throws IllegalArgumentException {
-
+		
+		// Check if cost is not null or empty
 		if (cost == null || cost.isEmpty()) {
 			throw new IllegalArgumentException("The mana string [" + cost + "] is null or empty");
 		}
 		StringTokenizer tokenizer = new StringTokenizer(cost.trim(), SEPARATOR);
-
+		
+		// If the tokenizer is empty, it means that the string is not correct
 		if (tokenizer.countTokens() == 0) {
 			throw new IllegalArgumentException("The mana string [" + cost + "] is not correct");
 		}
 		Set<String> legalValues = this.manaLegalValues.keySet();
 		Set<MtgColor> colors = new HashSet<MtgColor>(1);
 
+		// Go through every token, check them and deduce the associated color
 		while (tokenizer.hasMoreTokens()) {
 
 			String mana = tokenizer.nextToken();
@@ -231,6 +234,7 @@ public class ManaManager {
 					colors.add(MtgColor.BLACK);
 				}
 			} else {
+				// If a token is not in the legal values map, it means it is an illegal value
 				throw new IllegalArgumentException("The mana string [" + cost + "] is not correct");
 			}
 		}
@@ -238,10 +242,11 @@ public class ManaManager {
 	}
 
 	/**
+	 * Get the color(s) of a card based on its cost value.
 	 * 
-	 * @param card
-	 * @return
-	 * @throws IllegalArgumentException
+	 * @param card the card to analyze
+	 * @return a set of colors that reflect the cost string of the card
+	 * @throws IllegalArgumentException if card is null of if its cost value is wrong
 	 */
 	public Set<MtgColor> getColors(MtgCard card) throws IllegalArgumentException {
 

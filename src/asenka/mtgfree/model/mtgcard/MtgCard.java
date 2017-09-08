@@ -1,11 +1,11 @@
 package asenka.mtgfree.model.mtgcard;
 
-import java.awt.Image;
 import java.text.Collator;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import asenka.mtgfree.model.mtgcard.state.MtgCardState;
 import asenka.mtgfree.model.utilities.Localized;
 import asenka.mtgfree.model.utilities.ManaManager;
 
@@ -108,16 +108,6 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	private String comments;
 
 	/**
-	 * The front image. The one where the data are visible.
-	 */
-	private Image imageFront;
-
-	/**
-	 * The back of the card.
-	 */
-	private Image imageBack;
-
-	/**
 	 * The language used for the card data
 	 */
 	private Locale locale;
@@ -133,7 +123,8 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	// private static ManaManager manaManager = ManaManager.getInstance();
 
 	/**
-	 * Constructor 
+	 * Constructor
+	 * 
 	 * @param id
 	 * @param name
 	 * @param color
@@ -158,8 +149,8 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	 * @param backgroundText
 	 * @param colors
 	 * @param collectionName
-	 * @param power
-	 * @param toughness
+	 * @param power a string with a number from 0 to 99 or X or * or a combination of the previous
+	 * @param toughness a string with a number from 0 to 99 or X or * or a combination of the previous
 	 * @param loyalty
 	 * @param type
 	 * @param state
@@ -210,7 +201,7 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	}
 
 	/**
-	 * @return
+	 * @return the localized card name
 	 */
 	public String getName() {
 
@@ -218,7 +209,7 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	}
 
 	/**
-	 * @param name
+	 * @param name the card name
 	 */
 	public void setName(String name) {
 
@@ -226,7 +217,7 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	}
 
 	/**
-	 * @return
+	 * @return a string representing the mana cost of the card
 	 */
 	public String getCost() {
 
@@ -234,10 +225,19 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	}
 
 	/**
-	 * @param cost
+	 * Update the cost value. Updating the cost, also update the colors,
+	 * 
+	 * @param cost a string representing the mana cost of a card
+	 * @throws IllegalArgumentException if cost is null or if it contains some illegal values
 	 */
-	public void setCost(String cost) {
+	public void setCost(String cost) throws IllegalArgumentException {
 
+		ManaManager manaManager = ManaManager.getInstance();
+
+		// If cost is not empty, update the colors of the card
+		if (cost != null && !cost.isEmpty()) {
+			this.colors = manaManager.getColors(cost);
+		}
 		this.cost = cost;
 	}
 
@@ -301,29 +301,48 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	}
 
 	/**
+	 * Set the card's color and check if they matches with the card's cost.
 	 * 
-	 * @param colors
+	 * @param colors a set of MtgColor
+	 * @throws IllegalArgumentException if the new colors and the cost are not compatible
 	 */
-	public void setColors(Set<MtgColor> colors) {
+	public void setColors(Set<MtgColor> colors) throws IllegalArgumentException {
 
+		// Even though, an exception has been raised due to cost and
+		// color incompatibility the value is still set. That's why
+		// the setting is done before the checking.
 		this.colors = colors;
+
+		if (colors != null && colors.equals(ManaManager.getInstance().getColors(this.cost))) {
+			throw new IllegalArgumentException("The new color(s) " + colors + " do not match the card cost : " + cost);
+		}
 	}
 
 	/**
+	 * Set the card's color and check if they matches with the card's cost.
 	 * 
-	 * @param colors
+	 * @param colors an array of MtgColor
+	 * @throws IllegalArgumentException if the new colors and the cost are not compatible
 	 */
-	public void setColors(MtgColor... colors) {
+	public void setColors(MtgColor... colors) throws IllegalArgumentException {
 
+		// Even though, an exception has been raised due to cost and
+		// color incompatibility the value is still set. That's why
+		// the setting is done before the checking.
 		this.colors = new HashSet<MtgColor>(colors.length);
 
 		for (MtgColor color : colors) {
 			this.colors.add(color);
 		}
+
+		// Check if the cost and the new card's colors are still matching.
+		if (this.colors.equals(ManaManager.getInstance().getColors(this.cost))) {
+			throw new IllegalArgumentException("The new color(s) " + colors + " do not match the card cost : " + cost);
+		}
 	}
 
 	/**
-	 * @return
+	 * @return the localized name of the card's collection
 	 */
 	public String getCollectionName() {
 
@@ -331,7 +350,8 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	}
 
 	/**
-	 * @param collectionName
+	 * Set the collectionName
+	 * @param collectionName the localized name of the card's collection
 	 */
 	public void setCollectionName(String collectionName) {
 
@@ -339,7 +359,8 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	}
 
 	/**
-	 * @return
+	 * Get the card's power. It the card is not a creature or a vehicle it returns an empty string
+	 * @return the card power.
 	 */
 	public String getPower() {
 
@@ -347,7 +368,8 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	}
 
 	/**
-	 * @param power
+	 * set the card's power
+	 * @param power a string with a number from 0 to 99 or X or * or a combination of the previous
 	 */
 	public void setPower(String power) {
 
@@ -482,49 +504,12 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 		this.comments = comments;
 	}
 
-	/**
-	 * @return
-	 */
-	public Image getImageFront() {
-
-		return imageFront;
-	}
-
-	/**
-	 * @param imageFront
-	 */
-	public void setImageFront(Image imageFront) {
-
-		this.imageFront = imageFront;
-	}
-
-	/**
-	 * @return
-	 */
-	public Image getImageBack() {
-
-		return imageBack;
-	}
-
-	/**
-	 * @param imageBack
-	 */
-	public void setImageBack(Image imageBack) {
-
-		this.imageBack = imageBack;
-	}
-
 	@Override
 	public Locale getLocale() {
 
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
-	
-
-	
 
 	@Override
 	public String toString() {
@@ -537,8 +522,6 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 				+ (formats != null ? formats + ", " : "") + (abilities != null ? abilities + ", " : "")
 				+ (comments != null ? comments + ", " : "") + (locale != null ? locale : "") + "]";
 	}
-	
-	
 
 	@Override
 	public int hashCode() {

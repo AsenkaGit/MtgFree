@@ -1,4 +1,4 @@
-package asenka.mtgfree.model.mtgcard;
+package asenka.mtgfree.model.mtgcard.state;
 
 import asenka.mtgfree.model.exceptions.MtgContextException;
 import asenka.mtgfree.model.utilities.Location;
@@ -36,7 +36,7 @@ public class MtgCardState {
 	private Location location;
 
 	/**
-	 * The context (or location) of the card
+	 * The context of the card
 	 */
 	private MtgContext context;
 

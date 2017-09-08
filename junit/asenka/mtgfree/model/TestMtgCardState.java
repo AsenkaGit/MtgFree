@@ -6,8 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import asenka.mtgfree.model.exceptions.MtgContextException;
-import asenka.mtgfree.model.mtgcard.MtgCardState;
-import asenka.mtgfree.model.mtgcard.MtgContext;
+import asenka.mtgfree.model.mtgcard.state.MtgCardState;
+import asenka.mtgfree.model.mtgcard.state.MtgContext;
 import asenka.mtgfree.model.utilities.Location;
 
 /**
