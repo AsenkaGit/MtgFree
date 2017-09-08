@@ -31,7 +31,7 @@ public class TestManaManager {
 	private ManaManager manager;
 
 	@Before
-	public void initTest() {
+	public void setUp() {
 
 		manager = ManaManager.getInstance();
 		assertNotNull(manager);

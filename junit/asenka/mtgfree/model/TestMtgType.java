@@ -42,12 +42,6 @@ public class TestMtgType {
 		assertEquals(collection.get(3).getId(), 2);
 		assertEquals(collection.get(4).getId(), 3);
 		assertEquals(collection.get(5).getId(), 4);
-		
-		for(int i = 7; i < 10000; i++) {
-			collection.add(new MtgType(i, "type"+i, "subtype"+i, "", Locale.FRENCH));
-		}
-		Collections.shuffle(collection);
-		Collections.sort(collection);
 	}
 
 	@Test

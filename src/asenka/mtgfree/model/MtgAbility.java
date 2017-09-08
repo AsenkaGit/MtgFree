@@ -1,56 +1,72 @@
 package asenka.mtgfree.model;
 
+import java.text.Collator;
+import java.util.Locale;
+
+import asenka.mtgfree.model.utilities.Localized;
+
 /**
  * This class represents a card ability (fly, deathtouch, hexproof, etc...)
  * 
- * 
- * @author Asenka
+ * @author asenka
  */
-public class MtgAbility implements Comparable<MtgAbility> {
+public class MtgAbility implements Comparable<MtgAbility>, Localized {
 
 	/**
-	 * 
+	 * The ability id (from the database primary key)
 	 */
 	private int id;
 
 	/**
-	 * The ability name (localized).
+	 * The ability name
 	 */
 	private String name;
 
 	/**
-	 * A description of the ability (localized)
+	 * A description of the ability
 	 */
 	private String description;
 
 	/**
-	 * 
+	 * The language used to display the ability data
 	 */
-	private String language;
+	private Locale locale;
 
 	/**
-	 * 
-	 * @param id
-	 * @param name
-	 * @param language
+	 * Collator used to compare an ability's name with another
 	 */
-	public MtgAbility(int id, String name, String language) {
-		this(id, name, "", language);
+	private Collator collator;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param id the ability id (> 0)
+	 * @param name the ability name (not null)
+	 * @param locale the language used (not null)
+	 * @see Locale
+	 */
+	public MtgAbility(int id, String name, Locale locale) {
+
+		this(id, name, "", locale);
 	}
 
 	/**
+	 * Constructor
 	 * 
-	 * @param id
-	 * @param name
-	 * @param description
+	 * @param id the ability id (> 0)
+	 * @param name the ability name (not null)
+	 * @param description the ability description (not null)
+	 * @param locale the language used (not null)
+	 * @see Locale
 	 */
-	public MtgAbility(int id, String name, String description, String language) {
+	public MtgAbility(int id, String name, String description, Locale locale) {
+
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
-		this.language = language;
+		this.locale = locale;
+		this.collator = Collator.getInstance(this.locale);
 	}
 
 	/**
@@ -101,38 +117,18 @@ public class MtgAbility implements Comparable<MtgAbility> {
 		this.description = description;
 	}
 
-	/**
-	 * @return the language
-	 */
-	public String getLanguage() {
+	@Override
+	public Locale getLocale() {
 
-		return language;
+		return this.locale;
 	}
 
-	/**
-	 * @param language the language to set
-	 */
-	public void setLanguage(String language) {
-
-		this.language = language;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 
-		return "[" + id + ", " + name + ", " + description + ", " + language + "]";
+		return "[" + id + ", " + name + ", " + description + ", " + locale + "]";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 
@@ -140,16 +136,11 @@ public class MtgAbility implements Comparable<MtgAbility> {
 		int result = 1;
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + id;
-		result = prime * result + ((language == null) ? 0 : language.hashCode());
+		result = prime * result + ((locale == null) ? 0 : locale.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 
@@ -167,10 +158,10 @@ public class MtgAbility implements Comparable<MtgAbility> {
 			return false;
 		if (id != other.id)
 			return false;
-		if (language == null) {
-			if (other.language != null)
+		if (locale == null) {
+			if (other.locale != null)
 				return false;
-		} else if (!language.equals(other.language))
+		} else if (!locale.equals(other.locale))
 			return false;
 		if (name == null) {
 			if (other.name != null)
@@ -180,12 +171,9 @@ public class MtgAbility implements Comparable<MtgAbility> {
 		return true;
 	}
 
-	/**
-	 * 
-	 */
 	@Override
 	public int compareTo(MtgAbility o) {
 
-		return this.name.compareTo(o.name);
+		return this.collator.compare(this.name, o.name);
 	}
 }

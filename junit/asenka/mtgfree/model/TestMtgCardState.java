@@ -20,7 +20,7 @@ public class TestMtgCardState {
 	private MtgCardState testedState;
 
 	@Before
-	public void init() {
+	public void setUp() {
 
 		this.testedState = MtgCardState.createInitialState();
 	}
