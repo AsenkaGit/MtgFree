@@ -58,14 +58,14 @@ public class TestMtgCardState {
 		try {
 			this.testedState.setRevealed(false);
 			this.testedState.setRevealed(true);
-			fail("Exception expected");
+			fail("MtgContextException expected");
 		} catch (MtgContextException e) {
 		}
 
 		try {
 			this.testedState.setTapped(false);
 			this.testedState.setTapped(true);
-			fail("Exception expected");
+			fail("MtgContextException expected");
 		} catch (MtgContextException e) {
 		}
 
