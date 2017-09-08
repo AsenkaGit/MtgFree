@@ -1,4 +1,4 @@
-package asenka.mtgfree.utilities;
+package asenka.mtgfree.model.utilities;
 
 import java.util.Set;
 import org.junit.Before;
