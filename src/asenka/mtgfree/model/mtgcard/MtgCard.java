@@ -1,10 +1,12 @@
 package asenka.mtgfree.model.mtgcard;
 
-import java.text.Collator;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import asenka.mtgfree.model.mtgcard.comparators.CardCollectionComparator;
+import asenka.mtgfree.model.mtgcard.comparators.CardComparator;
+import asenka.mtgfree.model.mtgcard.comparators.CardNameComparator;
 import asenka.mtgfree.model.mtgcard.state.MtgCardState;
 import asenka.mtgfree.model.utilities.Localized;
 import asenka.mtgfree.model.utilities.ManaManager;
@@ -114,9 +116,10 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	private Locale locale;
 
 	/**
-	 * The collator use to compare card's names
+	 * The default comparator used to sort the cards in a collection. 
+	 * The default behavior is to sort 1/ with the card name and then 2/ with the collection name
 	 */
-	private transient Collator collator;
+	private CardComparator defaultComparator;
 
 	/**
 	 * Constructor
@@ -165,7 +168,7 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	 * @param collectionName
 	 * @param power a string with a number from 0 to 99 or X or * or a combination of the previous
 	 * @param toughness a string with a number from 0 to 99 or X or * or a combination of the previous
-	 * @param loyalty
+	 * @param loyalty an integer  > 0 for planeswalker and -1 for all other types of card
 	 * @param type
 	 * @param state
 	 * @param rarity
@@ -196,6 +199,12 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 		this.abilities = abilities;
 		this.comments = comments;
 		this.locale = locale;
+
+		// Creates the default comparator with 3 criteria
+		// 1. the card name
+		// 2. the collection name
+		CardComparator collectionComparator = new CardCollectionComparator(this.locale);
+		this.defaultComparator = new CardNameComparator(collectionComparator, this.locale);
 	}
 
 	/**
@@ -532,7 +541,7 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 
 		return "[" + id + ", " + name + ", " + cost + ", " + rulesText + ", " + backgroundText + ", " + colors + ", " + collectionName
 				+ ", " + power + ", " + toughness + ", " + loyalty + ", " + type + ", " + state + ", " + rarity + ", " + formats + ", "
-				+ abilities + ", " + comments + ", " + locale + "]";
+				+ abilities + ", " + comments + ", " + locale + "]\n";
 	}
 
 	@Override
@@ -652,15 +661,7 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	@Override
 	public int compareTo(MtgCard card) {
 
-		if (this.collator == null) {
-			this.collator = Collator.getInstance(this.locale);
-		}
-		int result = this.collator.compare(this.name, card.name);
-
-		if (result == 0) {
-			result = this.collator.compare(this.collectionName, card.collectionName);
-		}
-		return result;
+		return this.defaultComparator.compare(this, card);
 	}
 
 }

@@ -147,13 +147,13 @@ public class ManaManager {
 	 */
 	public int getConvertedCostMana(String cost) throws IllegalArgumentException {
 
-		if (cost == null || cost.isEmpty()) {
+		if (cost == null) {
 			throw new IllegalArgumentException("The mana string [" + cost + "] is null or empty");
 		}
 		StringTokenizer tokenizer = new StringTokenizer(cost.trim(), SEPARATOR);
 
 		if (tokenizer.countTokens() == 0) {
-			throw new IllegalArgumentException("The mana string [" + cost + "] is not correct");
+			return 0;
 		}
 		int ccm = 0; // ccm <=> Converted Cost Mana
 
