@@ -3,7 +3,6 @@ package asenka.mtgfree.model.mtgcard;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -11,8 +10,7 @@ import java.util.Locale;
 import org.junit.Before;
 import org.junit.Test;
 
-import asenka.mtgfree.model.mtgcard.comparators.CardCollectionComparator;
-import asenka.mtgfree.model.mtgcard.comparators.CardCostComparator;
+import asenka.mtgfree.model.mtgcard.comparators.*;
 import asenka.mtgfree.model.utilities.ManaManager;
 
 public class TestMtgCard {
@@ -71,7 +69,7 @@ public class TestMtgCard {
 		this.m14 = new MtgCard(14, "Conditions dangereuses", "Kaladesh", "2|b|g", sort, MtgRarity.UNCOMMUN, Locale.FRENCH);
 		
 		
-		this.listOfCards = new ArrayList<MtgCard>(9);
+		this.listOfCards = new ArrayList<MtgCard>(14);
 		
 		this.listOfCards.add(m1);
 		this.listOfCards.add(m2);
@@ -96,11 +94,15 @@ public class TestMtgCard {
 		
 		
 		
-		Collections.sort(listOfCards);
+		Collections.sort(listOfCards, new CardTypeComparator(new CardCollectionComparator()));
 		
-		System.out.println(resultToString2(listOfCards));
+		System.out.println(resultToString3(listOfCards));
 		
 	}
+	
+	
+	
+	// TODO Supprimer les méthodes ci-dessous
 	
 	private String resultToString(List<MtgCard> list) {
 		
@@ -126,6 +128,23 @@ public class TestMtgCard {
 			
 			buffer.append(c.getId() + "\t| "
 					+ c.getCost() + "\t==> " + ManaManager.getInstance().getConvertedCostMana(c.getCost()) + " | "
+					+ c.getColors() + "\t| "
+					+ c.getName() + " | " 	
+					+ c.getCollectionName() + "\n");
+		}
+
+		return buffer.toString();
+	}
+	
+	private String resultToString3(List<MtgCard> list) {
+		
+		StringBuffer buffer = new StringBuffer();
+		
+		for(MtgCard c : list) {
+			
+			buffer.append(c.getId() + "\t| "
+					+ c.getCost() + "\t==> " + ManaManager.getInstance().getConvertedCostMana(c.getCost()) + " | "
+					+ c.getType() + "\t| "
 					+ c.getColors() + "\t| "
 					+ c.getName() + " | " 	
 					+ c.getCollectionName() + "\n");
