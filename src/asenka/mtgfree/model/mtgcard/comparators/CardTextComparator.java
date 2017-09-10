@@ -3,21 +3,31 @@ package asenka.mtgfree.model.mtgcard.comparators;
 import java.text.Collator;
 import java.util.Locale;
 
+/**
+ * Abstract comparator working with text value. The comparator provides a localized 
+ * collator to sort properly every text value (string) according the each language 
+ * Specificities
+ * 
+ * @author asenka
+ *
+ */
 public abstract class CardTextComparator extends CardComparator {
 
 	/**
-	 * 
+	 * The localized collator use to compare two strings
 	 */
 	protected Collator collator;
 
 	/**
-	 * 
+	 * Create a default text comparator with the locale set 
+	 * in the used preferences
 	 */
 	public CardTextComparator() {
 		this(null, getPreferedLocale());
 	}
 
 	/**
+	 * 
 	 * @param locale
 	 */
 	public CardTextComparator(Locale locale) {
