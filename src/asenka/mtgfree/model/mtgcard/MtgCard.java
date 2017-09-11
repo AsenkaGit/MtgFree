@@ -122,7 +122,7 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	private CardComparator defaultComparator;
 
 	/**
-	 * Constructor
+	 * Constructor (interesting to instantiate land cards)
 	 * 
 	 * @param id
 	 * @param name
@@ -140,7 +140,7 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	}
 
 	/**
-	 * Constructor
+	 * Constructor (interesting to instantiate sort cards)
 	 * 
 	 * @param id
 	 * @param name
@@ -155,9 +155,28 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 		this(id, name, cost, "", "", ManaManager.getInstance().getColors(cost), collectionName, "", "", -1, type, null, rarity,
 				new HashSet<MtgFormat>(), new HashSet<MtgAbility>(), "", locale);
 	}
+	
+	/**
+	 * Constructor (interesting to instantiate creature cards)
+	 * 
+	 * @param id
+	 * @param name
+	 * @param collectionName
+	 * @param power
+	 * @param toughness
+	 * @param cost
+	 * @param type
+	 * @param rarity
+	 * @param locale
+	 */
+	public MtgCard(int id, String name, String collectionName, String power, String toughness, String cost, MtgType type, MtgRarity rarity, Locale locale) {
+
+		this(id, name, cost, "", "", ManaManager.getInstance().getColors(cost), collectionName, power, toughness, -1, type, null, rarity,
+				new HashSet<MtgFormat>(), new HashSet<MtgAbility>(), "", locale);
+	}
 
 	/**
-	 * Constructor
+	 * Constructor with all values
 	 * 
 	 * @param id
 	 * @param name

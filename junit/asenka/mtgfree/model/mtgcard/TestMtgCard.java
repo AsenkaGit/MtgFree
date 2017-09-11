@@ -22,6 +22,7 @@ public class TestMtgCard {
 	private MtgType landType;
 	private MtgType artefactVehicule;
 	private MtgType sort;
+	private MtgType artifact;
 	
 	private MtgCard m1;
 	private MtgCard m2;
@@ -37,6 +38,9 @@ public class TestMtgCard {
 	private MtgCard m12;
 	private MtgCard m13;
 	private MtgCard m14;
+	private MtgCard m15;
+	private MtgCard m16;
+	private MtgCard m17;
 	
 	private List<MtgCard> listOfCards;
 	
@@ -52,6 +56,7 @@ public class TestMtgCard {
 		this.artefactVehicule = new MtgType(5, "Artefact", "Artefact : Véhicule", "", Locale.FRENCH);
 		this.creatureHumain = new MtgType(6, "Créature", "Créature : humain", "", Locale.FRENCH);
 		this.sort = new MtgType(7, "Rituel", Locale.FRENCH);
+		this.artifact = new MtgType(8, "Artefact", Locale.FRENCH);
 		
 		this.m1 = new MtgCard(1, "Montagne", "Amonket", MtgColor.RED, this.landType, MtgRarity.COMMUN, Locale.FRENCH); 
 		this.m2 = new MtgCard(2, "Plaine", "Amonket", MtgColor.WHITE, this.landType, MtgRarity.COMMUN, Locale.FRENCH); 
@@ -60,16 +65,18 @@ public class TestMtgCard {
 		this.m5 = new MtgCard(5, "Forêt", "Amonket", MtgColor.GREEN, this.landType, MtgRarity.COMMUN, Locale.FRENCH);  
 		this.m6 = new MtgCard(6, "Forêt", "Kaladesh", MtgColor.GREEN, this.landType, MtgRarity.COMMUN, Locale.FRENCH); 
 		this.m7 = new MtgCard(7, "Jet", "Kaladesh", "1|r", instantType, MtgRarity.COMMUN, Locale.FRENCH);
-		this.m8 = new MtgCard(8, "Croiseur roulevif", "Kaladesh", "5", this.artefactVehicule, MtgRarity.RARE, Locale.FRENCH);
+		this.m8 = new MtgCard(8, "Croiseur roulevif", "Kaladesh", "5", "4", "5", this.artefactVehicule, MtgRarity.RARE, Locale.FRENCH);
 		this.m9 = new MtgCard(9, "Jet", "Amonket", "1|r", instantType, MtgRarity.COMMUN, Locale.FRENCH);
 		this.m10 = new MtgCard(10, "Moment opportun", "Amonket", "1|w", instantType, MtgRarity.COMMUN, Locale.FRENCH);
-		this.m11 = new MtgCard(11, "Capitaine du diregraf", "Kaladesh", "1|b|u", creatureZombieType, MtgRarity.UNCOMMUN, Locale.FRENCH);
-		this.m12 = new MtgCard(12, "Vizir de la Loyale", "Kaladesh", "3|w", creatureHumain, MtgRarity.UNCOMMUN, Locale.FRENCH);
+		this.m11 = new MtgCard(11, "Capitaine du diregraf", "Kaladesh", "2", "2", "1|b|u", creatureZombieType, MtgRarity.UNCOMMUN, Locale.FRENCH);
+		this.m12 = new MtgCard(12, "Vizir de la Loyale", "Kaladesh", "2", "1", "3|w", creatureHumain, MtgRarity.UNCOMMUN, Locale.FRENCH);
 		this.m13 = new MtgCard(13, "Épreuve de zèle", "Amonket", "2|r", enchantmentType, MtgRarity.UNCOMMUN, Locale.FRENCH);
 		this.m14 = new MtgCard(14, "Conditions dangereuses", "Kaladesh", "2|b|g", sort, MtgRarity.UNCOMMUN, Locale.FRENCH);
+		this.m15 = new MtgCard(15, "Cuirassé du consulat", "Révolte étherique", "7", "11", "1", this.artefactVehicule, MtgRarity.UNCOMMUN, Locale.FRENCH);
+		this.m16 = new MtgCard(16, "Truc chelou", "Révolte étherique", "2+*", "X", "X|2r", this.creatureZombieType, MtgRarity.MYTHIC, Locale.FRENCH);
+		this.m17 = new MtgCard(16, "Lotus Noir", "Alpha", "0", this.artifact, MtgRarity.UNDEFINED, Locale.FRENCH);
 		
-		
-		this.listOfCards = new ArrayList<MtgCard>(14);
+		this.listOfCards = new ArrayList<MtgCard>(15);
 		
 		this.listOfCards.add(m1);
 		this.listOfCards.add(m2);
@@ -85,6 +92,9 @@ public class TestMtgCard {
 		this.listOfCards.add(m12);
 		this.listOfCards.add(m13);
 		this.listOfCards.add(m14);
+		this.listOfCards.add(m15);
+		this.listOfCards.add(m16);
+		this.listOfCards.add(m17);
 	}
 	
 
@@ -94,7 +104,7 @@ public class TestMtgCard {
 		
 		
 		
-		Collections.sort(listOfCards, new CardTypeComparator(new CardCollectionComparator()));
+		Collections.sort(listOfCards, new CardTypeComparator(new CardCostComparator()));
 		
 		System.out.println(resultToString3(listOfCards));
 		
@@ -143,7 +153,9 @@ public class TestMtgCard {
 		for(MtgCard c : list) {
 			
 			buffer.append(c.getId() + "\t| "
-					+ c.getCost() + "\t==> " + ManaManager.getInstance().getConvertedCostMana(c.getCost()) + " | "
+					+ c.getCost() + "\t==> " + ManaManager.getInstance().getConvertedCostMana(c.getCost()) + "\t|"
+					+ c.getPower() + "/"
+					+ c.getToughness() + "\t| "
 					+ c.getType() + "\t| "
 					+ c.getColors() + "\t| "
 					+ c.getName() + " | " 	

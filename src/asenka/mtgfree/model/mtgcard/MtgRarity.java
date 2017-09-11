@@ -14,8 +14,8 @@ public enum MtgRarity implements Localized {
 	COMMUN(getLocalizedRarityName("commun")), 
 	UNCOMMUN(getLocalizedRarityName("uncommun")), 
 	RARE(getLocalizedRarityName("rare")), 
-	MYTHIC(getLocalizedRarityName("mythic"));
-//	UNKNOWN(getLocalizedRarityName("unknown"));
+	MYTHIC(getLocalizedRarityName("mythic")),
+	UNDEFINED(getLocalizedRarityName("undefined"));
 
 	/**
 	 * A Localized name for the rarity level
@@ -72,8 +72,8 @@ public enum MtgRarity implements Localized {
 			return "Rare";
 		} else if ("mythic".equals(strRarity)) {
 			return "Mythic rare";
-//		} else if ("unknown".equals(strRarity)) {
-//			return "Unknown";
+		} else if ("undefined".equals(strRarity)) {
+			return "";
 		} else {
 			throw new IllegalArgumentException(strRarity + " is not an valid argument for this method");
 		}

@@ -10,19 +10,33 @@ import asenka.mtgfree.model.utilities.ManaManager;
  */
 public final class CardCostComparator extends CardComparator {
 	
+	/**
+	 * Manager used to manipulate the mana cost string of a card
+	 */
 	private static final ManaManager MANA_MANAGER = ManaManager.getInstance();
 	
+	/**
+	 * Constructor
+	 */
 	public CardCostComparator() {
 		super(null);
 	}
 	
+	/**
+	 * Constructor with optional comparator
+	 * @param optionalComparator
+	 */
 	public CardCostComparator(CardComparator optionalComparator) {
 		super(optionalComparator);
 	}
 
+	/**
+	 * Compare two card accord to the value of the CCM
+	 */
 	@Override
 	public int compare(final MtgCard card1, final MtgCard card2) {
 
+		// Get the CCM delta
 		int result = MANA_MANAGER.getConvertedCostMana(card1) - MANA_MANAGER.getConvertedCostMana(card2);
 		
 		if(super.optionalComparator != null && result == 0) {
