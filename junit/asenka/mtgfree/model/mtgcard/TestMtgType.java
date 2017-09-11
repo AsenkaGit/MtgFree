@@ -25,7 +25,7 @@ public class TestMtgType {
 		MtgType t2 = new MtgType(2, "Éphémère", "Éphémère", "", Locale.FRENCH);
 		MtgType t3 = new MtgType(3, "Rituel", "Rituel", "", Locale.FRENCH);
 		MtgType t4 = new MtgType(4, "Terrain", "Terrain de base : montagne", "", Locale.FRENCH);
-		MtgType t5 = new MtgType(5, "Echangement", "Enchamentement : aura et mal�diction", "", Locale.FRENCH);
+		MtgType t5 = new MtgType(5, "Echangement", "Enchamentement : aura et malédiction", "", Locale.FRENCH);
 		MtgType t6 = new MtgType(6, "Créature", "Créature légendaire : dieu", "", Locale.FRENCH);
 
 		List<MtgType> collection = new ArrayList<>();
