@@ -104,9 +104,9 @@ public class TestMtgCard {
 		
 		
 		
-		Collections.sort(listOfCards, new CardTypeComparator(new CardCostComparator()));
+		Collections.sort(listOfCards, new CardCollectionComparator(new CardNameComparator(CardComparator.DESCENDING), CardComparator.DESCENDING));
 		
-		System.out.println(resultToString3(listOfCards));
+		System.out.println(resultToString(listOfCards));
 		
 	}
 	
