@@ -2,10 +2,13 @@ package asenka.mtgfree.model.mtgcard;
 
 import static org.junit.Assert.*;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 
 import org.junit.Test;
 
@@ -17,24 +20,13 @@ import asenka.mtgfree.model.mtgcard.MtgType;
  * @see MtgType
  */
 public class TestMtgType {
+	
+	private TestDataProvider data = TestDataProvider.getInstance();
 
 	@Test
 	public void testSorting() {
 
-		MtgType t1 = new MtgType(1, "Créature", "Créature : zombie et bête", "", Locale.FRENCH);
-		MtgType t2 = new MtgType(2, "Éphémère", "Éphémère", "", Locale.FRENCH);
-		MtgType t3 = new MtgType(3, "Rituel", "Rituel", "", Locale.FRENCH);
-		MtgType t4 = new MtgType(4, "Terrain", "Terrain de base : montagne", "", Locale.FRENCH);
-		MtgType t5 = new MtgType(5, "Echangement", "Enchamentement : aura et malédiction", "", Locale.FRENCH);
-		MtgType t6 = new MtgType(6, "Créature", "Créature légendaire : dieu", "", Locale.FRENCH);
-
-		List<MtgType> collection = new ArrayList<>();
-		collection.add(t1);
-		collection.add(t2);
-		collection.add(t3);
-		collection.add(t4);
-		collection.add(t5);
-		collection.add(t6);
+		List<MtgType> collection = new ArrayList<>(data.listOfTypes);
 
 		Collections.sort(collection);
 
@@ -53,7 +45,7 @@ public class TestMtgType {
 				new MtgType(1, "Créature", "Créature : zombie et bête", "", Locale.FRENCH));
 
 		assertNotEquals(new MtgType(1, "Créature", "Créature : zombie et bête", "", Locale.FRENCH),
-				new MtgType(1, "Créature", "Créature : zombie et bête", "", Locale.FRENCH));
+				new MtgType(1, "Créature", "Créature : zombie et bete", "", Locale.FRENCH));
 
 	}
 
@@ -64,8 +56,9 @@ public class TestMtgType {
 				new MtgType(1, "Créature", "Créature : zombie et bête", "", Locale.FRENCH).hashCode());
 
 		assertNotEquals(new MtgType(1, "Créature", "Créature : zombie et bête", "", Locale.FRENCH).hashCode(),
-				new MtgType(1, "Créature", "Créature : zombie et bête", "", Locale.FRENCH).hashCode());
+				new MtgType(1, "Créature", "Créature : zombie et bete", "", Locale.FRENCH).hashCode());
 
 	}
+	
 
 }

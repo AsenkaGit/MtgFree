@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MtgDataProvider {
+public class TestDataProvider {
 	
-	private static MtgDataProvider singleton = new MtgDataProvider();
+	private static TestDataProvider singleton = new TestDataProvider();
 	
 	public final MtgType instantType;
 	public final MtgType creatureZombieType;
@@ -50,7 +50,7 @@ public class MtgDataProvider {
 	/**
 	 * 
 	 */
-	public MtgDataProvider() {
+	public TestDataProvider() {
 		
 		this.instantType = new MtgType(1, "Éphémère", Locale.FRENCH);
 		this.creatureZombieType = new MtgType(2, "Créature", "Créature : zombie", "", Locale.FRENCH);
@@ -134,7 +134,7 @@ public class MtgDataProvider {
 	 * 
 	 * @return
 	 */
-	public static MtgDataProvider getInstance() {
+	public static TestDataProvider getInstance() {
 		return singleton;
 	}
 

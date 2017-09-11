@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 
-import asenka.mtgfree.model.mtgcard.MtgDataProvider;
+import asenka.mtgfree.model.mtgcard.TestDataProvider;
 import asenka.mtgfree.model.mtgcard.MtgAbility;
 
 /**
@@ -18,7 +18,7 @@ import asenka.mtgfree.model.mtgcard.MtgAbility;
 public class TestMtgAbility {
 
 	
-	private MtgDataProvider data = MtgDataProvider.getInstance();
+	private TestDataProvider data = TestDataProvider.getInstance();
 
 	@Test
 	public void testSorting() {

@@ -17,7 +17,7 @@ import org.junit.Test;
  */
 public class TestMtgCard {
 
-	private MtgDataProvider data = MtgDataProvider.getInstance();
+	private TestDataProvider data = TestDataProvider.getInstance();
 
 	@Test
 	public void testDefaultSorting() {
