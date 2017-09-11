@@ -532,6 +532,21 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 
 		this.abilities = abilities;
 	}
+	
+	/**
+	 * Add another ability to this card
+	 * @param abilities
+	 */
+	public void addAbilities(MtgAbility... abilities) {
+		
+		if(this.abilities == null) {
+			this.abilities = new HashSet<MtgAbility>(abilities.length);
+		}
+		
+		for(MtgAbility ability : abilities) {
+			this.abilities.add(ability);
+		}
+	}
 
 	/**
 	 * @return
