@@ -21,12 +21,12 @@ public class TestMtgType {
 	@Test
 	public void testSorting() {
 
-		MtgType t1 = new MtgType(1, "Cr�ature", "Cr�ature : zombie et b�te", "", Locale.FRENCH);
-		MtgType t2 = new MtgType(2, "�ph�m�re", "�ph�m�re", "", Locale.FRENCH);
+		MtgType t1 = new MtgType(1, "Créature", "Créature : zombie et bête", "", Locale.FRENCH);
+		MtgType t2 = new MtgType(2, "Éphémère", "Éphémère", "", Locale.FRENCH);
 		MtgType t3 = new MtgType(3, "Rituel", "Rituel", "", Locale.FRENCH);
 		MtgType t4 = new MtgType(4, "Terrain", "Terrain de base : montagne", "", Locale.FRENCH);
 		MtgType t5 = new MtgType(5, "Echangement", "Enchamentement : aura et mal�diction", "", Locale.FRENCH);
-		MtgType t6 = new MtgType(6, "Cr�ature", "Cr�ature l�gendaire : dieu", "", Locale.FRENCH);
+		MtgType t6 = new MtgType(6, "Créature", "Créature légendaire : dieu", "", Locale.FRENCH);
 
 		List<MtgType> collection = new ArrayList<>();
 		collection.add(t1);
@@ -49,22 +49,22 @@ public class TestMtgType {
 	@Test
 	public void testEquals() {
 
-		assertEquals(new MtgType(1, "Cr�ature", "Cr�ature : zombie et b�te", "", Locale.FRENCH),
-				new MtgType(1, "Cr�ature", "Cr�ature : zombie et b�te", "", Locale.FRENCH));
+		assertEquals(new MtgType(1, "Créature", "Créature : zombie et bête", "", Locale.FRENCH),
+				new MtgType(1, "Créature", "Créature : zombie et bête", "", Locale.FRENCH));
 
-		assertNotEquals(new MtgType(1, "Cr�ature", "Cr�ature : zombie et b�te", "", Locale.FRENCH),
-				new MtgType(1, "Cr�atur", "Cr�ature : zombie et b�te", "", Locale.FRENCH));
+		assertNotEquals(new MtgType(1, "Créature", "Créature : zombie et bête", "", Locale.FRENCH),
+				new MtgType(1, "Créature", "Créature : zombie et bête", "", Locale.FRENCH));
 
 	}
 
 	@Test
 	public void testHashCode() {
 
-		assertEquals(new MtgType(1, "Cr�ature", "Cr�ature : zombie et b�te", "", Locale.FRENCH).hashCode(),
-				new MtgType(1, "Cr�ature", "Cr�ature : zombie et b�te", "", Locale.FRENCH).hashCode());
+		assertEquals(new MtgType(1, "Créature", "Créature : zombie et bête", "", Locale.FRENCH).hashCode(),
+				new MtgType(1, "Créature", "Créature : zombie et bête", "", Locale.FRENCH).hashCode());
 
-		assertNotEquals(new MtgType(1, "Cr�ature", "Cr�ature : zombie et b�te", "", Locale.FRENCH).hashCode(),
-				new MtgType(1, "Cr�atur", "Cr�ature : zombie et b�te", "", Locale.FRENCH).hashCode());
+		assertNotEquals(new MtgType(1, "Créature", "Créature : zombie et bête", "", Locale.FRENCH).hashCode(),
+				new MtgType(1, "Créature", "Créature : zombie et bête", "", Locale.FRENCH).hashCode());
 
 	}
 
