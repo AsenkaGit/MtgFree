@@ -26,16 +26,10 @@ public class TestMtgType {
 	@Test
 	public void testSorting() {
 
-		List<MtgType> collection = new ArrayList<>(data.listOfTypes);
-
-		Collections.sort(collection);
-
-		assertEquals(collection.get(0).getId(), 1);
-		assertEquals(collection.get(1).getId(), 6);
-		assertEquals(collection.get(2).getId(), 5);
-		assertEquals(collection.get(3).getId(), 2);
-		assertEquals(collection.get(4).getId(), 3);
-		assertEquals(collection.get(5).getId(), 4);
+		List<MtgType> types = new ArrayList<MtgType>(data.getListOfTypes());
+		Collections.sort(types);
+		assertSortedByMainTypeAndSubtype(types);
+		System.out.println(types);
 	}
 
 	@Test
@@ -58,6 +52,43 @@ public class TestMtgType {
 		assertNotEquals(new MtgType(1, "Créature", "Créature : zombie et bête", "", Locale.FRENCH).hashCode(),
 				new MtgType(1, "Créature", "Créature : zombie et bete", "", Locale.FRENCH).hashCode());
 
+	}
+	
+	
+	/**
+	 * Check if the list of types is sorted with according to the main type
+	 * and then with the sub type with an ASCENDING order in
+	 * both comparator. It assumes the provided data are in FRENCH
+	 * 
+	 * @param list a list of types
+	 * @throws AssertionError
+	 */
+	private void assertSortedByMainTypeAndSubtype(List<MtgType> list) throws AssertionError {
+
+		Collator collatorFrench = Collator.getInstance(Locale.FRENCH);
+
+		try {
+			Iterator<MtgType> it = list.iterator();
+			MtgType previous = it.next();
+
+			while (it.hasNext()) {
+				MtgType current = it.next();
+				int result = collatorFrench.compare(previous.getMainType(), current.getMainType());
+
+				if (result == 0) {
+					result = collatorFrench.compare(previous.getSubType(), current.getSubType());
+				}
+				
+				// Check if 'current' if greater than 'previous'
+				if (result > 0) {
+					throw new AssertionError("The list of types is not sorted with an ASCENDING order");
+				}
+				previous = current;
+			}
+
+		} catch (NoSuchElementException ex) {
+			throw new AssertionError(ex);
+		}
 	}
 	
 

@@ -23,7 +23,7 @@ public class TestMtgAbility {
 	@Test
 	public void testSorting() {
 		
-		List<MtgAbility> abilities = new ArrayList<MtgAbility>(data.listOfAbilities);
+		List<MtgAbility> abilities = new ArrayList<MtgAbility>(data.getListOfAbilities());
 		
 		Collections.sort(abilities);
 		

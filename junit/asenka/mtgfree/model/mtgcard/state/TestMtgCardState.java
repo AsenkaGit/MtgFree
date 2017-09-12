@@ -51,7 +51,7 @@ public class TestMtgCardState {
 
 		assertFalse(this.testedState.isRevealed());
 		assertFalse(this.testedState.isTapped());
-		assertTrue(this.testedState.isVisible());
+		assertFalse(this.testedState.isVisible());
 		assertNull(this.testedState.getLocation());
 		assertEquals(this.testedState.getContext(), MtgContext.LIBRARY);
 

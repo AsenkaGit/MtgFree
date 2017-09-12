@@ -1,6 +1,7 @@
 package asenka.mtgfree.model.mtgcard;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,9 +44,9 @@ public class TestDataProvider {
 	public final MtgCard mtgCard16;
 	public final MtgCard mtgCard17;
 	
-	public final List<MtgCard> listOfCards;
-	public final List<MtgType> listOfTypes;
-	public final List<MtgAbility> listOfAbilities;
+	private final List<MtgCard> listOfCards;
+	private final List<MtgType> listOfTypes;
+	private final List<MtgAbility> listOfAbilities;
 	
 	/**
 	 * 
@@ -138,4 +139,24 @@ public class TestDataProvider {
 		return singleton;
 	}
 
+	/**
+	 * @return an unmodifiable list of cards
+	 */
+	public List<MtgCard> getListOfCards() {
+		return Collections.unmodifiableList(this.listOfCards);
+	}
+	
+	/**
+	 * @return an unmodifiable list of types
+	 */
+	public List<MtgType> getListOfTypes() {
+		return Collections.unmodifiableList(this.listOfTypes);
+	}
+	
+	/**
+	 * @return an unmodifiable list of abilities
+	 */
+	public List<MtgAbility> getListOfAbilities() {
+		return Collections.unmodifiableList(this.listOfAbilities);
+	}
 }

@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import asenka.mtgfree.model.mtgcard.MtgColor;
+import asenka.mtgfree.model.mtgcard.TestDataProvider;
 import asenka.mtgfree.model.utilities.ManaManager;
 
 import static asenka.mtgfree.model.mtgcard.MtgColor.*;
@@ -19,8 +20,6 @@ public class TestManaManager {
 
 	private static final String TEST_STR_COST_1_CORRECT = "2" + SEPARATOR + MANA_BLACK + SEPARATOR + MANA_RED;
 
-	private static final String TEST_STR_COST_2_WRONG = "";
-
 	private static final String TEST_STR_COST_3_WRONG = "3|XX";
 
 	private static final String TEST_STR_COST_4_CORRECT = "X|u|u";
@@ -28,6 +27,8 @@ public class TestManaManager {
 	private static final String TEST_STR_COST_5_CORRECT = "0";
 
 	private static final String TEST_STR_COST_6_CORRECT = "15|r|r|g|g";
+	
+	private TestDataProvider data = TestDataProvider.getInstance();
 
 	private ManaManager manager;
 
@@ -53,7 +54,6 @@ public class TestManaManager {
 		assertTrue(manager.isCorrectCost(MANA_GREEN));
 		assertTrue(manager.isCorrectCost(MANA_GREEN + SEPARATOR + MANA_GREEN + SEPARATOR + MANA_GREEN));
 
-		assertFalse(manager.isCorrectCost(TEST_STR_COST_2_WRONG));
 		assertFalse(manager.isCorrectCost(TEST_STR_COST_3_WRONG));
 		assertFalse(manager.isCorrectCost("coucou"));
 		assertFalse(manager.isCorrectCost("r/b|b"));
@@ -69,12 +69,8 @@ public class TestManaManager {
 		assertEquals(17, manager.getConvertedCostMana(TEST_STR_COST_4_CORRECT));
 		assertEquals(0, manager.getConvertedCostMana(TEST_STR_COST_5_CORRECT));
 		assertEquals(19, manager.getConvertedCostMana(TEST_STR_COST_6_CORRECT));
-
-		try {
-			manager.getConvertedCostMana(TEST_STR_COST_2_WRONG);
-			fail("An IllegalArgumentException was expected");
-		} catch (IllegalArgumentException e) {
-		}
+		assertEquals(0, manager.getConvertedCostMana(""));
+	
 
 		try {
 			manager.getConvertedCostMana(TEST_STR_COST_3_WRONG);
@@ -126,8 +122,11 @@ public class TestManaManager {
 		} catch (IllegalArgumentException e) {
 		}
 
-		// TODO faire un test à partir d'une carte quand la classe MtgCard sera
-		// finalisée
+		assertContains(manager.getColors(data.mtgCard7), RED);
+		assertContains(manager.getColors(data.mtgCard8));
+		assertContains(manager.getColors(data.mtgCard10), WHITE);
+		assertContains(manager.getColors(data.mtgCard11), BLACK, BLUE);
+		assertContains(manager.getColors(data.mtgCard11), BLUE, BLACK);
 	}
 
 	/**

@@ -23,7 +23,7 @@ public class TestMtgCard {
 	public void testDefaultSorting() {
 
 		// Use a copy of the list of cards provided
-		List<MtgCard> list = new ArrayList<MtgCard>(data.listOfCards);
+		List<MtgCard> list = new ArrayList<MtgCard>(data.getListOfCards());
 		Collections.sort(list);
 		assertSortedByNameAndCollection(list);
 	}
@@ -50,6 +50,8 @@ public class TestMtgCard {
 				if (result == 0) {
 					result = collatorFrench.compare(previous.getCollectionName(), current.getCollectionName());
 				}
+				
+				// Check if 'current' if greater than 'previous'
 				if (result > 0) {
 					throw new AssertionError("The list of cards is not sorted with an ASCENDING order");
 				}

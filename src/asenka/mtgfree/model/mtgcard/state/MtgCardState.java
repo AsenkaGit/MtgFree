@@ -31,14 +31,14 @@ public class MtgCardState {
 	private boolean isRevealed;
 
 	/**
-	 * Location of the card on the battlefield (only when context = BATTLEFIELD)
+	 * Location of the card on the battlefield (only when context = BATTLEFIELD or EXILE or GRAVEYARD)
 	 */
-	private Location location;
+	private Location location; // TODO Est-ce que l'on garde cette valeur ? Peut être que cela fait partie de la vue et non du modèle ?
 
 	/**
 	 * The context of the card
 	 */
-	private MtgContext context;
+	private MtgContext context; 
 
 	/**
 	 * @param isTapped
@@ -204,22 +204,12 @@ public class MtgCardState {
 		this.context = context;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 
 		return "[isTapped=" + isTapped + ", isVisible=" + isVisible + ", isRevealed=" + isRevealed + ", " + location + ", " + context + "]";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 
@@ -233,11 +223,6 @@ public class MtgCardState {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 
