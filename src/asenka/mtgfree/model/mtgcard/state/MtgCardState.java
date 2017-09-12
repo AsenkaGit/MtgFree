@@ -41,6 +41,20 @@ public class MtgCardState {
 	private MtgContext context; 
 
 	/**
+	 * Create a copy of this state
+	 * @param copyFrom the state to copy
+	 */
+	public MtgCardState(MtgCardState copyFrom) {
+	
+		this(copyFrom.isTapped, copyFrom.isVisible, copyFrom.isRevealed, copyFrom.context, null);
+		
+		if(copyFrom.location != null) {
+			this.setLocation(copyFrom.location.getX(), copyFrom.location.getY());
+		}
+		
+	}
+
+	/**
 	 * @param isTapped
 	 * @param isVisible
 	 * @param isRevealed

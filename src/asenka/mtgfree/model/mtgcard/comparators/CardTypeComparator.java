@@ -46,7 +46,7 @@ public final class CardTypeComparator extends CardTextComparator {
 	 */
 	public CardTypeComparator(int order) {
 		
-		super();
+		super(order);
 	}
 	
 	/**

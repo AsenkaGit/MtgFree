@@ -45,6 +45,20 @@ public class MtgType implements Comparable<MtgType>, Localized {
 	private transient Collator collator;
 
 	/**
+	 * Constructor used to create an exact copy of an existing type
+	 * @param copyFrom the type to copy
+	 */
+	@Deprecated
+	MtgType(MtgType copyFrom) {
+		this.id = copyFrom.id;
+		this.mainType = new String(copyFrom.mainType);
+		this.subType = new String(copyFrom.subType);
+		this.description = new String(copyFrom.description);
+		this.locale = copyFrom.locale;
+		this.collator = copyFrom.collator;
+	}
+
+	/**
 	 * Constructor
 	 * 
 	 * @param id
@@ -209,10 +223,6 @@ public class MtgType implements Comparable<MtgType>, Localized {
 
 		if (result == 0) {
 			result = this.collator.compare(this.subType, type.subType);
-
-			if (result == 0) {
-				result = this.id - type.id;
-			}
 		}
 		return result;
 	}

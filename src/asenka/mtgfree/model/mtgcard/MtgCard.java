@@ -1,5 +1,6 @@
 package asenka.mtgfree.model.mtgcard;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -120,6 +121,35 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	 * The default behavior is to sort 1/ with the card name and then 2/ with the collection name
 	 */
 	private CardComparator defaultComparator;
+	
+	/**
+	 * Create a exact copy of the card <code>copyFrom</code>
+	 * @param copyFrom the card to copy
+	 */
+	// Only package access for test, we'll see later if it's relevant to have it 'public'
+	MtgCard(MtgCard copyFrom) {
+		
+		this.id = copyFrom.id;
+		this.name = new String(copyFrom.name);
+		this.cost = new String(copyFrom.cost);
+		this.rulesText = new String(copyFrom.rulesText);
+		this.backgroundText = new String(copyFrom.backgroundText);
+		this.colors = new HashSet<MtgColor>(copyFrom.colors);
+		this.collectionName = new String(copyFrom.collectionName);
+		this.power = new String(copyFrom.power);
+		this.toughness = new String(copyFrom.toughness);
+		this.loyalty = copyFrom.loyalty;
+		this.type = copyFrom.type;
+		this.state = copyFrom.state != null ? new MtgCardState(copyFrom.state) : null;
+		this.rarity = copyFrom.rarity;
+		this.formats = new HashSet<MtgFormat>(copyFrom.formats);
+		this.abilities = new HashSet<MtgAbility>(copyFrom.abilities);
+		this.comments = new String(copyFrom.comments);
+		this.locale =  copyFrom.locale;
+		this.defaultComparator = copyFrom.defaultComparator;
+	}
+	
+	
 
 	/**
 	 * Constructor (interesting to instantiate land cards)
@@ -320,7 +350,7 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	 */
 	public Set<MtgColor> getColors() {
 
-		return colors;
+		return this.colors;
 	}
 
 	/**
@@ -378,8 +408,8 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 		}
 
 		// Check if the cost and the new card's colors are still matching.
-		if (!this.cost.isEmpty() && this.colors.equals(ManaManager.getInstance().getColors(this.cost))) {
-			throw new IllegalArgumentException("The new color(s) " + colors + " do not match the card cost : " + cost);
+		if (!this.cost.isEmpty() && !this.colors.equals(ManaManager.getInstance().getColors(this.cost))) {
+			throw new IllegalArgumentException("The new color(s) " + Arrays.toString(colors) + " do not match the card cost : " + cost);
 		}
 	}
 

@@ -59,6 +59,7 @@ public class TestManaManager {
 		assertFalse(manager.isCorrectCost("r/b|b"));
 		assertFalse(manager.isCorrectCost(""));
 		assertFalse(manager.isCorrectCost("|||"));
+		assertFalse(manager.isCorrectCost("|"));
 		assertFalse(manager.isCorrectCost(MANA_GREEN + MANA_GREEN + MANA_GREEN));
 	}
 
@@ -156,7 +157,7 @@ public class TestManaManager {
 		for (MtgColor color : colors) {
 
 			if (set.contains(color)) {
-				throw new AssertionError("The set " + set + " does not contains " + color);
+				throw new AssertionError("The set " + set + " contains " + color);
 			}
 		}
 	}

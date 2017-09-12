@@ -73,7 +73,8 @@ public class CardToughnessComparator extends CardComparator {
 	 * @param power a string representing the power of a card. 
 	 * @return an integer. 
 	 */
-	private static final int getIntegerStatValue(String power) {
+	// This method has default access modifier (package) to make it usable with JUnit test
+	static final int getIntegerStatValue(String power) {
 
 		// First, it checks if the power value can be used to create a number
 		// If it is possible, the number is created, otherwise we use the
