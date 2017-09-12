@@ -20,6 +20,11 @@ public class MtgCollection implements Comparable<MtgCollection>, Localized {
 	 * The average number of cards in a MTG collection. Used to initiate the set of cards collection
 	 */
 	private static final int INITIAL_COLLECTION_SIZE = 250;
+	
+//	/**
+//	 * Strings distance calculator used to find used to look for card names
+//	 */
+//	private static final JaroWinklerDistance STRING_DISTANCE_CALCULATOR = new JaroWinklerDistance();
 
 	/**
 	 * The id of the collection (from the database primary key)
@@ -183,7 +188,8 @@ public class MtgCollection implements Comparable<MtgCollection>, Localized {
 	}
 
 	/**
-	 * Add card(s) to the set of cards in the collection
+	 * Add card(s) to the set of cards in the collection. It also update the card
+	 * collection name attribute.
 	 * 
 	 * @param cards the card(s) to add
 	 */
@@ -191,6 +197,7 @@ public class MtgCollection implements Comparable<MtgCollection>, Localized {
 
 		for (MtgCard card : cards) {
 			this.cards.add(card);
+			card.setCollectionName(this.name);
 		}
 	}
 
@@ -209,7 +216,36 @@ public class MtgCollection implements Comparable<MtgCollection>, Localized {
 		}
 		return result;
 	}
+	
+	/**
+	 * @param card
+	 * @return <code>true</code> if the card belongs to the collection
+	 */
+	public boolean contains(MtgCard card) {
+		
+		return this.cards.contains(card);
+	}
 
+// TODO Cette méthode devrait plutôt être dans un utilitaire et pas directement ici.
+//	/**
+//	 * 
+//	 * @param cardApproximateName
+//	 * @return
+//	 */
+//	public Set<MtgCard> getCards(String cardApproximateName, double threshold) {
+//		
+//		Set<MtgCard> matchingCards = new HashSet<MtgCard>();
+//		
+//		for(MtgCard card : this.cards) {
+//			
+//			if(STRING_DISTANCE_CALCULATOR.apply(cardApproximateName.trim().toLowerCase(), 
+//					card.getName().trim().toLowerCase()) >= threshold ) {
+//				matchingCards.add(card);
+//			}
+//		}
+//		return matchingCards;
+//	}
+ 
 	@Override
 	public Locale getLocale() {
 

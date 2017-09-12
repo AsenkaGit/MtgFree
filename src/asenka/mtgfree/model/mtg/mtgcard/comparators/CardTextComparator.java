@@ -99,7 +99,7 @@ public abstract class CardTextComparator extends CardComparator {
 	 */
 	private static final Locale getPreferedLocale() {
 
-		return Locale.FRENCH;
+		return Locale.getDefault();
 		// TODO Utiliser un fichier de configuration pour déterminer automatiquement la locale
 		// à utiliser ici. En attendant je mets le Français (plus simple pour les tests)
 	}

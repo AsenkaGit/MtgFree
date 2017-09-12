@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import asenka.mtgfree.model.mtg.MtgCollection;
 import asenka.mtgfree.model.mtg.mtgcard.MtgAbility;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 import asenka.mtgfree.model.mtg.mtgcard.MtgColor;
@@ -49,10 +50,16 @@ public class TestDataProvider {
 	public final MtgCard mtgCard15;
 	public final MtgCard mtgCard16;
 	public final MtgCard mtgCard17;
+	public final MtgCard mtgCard18;
 	
 	private final List<MtgCard> listOfCards;
 	private final List<MtgType> listOfTypes;
 	private final List<MtgAbility> listOfAbilities;
+	
+	public final MtgCollection amonketCollection;
+	public final MtgCollection kaladeshCollection;
+//	public final MtgCollection alphaCollection;
+//	public final MtgCollection revoltAethericCollection;
 	
 	/**
 	 * 
@@ -111,6 +118,7 @@ public class TestDataProvider {
 		this.mtgCard15 = new MtgCard(15, "Cuirassé du consulat", "Révolte étherique", "7", "11", "1", this.artefactVehicule, MtgRarity.UNCOMMUN, Locale.FRENCH);
 		this.mtgCard16 = new MtgCard(16, "Truc chelou", "Révolte étherique", "2+*", "X", "X|2r", this.creatureZombieType, MtgRarity.MYTHIC, Locale.FRENCH);
 		this.mtgCard17 = new MtgCard(17, "Lotus Noir", "Alpha", "0", this.artifactType, MtgRarity.UNDEFINED, Locale.FRENCH);
+		this.mtgCard18 = new MtgCard(17, "Lotus Bleu", "Alpha", "0", this.artifactType, MtgRarity.UNDEFINED, Locale.FRENCH);
 		
 		this.mtgCard8.addAbilities(hasteAbility, pietinementAbility);
 		this.mtgCard11.addAbilities(deathtouchAbility);
@@ -135,6 +143,19 @@ public class TestDataProvider {
 		this.listOfCards.add(mtgCard15);
 		this.listOfCards.add(mtgCard16);
 		this.listOfCards.add(mtgCard17);
+		this.listOfCards.add(mtgCard18);
+		
+		this.amonketCollection = new MtgCollection(1, "Amonket", Locale.FRENCH);
+		this.kaladeshCollection = new MtgCollection(1, "Kaladesh", Locale.FRENCH);
+
+		
+		this.amonketCollection.addCards(this.mtgCard1, this.mtgCard2, this.mtgCard3, this.mtgCard4, this.mtgCard5, 
+				this.mtgCard9, this.mtgCard10, this.mtgCard13, this.mtgCard17, this.mtgCard18);
+		
+		this.kaladeshCollection.addCards(this.mtgCard6, this.mtgCard7, this.mtgCard8, this.mtgCard14, this.mtgCard15, 
+				this.mtgCard16);
+		
+		
 	}
 	
 	/**
