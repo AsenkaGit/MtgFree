@@ -167,7 +167,7 @@ public class MtgDeck implements Comparable<MtgDeck> {
 	 * 
 	 * @param addTo MAIN or SIDEBOARD
 	 * @param cards the card(s) to add
-	 * @throws MtgDeckException 
+	 * @throws MtgDeckException
 	 * @see MtgDeckList
 	 */
 	public void addCards(MtgDeckList addTo, MtgCard... cards) throws MtgDeckException {
@@ -201,6 +201,38 @@ public class MtgDeck implements Comparable<MtgDeck> {
 				this.sideBoard.remove(card);
 			}
 		}
+	}
+
+	/**
+	 * 
+	 * @param deckList if <code>null</code> it check both list in the deck
+	 * @param card the card to check
+	 * @return <code>true</code> if the card is in the deck
+	 */
+	public boolean contains(MtgDeckList deckList, MtgCard card) {
+
+		boolean result;
+		switch (deckList) {
+			case MAIN:
+				result = this.mainCards.contains(card);
+				break;
+			case SIDEBOARD:
+				result = this.sideBoard.contains(card);
+				break;
+			default:
+				result = this.sideBoard.contains(card) && this.mainCards.contains(card);
+		}
+		return result;
+	}
+
+	/**
+	 * Check if the deck contains the minimum amount of cards required to play (usually it is 60)
+	 *
+	 * @return <code>true</code> if it contains at least 60 cards in the main list
+	 */
+	public boolean isPlayable() {
+
+		return this.mainCards.size() >= MAXIMUM_SIDEBOARD_SIZE;
 	}
 
 	@Override

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Locale;
 
 import asenka.mtgfree.model.mtg.MtgCollection;
+import asenka.mtgfree.model.mtg.MtgDeck;
+import asenka.mtgfree.model.mtg.MtgLibrary;
 import asenka.mtgfree.model.mtg.mtgcard.MtgAbility;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 import asenka.mtgfree.model.mtg.mtgcard.MtgColor;
@@ -51,15 +53,14 @@ public class TestDataProvider {
 	public final MtgCard mtgCard16;
 	public final MtgCard mtgCard17;
 	public final MtgCard mtgCard18;
+
+	public final MtgCollection amonketCollection;
+	public final MtgCollection kaladeshCollection;
 	
 	private final List<MtgCard> listOfCards;
 	private final List<MtgType> listOfTypes;
 	private final List<MtgAbility> listOfAbilities;
 	
-	public final MtgCollection amonketCollection;
-	public final MtgCollection kaladeshCollection;
-//	public final MtgCollection alphaCollection;
-//	public final MtgCollection revoltAethericCollection;
 	
 	/**
 	 * 
@@ -154,8 +155,26 @@ public class TestDataProvider {
 		
 		this.kaladeshCollection.addCards(this.mtgCard6, this.mtgCard7, this.mtgCard8, this.mtgCard14, this.mtgCard15, 
 				this.mtgCard16);
+	}
+	
+	
+	public MtgLibrary getLibrary() {
 		
+		List<MtgCard> cardsInLibrary = new ArrayList<MtgCard>(MtgDeck.MINIMUM_DECK_SIZE);
+		addCards(10, this.mtgCard1, cardsInLibrary);
+		addCards(10, this.mtgCard2, cardsInLibrary);
+		addCards(10, this.mtgCard3, cardsInLibrary);
+		addCards(4, this.mtgCard7, cardsInLibrary);
+		addCards(4, this.mtgCard8, cardsInLibrary);
+		addCards(4, this.mtgCard9, cardsInLibrary);
+		addCards(4, this.mtgCard10, cardsInLibrary);
+		addCards(4, this.mtgCard11, cardsInLibrary);
+		addCards(2, this.mtgCard12, cardsInLibrary);
+		addCards(2, this.mtgCard13, cardsInLibrary);
+		addCards(2, this.mtgCard14, cardsInLibrary);
+		addCards(4, this.mtgCard17, cardsInLibrary);
 		
+		return new MtgLibrary(cardsInLibrary);
 	}
 	
 	/**
@@ -185,5 +204,17 @@ public class TestDataProvider {
 	 */
 	public List<MtgAbility> getListOfAbilities() {
 		return Collections.unmodifiableList(this.listOfAbilities);
+	}
+	
+	/**
+	 * @param x the number of time to add the card
+	 * @param card the card to add x time
+	 * @param list in this list
+	 */
+	private static void addCards(int x, MtgCard card, List<MtgCard> list) {
+		
+		do {
+			list.add(card);
+		} while(--x > 0);
 	}
 }
