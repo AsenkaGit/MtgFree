@@ -10,25 +10,29 @@ import java.util.ListIterator;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 
 /**
+ * This class represents the player's library used during a game
  * 
  * @author asenka
  */
 public class MtgLibrary {
 
 	/**
-	 * 
+	 * The cards in the library
 	 */
-	private final LinkedList<MtgCard> stackOfCards;
+	// The LinkedList is the best fit for the library needs. Check javadoc
+	private LinkedList<MtgCard> cards;
 
 	/**
-	 * 
+	 * The initial number of cards in the list
 	 */
 	private final int initialAmountOfCards;
 
 	/**
+	 * Constructor
 	 * 
-	 * @param cards
-	 * @throws IllegalArgumentException
+	 * @param cards any collection if cards 
+	 * @throws IllegalArgumentException if cards is <code>null</code> or if cards does not contains the minimum number of cards
+	 *         required (usually it is 60)
 	 */
 	public MtgLibrary(Collection<MtgCard> cards) throws IllegalArgumentException {
 
@@ -38,21 +42,31 @@ public class MtgLibrary {
 			throw new IllegalArgumentException("Try to initialize a library with an not complete deck");
 		}
 		this.initialAmountOfCards = cards.size();
-		this.stackOfCards = new LinkedList<MtgCard>(cards);
+		this.cards = new LinkedList<MtgCard>(cards);
 	}
 
 	/**
+	 * Removes and returns the first card in the stack
 	 * 
-	 * @return
+	 * @return the top card from the library
 	 */
-	public List<MtgCard> getStackOfCards() {
+	public MtgCard draw() {
 
-		return stackOfCards;
+		return this.cards.removeFirst();
 	}
 
 	/**
+	 * Returns the cards from the library
 	 * 
-	 * @return
+	 * @return an unmodifiable list of cards
+	 */
+	public List<MtgCard> getCards() {
+
+		return Collections.unmodifiableList(cards);
+	}
+
+	/**
+	 * @return the initial number of cards in the list.
 	 */
 	public int getInitialAmountOfCards() {
 
@@ -60,66 +74,89 @@ public class MtgLibrary {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return the number of remaining cards in the library
 	 */
 	public int getRemainingAmountOfCards() {
 
-		return this.stackOfCards.size();
+		return this.cards.size();
 	}
 
 	/**
+	 * Returns the x first cards from the library
 	 * 
 	 * @param xFirst
-	 * @return
+	 * @return the x first cards from the library
 	 */
 	public List<MtgCard> getFirstCards(int xFirst) {
 
-		if (xFirst > this.stackOfCards.size()) {
-			xFirst = this.stackOfCards.size();
+		if (xFirst > this.cards.size()) {
+			xFirst = this.cards.size();
 		}
 		List<MtgCard> xFirstList = new ArrayList<MtgCard>(xFirst);
 
 		for (int i = 0; i < xFirst; i++) {
-			xFirstList.add(this.stackOfCards.get(i));
+			xFirstList.add(this.cards.get(i));
 		}
 		return xFirstList;
 	}
 
 	/**
+	 * Get the card at the specified index
 	 * 
-	 * @param index
-	 * @return
+	 * @param index the index
+	 * @return a mtg card from the library
 	 */
 	public MtgCard getCardAt(int index) {
 
-		return this.stackOfCards.get(index);
+		return this.cards.get(index);
 	}
 
 	/**
+	 * Add one card at the top of the library
 	 * 
-	 * @param index
-	 * @return
+	 * @param card
+	 */
+	public void addFirst(MtgCard card) {
+
+		this.cards.addFirst(card);
+	}
+
+	/**
+	 * add one card at the bottom of the library
+	 * 
+	 * @param card
+	 */
+	public void addLast(MtgCard card) {
+
+		this.cards.addLast(card);
+	}
+
+	/**
+	 * Remove and returns the card at the specified index
+	 * 
+	 * @param index the index
+	 * @return the card removed
 	 */
 	public MtgCard removeCardAt(int index) {
 
-		return this.stackOfCards.remove(index);
+		return this.cards.remove(index);
 	}
 
 	/**
+	 * Returns and removes the x first cards from the library
 	 * 
-	 * @param xFirst the number of card to get
-	 * @return an array list with the x first cards in the library
+	 * @param xFirst
+	 * @return the x first cards from the library
 	 */
 	public List<MtgCard> removeFirstCards(int xFirst) {
 
-		if (xFirst > this.stackOfCards.size()) {
-			xFirst = this.stackOfCards.size();
+		if (xFirst > this.cards.size()) {
+			xFirst = this.cards.size();
 		}
 		List<MtgCard> xFirstList = new ArrayList<MtgCard>(xFirst);
 
 		for (int i = 0; i < xFirst; i++) {
-			xFirstList.add(this.stackOfCards.remove(i));
+			xFirstList.add(this.cards.remove(i));
 		}
 		return xFirstList;
 	}
@@ -129,17 +166,7 @@ public class MtgLibrary {
 	 */
 	public boolean isEmpty() {
 
-		return this.stackOfCards.isEmpty();
-	}
-
-	/**
-	 * Removes and returns the first card in the stack
-	 * 
-	 * @return a card
-	 */
-	public MtgCard draw() {
-
-		return this.stackOfCards.removeFirst();
+		return this.cards.isEmpty();
 	}
 
 	/**
@@ -147,34 +174,17 @@ public class MtgLibrary {
 	 */
 	public void shuffle() {
 
-		Collections.shuffle(this.stackOfCards);
-	}
-	
-	/**
-	 * 
-	 * @param card
-	 */
-	public void addFirst(MtgCard card) {
-		this.stackOfCards.addFirst(card);
-	}
-	
-	
-	/**
-	 * 
-	 * @param card
-	 */
-	public void addLast(MtgCard card) {
-		this.stackOfCards.addLast(card);
+		Collections.shuffle(this.cards);
 	}
 
 	@Override
 	public String toString() {
 
 		StringBuffer buf = new StringBuffer();
-		ListIterator<MtgCard> it = this.stackOfCards.listIterator(0);
-		
-		buf.append(this.getClass().getSimpleName() + " (" + stackOfCards.size() + "/" + initialAmountOfCards + ")\n");
-		
+		ListIterator<MtgCard> it = this.cards.listIterator(0);
+
+		buf.append(this.getClass().getSimpleName() + " (" + cards.size() + "/" + initialAmountOfCards + ")\n");
+
 		while (it.hasNext()) {
 			buf.append("[" + it.nextIndex() + "] \t--> " + it.next());
 		}
