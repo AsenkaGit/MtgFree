@@ -35,7 +35,7 @@ public enum MtgColor implements Localized {
 	MtgColor(String localizedName) {
 
 		this.name = localizedName;
-		this.locale = Locale.ENGLISH;
+		this.locale = Locale.getDefault();
 		// TODO par défaut on met une locale Anglaise. Il faudra utiliser par la suite le fichier
 		// de configuration de l'utilisateur pour trouver la bonne locale à utiliser.
 	}

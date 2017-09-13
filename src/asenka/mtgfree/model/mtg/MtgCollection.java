@@ -205,16 +205,12 @@ public class MtgCollection implements Comparable<MtgCollection>, Localized {
 	 * Remove card(s) from the set of cards in the collection
 	 * 
 	 * @param cards the card(s) to remove
-	 * @return <code>false</code> if at least one card was not in the set
 	 */
-	public boolean removeCards(MtgCard... cards) {
-
-		boolean result = true;
+	public void removeCards(MtgCard... cards) {
 
 		for (MtgCard card : cards) {
-			result &= this.cards.remove(card);
+			this.cards.remove(card);
 		}
-		return result;
 	}
 	
 	/**

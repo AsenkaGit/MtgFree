@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import asenka.mtgfree.model.mtg.exceptions.MtgDeckException;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 
 /**
@@ -26,16 +27,16 @@ public class MtgDeck implements Comparable<MtgDeck> {
 	 * The collator used to compare the deck's names
 	 */
 	// We use a default collator since we cannot know for sure witch language will be used to name the decks
-	// A french person, may use english names, or something that does not belong to any language anyway...
+	// A French person, may use English names, or something that does not belong to any language anyway...
 	private static final Collator DEFAULT_COLLATOR = Collator.getInstance();
 
 	/**
-	 * 
+	 * The minimum size of a deck in the main list of cards
 	 */
 	public static final int MINIMUM_DECK_SIZE = 60;
 
 	/**
-	 * 
+	 * The maximum size of the sideboard
 	 */
 	public static final int MAXIMUM_SIDEBOARD_SIZE = 15;
 
@@ -72,6 +73,7 @@ public class MtgDeck implements Comparable<MtgDeck> {
 	 * @param description
 	 */
 	public MtgDeck(int id, String name, String description) {
+
 		super();
 		this.id = id;
 		this.name = name;
@@ -158,6 +160,101 @@ public class MtgDeck implements Comparable<MtgDeck> {
 	public void setSideBoard(Collection<MtgCard> sideBoard) {
 
 		this.sideBoard = new ArrayList<MtgCard>(sideBoard);
+	}
+
+	/**
+	 * Adds cards to the specified list of the deck
+	 * 
+	 * @param addTo MAIN or SIDEBOARD
+	 * @param cards the card(s) to add
+	 * @throws MtgDeckException 
+	 * @see MtgDeckList
+	 */
+	public void addCards(MtgDeckList addTo, MtgCard... cards) throws MtgDeckException {
+
+		for (MtgCard card : cards) {
+
+			if (addTo == MtgDeckList.MAIN) {
+				this.mainCards.add(card);
+			} else if (this.sideBoard.size() < MAXIMUM_SIDEBOARD_SIZE) {
+				this.sideBoard.add(card);
+			} else {
+				throw new MtgDeckException("The side board cannot contains more than " + MAXIMUM_SIDEBOARD_SIZE + " cards");
+			}
+		}
+	}
+
+	/**
+	 * Removes cards from the specified list of the deck
+	 * 
+	 * @param removeFrom MAIN or SIDEBOARD
+	 * @param cards the card(s) to add
+	 * @see MtgDeckList
+	 */
+	public void removeCards(MtgDeckList removeFrom, MtgCard... cards) {
+
+		for (MtgCard card : cards) {
+
+			if (removeFrom == MtgDeckList.MAIN) {
+				this.mainCards.remove(card);
+			} else {
+				this.sideBoard.remove(card);
+			}
+		}
+	}
+
+	@Override
+	public String toString() {
+
+		return "[" + id + ", " + name + ", " + description + ", " + mainCards.size() + ", " + sideBoard.size() + "]";
+	}
+
+	@Override
+	public int hashCode() {
+
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + id;
+		result = prime * result + ((mainCards == null) ? 0 : mainCards.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((sideBoard == null) ? 0 : sideBoard.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MtgDeck other = (MtgDeck) obj;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (id != other.id)
+			return false;
+		if (mainCards == null) {
+			if (other.mainCards != null)
+				return false;
+		} else if (!mainCards.equals(other.mainCards))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (sideBoard == null) {
+			if (other.sideBoard != null)
+				return false;
+		} else if (!sideBoard.equals(other.sideBoard))
+			return false;
+		return true;
 	}
 
 	@Override
