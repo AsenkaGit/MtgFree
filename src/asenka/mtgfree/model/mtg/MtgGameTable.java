@@ -33,6 +33,8 @@ public class MtgGameTable {
 	 * The list of cards on the battlefield
 	 */
 	private List<MtgCard> cardsOnBattlefield;
+	
+	// TODO add the logs
 
 	/**
 	 * Constructor
