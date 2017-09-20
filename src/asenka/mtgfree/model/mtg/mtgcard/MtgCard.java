@@ -1,4 +1,4 @@
-package asenka.mtgfree.model.mtg.mtgcard;
+Locapackage asenka.mtgfree.model.mtg.mtgcard;
 
 import java.util.Arrays;
 import java.util.HashSet;

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
+import asenka.mtgfree.model.mtg.mtgcard.state.MtgCardState;
+import asenka.mtgfree.model.mtg.mtgcard.state.MtgContext;
 
 /**
  * This class represents the player's library used during a game
@@ -30,7 +32,7 @@ public class MtgLibrary {
 	/**
 	 * Constructor
 	 * 
-	 * @param cards any collection if cards 
+	 * @param cards any collection if cards
 	 * @throws IllegalArgumentException if cards is <code>null</code> or if cards does not contains the minimum number of cards
 	 *         required (usually it is 60)
 	 */
@@ -118,6 +120,7 @@ public class MtgLibrary {
 	 */
 	public void addFirst(MtgCard card) {
 
+		updateCardState(card, MtgContext.LIBRARY);
 		this.cards.addFirst(card);
 	}
 
@@ -128,6 +131,7 @@ public class MtgLibrary {
 	 */
 	public void addLast(MtgCard card) {
 
+		updateCardState(card, MtgContext.LIBRARY);
 		this.cards.addLast(card);
 	}
 
@@ -191,4 +195,20 @@ public class MtgLibrary {
 		return buf.toString();
 	}
 
+	/**
+	 * Check if the card has a state and update the context in the card state
+	 * 
+	 * @param card the card to update
+	 * @param context the context to set on the card
+	 * @throws IllegalArgumentException if the card state is null
+	 */
+	private static void updateCardState(MtgCard card, MtgContext context) throws IllegalArgumentException {
+
+		MtgCardState state = card.getState();
+
+		if (state == null) {
+			throw new IllegalArgumentException("The card does not have a state : " + card);
+		}
+		state.setContext(context);
+	}
 }

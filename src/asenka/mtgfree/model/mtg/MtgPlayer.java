@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import asenka.mtgfree.model.mtg.exceptions.MtgDeckException;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 import asenka.mtgfree.model.mtg.mtgcard.state.MtgCardState;
 import asenka.mtgfree.model.mtg.mtgcard.state.MtgContext;
@@ -24,6 +25,7 @@ import asenka.mtgfree.model.mtg.mtgcard.state.MtgContext;
  * <li>the current deck</li>
  * <li>the available decks</li>
  * </ul>
+ * 
  * @author asenka
  */
 public class MtgPlayer implements Comparable<MtgPlayer> {
@@ -239,14 +241,9 @@ public class MtgPlayer implements Comparable<MtgPlayer> {
 	 * @param card the card to add
 	 * @throws IllegalArgumentException if the card does not have a state yet
 	 */
-	public void addCardToGraveyard(MtgCard card) {
+	public void addCardToGraveyard(MtgCard card) throws IllegalArgumentException {
 
-		MtgCardState state = card.getState();
-
-		if (state == null) {
-			throw new IllegalArgumentException("The card does not have a state : " + card);
-		}
-		state.setContext(MtgContext.GRAVEYARD);
+		updateCardState(card, MtgContext.GRAVEYARD);
 		this.graveyard.add(card);
 	}
 
@@ -256,14 +253,9 @@ public class MtgPlayer implements Comparable<MtgPlayer> {
 	 * @param card the card to add
 	 * @throws IllegalArgumentException if the card does not have a state yet
 	 */
-	public void addCardToExile(MtgCard card) {
+	public void addCardToExile(MtgCard card) throws IllegalArgumentException {
 
-		MtgCardState state = card.getState();
-
-		if (state == null) {
-			throw new IllegalArgumentException("The card does not have a state : " + card);
-		}
-		state.setContext(MtgContext.EXILE);
+		updateCardState(card, MtgContext.EXILE);
 		this.exile.add(card);
 	}
 
@@ -273,23 +265,22 @@ public class MtgPlayer implements Comparable<MtgPlayer> {
 	 * @param card the card to add
 	 * @throws IllegalArgumentException if the card does not have a state yet
 	 */
-	public void addCardToHand(MtgCard card) {
+	public void addCardToHand(MtgCard card) throws IllegalArgumentException {
 
-		MtgCardState state = card.getState();
-
-		if (state == null) {
-			throw new IllegalArgumentException("The card does not have a state : " + card);
-		}
-		state.setContext(MtgContext.HAND);
+		updateCardState(card, MtgContext.HAND);
 		this.hand.add(card);
 	}
 
 	/**
-	 * 
-	 * @param deck
+	 * Add another deck to the player list of available decks
+	 * @param deck the deck to add
+	 * @throws MtgDeckException if the deck is not playable
 	 */
-	public void addAvailableDeck(MtgDeck deck) {
+	public void addAvailableDeck(MtgDeck deck) throws MtgDeckException {
 
+		if (!deck.isPlayable()) {
+			new MtgDeckException("Try to add an unplayable deck to this player");
+		}
 		this.availableDecks.add(deck);
 	}
 
@@ -329,5 +320,22 @@ public class MtgPlayer implements Comparable<MtgPlayer> {
 	public int compareTo(MtgPlayer player) {
 
 		return DEFAULT_COLLATOR.compare(this.name, player.name);
+	}
+
+	/**
+	 * Check if the card has a state and update the context in the card state
+	 * 
+	 * @param card the card to update
+	 * @param context the context to set on the card
+	 * @throws IllegalArgumentException if the card state is null
+	 */
+	private static void updateCardState(MtgCard card, MtgContext context) throws IllegalArgumentException {
+
+		MtgCardState state = card.getState();
+
+		if (state == null) {
+			throw new IllegalArgumentException("The card does not have a state : " + card);
+		}
+		state.setContext(context);
 	}
 }
