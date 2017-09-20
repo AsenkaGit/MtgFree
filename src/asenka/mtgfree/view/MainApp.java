@@ -20,6 +20,8 @@ public class MainApp extends Application {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("MTG FREE");
 		initRootLayout();
+		
+		
 
 	}
 
