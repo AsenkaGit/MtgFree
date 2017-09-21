@@ -1,24 +1,23 @@
 package asenka.mtgfree.view;
 
 
-import javafx.scene.Group;
+
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.Pane;
 
 
-public class BattlefieldView extends Group {
+public class BattlefieldView extends Pane {
 	
 	public BattlefieldView() {
-
-		
-		
-		
-		Image image = new Image("file:resources/images/mtg/cards/card_mtg_back.jpg");
-		
-		
-		ImageView cardView = new ImageView(image);
-		
-		this.getChildren().add(cardView);
+		this.setBackground(new Background(new BackgroundImage(new Image("file:resources/images/mtg/gui_mtg_background.jpg"), 
+				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, 
+				BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+		this.getChildren().add(new CardView(null, this));
 	}
 
 
