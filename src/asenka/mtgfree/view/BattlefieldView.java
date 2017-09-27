@@ -17,7 +17,19 @@ public class BattlefieldView extends Pane {
 		this.setBackground(new Background(new BackgroundImage(new Image("file:resources/images/mtg/gui_mtg_background.jpg"), 
 				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, 
 				BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+		
+		
+		
 		this.getChildren().add(new CardView(null, this));
+		this.getChildren().add(new CardView(null, this));
+		
+//		this.setOnMousePressed((event) -> {
+//			System.out.println(this.getBoundsInLocal().getWidth());
+//			System.out.println(this.getBoundsInLocal().getHeight());
+//			System.out.println(this.getParent().getBoundsInLocal().getWidth());
+//			System.out.println(this.getParent().getBoundsInLocal().getHeight());
+//			System.out.println("-------------");
+//		});
 	}
 
 

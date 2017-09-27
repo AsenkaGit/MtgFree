@@ -16,5 +16,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/MtgFree/project/libraries/commons-text-1.1/commons-text-1.1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/usr/share/java/openjfx/jre/lib/ext/jfxrt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
