@@ -10,12 +10,8 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import asenka.mtgfree.view.BattlefieldView?>
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
-	<center>
-		<BattlefieldView>
-		</BattlefieldView>
-	</center>
+
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="asenka.mtgfree.view.MainPaneController">
 	<right>
 		<TabPane prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
 			<tabs>
@@ -55,9 +51,7 @@
 					<content>
 						<ScrollPane hbarPolicy="NEVER" prefWidth="200.0">
 							<content>
-								<TextArea prefWidth="200.0"
-									text=" Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sed dapibus nisi. Fusce dapibus porttitor urna consequat sollicitudin. Vivamus lorem enim, sollicitudin vitae ipsum et, dapibus efficitur lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin interdum lorem at nibh tincidunt, non luctus mauris ornare. Nullam fringilla faucibus sem, auctor ornare sem gravida nec. Duis nibh sem, venenatis ac nisl ac, porttitor faucibus enim. Curabitur maximus purus at tempus semper. Mauris a sapien ornare, ornare mi at, finibus ipsum. Nunc placerat dui id nibh tristique, pretium posuere ante porttitor. Aliquam malesuada laoreet leo vitae maximus.&#10;&#10;Vivamus scelerisque, ante ac aliquam varius, arcu erat luctus quam, sed eleifend magna felis eget nisl. Ut dapibus iaculis justo, ultricies laoreet mauris cursus eu. Aliquam erat volutpat. Sed rhoncus quam vitae sem congue, nec aliquet mauris molestie. Mauris nec augue augue. Nam nulla odio, interdum quis sapien fermentum, tincidunt vehicula ex. Nullam euismod eros eget auctor dignissim. Nunc non eros nulla. Nullam tempor magna quis erat sollicitudin, et commodo augue rhoncus. Quisque lectus velit, sagittis vel vulputate et, semper ut ex.&#10;&#10;Nam vehicula dignissim nibh vel feugiat. Nam nec neque at erat cursus consequat. Sed at tincidunt nisi, ullamcorper consequat purus. Nunc ac cursus diam. Vestibulum venenatis efficitur leo sit amet lacinia. Mauris et urna blandit, euismod tellus et, imperdiet turpis. In vestibulum nisl vitae fermentum finibus. Donec mollis at lorem nec tempor. Praesent pretium ante auctor tellus blandit laoreet. Maecenas ullamcorper purus id enim convallis sodales. Quisque risus purus, condimentum ac lorem suscipit, maximus auctor dui. &#10;"
-									wrapText="true" />
+								<TextArea prefWidth="200.0" text=" Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sed dapibus nisi. Fusce dapibus porttitor urna consequat sollicitudin. Vivamus lorem enim, sollicitudin vitae ipsum et, dapibus efficitur lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin interdum lorem at nibh tincidunt, non luctus mauris ornare. Nullam fringilla faucibus sem, auctor ornare sem gravida nec. Duis nibh sem, venenatis ac nisl ac, porttitor faucibus enim. Curabitur maximus purus at tempus semper. Mauris a sapien ornare, ornare mi at, finibus ipsum. Nunc placerat dui id nibh tristique, pretium posuere ante porttitor. Aliquam malesuada laoreet leo vitae maximus.&#10;&#10;Vivamus scelerisque, ante ac aliquam varius, arcu erat luctus quam, sed eleifend magna felis eget nisl. Ut dapibus iaculis justo, ultricies laoreet mauris cursus eu. Aliquam erat volutpat. Sed rhoncus quam vitae sem congue, nec aliquet mauris molestie. Mauris nec augue augue. Nam nulla odio, interdum quis sapien fermentum, tincidunt vehicula ex. Nullam euismod eros eget auctor dignissim. Nunc non eros nulla. Nullam tempor magna quis erat sollicitudin, et commodo augue rhoncus. Quisque lectus velit, sagittis vel vulputate et, semper ut ex.&#10;&#10;Nam vehicula dignissim nibh vel feugiat. Nam nec neque at erat cursus consequat. Sed at tincidunt nisi, ullamcorper consequat purus. Nunc ac cursus diam. Vestibulum venenatis efficitur leo sit amet lacinia. Mauris et urna blandit, euismod tellus et, imperdiet turpis. In vestibulum nisl vitae fermentum finibus. Donec mollis at lorem nec tempor. Praesent pretium ante auctor tellus blandit laoreet. Maecenas ullamcorper purus id enim convallis sodales. Quisque risus purus, condimentum ac lorem suscipit, maximus auctor dui. &#10;" wrapText="true" />
 							</content>
 						</ScrollPane>
 					</content>
@@ -72,4 +66,7 @@
 			</right>
 		</BorderPane>
 	</bottom>
+   <center>
+      <AnchorPane fx:id="battlefield" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="TOP_LEFT" />
+   </center>
 </BorderPane>

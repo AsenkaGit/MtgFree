@@ -51,14 +51,13 @@ public class CardView extends Group {
 		this.front = new ImageView(new Image("file:resources/images/mtg/cards/card_mtg_en_Alpha_Black Lotus.png"));
 		this.setScale(SCALE_SMALL);
 		this.getChildren().addAll(this.back, this.front);
-		
-		this.setLayoutX(-50);
-		this.setLayoutY(-50);
 
 		// Hide the back
 		this.back.setScaleX(0);
-
 		this.setCursor(Cursor.HAND);
+		
+//		this.setTranslateX(100);
+		
 
 		this.setOnMouseDragged((event) -> {
 			
@@ -66,9 +65,14 @@ public class CardView extends Group {
 
 		this.setOnMousePressed((event) -> {
 			
-			
+			System.out.println("LayoutX/Y :");
 			System.out.println(this.getLayoutX());
 			System.out.println(this.getLayoutY());
+			System.out.println("Translate X/Y :");
+			System.out.println(this.getTranslateX());
+			System.out.println(this.getTranslateY());
+			
+			
 		});
 
 		

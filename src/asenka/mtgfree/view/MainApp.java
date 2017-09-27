@@ -14,14 +14,15 @@ public class MainApp extends Application {
 	
 	private BorderPane rootLayout;
 
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-
+		
 		this.primaryStage = primaryStage;
-		this.primaryStage.setTitle("MTG FREE");
-		initRootLayout();
+        this.primaryStage.setTitle("MTGAPP");
 		
 		
+		this.initRootLayout();
 
 	}
 
