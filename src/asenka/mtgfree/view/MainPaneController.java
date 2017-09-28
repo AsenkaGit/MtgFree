@@ -11,19 +11,14 @@ public class MainPaneController {
 	
 	@FXML
 	private void initialize() {
+
+		battlefield.getChildren().addAll(new CardView());
 		
-		System.out.println("Coucou");
-		
-		battlefield.getChildren().addAll(new CardView(null, battlefield));
-		
-		
-		
-		battlefield.setOnMouseClicked((event) -> {
-			System.out.println(event.getX() + " : " + event.getY());
-			System.out.println(event.getSceneX() + " : " + event.getSceneY());
+		this.battlefield.setOnMousePressed((event) -> {
+
 			
 		});
-		
+
 	}
 
 

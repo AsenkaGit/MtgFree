@@ -1,7 +1,7 @@
 package asenka.mtgfree.view;
 
 import javafx.util.Duration;
-
+import jdk.net.NetworkPermission;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
@@ -10,9 +10,11 @@ import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.transform.Rotate;
 
 /**
  * 
@@ -21,74 +23,91 @@ import javafx.scene.layout.Pane;
  */
 public class CardView extends Group {
 
-	public static final double SCALE_LARGE = 1d;
-
-	public static final double SCALE_NORMAL = 0.8d;
-
-	public static final double SCALE_SMALL = 0.4d;
-
 	private final static Duration HALF_FLIP_ROTATION = Duration.seconds(0.25);
 
-	private ImageView back;
+	public final static double SMALL_CARD_HEIGHT = 120d;
 
-	private ImageView front;
+	public final static double MEDIUM_CARD_HEIGHT = 200d;
 
-	private MtgCard card;
+	public final static double LARGE_CARD_HEIGHT = 255d;
 
-	private Point2D dragAnchor;
+	private ImageView backView;
 
-	private boolean displayFront = true;
+	private ImageView frontView;
 
-	private double currentScale;
+	private Point2D previousCursorLocation;
+	
+	private boolean tapped = false;
 
-	private SequentialTransition animation;
+	public CardView() {
 
-	public CardView(MtgCard card, Pane parent) {
-		
+		this.backView = new ImageView(new Image("file:resources/images/mtg/cards/card_mtg_back.jpg"));
+		this.frontView = new ImageView(new Image("file:resources/images/mtg/cards/card_mtg_en_Alpha_Black Lotus.png"));
+		this.frontView.setPreserveRatio(true);
+		this.backView.setPreserveRatio(true);
+		this.frontView.setSmooth(true);
+		this.backView.setSmooth(true);
+		this.frontView.setFitHeight(SMALL_CARD_HEIGHT);
+		this.backView.setFitHeight(SMALL_CARD_HEIGHT);
 
-		this.card = card;
-		this.back = new ImageView(new Image("file:resources/images/mtg/cards/card_mtg_back.jpg"));
-		this.front = new ImageView(new Image("file:resources/images/mtg/cards/card_mtg_en_Alpha_Black Lotus.png"));
-		this.setScale(SCALE_SMALL);
-		this.getChildren().addAll(this.back, this.front);
+		this.backView.setScaleX(0);
 
-		// Hide the back
-		this.back.setScaleX(0);
+		this.getChildren().addAll(this.backView, this.frontView);
 		this.setCursor(Cursor.HAND);
-		
-//		this.setTranslateX(100);
-		
-
-		this.setOnMouseDragged((event) -> {
-			
-		});
 
 		this.setOnMousePressed((event) -> {
 			
-			System.out.println("LayoutX/Y :");
-			System.out.println(this.getLayoutX());
-			System.out.println(this.getLayoutY());
-			System.out.println("Translate X/Y :");
-			System.out.println(this.getTranslateX());
-			System.out.println(this.getTranslateY());
+			// Initialize the location of the cursor
+			this.previousCursorLocation = new Point2D(event.getSceneX(), event.getSceneY());
 			
-			
+			if (event.isAltDown()) {
+				
+				if(!tapped) {
+					this.frontView.getTransforms().add(new Rotate(90, event.getX(), event.getY()));
+					tapped = true;
+				} else {
+					this.frontView.getTransforms().clear();
+					tapped = false;
+				}
+			} 
 		});
 
-		
+		this.setOnMouseDragged((event) -> {
+
+			// Calculate the new card location. deltaX/Y is the v
+			final double deltaX = event.getSceneX() - previousCursorLocation.getX();
+			final double deltaY = event.getSceneY() - previousCursorLocation.getY();
+			final double newPositionX = this.getTranslateX() + deltaX;
+			final double newPositionY = this.getTranslateY() + deltaY;
+
+			// Get the necessary values to control the new card location
+			final Parent battlefieldPane = this.getParent();
+			final double parentWidth = battlefieldPane.getBoundsInParent().getWidth();
+			final double parentHeight = battlefieldPane.getBoundsInParent().getHeight();
+			final double cardWidth = this.getBoundsInParent().getWidth();
+			final double cardHeight = this.getBoundsInParent().getHeight();
+
+			// This values are useful to manage the case when the cursor goes outside
+			// the battlefield pane component
+			boolean updateX = false;
+			boolean updateY = false;
+
+			// Control and update the card location
+			if (newPositionX >= 0 && (newPositionX + cardWidth) <= parentWidth) {
+				this.setTranslateX(newPositionX);
+				updateX = true;
+			}
+
+			if (newPositionY >= 0 && (newPositionY + cardHeight) <= parentHeight) {
+				this.setTranslateY(newPositionY);
+				updateY = true;
+			}
+
+			// Update the previous location of the cursor 
+			this.previousCursorLocation = new Point2D(
+					updateX ? event.getSceneX() : this.previousCursorLocation.getX(),
+					updateY ? event.getSceneY() : this.previousCursorLocation.getY());
+		});
+
 	}
-
-	/**
-	 * Update the scale of the displayed card
-	 * @param scale a double value >= 0
-	 */
-	public void setScale(double scale) {
-
-		this.currentScale = scale;
-		this.back.setScaleX(scale);
-		this.back.setScaleY(scale);
-		this.front.setScaleX(scale);
-		this.front.setScaleY(scale);
-	}
-
 }
