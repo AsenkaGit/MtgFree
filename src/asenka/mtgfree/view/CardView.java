@@ -2,19 +2,29 @@ package asenka.mtgfree.view;
 
 import javafx.util.Duration;
 import jdk.net.NetworkPermission;
+
+import java.util.List;
+
+import org.controlsfx.control.InfoOverlay;
+import org.controlsfx.control.action.ActionProxy;
+
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.geometry.Point2D;
+import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Transform;
 
 /**
  * 
@@ -34,12 +44,26 @@ public class CardView extends Group {
 	private ImageView backView;
 
 	private ImageView frontView;
+	
+	private ContextMenu contextMenu;
 
 	private Point2D previousCursorLocation;
-	
+
 	private boolean tapped = false;
 
 	public CardView() {
+
+		contextMenu = new ContextMenu();
+		contextMenu.setOnShowing((event) -> System.out.println("showing"));
+		contextMenu.setOnShown((event) -> System.out.println("shown"));
+
+		MenuItem item1 = new MenuItem("About");
+		item1.setOnAction((event) -> System.out.println("About"));
+
+		MenuItem item2 = new MenuItem("Preferences");
+		item2.setOnAction((event) -> System.out.println("Preferences"));
+
+		contextMenu.getItems().addAll(item1, item2);
 
 		this.backView = new ImageView(new Image("file:resources/images/mtg/cards/card_mtg_back.jpg"));
 		this.frontView = new ImageView(new Image("file:resources/images/mtg/cards/card_mtg_en_Alpha_Black Lotus.png"));
@@ -56,25 +80,18 @@ public class CardView extends Group {
 		this.setCursor(Cursor.HAND);
 
 		this.setOnMousePressed((event) -> {
-			
+
 			// Initialize the location of the cursor
 			this.previousCursorLocation = new Point2D(event.getSceneX(), event.getSceneY());
-			
-			if (event.isAltDown()) {
-				
-				if(!tapped) {
-					this.frontView.getTransforms().add(new Rotate(90, event.getX(), event.getY()));
-					tapped = true;
-				} else {
-					this.frontView.getTransforms().clear();
-					tapped = false;
-				}
-			} 
+
+			if (event.isSecondaryButtonDown()) {
+				contextMenu.show(this, Side.RIGHT, 0,0);
+			}
 		});
 
 		this.setOnMouseDragged((event) -> {
 
-			// Calculate the new card location. deltaX/Y is the v
+			// Calculate the new card location.
 			final double deltaX = event.getSceneX() - previousCursorLocation.getX();
 			final double deltaY = event.getSceneY() - previousCursorLocation.getY();
 			final double newPositionX = this.getTranslateX() + deltaX;
@@ -103,11 +120,21 @@ public class CardView extends Group {
 				updateY = true;
 			}
 
-			// Update the previous location of the cursor 
+			// Update the previous location of the cursor
 			this.previousCursorLocation = new Point2D(
 					updateX ? event.getSceneX() : this.previousCursorLocation.getX(),
 					updateY ? event.getSceneY() : this.previousCursorLocation.getY());
 		});
+
+	}
+
+	/**
+	 * 
+	 * @param angle
+	 */
+	public void rotate(double angle) {
+
+		List<Transform> transforms = this.getTransforms();
 
 	}
 }
