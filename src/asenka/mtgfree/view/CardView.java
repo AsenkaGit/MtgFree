@@ -20,6 +20,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -46,24 +47,30 @@ public class CardView extends Group {
 	private ImageView frontView;
 	
 	private ContextMenu contextMenu;
+	
+	private MenuItem tapMenuItem;
+	
+	private MenuItem untapMenuItem;
+	
+	private MenuItem hideCardMenuItem;
+	
+	private MenuItem showCardMenuItem;
 
 	private Point2D previousCursorLocation;
 
-	private boolean tapped = false;
+	private boolean tapped;
+	
+	private boolean revealed;
+	
+	private boolean selected;
 
-	public CardView() {
+	public CardView(boolean revealed) {
+		
+		this.tapped = false;
+		this.selected = false;
+		this.revealed = revealed;
 
-		contextMenu = new ContextMenu();
-		contextMenu.setOnShowing((event) -> System.out.println("showing"));
-		contextMenu.setOnShown((event) -> System.out.println("shown"));
-
-		MenuItem item1 = new MenuItem("About");
-		item1.setOnAction((event) -> System.out.println("About"));
-
-		MenuItem item2 = new MenuItem("Preferences");
-		item2.setOnAction((event) -> System.out.println("Preferences"));
-
-		contextMenu.getItems().addAll(item1, item2);
+		initContextMenu();
 
 		this.backView = new ImageView(new Image("file:resources/images/mtg/cards/card_mtg_back.jpg"));
 		this.frontView = new ImageView(new Image("file:resources/images/mtg/cards/card_mtg_en_Alpha_Black Lotus.png"));
@@ -71,8 +78,8 @@ public class CardView extends Group {
 		this.backView.setPreserveRatio(true);
 		this.frontView.setSmooth(true);
 		this.backView.setSmooth(true);
-		this.frontView.setFitHeight(SMALL_CARD_HEIGHT);
-		this.backView.setFitHeight(SMALL_CARD_HEIGHT);
+		this.frontView.setFitHeight(MEDIUM_CARD_HEIGHT);
+		this.backView.setFitHeight(MEDIUM_CARD_HEIGHT);
 
 		this.backView.setScaleX(0);
 
@@ -80,7 +87,9 @@ public class CardView extends Group {
 		this.setCursor(Cursor.HAND);
 
 		this.setOnMousePressed((event) -> {
-
+			
+			this.setSelected(true);
+	
 			// Initialize the location of the cursor
 			this.previousCursorLocation = new Point2D(event.getSceneX(), event.getSceneY());
 
@@ -90,6 +99,8 @@ public class CardView extends Group {
 		});
 
 		this.setOnMouseDragged((event) -> {
+			
+			contextMenu.hide();
 
 			// Calculate the new card location.
 			final double deltaX = event.getSceneX() - previousCursorLocation.getX();
@@ -128,13 +139,59 @@ public class CardView extends Group {
 
 	}
 
+	private void initContextMenu() {
+		
+		this.contextMenu = new ContextMenu();
+		this.tapMenuItem = new MenuItem("Tap");
+		this.untapMenuItem = new MenuItem("Untap");
+		this.tapMenuItem.setDisable(this.tapped);
+		this.untapMenuItem.setDisable(!this.tapped);
+		this.showCardMenuItem = new MenuItem("Reveal");
+		this.hideCardMenuItem = new MenuItem("Hide");
+		this.tapMenuItem.setDisable(this.tapped);
+		this.untapMenuItem.setDisable(!this.tapped);
+		this.contextMenu.getItems().addAll(this.tapMenuItem, this.untapMenuItem);
+		this.contextMenu.getItems().add(new SeparatorMenuItem());
+		this.contextMenu.getItems().addAll(this.showCardMenuItem, this.hideCardMenuItem);
+	}
+
 	/**
-	 * 
-	 * @param angle
+	 * @return the selected
 	 */
-	public void rotate(double angle) {
+	public boolean isSelected() {
 
-		List<Transform> transforms = this.getTransforms();
+		return selected;
+	}
 
+	/**
+	 * @param selected the selected to set
+	 */
+	public void setSelected(boolean selected) {
+
+		if(selected) {
+			this.setStyle("-fx-effect: dropshadow(  gaussian  , blue , 15 , 0.0 , 0 , 0 );");
+		} else {
+			this.setStyle("");
+		}
+		
+		
+
+		this.selected = selected;
+	}
+
+	/**
+	 * @return the revealed
+	 */
+	public boolean isRevealed() {
+
+		return revealed;
+	}
+
+	/**
+	 * @param revealed the revealed to set
+	 */
+	public void setRevealed(boolean revealed) {
+
+		this.revealed = revealed;
 	}
 }
