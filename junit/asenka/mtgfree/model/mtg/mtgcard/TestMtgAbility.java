@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.Test;
 
 import asenka.mtgfree.model.mtg.mtgcard.MtgAbility;
+import asenka.mtgfree.tests.utilities.TestDataProvider;
 
 /**
  * 

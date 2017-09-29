@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 import org.junit.Test;
 
 import asenka.mtgfree.model.mtg.mtgcard.MtgType;
+import asenka.mtgfree.tests.utilities.TestDataProvider;
 
 /**
  * 

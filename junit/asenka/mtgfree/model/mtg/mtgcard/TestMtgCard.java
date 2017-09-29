@@ -17,6 +17,7 @@ import org.junit.Test;
 import asenka.mtgfree.model.mtg.mtgcard.MtgAbility;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 import asenka.mtgfree.model.mtg.mtgcard.MtgColor;
+import asenka.mtgfree.tests.utilities.TestDataProvider;
 
 /**
  * 

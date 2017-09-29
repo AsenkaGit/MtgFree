@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import asenka.mtgfree.model.mtg.mtgcard.TestDataProvider;
+import asenka.mtgfree.tests.utilities.TestDataProvider;
 
 
 public class TestMtgCollection {

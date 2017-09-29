@@ -4,7 +4,7 @@ package asenka.mtgfree.model.mtg;
 import org.junit.Test;
 
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
-import asenka.mtgfree.model.mtg.mtgcard.TestDataProvider;
+import asenka.mtgfree.tests.utilities.TestDataProvider;
 
 
 public class TestMtgLibrary {

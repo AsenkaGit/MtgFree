@@ -64,7 +64,7 @@ public class CardView extends Group {
 	
 	private boolean selected;
 
-	public CardView(boolean revealed) {
+	public CardView(MtgCard card) {
 		
 		this.tapped = false;
 		this.selected = false;

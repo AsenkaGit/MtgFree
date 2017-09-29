@@ -11,7 +11,6 @@ import java.util.NoSuchElementException;
 import org.junit.Test;
 
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
-import asenka.mtgfree.model.mtg.mtgcard.TestDataProvider;
 import asenka.mtgfree.model.mtg.mtgcard.comparators.CardCollectionComparator;
 import asenka.mtgfree.model.mtg.mtgcard.comparators.CardComparator;
 import asenka.mtgfree.model.mtg.mtgcard.comparators.CardCostComparator;
@@ -21,6 +20,7 @@ import asenka.mtgfree.model.mtg.mtgcard.comparators.CardTextComparator;
 import asenka.mtgfree.model.mtg.mtgcard.comparators.CardToughnessComparator;
 import asenka.mtgfree.model.mtg.mtgcard.comparators.CardTypeComparator;
 import asenka.mtgfree.model.mtg.utilities.ManaManager;
+import asenka.mtgfree.tests.utilities.TestDataProvider;
 
 import static asenka.mtgfree.model.mtg.mtgcard.comparators.CardComparator.*;
 import static java.util.Locale.*;

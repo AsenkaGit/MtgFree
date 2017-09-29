@@ -5,8 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import asenka.mtgfree.model.mtg.mtgcard.MtgColor;
-import asenka.mtgfree.model.mtg.mtgcard.TestDataProvider;
 import asenka.mtgfree.model.mtg.utilities.ManaManager;
+import asenka.mtgfree.tests.utilities.TestDataProvider;
 
 import static asenka.mtgfree.model.mtg.mtgcard.MtgColor.*;
 import static asenka.mtgfree.model.mtg.utilities.ManaManager.*;
