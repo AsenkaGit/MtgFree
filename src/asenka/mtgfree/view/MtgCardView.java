@@ -4,11 +4,14 @@ import javafx.util.Duration;
 import jdk.net.NetworkPermission;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.controlsfx.control.InfoOverlay;
 import org.controlsfx.control.action.ActionProxy;
 
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
+import asenka.mtgfree.model.mtg.mtgcard.MtgCardState;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
@@ -32,9 +35,9 @@ import javafx.scene.transform.Transform;
  * @author asenka
  *
  */
-public class CardView extends Group {
+public class MtgCardView extends Group implements Observer {
 
-	private final static Duration HALF_FLIP_ROTATION = Duration.seconds(0.25);
+//	private final static Duration HALF_FLIP_ROTATION = Duration.seconds(0.25);
 
 	public final static double SMALL_CARD_HEIGHT = 120d;
 
@@ -63,12 +66,19 @@ public class CardView extends Group {
 	private boolean revealed;
 	
 	private boolean selected;
+	
+	private MtgCardController controller;
 
-	public CardView(MtgCard card) {
+	public MtgCardView(MtgCardController cardController) {
 		
-		this.tapped = false;
+		this.controller = cardController;
+		final MtgCard card = this.controller.getCard();
+		
+		this.tapped = card.isTapped();
+		this.revealed = card.isRevealed();
 		this.selected = false;
-		this.revealed = revealed;
+		
+		this.setCursor(Cursor.HAND);
 
 		initContextMenu();
 
@@ -84,7 +94,7 @@ public class CardView extends Group {
 		this.backView.setScaleX(0);
 
 		this.getChildren().addAll(this.backView, this.frontView);
-		this.setCursor(Cursor.HAND);
+		
 
 		this.setOnMousePressed((event) -> {
 			
@@ -139,6 +149,9 @@ public class CardView extends Group {
 
 	}
 
+	/**
+	 * Initialize the context menu
+	 */
 	private void initContextMenu() {
 		
 		this.contextMenu = new ContextMenu();
@@ -173,9 +186,6 @@ public class CardView extends Group {
 		} else {
 			this.setStyle("");
 		}
-		
-		
-
 		this.selected = selected;
 	}
 
@@ -192,6 +202,19 @@ public class CardView extends Group {
 	 */
 	public void setRevealed(boolean revealed) {
 
-		this.revealed = revealed;
+		if(this.revealed != revealed) {
+			
+			
+			
+			
+			this.revealed = revealed;
+		}
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		
+		
+		
 	}
 }

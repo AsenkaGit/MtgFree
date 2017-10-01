@@ -1,14 +1,20 @@
 package asenka.mtgfree.model.mtg.mtgcard;
 
+import java.awt.geom.Point2D;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Observable;
 import java.util.Set;
 
+import asenka.mtgfree.model.mtg.events.ChangeMtgCardContextEvent;
+import asenka.mtgfree.model.mtg.events.MoveMtgCardEvent;
+import asenka.mtgfree.model.mtg.events.RevealedMtgCardEvent;
+import asenka.mtgfree.model.mtg.events.TappedMtgCardEvent;
+import asenka.mtgfree.model.mtg.events.VisibilityMtgCardEvent;
 import asenka.mtgfree.model.mtg.mtgcard.comparators.CardCollectionComparator;
 import asenka.mtgfree.model.mtg.mtgcard.comparators.CardComparator;
 import asenka.mtgfree.model.mtg.mtgcard.comparators.CardNameComparator;
-import asenka.mtgfree.model.mtg.mtgcard.state.MtgCardState;
 import asenka.mtgfree.model.mtg.utilities.ManaManager;
 import asenka.mtgfree.model.utilities.Localized;
 
@@ -17,7 +23,15 @@ import asenka.mtgfree.model.utilities.Localized;
  * 
  * @author aAsenka
  */
-public class MtgCard implements Comparable<MtgCard>, Localized {
+/**
+ * @author asenka
+ *
+ */
+/**
+ * @author asenka
+ *
+ */
+public class MtgCard extends Observable implements Comparable<MtgCard>, Localized {
 
 	/**
 	 * The unique id of a card (based on the ID in the database)
@@ -117,18 +131,19 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	private Locale locale;
 
 	/**
-	 * The default comparator used to sort the cards in a collection. 
-	 * The default behavior is to sort 1/ with the card name and then 2/ with the collection name
+	 * The default comparator used to sort the cards in a collection. The default behavior is to sort 1/ with the card name and
+	 * then 2/ with the collection name
 	 */
 	private CardComparator defaultComparator;
-	
+
 	/**
 	 * Create a exact copy of the card <code>copyFrom</code>
+	 * 
 	 * @param copyFrom the card to copy
 	 */
 	// Only package access for test, we'll see later if it's relevant to have it 'public'
 	MtgCard(MtgCard copyFrom) {
-		
+
 		this.id = copyFrom.id;
 		this.name = new String(copyFrom.name);
 		this.cost = new String(copyFrom.cost);
@@ -145,11 +160,9 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 		this.formats = new HashSet<MtgFormat>(copyFrom.formats);
 		this.abilities = new HashSet<MtgAbility>(copyFrom.abilities);
 		this.comments = new String(copyFrom.comments);
-		this.locale =  copyFrom.locale;
+		this.locale = copyFrom.locale;
 		this.defaultComparator = copyFrom.defaultComparator;
 	}
-	
-	
 
 	/**
 	 * Constructor (interesting to instantiate land cards)
@@ -185,7 +198,7 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 		this(id, name, cost, "", "", ManaManager.getInstance().getColors(cost), collectionName, "", "", -1, type, null, rarity,
 				new HashSet<MtgFormat>(), new HashSet<MtgAbility>(), "", locale);
 	}
-	
+
 	/**
 	 * Constructor (interesting to instantiate creature cards)
 	 * 
@@ -199,10 +212,11 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	 * @param rarity
 	 * @param locale
 	 */
-	public MtgCard(int id, String name, String collectionName, String power, String toughness, String cost, MtgType type, MtgRarity rarity, Locale locale) {
+	public MtgCard(int id, String name, String collectionName, String power, String toughness, String cost, MtgType type, MtgRarity rarity,
+			Locale locale) {
 
-		this(id, name, cost, "", "", ManaManager.getInstance().getColors(cost), collectionName, power, toughness, -1, type, null, rarity,
-				new HashSet<MtgFormat>(), new HashSet<MtgAbility>(), "", locale);
+		this(id, name, cost, "", "", ManaManager.getInstance().getColors(cost), collectionName, power, toughness, -1, type,
+				MtgCardState.getNewInitialState(), rarity, new HashSet<MtgFormat>(), new HashSet<MtgAbility>(), "", locale);
 	}
 
 	/**
@@ -217,7 +231,7 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	 * @param collectionName
 	 * @param power a string with a number from 0 to 99 or X or * or a combination of the previous
 	 * @param toughness a string with a number from 0 to 99 or X or * or a combination of the previous
-	 * @param loyalty an integer  > 0 for planeswalker and -1 for all other types of card
+	 * @param loyalty an integer > 0 for planeswalker and -1 for all other types of card
 	 * @param type
 	 * @param state
 	 * @param rarity
@@ -502,22 +516,6 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	/**
 	 * @return
 	 */
-	public MtgCardState getState() {
-
-		return state;
-	}
-
-	/**
-	 * @param state
-	 */
-	public void setState(MtgCardState state) {
-
-		this.state = state;
-	}
-
-	/**
-	 * @return
-	 */
 	public MtgRarity getRarity() {
 
 		return rarity;
@@ -562,18 +560,19 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 
 		this.abilities = abilities;
 	}
-	
+
 	/**
 	 * Add another ability to this card
+	 * 
 	 * @param abilities
 	 */
 	public void addAbilities(MtgAbility... abilities) {
-		
-		if(this.abilities == null) {
+
+		if (this.abilities == null) {
 			this.abilities = new HashSet<MtgAbility>(abilities.length);
 		}
-		
-		for(MtgAbility ability : abilities) {
+
+		for (MtgAbility ability : abilities) {
 			this.abilities.add(ability);
 		}
 	}
@@ -592,6 +591,163 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 	public void setComments(String comments) {
 
 		this.comments = comments;
+	}
+
+	/**
+	 * @return
+	 */
+	protected MtgCardState getState() {
+
+		return state;
+	}
+
+	/**
+	 * 
+	 * @param state
+	 */
+	protected void setState(MtgCardState state) {
+
+		this.setContext(state.getContext());
+		this.setLocation(state.getLocation().getX(), state.getLocation().getY());
+		this.setRevealed(state.isRevealed());
+		this.setTapped(state.isTapped());
+		this.setVisible(state.isVisible());
+	}
+
+	/**
+	 * @return
+	 */
+	public boolean isVisible() {
+
+		return this.state.isVisible();
+	}
+
+	/**
+	 * @param visible
+	 */
+	public void setVisible(boolean visible) {
+
+		this.state.setVisible(visible);
+		super.notifyObservers(new VisibilityMtgCardEvent(this));
+
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isTapped() {
+
+		return this.state.isTapped();
+	}
+
+	/**
+	 * @param tapped
+	 */
+	public void setTapped(boolean tapped) {
+
+		this.state.setTapped(tapped);
+		this.notifyObservers(new TappedMtgCardEvent(this));
+
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isRevealed() {
+
+		return this.state.isRevealed();
+	}
+
+	/**
+	 * @param revealed
+	 */
+	public void setRevealed(boolean revealed) {
+
+		this.state.setRevealed(revealed);
+		this.notifyObservers(new RevealedMtgCardEvent(this));
+
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Point2D.Double getLocation() {
+
+		return this.state.getLocation();
+	}
+
+	/**
+	 * @param location
+	 */
+	public void setLocation(final double x, final double y) {
+
+		this.state.setLocation(x, y);
+
+		this.notifyObservers(new MoveMtgCardEvent(this));
+
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public MtgContext getContext() {
+
+		return this.state.getContext();
+	}
+
+	/**
+	 * Change the context of the card. Updating the context change also the values of the booleans parameters of the card state.
+	 * <br />
+	 * <br />
+	 * <i>e.g.</i> Setting the context to HAND, will change the parameters like this:<br />
+	 * <code>isRevealed = false</code><br />
+	 * <code>isVisible = false</code><br />
+	 * <code>location = null</code><br />
+	 * <code>isTapped = false</code>
+	 * 
+	 * @param context the context of the card
+	 */
+	public void setContext(MtgContext context) {
+
+		ChangeMtgCardContextEvent event = new ChangeMtgCardContextEvent(this);
+
+		switch (context) {
+
+			case OUT_OF_GAME:
+			case LIBRARY:
+			case HAND:
+				this.state.setRevealed(false);
+				this.state.setTapped(false);
+				this.state.setVisible(false);
+				this.state.setLocation(-1.0, -1.0);
+				event.add(new RevealedMtgCardEvent(this));
+				event.add(new TappedMtgCardEvent(this));
+				event.add(new VisibilityMtgCardEvent(this));
+				event.add(new MoveMtgCardEvent(this));
+				break;
+			case GRAVEYARD:
+				this.state.setRevealed(false);
+				this.state.setTapped(false);
+				this.state.setVisible(true); // when moving a card to grave yard, it becomes visible automatically
+				event.add(new RevealedMtgCardEvent(this));
+				event.add(new TappedMtgCardEvent(this));
+				event.add(new VisibilityMtgCardEvent(this));
+				break;
+			case BATTLEFIELD:
+			case EXILE:
+				this.state.setRevealed(false);
+				this.state.setTapped(false);
+				event.add(new RevealedMtgCardEvent(this));
+				event.add(new TappedMtgCardEvent(this));
+				// When moving to exile, the visible status is kept as it was
+				break;
+		}
+		this.state.setContext(context);
+		super.notifyObservers(event);
 	}
 
 	@Override
@@ -727,5 +883,4 @@ public class MtgCard implements Comparable<MtgCard>, Localized {
 
 		return this.defaultComparator.compare(this, card);
 	}
-
 }

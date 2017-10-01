@@ -2,17 +2,17 @@ package asenka.mtgfree.model.mtg;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
-import asenka.mtgfree.model.mtg.mtgcard.state.MtgCardState;
-import asenka.mtgfree.model.mtg.mtgcard.state.MtgContext;
+import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
 
 /**
  * This class represents a game table
  * 
  * @author asenka
  */
-public class MtgGameTable {
+public class MtgGameTable extends Observable {
 
 	/**
 	 * The table name
@@ -101,7 +101,27 @@ public class MtgGameTable {
 
 		this.players = players;
 	}
-
+	
+	/**
+	 * 
+	 * @param player
+	 */
+	public void addPlayer(MtgPlayer player) {
+		
+		this.players.add(player);
+		// TODO Add event
+	}
+	
+	/**
+	 * 
+	 * @param player
+	 */
+	public void removePlayer(MtgPlayer player) {
+		
+		this.players.remove(player);
+		// TODO add event
+	}
+ 
 	/**
 	 * @return
 	 */
@@ -117,13 +137,9 @@ public class MtgGameTable {
 	 */
 	public void addCardToBattleField(MtgCard card) {
 
-		MtgCardState state = card.getState();
-
-		if (state == null) {
-			throw new IllegalArgumentException("The card does not have a state : " + card);
-		}
-		state.setContext(MtgContext.BATTLEFIELD);
+		card.setContext(MtgContext.BATTLEFIELD);
 		this.cardsOnBattlefield.add(card);
+		// TODO Add event
 	}
 
 	/**

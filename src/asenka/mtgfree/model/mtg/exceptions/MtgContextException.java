@@ -1,7 +1,7 @@
 package asenka.mtgfree.model.mtg.exceptions;
 
-import asenka.mtgfree.model.mtg.mtgcard.state.MtgCardState;
-import asenka.mtgfree.model.mtg.mtgcard.state.MtgContext;
+import asenka.mtgfree.model.mtg.mtgcard.MtgCardState;
+import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
 
 /**
  * Error raised when the state of a card is not valid according to the context where

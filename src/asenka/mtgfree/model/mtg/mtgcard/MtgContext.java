@@ -1,4 +1,4 @@
-package asenka.mtgfree.model.mtg.mtgcard.state;
+package asenka.mtgfree.model.mtg.mtgcard;
 
 import java.util.Locale;
 
@@ -20,7 +20,8 @@ public enum MtgContext implements Localized {
 	HAND(getLocalizedContextName("hand")), 
 	BATTLEFIELD(getLocalizedContextName("battlefield")),  
 	GRAVEYARD(getLocalizedContextName("graveyard")), 
-	EXILE(getLocalizedContextName("exile"));
+	EXILE(getLocalizedContextName("exile")),
+	OUT_OF_GAME(getLocalizedContextName("out_of_game"));
 	
 
 	/**
@@ -80,6 +81,8 @@ public enum MtgContext implements Localized {
 			return "Graveyard";
 		} else if ("exile".equals(strContext)) {
 			return "Exile";
+		} else if ("out_of_game".equals(strContext)) {
+			return "Out of game";
 		} else {
 			throw new IllegalArgumentException(strContext + " is not an valid argument for this method");
 		}

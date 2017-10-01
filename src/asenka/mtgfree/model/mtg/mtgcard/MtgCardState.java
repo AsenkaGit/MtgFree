@@ -1,7 +1,9 @@
-package asenka.mtgfree.model.mtg.mtgcard.state;
+package asenka.mtgfree.model.mtg.mtgcard;
+
+import java.awt.geom.Point2D;
 
 import asenka.mtgfree.model.mtg.exceptions.MtgContextException;
-import asenka.mtgfree.model.utilities.Location;
+
 
 /**
  * This card manage the card state :<br />
@@ -33,7 +35,7 @@ public class MtgCardState {
 	/**
 	 * Location of the card on the battlefield (only when context = BATTLEFIELD or EXILE or GRAVEYARD)
 	 */
-	private Location location; // TODO Est-ce que l'on garde cette valeur ? Peut être que cela fait partie de la vue et non du modèle ?
+	private Point2D.Double location;
 
 	/**
 	 * The context of the card
@@ -44,7 +46,7 @@ public class MtgCardState {
 	 * Create a copy of this state
 	 * @param copyFrom the state to copy
 	 */
-	public MtgCardState(MtgCardState copyFrom) {
+	MtgCardState(MtgCardState copyFrom) {
 	
 		this(copyFrom.isTapped, copyFrom.isVisible, copyFrom.isRevealed, copyFrom.context, null);
 		
@@ -61,7 +63,7 @@ public class MtgCardState {
 	 * @param context
 	 * @param location
 	 */
-	public MtgCardState(boolean isTapped, boolean isVisible, boolean isRevealed, MtgContext context, Location location) {
+	MtgCardState(boolean isTapped, boolean isVisible, boolean isRevealed, MtgContext context, Point2D.Double location) {
 
 		super();
 		this.isTapped = isTapped;
@@ -74,7 +76,7 @@ public class MtgCardState {
 	/**
 	 * @return the isTapped
 	 */
-	public boolean isTapped() {
+	boolean isTapped() {
 
 		return isTapped;
 	}
@@ -83,7 +85,7 @@ public class MtgCardState {
 	 * @param isTapped <code>true</code> if you want to tap a card on the battlefield
 	 * @throws MtgContextException if you try to tap a card that is not on the battlefield
 	 */
-	public void setTapped(boolean isTapped) {
+	void setTapped(boolean isTapped) {
 
 		if (isTapped && this.context != MtgContext.BATTLEFIELD) {
 			throw new MtgContextException(this, "Try to tap a card that is not on the battlefield");
@@ -96,7 +98,7 @@ public class MtgCardState {
 	 * 
 	 * @return the isVisible
 	 */
-	public boolean isVisible() {
+	boolean isVisible() {
 
 		return isVisible;
 	}
@@ -104,7 +106,7 @@ public class MtgCardState {
 	/**
 	 * @param isVisible <code>true</code> if you want to make visible a card on the battlefield or in the exile context
 	 */
-	public void setVisible(boolean isVisible) {
+	void setVisible(boolean isVisible) {
 
 		this.isVisible = isVisible;
 	}
@@ -112,7 +114,7 @@ public class MtgCardState {
 	/**
 	 * @return the isRevealed
 	 */
-	public boolean isRevealed() {
+	boolean isRevealed() {
 
 		return isRevealed;
 	}
@@ -123,7 +125,7 @@ public class MtgCardState {
 	 *        default secret state.
 	 * @throws MtgContextException if you try to reveal a card than is not in the HAND context
 	 */
-	public void setRevealed(boolean isRevealed) {
+	void setRevealed(boolean isRevealed) {
 
 		if (isRevealed && this.context != MtgContext.HAND) {
 			throw new MtgContextException(this, "Try to set 'isRevealed' to true when context is not HAND");
@@ -136,7 +138,7 @@ public class MtgCardState {
 	 * 
 	 * @return
 	 */
-	public Location getLocation() {
+	Point2D.Double getLocation() {
 
 		return location;
 	}
@@ -145,7 +147,7 @@ public class MtgCardState {
 	 * 
 	 * @param location
 	 */
-	public void setLocation(Location location) {
+	void setLocation(Point2D.Double location) {
 
 		this.location = location;
 	}
@@ -155,66 +157,28 @@ public class MtgCardState {
 	 * @param x
 	 * @param y
 	 */
-	public void setLocation(int x, int y) {
+	void setLocation(final double x, final double y) {
 
 		if (this.location == null) {
-			this.setLocation(new Location(x, y));
+			this.setLocation(new Point2D.Double(x, y));
 		} else {
-			this.location.setX(x);
-			this.location.setY(y);
+			this.location.setLocation(x, y);
 		}
 	}
 
 	/**
 	 * @return the context
 	 */
-	public MtgContext getContext() {
+	MtgContext getContext() {
 
 		return context;
 	}
 
 	/**
-	 * Change the context of the card. Updating the context change also the values of the booleans parameters of the card state.
-	 * <br />
-	 * <br />
-	 * <i>e.g.</i> Setting the context to HAND, will change the parameters like this:<br />
-	 * <code>isRevealed = false</code><br />
-	 * <code>isVisible = false</code><br />
-	 * <code>location = null</code><br />
-	 * <code>isTapped = false</code>
-	 * 
 	 * @param context the context of the card
 	 */
-	public void setContext(MtgContext context) {
-
-		switch (context) {
-			case LIBRARY:
-				this.isRevealed = false;
-				this.isTapped = false;
-				this.isVisible = false;
-				this.location = null;
-				break;
-			case HAND:
-				this.isRevealed = false;
-				this.isTapped = false;
-				this.isVisible = false;
-				this.location = null;
-				break;
-			case BATTLEFIELD:
-				this.isRevealed = false;
-				this.isTapped = false;
-				break;
-			case GRAVEYARD:
-				this.isRevealed = false;
-				this.isTapped = false;
-				this.isVisible = true; // when moving a card to graveyard, it becomes visible automatically
-				break;
-			case EXILE:
-				this.isRevealed = false;
-				this.isTapped = false;
-				// When moving to exile, the visible status is kept as it was
-				break;
-		}
+	void setContext(MtgContext context) {
+		
 		this.context = context;
 	}
 
@@ -264,19 +228,19 @@ public class MtgCardState {
 	}
 
 	/**
-	 * Returns a new initial state (for the card when the game starts) :<br />
+	 * Returns a new initial state :<br />
 	 * <ul>
 	 * <li><code>isTapped = false</code></li>
 	 * <li><code>isVisible = false</code></li>
 	 * <li><code>isRevealed = false</code></li>
-	 * <li><code>context = LIBRARY</code></li>
+	 * <li><code>context = OUT_OF_GAME</code></li>
 	 * <li><code>location = null</code></li>
 	 * </ul>
 	 * 
 	 * @return a initial card state (when the cards are in the library)
 	 */
-	public static MtgCardState getNewInitialState() {
+	static MtgCardState getNewInitialState() {
 
-		return new MtgCardState(false, false, false, MtgContext.LIBRARY, null);
+		return new MtgCardState(false, false, false, MtgContext.OUT_OF_GAME, null);
 	}
 }

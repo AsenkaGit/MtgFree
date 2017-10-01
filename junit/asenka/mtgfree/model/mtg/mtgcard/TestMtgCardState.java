@@ -1,14 +1,15 @@
-package asenka.mtgfree.model.mtg.mtgcard.state;
+package asenka.mtgfree.model.mtg.mtgcard;
 
 import static org.junit.Assert.*;
+
+import java.awt.geom.Point2D;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import asenka.mtgfree.model.mtg.exceptions.MtgContextException;
-import asenka.mtgfree.model.mtg.mtgcard.state.MtgCardState;
-import asenka.mtgfree.model.mtg.mtgcard.state.MtgContext;
-import asenka.mtgfree.model.utilities.Location;
+import asenka.mtgfree.model.mtg.mtgcard.MtgCardState;
+import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
 
 /**
  * 
@@ -36,14 +37,14 @@ public class TestMtgCardState {
 				new MtgCardState(true, true, true, MtgContext.EXILE, null));
 
 		assertNotEquals(new MtgCardState(true, true, true, MtgContext.BATTLEFIELD, null),
-				new MtgCardState(true, true, true, MtgContext.BATTLEFIELD, new Location(0, 0)));
+				new MtgCardState(true, true, true, MtgContext.BATTLEFIELD, new Point2D.Double(0, 0)));
 	}
 
 	@Test
 	public void testHashCode() {
 
-		assertEquals(new MtgCardState(true, true, true, MtgContext.BATTLEFIELD, new Location(0, 0)).hashCode(),
-				new MtgCardState(true, true, true, MtgContext.BATTLEFIELD, new Location(0, 0)).hashCode());
+		assertEquals(new MtgCardState(true, true, true, MtgContext.BATTLEFIELD, new Point2D.Double(0, 0)).hashCode(),
+				new MtgCardState(true, true, true, MtgContext.BATTLEFIELD, new Point2D.Double(0, 0)).hashCode());
 	}
 
 	@Test
@@ -79,9 +80,9 @@ public class TestMtgCardState {
 		this.testedState.setLocation(125, 241);
 		assertFalse(this.testedState.isRevealed());
 		assertFalse(this.testedState.isTapped());
-		assertEquals(this.testedState.getLocation(), new Location(125, 241));
+		assertEquals(this.testedState.getLocation(), new Point2D.Double(125, 241));
 		this.testedState.setLocation(200, 241);
-		assertEquals(this.testedState.getLocation(), new Location(200, 241));
+		assertEquals(this.testedState.getLocation(), new Point2D.Double(200, 241));
 		this.testedState.setVisible(true);
 		assertTrue(this.testedState.isVisible());
 		this.testedState.setTapped(true);
@@ -90,7 +91,7 @@ public class TestMtgCardState {
 		assertFalse(this.testedState.isRevealed());
 		assertFalse(this.testedState.isTapped());
 		assertTrue(this.testedState.isVisible());
-		assertEquals(this.testedState.getLocation(), new Location(200, 241));
+		assertEquals(this.testedState.getLocation(), new Point2D.Double(200, 241));
 
 		this.testedState.setContext(MtgContext.HAND);
 		assertFalse(this.testedState.isRevealed());

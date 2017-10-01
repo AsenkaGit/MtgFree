@@ -4,12 +4,12 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Observable;
 import java.util.Set;
 
 import asenka.mtgfree.model.mtg.exceptions.MtgDeckException;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
-import asenka.mtgfree.model.mtg.mtgcard.state.MtgCardState;
-import asenka.mtgfree.model.mtg.mtgcard.state.MtgContext;
+import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
 
 /**
  * This class represents a player and stores all the data related to the player
@@ -28,7 +28,7 @@ import asenka.mtgfree.model.mtg.mtgcard.state.MtgContext;
  * 
  * @author asenka
  */
-public class MtgPlayer implements Comparable<MtgPlayer> {
+public class MtgPlayer extends Observable implements Comparable<MtgPlayer> {
 
 	/**
 	 * The collator used to compare the deck's names
@@ -331,11 +331,6 @@ public class MtgPlayer implements Comparable<MtgPlayer> {
 	 */
 	private static void updateCardState(MtgCard card, MtgContext context) throws IllegalArgumentException {
 
-		MtgCardState state = card.getState();
-
-		if (state == null) {
-			throw new IllegalArgumentException("The card does not have a state : " + card);
-		}
-		state.setContext(context);
+		card.setContext(context);
 	}
 }

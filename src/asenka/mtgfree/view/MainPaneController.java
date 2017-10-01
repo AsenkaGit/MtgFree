@@ -17,14 +17,14 @@ public class MainPaneController {
 	@FXML
 	private void initialize() {
 		
-		MtgCard card = new MtgCard(1, "Black Lotus", "Alpha", "0", new MtgType(1, "Artefact", Locale.ENGLISH), MtgRarity.MYTHIC, Locale.ENGLISH);
-
-		battlefield.getChildren().add(new CardView(card));
-		
-		this.battlefield.setOnMousePressed((event) -> {
-
-			
-		});
+//		MtgCard card = new MtgCard(1, "Black Lotus", "Alpha", "0", new MtgType(1, "Artefact", Locale.ENGLISH), MtgRarity.MYTHIC, Locale.ENGLISH);
+//
+//		battlefield.getChildren().add(new MtgCardView(card));
+//		
+//		this.battlefield.setOnMousePressed((event) -> {
+//
+//			
+//		});
 
 	}
 
