@@ -9,6 +9,7 @@ import java.util.Set;
 
 import asenka.mtgfree.model.mtg.events.ChangeMtgCardContextEvent;
 import asenka.mtgfree.model.mtg.events.MoveMtgCardEvent;
+import asenka.mtgfree.model.mtg.events.MtgCardSelectionEvent;
 import asenka.mtgfree.model.mtg.events.RevealedMtgCardEvent;
 import asenka.mtgfree.model.mtg.events.TappedMtgCardEvent;
 import asenka.mtgfree.model.mtg.events.VisibilityMtgCardEvent;
@@ -22,10 +23,6 @@ import asenka.mtgfree.model.utilities.Localized;
  * This class represents a Mtg Card. It stores all the necessary data about the cards
  * 
  * @author aAsenka
- */
-/**
- * @author asenka
- *
  */
 /**
  * @author asenka
@@ -141,7 +138,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	 * 
 	 * @param copyFrom the card to copy
 	 */
-	// Only package access for test, we'll see later if it's relevant to have it 'public'
+	// TODO Only package access for test, we'll see later if it's relevant to have it 'public'
 	MtgCard(MtgCard copyFrom) {
 
 		this.id = copyFrom.id;
@@ -177,8 +174,8 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	 */
 	public MtgCard(int id, String name, String collectionName, MtgColor color, MtgType type, MtgRarity rarity, Locale locale) {
 
-		this(id, name, "", "", "", null, collectionName, "", "", -1, type, null, rarity, new HashSet<MtgFormat>(),
-				new HashSet<MtgAbility>(), "", locale);
+		this(id, name, "", "", "", null, collectionName, "", "", -1, type, MtgCardState.getNewInitialState(), rarity,
+				new HashSet<MtgFormat>(), new HashSet<MtgAbility>(), "", locale);
 		this.setColors(color);
 	}
 
@@ -195,8 +192,8 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	 */
 	public MtgCard(int id, String name, String collectionName, String cost, MtgType type, MtgRarity rarity, Locale locale) {
 
-		this(id, name, cost, "", "", ManaManager.getInstance().getColors(cost), collectionName, "", "", -1, type, null, rarity,
-				new HashSet<MtgFormat>(), new HashSet<MtgAbility>(), "", locale);
+		this(id, name, cost, "", "", ManaManager.getInstance().getColors(cost), collectionName, "", "", -1, type,
+				MtgCardState.getNewInitialState(), rarity, new HashSet<MtgFormat>(), new HashSet<MtgAbility>(), "", locale);
 	}
 
 	/**
@@ -368,9 +365,9 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * 
-	 * @param colors
-	 * @return
+	 * Compare a card to an array of colors and check if all the colors matches the card color
+	 * @param colors the array of color(s) (it can contains only one color)
+	 * @return <code>true</code> if the array of color(s) perfectly matches the card color(s)
 	 */
 	public boolean isColor(MtgColor... colors) {
 
@@ -394,14 +391,10 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	 */
 	public void setColors(Set<MtgColor> colors) throws IllegalArgumentException {
 
-		// Even though, an exception has been raised due to cost and
-		// color incompatibility the value is still set. That's why
-		// the setting is done before the checking.
-		this.colors = colors;
-
 		if (colors != null && colors.equals(ManaManager.getInstance().getColors(this.cost))) {
 			throw new IllegalArgumentException("The new color(s) " + colors + " do not match the card cost : " + cost);
 		}
+		this.colors = colors;
 	}
 
 	/**
@@ -650,6 +643,24 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 		this.notifyObservers(new TappedMtgCardEvent(this));
 
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isSelected() {
+	
+		return this.state.isSelected();
+	}
+	
+	/**
+	 * 
+	 * @param selected
+	 */
+	public void setSelected(boolean selected) {
+		this.state.setSelected(selected);
+		this.notifyObservers(new MtgCardSelectionEvent(this));
+	}
 
 	/**
 	 * 
@@ -659,6 +670,8 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 
 		return this.state.isRevealed();
 	}
+
+	
 
 	/**
 	 * @param revealed
@@ -706,7 +719,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	 * <i>e.g.</i> Setting the context to HAND, will change the parameters like this:<br />
 	 * <code>isRevealed = false</code><br />
 	 * <code>isVisible = false</code><br />
-	 * <code>location = null</code><br />
+	 * <code>location = (-1, -1)</code><br />
 	 * <code>isTapped = false</code>
 	 * 
 	 * @param context the context of the card
@@ -750,6 +763,11 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 		super.notifyObservers(event);
 	}
 
+	/**
+	 * Use this value to know the card language
+	 * 
+	 * @return the locale used for the card
+	 */
 	@Override
 	public Locale getLocale() {
 

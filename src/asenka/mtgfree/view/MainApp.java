@@ -20,8 +20,6 @@ public class MainApp extends Application {
 		
 		this.primaryStage = primaryStage;
         this.primaryStage.setTitle("MTGAPP");
-		
-		
 		this.initRootLayout();
 
 	}

@@ -4,13 +4,12 @@ import java.awt.geom.Point2D;
 
 import asenka.mtgfree.model.mtg.exceptions.MtgContextException;
 
-
 /**
  * This card manage the card state :<br />
  * > tapped/untapped (only on battlefield)<br />
  * > visible/hidden (only on battlefield and exile)<br />
  * > secret/revealed (only in the player's hand)<br />
- * > the context of the card : Library, Hand, Graveyard, etc...)<br />
+ * > the context of the card : Library, Hand, Grave yard, etc...)<br />
  * 
  * @author asenka
  */
@@ -40,23 +39,27 @@ public class MtgCardState {
 	/**
 	 * The context of the card
 	 */
-	private MtgContext context; 
+	private MtgContext context;
+
+	/**
+	 * This value indicates whether or not the card is selected
+	 */
+	private boolean selected;
 
 	/**
 	 * Create a copy of this state
+	 * 
 	 * @param copyFrom the state to copy
 	 */
 	MtgCardState(MtgCardState copyFrom) {
-	
-		this(copyFrom.isTapped, copyFrom.isVisible, copyFrom.isRevealed, copyFrom.context, null);
-		
-		if(copyFrom.location != null) {
-			this.setLocation(copyFrom.location.getX(), copyFrom.location.getY());
-		}
-		
+
+		this(copyFrom.isTapped, copyFrom.isVisible, copyFrom.isRevealed, copyFrom.context,
+				new Point2D.Double(copyFrom.location.getX(), copyFrom.location.getY()));
 	}
 
 	/**
+	 * Full constructor
+	 * 
 	 * @param isTapped
 	 * @param isVisible
 	 * @param isRevealed
@@ -85,7 +88,7 @@ public class MtgCardState {
 	 * @param isTapped <code>true</code> if you want to tap a card on the battlefield
 	 * @throws MtgContextException if you try to tap a card that is not on the battlefield
 	 */
-	void setTapped(boolean isTapped) {
+	void setTapped(boolean isTapped) throws MtgContextException {
 
 		if (isTapped && this.context != MtgContext.BATTLEFIELD) {
 			throw new MtgContextException(this, "Try to tap a card that is not on the battlefield");
@@ -104,6 +107,8 @@ public class MtgCardState {
 	}
 
 	/**
+	 * Set the visibility of the card on the battlefield
+	 * 
 	 * @param isVisible <code>true</code> if you want to make visible a card on the battlefield or in the exile context
 	 */
 	void setVisible(boolean isVisible) {
@@ -112,7 +117,9 @@ public class MtgCardState {
 	}
 
 	/**
-	 * @return the isRevealed
+	 * Set is a card in a player's hand is revealed to other player(s) or not
+	 * 
+	 * @return <code>true</code> if the card should be seen by others players
 	 */
 	boolean isRevealed() {
 
@@ -125,13 +132,31 @@ public class MtgCardState {
 	 *        default secret state.
 	 * @throws MtgContextException if you try to reveal a card than is not in the HAND context
 	 */
-	void setRevealed(boolean isRevealed) {
+	void setRevealed(boolean isRevealed) throws MtgContextException {
 
 		if (isRevealed && this.context != MtgContext.HAND) {
 			throw new MtgContextException(this, "Try to set 'isRevealed' to true when context is not HAND");
 		} else {
 			this.isRevealed = isRevealed;
 		}
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	boolean isSelected() {
+
+		return this.selected;
+	}
+
+	/**
+	 * 
+	 * @param selected
+	 */
+	void setSelected(boolean selected) {
+
+		this.selected = selected;
 	}
 
 	/**
@@ -159,11 +184,7 @@ public class MtgCardState {
 	 */
 	void setLocation(final double x, final double y) {
 
-		if (this.location == null) {
-			this.setLocation(new Point2D.Double(x, y));
-		} else {
-			this.location.setLocation(x, y);
-		}
+		this.location.setLocation(x, y);
 	}
 
 	/**
@@ -178,7 +199,7 @@ public class MtgCardState {
 	 * @param context the context of the card
 	 */
 	void setContext(MtgContext context) {
-		
+
 		this.context = context;
 	}
 
@@ -234,13 +255,13 @@ public class MtgCardState {
 	 * <li><code>isVisible = false</code></li>
 	 * <li><code>isRevealed = false</code></li>
 	 * <li><code>context = OUT_OF_GAME</code></li>
-	 * <li><code>location = null</code></li>
+	 * <li><code>location = (-1, -1)</code></li>
 	 * </ul>
 	 * 
 	 * @return a initial card state (when the cards are in the library)
 	 */
 	static MtgCardState getNewInitialState() {
 
-		return new MtgCardState(false, false, false, MtgContext.OUT_OF_GAME, null);
+		return new MtgCardState(false, false, false, MtgContext.OUT_OF_GAME, new Point2D.Double(-1.0, -1.0));
 	}
 }

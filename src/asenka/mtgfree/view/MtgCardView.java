@@ -1,34 +1,20 @@
 package asenka.mtgfree.view;
 
-import javafx.util.Duration;
-import jdk.net.NetworkPermission;
-
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.controlsfx.control.InfoOverlay;
-import org.controlsfx.control.action.ActionProxy;
-
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
-import asenka.mtgfree.model.mtg.mtgcard.MtgCardState;
-import javafx.animation.ScaleTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.Transition;
+import asenka.mtgfree.utilities.FileManager;
 import javafx.geometry.Point2D;
 import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Transform;
 
 /**
  * 
@@ -37,79 +23,131 @@ import javafx.scene.transform.Transform;
  */
 public class MtgCardView extends Group implements Observer {
 
-//	private final static Duration HALF_FLIP_ROTATION = Duration.seconds(0.25);
+	// private final static Duration HALF_FLIP_ROTATION = Duration.seconds(0.25);
 
-	public final static double SMALL_CARD_HEIGHT = 120d;
+	public static final double SMALL_CARD_HEIGHT = 120d;
 
-	public final static double MEDIUM_CARD_HEIGHT = 200d;
+	public static final double MEDIUM_CARD_HEIGHT = 200d;
 
-	public final static double LARGE_CARD_HEIGHT = 255d;
+	public static final double LARGE_CARD_HEIGHT = 255d;
+
+	private static final FileManager FILE_MANAGER = FileManager.getInstance();
+
+	public static final Image MTGCARD_BACK_IMAGE = new Image(FILE_MANAGER.getMtgBackInputStream());
 
 	private ImageView backView;
 
 	private ImageView frontView;
-	
+
 	private ContextMenu contextMenu;
-	
+
 	private MenuItem tapMenuItem;
-	
+
 	private MenuItem untapMenuItem;
-	
+
 	private MenuItem hideCardMenuItem;
-	
+
 	private MenuItem showCardMenuItem;
 
 	private Point2D previousCursorLocation;
 
 	private boolean tapped;
-	
-	private boolean revealed;
-	
-	private boolean selected;
-	
+
+	// private boolean displayFront;
+	//
+//	private boolean selected;
+
 	private MtgCardController controller;
 
+	/**
+	 * 
+	 * @param cardController
+	 */
 	public MtgCardView(MtgCardController cardController) {
-		
+
 		this.controller = cardController;
 		final MtgCard card = this.controller.getCard();
-		
 		this.tapped = card.isTapped();
-		this.revealed = card.isRevealed();
-		this.selected = false;
-		
-		this.setCursor(Cursor.HAND);
+//		this.selected = card.isSelected();
+		card.addObserver(this);
 
 		initContextMenu();
+		initCardsImage();
+		initCardViewStyle();
+		initActions();
 
-		this.backView = new ImageView(new Image("file:resources/images/mtg/cards/card_mtg_back.jpg"));
-		this.frontView = new ImageView(new Image("file:resources/images/mtg/cards/card_mtg_en_Alpha_Black Lotus.png"));
+	}
+
+	/**
+	 * Initialize the context menu
+	 */
+	private void initContextMenu() {
+
+		this.contextMenu = new ContextMenu();
+		this.tapMenuItem = new MenuItem("Tap");
+		this.untapMenuItem = new MenuItem("Untap");
+		this.tapMenuItem.setDisable(this.tapped);
+		this.untapMenuItem.setDisable(!this.tapped);
+		this.showCardMenuItem = new MenuItem("Reveal");
+		this.hideCardMenuItem = new MenuItem("Hide");
+		this.tapMenuItem.setDisable(this.tapped);
+		this.untapMenuItem.setDisable(!this.tapped);
+		this.contextMenu.getItems().addAll(this.tapMenuItem, this.untapMenuItem);
+		this.contextMenu.getItems().add(new SeparatorMenuItem());
+		this.contextMenu.getItems().addAll(this.showCardMenuItem, this.hideCardMenuItem);
+	}
+
+	/**
+	 * 
+	 */
+	private void initCardsImage() {
+
+		final MtgCard card = this.controller.getCard();
+
+		this.frontView = new ImageView(new Image(FILE_MANAGER.getCardImageInputStream(card)));
 		this.frontView.setPreserveRatio(true);
-		this.backView.setPreserveRatio(true);
 		this.frontView.setSmooth(true);
+
+		this.backView = new ImageView(MTGCARD_BACK_IMAGE);
+		this.backView.setPreserveRatio(true);
 		this.backView.setSmooth(true);
+
 		this.frontView.setFitHeight(MEDIUM_CARD_HEIGHT);
 		this.backView.setFitHeight(MEDIUM_CARD_HEIGHT);
-
-		this.backView.setScaleX(0);
+		
+		this.setVisibleImage(card.isVisible());
 
 		this.getChildren().addAll(this.backView, this.frontView);
-		
+	}
+
+	/**
+	 * 
+	 */
+	private void initCardViewStyle() {
+
+		this.setCursor(Cursor.HAND);
+	}
+
+	/**
+	 * 
+	 */
+	private void initActions() {
 
 		this.setOnMousePressed((event) -> {
-			
-			this.setSelected(true);
-	
+
+			this.setSelectedStyle(true);
+			this.controller.setSelected(true);
+
 			// Initialize the location of the cursor
 			this.previousCursorLocation = new Point2D(event.getSceneX(), event.getSceneY());
 
 			if (event.isSecondaryButtonDown()) {
-				contextMenu.show(this, Side.RIGHT, 0,0);
+				contextMenu.show(this, Side.RIGHT, 0, 0);
 			}
 		});
 
 		this.setOnMouseDragged((event) -> {
-			
+
 			contextMenu.hide();
 
 			// Calculate the new card location.
@@ -142,79 +180,37 @@ public class MtgCardView extends Group implements Observer {
 			}
 
 			// Update the previous location of the cursor
-			this.previousCursorLocation = new Point2D(
-					updateX ? event.getSceneX() : this.previousCursorLocation.getX(),
+			this.previousCursorLocation = new Point2D(updateX ? event.getSceneX() : this.previousCursorLocation.getX(),
 					updateY ? event.getSceneY() : this.previousCursorLocation.getY());
 		});
 
 	}
 
 	/**
-	 * Initialize the context menu
-	 */
-	private void initContextMenu() {
-		
-		this.contextMenu = new ContextMenu();
-		this.tapMenuItem = new MenuItem("Tap");
-		this.untapMenuItem = new MenuItem("Untap");
-		this.tapMenuItem.setDisable(this.tapped);
-		this.untapMenuItem.setDisable(!this.tapped);
-		this.showCardMenuItem = new MenuItem("Reveal");
-		this.hideCardMenuItem = new MenuItem("Hide");
-		this.tapMenuItem.setDisable(this.tapped);
-		this.untapMenuItem.setDisable(!this.tapped);
-		this.contextMenu.getItems().addAll(this.tapMenuItem, this.untapMenuItem);
-		this.contextMenu.getItems().add(new SeparatorMenuItem());
-		this.contextMenu.getItems().addAll(this.showCardMenuItem, this.hideCardMenuItem);
-	}
-
-	/**
-	 * @return the selected
-	 */
-	public boolean isSelected() {
-
-		return selected;
-	}
-
-	/**
 	 * @param selected the selected to set
 	 */
-	public void setSelected(boolean selected) {
+	private void setSelectedStyle(boolean selected) {
 
-		if(selected) {
+		if (selected) {
 			this.setStyle("-fx-effect: dropshadow(  gaussian  , blue , 15 , 0.0 , 0 , 0 );");
 		} else {
 			this.setStyle("");
 		}
-		this.selected = selected;
 	}
 
 	/**
-	 * @return the revealed
+	 * 
+	 * @param displayFront
 	 */
-	public boolean isRevealed() {
+	private void setVisibleImage(boolean displayFront) {
 
-		return revealed;
-	}
-
-	/**
-	 * @param revealed the revealed to set
-	 */
-	public void setRevealed(boolean revealed) {
-
-		if(this.revealed != revealed) {
-			
-			
-			
-			
-			this.revealed = revealed;
-		}
+		this.backView.setVisible(!displayFront);
+		this.frontView.setVisible(displayFront);
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
-		
-		
-		
+	public void update(Observable card, Object event) {
+
+		System.out.println("CardView " + (MtgCard) card + " has been update : " + event.getClass().getSimpleName());
 	}
 }
