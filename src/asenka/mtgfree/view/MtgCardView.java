@@ -3,6 +3,9 @@ package asenka.mtgfree.view;
 import java.util.Observable;
 import java.util.Observer;
 
+import asenka.mtgfree.model.mtg.events.MoveMtgCardEvent;
+import asenka.mtgfree.model.mtg.events.TappedMtgCardEvent;
+import asenka.mtgfree.model.mtg.events.VisibilityMtgCardEvent;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 import asenka.mtgfree.utilities.FileManager;
 import javafx.geometry.Point2D;
@@ -55,7 +58,7 @@ public class MtgCardView extends Group implements Observer {
 
 	// private boolean displayFront;
 	//
-//	private boolean selected;
+	// private boolean selected;
 
 	private MtgCardController controller;
 
@@ -68,14 +71,14 @@ public class MtgCardView extends Group implements Observer {
 		this.controller = cardController;
 		final MtgCard card = this.controller.getCard();
 		this.tapped = card.isTapped();
-//		this.selected = card.isSelected();
+		// this.selected = card.isSelected();
 		card.addObserver(this);
 
 		initContextMenu();
 		initCardsImage();
 		initCardViewStyle();
 		initActions();
-		
+
 		controller.setSelected(true);
 
 	}
@@ -85,18 +88,36 @@ public class MtgCardView extends Group implements Observer {
 	 */
 	private void initContextMenu() {
 
+		final boolean visible = this.controller.getCard().isVisible();
+
 		this.contextMenu = new ContextMenu();
 		this.tapMenuItem = new MenuItem("Tap");
 		this.untapMenuItem = new MenuItem("Untap");
 		this.tapMenuItem.setDisable(this.tapped);
 		this.untapMenuItem.setDisable(!this.tapped);
-		this.showCardMenuItem = new MenuItem("Reveal");
+		this.showCardMenuItem = new MenuItem("Show");
 		this.hideCardMenuItem = new MenuItem("Hide");
-		this.tapMenuItem.setDisable(this.tapped);
-		this.untapMenuItem.setDisable(!this.tapped);
+		this.showCardMenuItem.setDisable(visible);
+		this.hideCardMenuItem.setDisable(!visible);
+
+		initContextMenuActions();
+
 		this.contextMenu.getItems().addAll(this.tapMenuItem, this.untapMenuItem);
 		this.contextMenu.getItems().add(new SeparatorMenuItem());
 		this.contextMenu.getItems().addAll(this.showCardMenuItem, this.hideCardMenuItem);
+	}
+
+	/**
+	 * 
+	 */
+	private void initContextMenuActions() {
+
+		this.tapMenuItem.setOnAction((event) -> this.controller.setTapped(true));
+		this.untapMenuItem.setOnAction((event) -> this.controller.setTapped(false));
+
+		this.showCardMenuItem.setOnAction((event) -> this.controller.setVisible(true));
+		this.hideCardMenuItem.setOnAction((event) -> this.controller.setVisible(false));
+
 	}
 
 	/**
@@ -116,7 +137,7 @@ public class MtgCardView extends Group implements Observer {
 
 		this.frontView.setFitHeight(MEDIUM_CARD_HEIGHT);
 		this.backView.setFitHeight(MEDIUM_CARD_HEIGHT);
-		
+
 		this.setVisibleImage(card.isVisible());
 
 		this.getChildren().addAll(this.backView, this.frontView);
@@ -184,7 +205,7 @@ public class MtgCardView extends Group implements Observer {
 			// Update the previous location of the cursor
 			this.previousCursorLocation = new Point2D(updateX ? event.getSceneX() : this.previousCursorLocation.getX(),
 					updateY ? event.getSceneY() : this.previousCursorLocation.getY());
-			
+
 			controller.setLocation(newPositionX, newPositionY);
 		});
 
@@ -213,9 +234,27 @@ public class MtgCardView extends Group implements Observer {
 	}
 
 	@Override
-	public void update(Observable card, Object event) {
-		
+	public void update(Observable observedObject, Object event) {
 
-		System.out.println("CardView " + (MtgCard) card + " has been update : " + event.getClass().getSimpleName());
+		final MtgCard card = (MtgCard) observedObject;
+
+		if (event instanceof TappedMtgCardEvent) {
+
+			if (card.isTapped()) {
+				this.setRotate(90);
+			} else {
+				this.setRotate(0);
+			}
+			this.tapMenuItem.setDisable(card.isTapped());
+			this.untapMenuItem.setDisable(!card.isTapped());
+
+		} else if (event instanceof MoveMtgCardEvent) {
+
+			System.out.println(event + " Card moved");
+		} else if (event instanceof VisibilityMtgCardEvent) {
+			this.setVisibleImage(card.isVisible());
+			this.showCardMenuItem.setDisable(card.isVisible());
+			this.hideCardMenuItem.setDisable(!card.isVisible());
+		}
 	}
 }
