@@ -75,6 +75,8 @@ public class MtgCardView extends Group implements Observer {
 		initCardsImage();
 		initCardViewStyle();
 		initActions();
+		
+		controller.setSelected(true);
 
 	}
 
@@ -182,6 +184,8 @@ public class MtgCardView extends Group implements Observer {
 			// Update the previous location of the cursor
 			this.previousCursorLocation = new Point2D(updateX ? event.getSceneX() : this.previousCursorLocation.getX(),
 					updateY ? event.getSceneY() : this.previousCursorLocation.getY());
+			
+			controller.setLocation(newPositionX, newPositionY);
 		});
 
 	}
@@ -210,6 +214,7 @@ public class MtgCardView extends Group implements Observer {
 
 	@Override
 	public void update(Observable card, Object event) {
+		
 
 		System.out.println("CardView " + (MtgCard) card + " has been update : " + event.getClass().getSimpleName());
 	}

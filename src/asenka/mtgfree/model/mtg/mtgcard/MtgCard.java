@@ -621,6 +621,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	public void setVisible(boolean visible) {
 
 		this.state.setVisible(visible);
+		super.setChanged();
 		super.notifyObservers(new VisibilityMtgCardEvent(this));
 
 	}
@@ -640,7 +641,8 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	public void setTapped(boolean tapped) {
 
 		this.state.setTapped(tapped);
-		this.notifyObservers(new TappedMtgCardEvent(this));
+		super.setChanged();
+		super.notifyObservers(new TappedMtgCardEvent(this));
 
 	}
 	
@@ -659,7 +661,8 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	 */
 	public void setSelected(boolean selected) {
 		this.state.setSelected(selected);
-		this.notifyObservers(new MtgCardSelectionEvent(this));
+		super.setChanged();
+		super.notifyObservers(new MtgCardSelectionEvent(this));
 	}
 
 	/**
@@ -679,7 +682,8 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	public void setRevealed(boolean revealed) {
 
 		this.state.setRevealed(revealed);
-		this.notifyObservers(new RevealedMtgCardEvent(this));
+		super.setChanged();
+		super.notifyObservers(new RevealedMtgCardEvent(this));
 
 	}
 
@@ -698,8 +702,8 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	public void setLocation(final double x, final double y) {
 
 		this.state.setLocation(x, y);
-
-		this.notifyObservers(new MoveMtgCardEvent(this));
+		super.setChanged();
+		super.notifyObservers(new MoveMtgCardEvent(this));
 
 	}
 
