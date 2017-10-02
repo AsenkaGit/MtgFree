@@ -13,6 +13,7 @@ import asenka.mtgfree.model.mtg.events.MtgCardSelectionEvent;
 import asenka.mtgfree.model.mtg.events.RevealedMtgCardEvent;
 import asenka.mtgfree.model.mtg.events.TappedMtgCardEvent;
 import asenka.mtgfree.model.mtg.events.VisibilityMtgCardEvent;
+import asenka.mtgfree.model.mtg.exceptions.MtgContextException;
 import asenka.mtgfree.model.mtg.mtgcard.comparators.CardCollectionComparator;
 import asenka.mtgfree.model.mtg.mtgcard.comparators.CardComparator;
 import asenka.mtgfree.model.mtg.mtgcard.comparators.CardNameComparator;
@@ -23,6 +24,9 @@ import asenka.mtgfree.model.utilities.Localized;
  * This class represents a Mtg Card. It stores all the necessary data about the cards
  * 
  * @author asenka
+ * @see Observable
+ * @see Comparable
+ * @see Localized
  */
 public class MtgCard extends Observable implements Comparable<MtgCard>, Localized {
 
@@ -92,12 +96,6 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	private MtgType type;
 
 	/**
-	 * The state of a card. Only used during a game, it stores all the necessary data to manipulate the card while playing
-	 * (coordinates, context, is the card tapped or not, etc.)
-	 */
-	private MtgCardState state;
-
-	/**
 	 * The rarity level of a card
 	 */
 	private MtgRarity rarity;
@@ -117,6 +115,12 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	 * the cards (not localized).
 	 */
 	private String comments;
+
+	/**
+	 * The state of a card. Only used during a game, it stores all the necessary data to manipulate the card while playing
+	 * (coordinates, context, is the card tapped or not, etc.)
+	 */
+	private MtgCardState state;
 
 	/**
 	 * The language used for the card data
@@ -473,6 +477,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 
 	/**
 	 * Only for planewalkers card. Otherwise the value is -1
+	 * 
 	 * @return an integer value > 0 for planewalkers
 	 */
 	public int getLoyalty() {
@@ -482,6 +487,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 
 	/**
 	 * Only for planewalkers card. Otherwise the value is -1
+	 * 
 	 * @param loyalty
 	 */
 	public void setLoyalty(int loyalty) {
@@ -535,6 +541,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 
 	/**
 	 * Set the legal formats of the card
+	 * 
 	 * @param formats
 	 */
 	public void setFormats(Set<MtgFormat> formats) {
@@ -593,19 +600,25 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @return the card state
+	 * @return the current card state (location, context, tapped or not, visible or not, etc...)
 	 * @see MtgCardState
 	 */
+	// This method has been set to protected because the state object should
+	// not be manipulated outside this package
 	protected MtgCardState getState() {
 
 		return state;
 	}
 
 	/**
-	 * Update the card state with another card state
-	 * @param state
+	 * Update the card state with another card state. The value are copied
+	 * one by one. It is not a reference update.
+	 * 
+	 * @param state the state to get the values from
 	 * @see MtgCardState
 	 */
+	// This method has been set to protected because the state object should
+	// not be manipulated outside this package
 	protected void setState(MtgCardState state) {
 
 		this.setContext(state.getContext());
@@ -617,6 +630,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 
 	/**
 	 * The visibility indicates if the card should display the front side or the back side
+	 * 
 	 * @return true if the card should be visible on the battlefield
 	 */
 	public boolean isVisible() {
@@ -625,21 +639,23 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @param visible
+	 * Update the visibility of a card and notify all the observers (if necessary). The observer are notified
+	 * with a {@link VisibilityMtgCardEvent} 
+	 * @param visible <code>true</code> if you want to display the front side.
 	 * @see VisibilityMtgCardEvent
 	 */
 	public void setVisible(boolean visible) {
 
-		// Check if the data has been updated
-		if(this.state.isVisible() != visible) {
+		// Check if it is a new value
+		if (this.state.isVisible() != visible) {
 			this.state.setVisible(visible);
-			super.setChanged();
+			super.setChanged(); // <= Without this call, the notify method just below does nothing
 			super.notifyObservers(new VisibilityMtgCardEvent(this));
 		}
 	}
 
 	/**
-	 * @return true if the card is tapped
+	 * @return <code>true</code>rue if the card is tapped
 	 */
 	public boolean isTapped() {
 
@@ -647,12 +663,16 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @param tapped 
+	 * Update the tapped property of a card and notify all the observers (if necessary). The observer are notified
+	 * with a {@link TappedMtgCardEvent} 
+	 * @param tapped <code>true</code> if you want to tap the card
+	 * @throws MtgContextException if the current context does not allow the new value
 	 * @see TappedMtgCardEvent
 	 */
-	public void setTapped(boolean tapped) {
+	public void setTapped(boolean tapped) throws MtgContextException {
 
-		if(this.state.isTapped() != tapped) {
+		// Check if it is a new value
+		if (this.state.isTapped() != tapped) {
 			this.state.setTapped(tapped);
 			super.setChanged();
 			super.notifyObservers(new TappedMtgCardEvent(this));
@@ -660,31 +680,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * 
-	 * @return <code>true</code> if the card is selected
-	 */
-	public boolean isSelected() {
-
-		return this.state.isSelected();
-	}
-
-	/**
-	 * 
-	 * @param selected
-	 * @see MtgCardSelectionEvent
-	 */
-	public void setSelected(boolean selected) {
-
-		// Check if it is a new value
-		if (this.state.isSelected() != selected) {
-			this.state.setSelected(selected);
-			super.setChanged();
-			super.notifyObservers(new MtgCardSelectionEvent(this));
-		}
-	}
-
-	/**
-	 * @return <code>true</code> if the card is visible by other players from the player's hand
+	 * @return <code>true</code> if the card is revealed to other players from the owner's hand
 	 */
 	public boolean isRevealed() {
 
@@ -695,9 +691,10 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	 * Check if a card in a player's hand is revealed
 	 * 
 	 * @param revealed <code>true</code> if the card is revealed from player's hand
+	 * @throws MtgContextException if the current context does not allow the new value
 	 * @see RevealedMtgCardEvent
 	 */
-	public void setRevealed(boolean revealed) {
+	public void setRevealed(boolean revealed) throws MtgContextException {
 
 		// Check if it is a new value
 		if (this.state.isRevealed() != revealed) {
@@ -719,10 +716,11 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * Update the card location and notify the obervers that the location of the card has changed (if necessary)
+	 * Update the card location and notify the observers that the location of the card has changed (if necessary).
+	 * The observers are notified with a {@link MoveMtgCardEvent}
 	 * 
-	 * @param x
-	 * @param y
+	 * @param x the new horizontal coordinate
+	 * @param y the new vertical coordinate
 	 * @see MtgCardState
 	 * @see MoveMtgCardEvent
 	 */
@@ -739,8 +737,8 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return the current context of a card (BATTLEFIELD, LIBRARY, OUT_OF_GAME, etc...)
+	 * @see MtgContext
 	 */
 	public MtgContext getContext() {
 
@@ -748,14 +746,19 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * Change the context of the card. Updating the context change also the values of the booleans parameters of the card state.
+	 * Change the context of the card. Updating the context change also the values of 
+	 * the booleans parameters of the card state.
 	 * <br />
 	 * <br />
 	 * <i>e.g.</i> Setting the context to HAND, will change the parameters like this:<br />
-	 * <code>isRevealed = false</code><br />
-	 * <code>isVisible = false</code><br />
-	 * <code>location = (-1, -1)</code><br />
-	 * <code>isTapped = false</code>
+	 * <code>isRevealed = false</code> (by default a card in the player's hand it not revealed)<br />
+	 * <code>isVisible = false</code> (this property make sense only on the BATTLEFIELD context)<br />
+	 * <code>location = (-1, -1)</code> (this property make sense only on the BATTLEFIELD context)<br />
+	 * <code>isTapped = false</code> (this property make sense only on the BATTLEFIELD context).
+	 * <br /><br />
+	 * When calling this method, a special event is created. It contains other events depending on the new
+	 * context value. When the observers will be notified, they have to manage the {@link ChangeMtgCardContextEvent}
+	 * and also, all the related events.
 	 * 
 	 * @param context the context of the card
 	 * @see ChangeMtgCardContextEvent
@@ -768,10 +771,12 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 			case OUT_OF_GAME:
 			case LIBRARY:
 			case HAND:
+				// Update the state values
 				this.state.setRevealed(false);
 				this.state.setTapped(false);
 				this.state.setVisible(false);
 				this.state.setLocation(-1.0, -1.0);
+				// Creates the associated events related to the previous state modification
 				event.add(new RevealedMtgCardEvent(this));
 				event.add(new TappedMtgCardEvent(this));
 				event.add(new VisibilityMtgCardEvent(this));
@@ -797,6 +802,30 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 		this.state.setContext(context);
 		super.setChanged();
 		super.notifyObservers(event);
+	}
+
+	/**
+	 * 
+	 * @return <code>true</code> if the card is selected
+	 */
+	public boolean isSelected() {
+	
+		return this.state.isSelected();
+	}
+
+	/**
+	 * 
+	 * @param selected
+	 * @see MtgCardSelectionEvent
+	 */
+	public void setSelected(boolean selected) {
+	
+		// Check if it is a new value
+		if (this.state.isSelected() != selected) {
+			this.state.setSelected(selected);
+			super.setChanged();
+			super.notifyObservers(new MtgCardSelectionEvent(this));
+		}
 	}
 
 	/**

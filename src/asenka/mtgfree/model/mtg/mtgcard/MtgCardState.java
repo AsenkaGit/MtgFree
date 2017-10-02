@@ -35,8 +35,7 @@ public class MtgCardState {
 	/**
 	 * This value indicates whether or not the card is selected. 
 	 */
-	// TODO Peut être que cette valeur n'est pas nécessaire dans le modèle ?
-	private boolean selected;
+	private boolean selected; // TODO Peut être que cette valeur n'est pas nécessaire dans le modèle ?
 
 	/**
 	 * Location of the card on the battlefield (only when context = BATTLEFIELD or EXILE or GRAVEYARD)

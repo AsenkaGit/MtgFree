@@ -12,11 +12,12 @@ import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
 public class MtgCardController {
 
 	/**
-	 * 
+	 * The card controlled by this controller
 	 */
 	private MtgCard card;
 
 	/**
+	 * Constructor with an MtgCard
 	 * @param card
 	 */
 	public MtgCardController(MtgCard card) {
@@ -25,7 +26,7 @@ public class MtgCardController {
 	}
 
 	/**
-	 * @return
+	 * @return the card controlled by this controller
 	 */
 	public MtgCard getCard() {
 
@@ -33,7 +34,7 @@ public class MtgCardController {
 	}
 
 	/**
-	 * @param card
+	 * @param card the card to control
 	 */
 	public void setCard(MtgCard card) {
 
@@ -41,7 +42,8 @@ public class MtgCardController {
 	}
 
 	/**
-	 * @param visible
+	 * Action : set if a card is visible (i.e. display the front side)
+	 * @param visible <code>true</code> to display the front side
 	 */
 	public void setVisible(boolean visible) {
 
@@ -91,5 +93,4 @@ public class MtgCardController {
 
 		this.card.setContext(context);
 	}
-
 }
