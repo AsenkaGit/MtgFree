@@ -1,5 +1,6 @@
 package asenka.mtgfree.model.mtg.events;
 
+import org.apache.log4j.Logger;
 /**
  * 
  * 
@@ -13,6 +14,8 @@ public class AbstractEvent {
 	 * 
 	 */
 	protected String eventMessage;
+	
+	private static final Logger LOGGER = Logger.getLogger(AbstractEvent.class);
 
 	/**
 	 * 
@@ -21,6 +24,8 @@ public class AbstractEvent {
 	public AbstractEvent(String eventMessage) {
 		super();
 		this.eventMessage = eventMessage;
+		
+		LOGGER.info(this);
 	}
 
 	/**

@@ -74,7 +74,7 @@ public class MtgCardController {
 	}
 
 	/**
-	 * Update the card location (only if the card is on the battlefield
+	 * Update the card location (only if the card is on the battlefield)
 	 * 
 	 * @param x
 	 * @param y
@@ -89,7 +89,7 @@ public class MtgCardController {
 	 */
 	public void setContext(MtgContext context) {
 
-		this.setContext(context);
+		this.card.setContext(context);
 	}
 
 }

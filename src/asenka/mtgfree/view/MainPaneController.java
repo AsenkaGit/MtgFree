@@ -24,8 +24,8 @@ public class MainPaneController {
 		
 		MtgCardController cardController = new MtgCardController(card);
 		MtgCardController cardController2 = new MtgCardController(card);
-		MtgCardView cardView = new MtgCardView(cardController);
-		MtgCardView cardView2 = new MtgCardView(cardController2);
+		MtgCardViewOnBattleField cardView = new MtgCardViewOnBattleField(cardController);
+		MtgCardViewOnBattleField cardView2 = new MtgCardViewOnBattleField(cardController2);
 		
 		
 		battlefield.getChildren().addAll(cardView, cardView2);

@@ -3,10 +3,14 @@ package asenka.mtgfree.view;
 import java.util.Observable;
 import java.util.Observer;
 
+import asenka.mtgfree.model.mtg.events.AbstractMtgCardEvent;
+import asenka.mtgfree.model.mtg.events.ChangeMtgCardContextEvent;
 import asenka.mtgfree.model.mtg.events.MoveMtgCardEvent;
+import asenka.mtgfree.model.mtg.events.MtgCardSelectionEvent;
 import asenka.mtgfree.model.mtg.events.TappedMtgCardEvent;
 import asenka.mtgfree.model.mtg.events.VisibilityMtgCardEvent;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
+import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
 import asenka.mtgfree.utilities.FileManager;
 import javafx.geometry.Point2D;
 import javafx.geometry.Side;
@@ -24,7 +28,7 @@ import javafx.scene.image.ImageView;
  * @author asenka
  *
  */
-public class MtgCardView extends Group implements Observer {
+public class MtgCardViewOnBattleField extends Group implements Observer {
 
 	// private final static Duration HALF_FLIP_ROTATION = Duration.seconds(0.25);
 
@@ -62,11 +66,17 @@ public class MtgCardView extends Group implements Observer {
 
 	private MtgCardController controller;
 
+	private MenuItem graveyardMenuItem;
+
+	private MenuItem exileMenuItem;
+
+	private MenuItem battlefieldMenuItem;
+
 	/**
 	 * 
 	 * @param cardController
 	 */
-	public MtgCardView(MtgCardController cardController) {
+	public MtgCardViewOnBattleField(MtgCardController cardController) {
 
 		this.controller = cardController;
 		final MtgCard card = this.controller.getCard();
@@ -76,6 +86,7 @@ public class MtgCardView extends Group implements Observer {
 
 		initContextMenu();
 		initCardsImage();
+		
 		initCardViewStyle();
 		initActions();
 
@@ -95,16 +106,48 @@ public class MtgCardView extends Group implements Observer {
 		this.untapMenuItem = new MenuItem("Untap");
 		this.tapMenuItem.setDisable(this.tapped);
 		this.untapMenuItem.setDisable(!this.tapped);
+		
 		this.showCardMenuItem = new MenuItem("Show");
 		this.hideCardMenuItem = new MenuItem("Hide");
 		this.showCardMenuItem.setDisable(visible);
 		this.hideCardMenuItem.setDisable(!visible);
-
+		
+		this.graveyardMenuItem = new MenuItem("to Graveyard");
+		this.exileMenuItem = new MenuItem("to Exile");
+		this.battlefieldMenuItem = new MenuItem("to Battlefield");
+		
+		switch(this.controller.getCard().getContext()) {
+			case BATTLEFIELD: 
+				this.graveyardMenuItem.setDisable(false);
+				this.exileMenuItem.setDisable(false);
+				this.battlefieldMenuItem.setDisable(true);
+				break;
+			case GRAVEYARD:
+				this.graveyardMenuItem.setDisable(true);
+				this.exileMenuItem.setDisable(false);
+				this.battlefieldMenuItem.setDisable(false);
+				this.tapMenuItem.setDisable(true);
+				this.untapMenuItem.setDisable(true);
+				this.showCardMenuItem.setDisable(true);
+				this.hideCardMenuItem.setDisable(true);
+				break;
+			case EXILE:
+				this.graveyardMenuItem.setDisable(false);
+				this.exileMenuItem.setDisable(true);
+				this.battlefieldMenuItem.setDisable(false);
+				this.tapMenuItem.setDisable(true);
+				this.untapMenuItem.setDisable(true);
+				break;
+			default: 
+				break;	
+		}
 		initContextMenuActions();
 
 		this.contextMenu.getItems().addAll(this.tapMenuItem, this.untapMenuItem);
 		this.contextMenu.getItems().add(new SeparatorMenuItem());
 		this.contextMenu.getItems().addAll(this.showCardMenuItem, this.hideCardMenuItem);
+		this.contextMenu.getItems().add(new SeparatorMenuItem());
+		this.contextMenu.getItems().addAll(this.battlefieldMenuItem, this.graveyardMenuItem, this.exileMenuItem);
 	}
 
 	/**
@@ -117,11 +160,15 @@ public class MtgCardView extends Group implements Observer {
 
 		this.showCardMenuItem.setOnAction((event) -> this.controller.setVisible(true));
 		this.hideCardMenuItem.setOnAction((event) -> this.controller.setVisible(false));
+		
+		this.battlefieldMenuItem.setOnAction((event) -> this.controller.setContext(MtgContext.BATTLEFIELD));
+		this.graveyardMenuItem.setOnAction((event) -> this.controller.setContext(MtgContext.GRAVEYARD));
+		this.exileMenuItem.setOnAction((event) -> this.controller.setContext(MtgContext.EXILE));
 
 	}
 
 	/**
-	 * 
+	 * Initialize the cards front & back images (from the MtgCard)
 	 */
 	private void initCardsImage() {
 
@@ -144,7 +191,7 @@ public class MtgCardView extends Group implements Observer {
 	}
 
 	/**
-	 * 
+	 * Initialize some cosmetic features on the card view
 	 */
 	private void initCardViewStyle() {
 
@@ -152,14 +199,14 @@ public class MtgCardView extends Group implements Observer {
 	}
 
 	/**
-	 * 
+	 * Initialize the actions available on the card view component (on the battlefield)
 	 */
 	private void initActions() {
-
+		
+		// When the use press a mouse button on the card view
 		this.setOnMousePressed((event) -> {
-
-			this.setSelectedStyle(true);
 			this.controller.setSelected(true);
+			this.setSelected(true);
 
 			// Initialize the location of the cursor
 			this.previousCursorLocation = new Point2D(event.getSceneX(), event.getSceneY());
@@ -169,8 +216,9 @@ public class MtgCardView extends Group implements Observer {
 			}
 		});
 
+		// When the use maintain the button pressed and drag the card to move it
 		this.setOnMouseDragged((event) -> {
-
+			// When you drag a card view, the context menu is hidden 
 			contextMenu.hide();
 
 			// Calculate the new card location.
@@ -205,7 +253,8 @@ public class MtgCardView extends Group implements Observer {
 			// Update the previous location of the cursor
 			this.previousCursorLocation = new Point2D(updateX ? event.getSceneX() : this.previousCursorLocation.getX(),
 					updateY ? event.getSceneY() : this.previousCursorLocation.getY());
-
+			
+			// Update the location of the card in the model
 			controller.setLocation(newPositionX, newPositionY);
 		});
 
@@ -214,7 +263,7 @@ public class MtgCardView extends Group implements Observer {
 	/**
 	 * @param selected the selected to set
 	 */
-	private void setSelectedStyle(boolean selected) {
+	private void setSelected(boolean selected) {
 
 		if (selected) {
 			this.setStyle("-fx-effect: dropshadow(  gaussian  , blue , 15 , 0.0 , 0 , 0 );");
@@ -224,13 +273,68 @@ public class MtgCardView extends Group implements Observer {
 	}
 
 	/**
-	 * 
-	 * @param displayFront
+	 * Select the image to display 
+	 * @param displayFront if <code>true</code>, the front image is displayed
 	 */
 	private void setVisibleImage(boolean displayFront) {
 
 		this.backView.setVisible(!displayFront);
 		this.frontView.setVisible(displayFront);
+
+		this.showCardMenuItem.setDisable(displayFront);
+		this.hideCardMenuItem.setDisable(!displayFront);
+	}
+
+	/**
+	 * When the card view is tapped, it means the card is rotated with and angle of 90°
+	 * around its center. 
+	 * @param tapped if <code>true</code>, the card is rotated
+	 */
+	private void setTapped(boolean tapped) {
+
+		if (tapped) {
+			this.setRotate(90);
+		} else {
+			this.setRotate(0);
+		}
+		this.tapMenuItem.setDisable(tapped);
+		this.untapMenuItem.setDisable(!tapped);
+	}
+	
+	/**
+	 * Update the context menu items according to the card context
+	 * @param context the card context
+	 */
+	private void setContextMenuItemsEnable(MtgContext context) {
+		
+		switch(context) {
+			case BATTLEFIELD: 
+				this.graveyardMenuItem.setDisable(false);
+				this.exileMenuItem.setDisable(false);
+				this.battlefieldMenuItem.setDisable(true);
+				this.setTapped(this.controller.getCard().isTapped());
+				this.setVisibleImage(this.controller.getCard().isVisible());
+				break;
+			case GRAVEYARD:
+				this.graveyardMenuItem.setDisable(true);
+				this.exileMenuItem.setDisable(false);
+				this.battlefieldMenuItem.setDisable(false);
+				this.tapMenuItem.setDisable(true);
+				this.untapMenuItem.setDisable(true);
+				this.showCardMenuItem.setDisable(true);
+				this.hideCardMenuItem.setDisable(true);
+				break;
+			case EXILE:
+				this.graveyardMenuItem.setDisable(false);
+				this.exileMenuItem.setDisable(true);
+				this.battlefieldMenuItem.setDisable(false);
+				this.tapMenuItem.setDisable(true);
+				this.untapMenuItem.setDisable(true);
+				this.setVisibleImage(this.controller.getCard().isVisible());
+				break;
+			default: 
+				break;	
+		}
 	}
 
 	@Override
@@ -239,22 +343,20 @@ public class MtgCardView extends Group implements Observer {
 		final MtgCard card = (MtgCard) observedObject;
 
 		if (event instanceof TappedMtgCardEvent) {
-
-			if (card.isTapped()) {
-				this.setRotate(90);
-			} else {
-				this.setRotate(0);
-			}
-			this.tapMenuItem.setDisable(card.isTapped());
-			this.untapMenuItem.setDisable(!card.isTapped());
-
+			this.setTapped(card.isTapped());
 		} else if (event instanceof MoveMtgCardEvent) {
-
-			System.out.println(event + " Card moved");
+			// TODO Manage movement event
 		} else if (event instanceof VisibilityMtgCardEvent) {
 			this.setVisibleImage(card.isVisible());
-			this.showCardMenuItem.setDisable(card.isVisible());
-			this.hideCardMenuItem.setDisable(!card.isVisible());
+		} else if (event instanceof ChangeMtgCardContextEvent) {
+
+			ChangeMtgCardContextEvent contextEvent = (ChangeMtgCardContextEvent) event;
+			
+			// When a card change its context, several related events can happen
+			for (AbstractMtgCardEvent relatedEvent : contextEvent.getRelatedEvents()) {
+				this.update(observedObject, relatedEvent);
+			}
+			setContextMenuItemsEnable(card.getContext());
 		}
 	}
 }

@@ -64,15 +64,16 @@ public final class FileManager {
 	}
 
 	/**
-	 * 
-	 * @param card
-	 * @return
+	 * Returns the input stream to the file containing the card front image 
+	 * @param card the mtg card you want
+	 * @return an InputStream to an image file. If the card image is not found, it returns a default image
 	 */
 	public InputStream getCardImageInputStream(MtgCard card) {
 
 		InputStream imageInputStream;
 
 		try {
+			// Create an input stream from the file related to the card image
 			imageInputStream = new FileInputStream(getCardFile(card));
 		} catch (FileNotFoundException e) {
 			LOGGER.error("The image of the card " + card.getName() + " can't be loaded." + "\n\tEXCEPTION MESSAGE: " + e.getMessage());
@@ -87,12 +88,14 @@ public final class FileManager {
 	}
 
 	/**
-	 * 
-	 * @param card
-	 * @return
+	 * Returns the file containing the card front image 
+	 * @param card the card you need
+	 * @return a File containing the card image
+	 * @throws FileNotFoundException if the image cannot be found
 	 */
 	public File getCardFile(MtgCard card) throws FileNotFoundException {
 
+		// Get the necessary data to look for the image
 		final String cardName = card.getName();
 		final String cardLanguage = card.getLocale().getLanguage();
 		final String cardCollection = card.getCollectionName();
@@ -100,6 +103,7 @@ public final class FileManager {
 				+ cardName + IMAGE_FILE_EXTENSION;
 		File file = new File(imageFilePath);
 
+		// Check if the file does exists
 		if (file.exists()) {
 			return new File(imageFilePath);
 		} else {
@@ -108,7 +112,7 @@ public final class FileManager {
 	}
 
 	/**
-	 * 
+	 * Returns the back image of a mtg card
 	 * @return an InputStream to the back of the Card Image
 	 */
 	public InputStream getMtgBackInputStream() {

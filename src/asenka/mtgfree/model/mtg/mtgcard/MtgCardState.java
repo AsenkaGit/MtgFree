@@ -5,31 +5,38 @@ import java.awt.geom.Point2D;
 import asenka.mtgfree.model.mtg.exceptions.MtgContextException;
 
 /**
- * This card manage the card state :<br />
- * > tapped/untapped (only on battlefield)<br />
- * > visible/hidden (only on battlefield and exile)<br />
- * > secret/revealed (only in the player's hand)<br />
- * > the context of the card : Library, Hand, Grave yard, etc...)<br />
- * 
+ * This card manage the card state :
+ * <ul>
+ * <li>tapped/untapped (only on battlefield)</li>
+ * <li>visible/hidden (only on battlefield and exile)</li>
+ * <li>secret/revealed (only in the player's hand)</li>
+ * <li>the context of the card : Library, Hand, Grave yard, etc...)</li>
+ * </ul>
  * @author asenka
  */
 public class MtgCardState {
 
 	/**
-	 * if true => the card is tapped. If the card is not on the battlefield, this value should be false.
+	 * if <code>true</code> => the card is tapped. If the card is not on the battlefield, this value should be false.
 	 */
-	private boolean isTapped;
+	private boolean tapped;
 
 	/**
-	 * If true => the card is visible. Should be false if the card is neither on the battlefield or the exile area.
+	 * If <code>true</code> => the card is visible. Should be false if the card is neither on the battlefield or the exile area.
 	 */
-	private boolean isVisible;
+	private boolean visible;
 
 	/**
-	 * if true => the card is revealed. It means that the card should be visible for all players/viewers. It should be false if
+	 * if <code>true</code> => the card is revealed. It means that the card should be visible for all players/viewers. It should be false if
 	 * the card is not in the player's hand.
 	 */
-	private boolean isRevealed;
+	private boolean revealed;
+
+	/**
+	 * This value indicates whether or not the card is selected. 
+	 */
+	// TODO Peut être que cette valeur n'est pas nécessaire dans le modèle ?
+	private boolean selected;
 
 	/**
 	 * Location of the card on the battlefield (only when context = BATTLEFIELD or EXILE or GRAVEYARD)
@@ -42,18 +49,13 @@ public class MtgCardState {
 	private MtgContext context;
 
 	/**
-	 * This value indicates whether or not the card is selected
-	 */
-	private boolean selected;
-
-	/**
 	 * Create a copy of this state
 	 * 
 	 * @param copyFrom the state to copy
 	 */
 	MtgCardState(MtgCardState copyFrom) {
 
-		this(copyFrom.isTapped, copyFrom.isVisible, copyFrom.isRevealed, copyFrom.context,
+		this(copyFrom.tapped, copyFrom.visible, copyFrom.revealed, copyFrom.context,
 				new Point2D.Double(copyFrom.location.getX(), copyFrom.location.getY()));
 	}
 
@@ -69,19 +71,19 @@ public class MtgCardState {
 	MtgCardState(boolean isTapped, boolean isVisible, boolean isRevealed, MtgContext context, Point2D.Double location) {
 
 		super();
-		this.isTapped = isTapped;
-		this.isVisible = isVisible;
-		this.isRevealed = isRevealed;
+		this.tapped = isTapped;
+		this.visible = isVisible;
+		this.revealed = isRevealed;
 		this.context = context;
 		this.location = location;
 	}
 
 	/**
-	 * @return the isTapped
+	 * @return <code>true</code> if the card is tapped
 	 */
 	boolean isTapped() {
 
-		return isTapped;
+		return tapped;
 	}
 
 	/**
@@ -93,17 +95,17 @@ public class MtgCardState {
 		if (isTapped && this.context != MtgContext.BATTLEFIELD) {
 			throw new MtgContextException(this, "Try to tap a card that is not on the battlefield");
 		} else {
-			this.isTapped = isTapped;
+			this.tapped = isTapped;
 		}
 	}
 
 	/**
-	 * 
-	 * @return the isVisible
+	 * The visibility indicates if the card should display the front side or the back side
+	 * @return <code>true</code> if the card should be visible on the battlefield
 	 */
 	boolean isVisible() {
 
-		return isVisible;
+		return visible;
 	}
 
 	/**
@@ -113,7 +115,7 @@ public class MtgCardState {
 	 */
 	void setVisible(boolean isVisible) {
 
-		this.isVisible = isVisible;
+		this.visible = isVisible;
 	}
 
 	/**
@@ -123,11 +125,11 @@ public class MtgCardState {
 	 */
 	boolean isRevealed() {
 
-		return isRevealed;
+		return revealed;
 	}
 
 	/**
-	 * 
+	 * Set if a card from the player's hand is revealed to other or not
 	 * @param isRevealed <code>true</code> if you want to reveal a card in a player's hand. <code>false</code> to go back to the
 	 *        default secret state.
 	 * @throws MtgContextException if you try to reveal a card than is not in the HAND context
@@ -137,13 +139,12 @@ public class MtgCardState {
 		if (isRevealed && this.context != MtgContext.HAND) {
 			throw new MtgContextException(this, "Try to set 'isRevealed' to true when context is not HAND");
 		} else {
-			this.isRevealed = isRevealed;
+			this.revealed = isRevealed;
 		}
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return <code>true</code> if the card is selected
 	 */
 	boolean isSelected() {
 
@@ -151,8 +152,8 @@ public class MtgCardState {
 	}
 
 	/**
-	 * 
-	 * @param selected
+	 * Set if the card is selected or not
+	 * @param selected 
 	 */
 	void setSelected(boolean selected) {
 
@@ -160,17 +161,18 @@ public class MtgCardState {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return the current location of the card
+	 * @see Point2D.Double
 	 */
 	Point2D.Double getLocation() {
 
-		return location;
+		return this.location;
 	}
 
 	/**
-	 * 
-	 * @param location
+	 * Set the location of the card
+	 * @param location a new Point2D with the new coordinates (x, y)
+	 * @see Point2D.Double
 	 */
 	void setLocation(Point2D.Double location) {
 
@@ -178,7 +180,7 @@ public class MtgCardState {
 	}
 
 	/**
-	 * 
+	 * Set the location of the card
 	 * @param x
 	 * @param y
 	 */
@@ -188,7 +190,8 @@ public class MtgCardState {
 	}
 
 	/**
-	 * @return the context
+	 * @return the context of the card
+	 * @see MtgContext
 	 */
 	MtgContext getContext() {
 
@@ -196,7 +199,9 @@ public class MtgCardState {
 	}
 
 	/**
+	 * Set the context of the card
 	 * @param context the context of the card
+	 * @see MtgContext
 	 */
 	void setContext(MtgContext context) {
 
@@ -206,7 +211,7 @@ public class MtgCardState {
 	@Override
 	public String toString() {
 
-		return "[isTapped=" + isTapped + ", isVisible=" + isVisible + ", isRevealed=" + isRevealed + ", " + location + ", " + context + "]";
+		return "[isTapped=" + tapped + ", isVisible=" + visible + ", isRevealed=" + revealed + ", " + location + ", " + context + "]";
 	}
 
 	@Override
@@ -215,9 +220,9 @@ public class MtgCardState {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((context == null) ? 0 : context.hashCode());
-		result = prime * result + (isRevealed ? 1231 : 1237);
-		result = prime * result + (isTapped ? 1231 : 1237);
-		result = prime * result + (isVisible ? 1231 : 1237);
+		result = prime * result + (revealed ? 1231 : 1237);
+		result = prime * result + (tapped ? 1231 : 1237);
+		result = prime * result + (visible ? 1231 : 1237);
 		result = prime * result + ((location == null) ? 0 : location.hashCode());
 		return result;
 	}
@@ -234,11 +239,11 @@ public class MtgCardState {
 		MtgCardState other = (MtgCardState) obj;
 		if (context != other.context)
 			return false;
-		if (isRevealed != other.isRevealed)
+		if (revealed != other.revealed)
 			return false;
-		if (isTapped != other.isTapped)
+		if (tapped != other.tapped)
 			return false;
-		if (isVisible != other.isVisible)
+		if (visible != other.visible)
 			return false;
 		if (location == null) {
 			if (other.location != null)

@@ -22,11 +22,7 @@ import asenka.mtgfree.model.utilities.Localized;
 /**
  * This class represents a Mtg Card. It stores all the necessary data about the cards
  * 
- * @author aAsenka
- */
-/**
  * @author asenka
- *
  */
 public class MtgCard extends Observable implements Comparable<MtgCard>, Localized {
 
@@ -260,7 +256,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 		this.comments = comments;
 		this.locale = locale;
 
-		// Creates the default comparator with 3 criteria
+		// Creates the default comparator with 2 criteria
 		// 1. the card name
 		// 2. the collection name
 		CardComparator collectionComparator = new CardCollectionComparator(this.locale);
@@ -268,7 +264,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @return
+	 * @return the card id
 	 */
 	public int getId() {
 
@@ -276,7 +272,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @param id
+	 * @param id the card id
 	 */
 	public void setId(int id) {
 
@@ -325,7 +321,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @return
+	 * @return a string with with the rules of the card
 	 */
 	public String getRulesText() {
 
@@ -333,7 +329,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @param rulesText
+	 * @param rulesText the rules of the card
 	 */
 	public void setRulesText(String rulesText) {
 
@@ -357,7 +353,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @return
+	 * @return a set of colors matching the card
 	 */
 	public Set<MtgColor> getColors() {
 
@@ -366,6 +362,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 
 	/**
 	 * Compare a card to an array of colors and check if all the colors matches the card color
+	 * 
 	 * @param colors the array of color(s) (it can contains only one color)
 	 * @return <code>true</code> if the array of color(s) perfectly matches the card color(s)
 	 */
@@ -459,7 +456,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @return
+	 * @return the toughness of a card
 	 */
 	public String getToughness() {
 
@@ -467,7 +464,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @param toughness
+	 * @param toughness the toughness of a card
 	 */
 	public void setToughness(String toughness) {
 
@@ -475,7 +472,8 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @return
+	 * Only for planewalkers card. Otherwise the value is -1
+	 * @return an integer value > 0 for planewalkers
 	 */
 	public int getLoyalty() {
 
@@ -483,6 +481,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
+	 * Only for planewalkers card. Otherwise the value is -1
 	 * @param loyalty
 	 */
 	public void setLoyalty(int loyalty) {
@@ -491,7 +490,8 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @return
+	 * @return the type of the card
+	 * @see MtgType
 	 */
 	public MtgType getType() {
 
@@ -499,7 +499,8 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @param type
+	 * @param type the type of the card
+	 * @see MtgType
 	 */
 	public void setType(MtgType type) {
 
@@ -507,7 +508,8 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @return
+	 * @return the rarity of the card
+	 * @see MtgRarity
 	 */
 	public MtgRarity getRarity() {
 
@@ -516,6 +518,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 
 	/**
 	 * @param rarity
+	 * @see MtgRarity
 	 */
 	public void setRarity(MtgRarity rarity) {
 
@@ -523,7 +526,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @return
+	 * @return the legal formats of this card
 	 */
 	public Set<MtgFormat> getFormats() {
 
@@ -531,6 +534,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
+	 * Set the legal formats of the card
 	 * @param formats
 	 */
 	public void setFormats(Set<MtgFormat> formats) {
@@ -540,6 +544,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 
 	/**
 	 * @return
+	 * @see MtgAbility
 	 */
 	public Set<MtgAbility> getAbilities() {
 
@@ -547,7 +552,8 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @param abilities
+	 * @param abilities the abilities of the card
+	 * @see MtgAbility
 	 */
 	public void setAbilities(Set<MtgAbility> abilities) {
 
@@ -587,7 +593,8 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @return
+	 * @return the card state
+	 * @see MtgCardState
 	 */
 	protected MtgCardState getState() {
 
@@ -595,8 +602,9 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * 
+	 * Update the card state with another card state
 	 * @param state
+	 * @see MtgCardState
 	 */
 	protected void setState(MtgCardState state) {
 
@@ -608,7 +616,8 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @return
+	 * The visibility indicates if the card should display the front side or the back side
+	 * @return true if the card should be visible on the battlefield
 	 */
 	public boolean isVisible() {
 
@@ -617,18 +626,20 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 
 	/**
 	 * @param visible
+	 * @see VisibilityMtgCardEvent
 	 */
 	public void setVisible(boolean visible) {
 
-		this.state.setVisible(visible);
-		super.setChanged();
-		super.notifyObservers(new VisibilityMtgCardEvent(this));
-
+		// Check if the data has been updated
+		if(this.state.isVisible() != visible) {
+			this.state.setVisible(visible);
+			super.setChanged();
+			super.notifyObservers(new VisibilityMtgCardEvent(this));
+		}
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return true if the card is tapped
 	 */
 	public boolean isTapped() {
 
@@ -636,60 +647,71 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @param tapped
+	 * @param tapped 
+	 * @see TappedMtgCardEvent
 	 */
 	public void setTapped(boolean tapped) {
 
-		this.state.setTapped(tapped);
-		super.setChanged();
-		super.notifyObservers(new TappedMtgCardEvent(this));
-
+		if(this.state.isTapped() != tapped) {
+			this.state.setTapped(tapped);
+			super.setChanged();
+			super.notifyObservers(new TappedMtgCardEvent(this));
+		}
 	}
-	
+
 	/**
 	 * 
-	 * @return
+	 * @return <code>true</code> if the card is selected
 	 */
 	public boolean isSelected() {
-	
+
 		return this.state.isSelected();
 	}
-	
+
 	/**
 	 * 
 	 * @param selected
+	 * @see MtgCardSelectionEvent
 	 */
 	public void setSelected(boolean selected) {
-		this.state.setSelected(selected);
-		super.setChanged();
-		super.notifyObservers(new MtgCardSelectionEvent(this));
+
+		// Check if it is a new value
+		if (this.state.isSelected() != selected) {
+			this.state.setSelected(selected);
+			super.setChanged();
+			super.notifyObservers(new MtgCardSelectionEvent(this));
+		}
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return <code>true</code> if the card is visible by other players from the player's hand
 	 */
 	public boolean isRevealed() {
 
 		return this.state.isRevealed();
 	}
 
-	
-
 	/**
-	 * @param revealed
+	 * Check if a card in a player's hand is revealed
+	 * 
+	 * @param revealed <code>true</code> if the card is revealed from player's hand
+	 * @see RevealedMtgCardEvent
 	 */
 	public void setRevealed(boolean revealed) {
 
-		this.state.setRevealed(revealed);
-		super.setChanged();
-		super.notifyObservers(new RevealedMtgCardEvent(this));
-
+		// Check if it is a new value
+		if (this.state.isRevealed() != revealed) {
+			this.state.setRevealed(revealed);
+			super.setChanged();
+			super.notifyObservers(new RevealedMtgCardEvent(this));
+		}
 	}
 
 	/**
+	 * Get the location of the card
 	 * 
-	 * @return
+	 * @return a Point2D.Double object with the (x,y) double coordinates
+	 * @see Point2D.Double
 	 */
 	public Point2D.Double getLocation() {
 
@@ -697,13 +719,22 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * @param location
+	 * Update the card location and notify the obervers that the location of the card has changed (if necessary)
+	 * 
+	 * @param x
+	 * @param y
+	 * @see MtgCardState
+	 * @see MoveMtgCardEvent
 	 */
 	public void setLocation(final double x, final double y) {
 
-		this.state.setLocation(x, y);
-		super.setChanged();
-		super.notifyObservers(new MoveMtgCardEvent(this));
+		// Check if the new location is different
+		if (this.state.getLocation().getX() != x || this.state.getLocation().getY() != y) {
+
+			this.state.setLocation(x, y);
+			super.setChanged();
+			super.notifyObservers(new MoveMtgCardEvent(this));
+		}
 
 	}
 
@@ -727,13 +758,13 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	 * <code>isTapped = false</code>
 	 * 
 	 * @param context the context of the card
+	 * @see ChangeMtgCardContextEvent
 	 */
 	public void setContext(MtgContext context) {
 
 		ChangeMtgCardContextEvent event = new ChangeMtgCardContextEvent(this);
 
 		switch (context) {
-
 			case OUT_OF_GAME:
 			case LIBRARY:
 			case HAND:
@@ -764,6 +795,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 				break;
 		}
 		this.state.setContext(context);
+		super.setChanged();
 		super.notifyObservers(event);
 	}
 
