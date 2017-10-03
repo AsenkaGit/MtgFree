@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Observable;
 
+import asenka.mtgfree.model.mtg.events.MtgLibraryAddCardEvent;
+import asenka.mtgfree.model.mtg.events.MtgLibraryDrawCardEvent;
+import asenka.mtgfree.model.mtg.events.MtgLibraryRemoveCardEvent;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
 
@@ -48,22 +51,32 @@ public class MtgLibrary extends Observable {
 	}
 
 	/**
-	 * Removes and returns the first card in the stack
+	 * Removes and returns the first card in the stack. The observers are notified that the library is updated (with one card
+	 * less)
 	 * 
-	 * @return the top card from the library
+	 * @return the top card from the library (removed from the library)
 	 */
 	public MtgCard draw() {
 
-		return this.cards.removeFirst();
+		MtgCard card = this.cards.removeFirst();
+
+		if (card != null) {
+			super.setChanged();
+			super.notifyObservers(new MtgLibraryDrawCardEvent(this, card));
+		}
+		return card;
 	}
 
 	/**
 	 * Returns the cards from the library
 	 * 
 	 * @return an unmodifiable list of cards
+	 * @see Collections#unmodifiableList(List)
 	 */
 	public List<MtgCard> getCards() {
 
+		// We don't want to have the cards from the library updated outside of the library.
+		// That's why we return an unmodifiable list of cards instead of a reference to the library list
 		return Collections.unmodifiableList(cards);
 	}
 
@@ -84,13 +97,14 @@ public class MtgLibrary extends Observable {
 	}
 
 	/**
-	 * Returns the x first cards from the library
+	 * Returns the x first cards from the library. The returned cards remain inside the library (no need to notify the observers)
 	 * 
-	 * @param xFirst
+	 * @param xFirst the number of cards to get
 	 * @return the x first cards from the library
 	 */
 	public List<MtgCard> getFirstCards(int xFirst) {
 
+		// if xFirst is superior at the current number of cards in the library, the parameter value is reduced
 		if (xFirst > this.cards.size()) {
 			xFirst = this.cards.size();
 		}
@@ -108,42 +122,56 @@ public class MtgLibrary extends Observable {
 	 * @param index the index
 	 * @return a mtg card from the library
 	 */
-	public MtgCard getCardAt(int index) {
+	public MtgCard getCardAt(final int index) {
 
 		return this.cards.get(index);
 	}
 
 	/**
-	 * Add one card at the top of the library
+	 * Add one card at the top of the library and notify the observers
 	 * 
 	 * @param card
+	 * @see MtgLibraryAddCardEvent
 	 */
-	public void addFirst(MtgCard card) {
+	public void addFirst(final MtgCard card) {
 
-		card.setContext(MtgContext.LIBRARY);
 		this.cards.addFirst(card);
+		card.setContext(MtgContext.LIBRARY);
+		super.setChanged();
+		super.notifyObservers(new MtgLibraryAddCardEvent(this, card, 0));
 	}
 
 	/**
-	 * add one card at the bottom of the library
+	 * Add one card at the bottom of the library and notify the observers
 	 * 
 	 * @param card
+	 * @see MtgLibraryAddCardEvent
 	 */
-	public void addLast(MtgCard card) {
+	public void addLast(final MtgCard card) {
 
-		card.setContext(MtgContext.LIBRARY);
 		this.cards.addLast(card);
+		card.setContext(MtgContext.LIBRARY);
+		super.setChanged();
+		super.notifyObservers(new MtgLibraryAddCardEvent(this, card, (this.cards.size() - 1)));
 	}
 
 	/**
-	 * Remove and returns the card at the specified index
+	 * Remove and returns the card at the specified index and notify the observers
 	 * 
-	 * @param index the index
+	 * @param index the index to remove the card
 	 * @return the card removed
+	 * @see MtgLibraryRemoveCardEvent
 	 */
-	public MtgCard removeCardAt(int index) {
+	public MtgCard removeCardAt(final int index) {
 
-		return this.cards.remove(index);
+		MtgCard card = this.cards.remove(index);
+
+		if (card != null) {
+			super.setChanged();
+			super.notifyObservers(new MtgLibraryRemoveCardEvent(this, card));
+		}
+		return card;
+
 	}
 
 	/**
@@ -195,14 +223,14 @@ public class MtgLibrary extends Observable {
 		return buf.toString();
 	}
 
-//	/**
-//	 * Check if the card has a state and update the context in the card state
-//	 * 
-//	 * @param card the card to update
-//	 * @param context the context to set on the card
-//	 */
-//	private static void updateCardState(MtgCard card, MtgContext context) {
-//
-//		card.setContext(context);
-//	}
+	// /**
+	// * Check if the card has a state and update the context in the card state
+	// *
+	// * @param card the card to update
+	// * @param context the context to set on the card
+	// */
+	// private static void updateCardState(MtgCard card, MtgContext context) {
+	//
+	// card.setContext(context);
+	// }
 }

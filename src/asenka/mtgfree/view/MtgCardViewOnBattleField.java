@@ -3,12 +3,12 @@ package asenka.mtgfree.view;
 import java.util.Observable;
 import java.util.Observer;
 
-import asenka.mtgfree.model.mtg.events.AbstractMtgCardEvent;
-import asenka.mtgfree.model.mtg.events.ChangeMtgCardContextEvent;
-import asenka.mtgfree.model.mtg.events.MoveMtgCardEvent;
-import asenka.mtgfree.model.mtg.events.MtgCardSelectionEvent;
-import asenka.mtgfree.model.mtg.events.TappedMtgCardEvent;
-import asenka.mtgfree.model.mtg.events.VisibilityMtgCardEvent;
+import asenka.mtgfree.model.mtg.events.AbstractMtgCardUpdatedEvent;
+import asenka.mtgfree.model.mtg.events.MtgCardContextUpdatedEvent;
+import asenka.mtgfree.model.mtg.events.MtgCardLocationUpdatedEvent;
+import asenka.mtgfree.model.mtg.events.MtgCardSelectionUpdatedEvent;
+import asenka.mtgfree.model.mtg.events.MtgCardTapUpdatedEvent;
+import asenka.mtgfree.model.mtg.events.MtgCardVisibilityUpdatedEvent;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
 import asenka.mtgfree.utilities.FileManager;
@@ -342,21 +342,12 @@ public class MtgCardViewOnBattleField extends Group implements Observer {
 
 		final MtgCard card = (MtgCard) observedObject;
 
-		if (event instanceof TappedMtgCardEvent) {
+		if (event instanceof MtgCardTapUpdatedEvent) {
 			this.setTapped(card.isTapped());
-		} else if (event instanceof MoveMtgCardEvent) {
+		} else if (event instanceof MtgCardLocationUpdatedEvent) {
 			// TODO Manage movement event
-		} else if (event instanceof VisibilityMtgCardEvent) {
+		} else if (event instanceof MtgCardVisibilityUpdatedEvent) {
 			this.setVisibleImage(card.isVisible());
-		} else if (event instanceof ChangeMtgCardContextEvent) {
-
-			ChangeMtgCardContextEvent contextEvent = (ChangeMtgCardContextEvent) event;
-			
-			// When a card change its context, several related events can happen
-			for (AbstractMtgCardEvent relatedEvent : contextEvent.getRelatedEvents()) {
-				this.update(observedObject, relatedEvent);
-			}
-			setContextMenuItemsEnable(card.getContext());
-		}
+		} 
 	}
 }

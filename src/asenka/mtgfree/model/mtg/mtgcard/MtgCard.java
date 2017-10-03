@@ -7,12 +7,12 @@ import java.util.Locale;
 import java.util.Observable;
 import java.util.Set;
 
-import asenka.mtgfree.model.mtg.events.ChangeMtgCardContextEvent;
-import asenka.mtgfree.model.mtg.events.MoveMtgCardEvent;
-import asenka.mtgfree.model.mtg.events.MtgCardSelectionEvent;
-import asenka.mtgfree.model.mtg.events.RevealedMtgCardEvent;
-import asenka.mtgfree.model.mtg.events.TappedMtgCardEvent;
-import asenka.mtgfree.model.mtg.events.VisibilityMtgCardEvent;
+import asenka.mtgfree.model.mtg.events.MtgCardContextUpdatedEvent;
+import asenka.mtgfree.model.mtg.events.MtgCardLocationUpdatedEvent;
+import asenka.mtgfree.model.mtg.events.MtgCardSelectionUpdatedEvent;
+import asenka.mtgfree.model.mtg.events.MtgCardRevealUpdatedEvent;
+import asenka.mtgfree.model.mtg.events.MtgCardTapUpdatedEvent;
+import asenka.mtgfree.model.mtg.events.MtgCardVisibilityUpdatedEvent;
 import asenka.mtgfree.model.mtg.exceptions.MtgContextException;
 import asenka.mtgfree.model.mtg.mtgcard.comparators.CardCollectionComparator;
 import asenka.mtgfree.model.mtg.mtgcard.comparators.CardComparator;
@@ -640,9 +640,9 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 
 	/**
 	 * Update the visibility of a card and notify all the observers (if necessary). The observer are notified
-	 * with a {@link VisibilityMtgCardEvent} 
+	 * with a {@link MtgCardVisibilityUpdatedEvent} 
 	 * @param visible <code>true</code> if you want to display the front side.
-	 * @see VisibilityMtgCardEvent
+	 * @see MtgCardVisibilityUpdatedEvent
 	 */
 	public void setVisible(boolean visible) {
 
@@ -650,7 +650,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 		if (this.state.isVisible() != visible) {
 			this.state.setVisible(visible);
 			super.setChanged(); // <= Without this call, the notify method just below does nothing
-			super.notifyObservers(new VisibilityMtgCardEvent(this));
+			super.notifyObservers(new MtgCardVisibilityUpdatedEvent(this));
 		}
 	}
 
@@ -664,10 +664,10 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 
 	/**
 	 * Update the tapped property of a card and notify all the observers (if necessary). The observer are notified
-	 * with a {@link TappedMtgCardEvent} 
+	 * with a {@link MtgCardTapUpdatedEvent} 
 	 * @param tapped <code>true</code> if you want to tap the card
 	 * @throws MtgContextException if the current context does not allow the new value
-	 * @see TappedMtgCardEvent
+	 * @see MtgCardTapUpdatedEvent
 	 */
 	public void setTapped(boolean tapped) throws MtgContextException {
 
@@ -675,7 +675,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 		if (this.state.isTapped() != tapped) {
 			this.state.setTapped(tapped);
 			super.setChanged();
-			super.notifyObservers(new TappedMtgCardEvent(this));
+			super.notifyObservers(new MtgCardTapUpdatedEvent(this));
 		}
 	}
 
@@ -688,11 +688,12 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	}
 
 	/**
-	 * Check if a card in a player's hand is revealed
+	 * Set if a card in a player's hand is revealed and notify the observers if
+	 * it is necessary (new value)
 	 * 
 	 * @param revealed <code>true</code> if the card is revealed from player's hand
 	 * @throws MtgContextException if the current context does not allow the new value
-	 * @see RevealedMtgCardEvent
+	 * @see MtgCardRevealUpdatedEvent
 	 */
 	public void setRevealed(boolean revealed) throws MtgContextException {
 
@@ -700,7 +701,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 		if (this.state.isRevealed() != revealed) {
 			this.state.setRevealed(revealed);
 			super.setChanged();
-			super.notifyObservers(new RevealedMtgCardEvent(this));
+			super.notifyObservers(new MtgCardRevealUpdatedEvent(this));
 		}
 	}
 
@@ -717,12 +718,12 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 
 	/**
 	 * Update the card location and notify the observers that the location of the card has changed (if necessary).
-	 * The observers are notified with a {@link MoveMtgCardEvent}
+	 * The observers are notified with a {@link MtgCardLocationUpdatedEvent}
 	 * 
 	 * @param x the new horizontal coordinate
 	 * @param y the new vertical coordinate
 	 * @see MtgCardState
-	 * @see MoveMtgCardEvent
+	 * @see MtgCardLocationUpdatedEvent
 	 */
 	public void setLocation(final double x, final double y) {
 
@@ -731,7 +732,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 
 			this.state.setLocation(x, y);
 			super.setChanged();
-			super.notifyObservers(new MoveMtgCardEvent(this));
+			super.notifyObservers(new MtgCardLocationUpdatedEvent(this));
 		}
 
 	}
@@ -756,46 +757,33 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	 * <code>location = (-1, -1)</code> (this property make sense only on the BATTLEFIELD context)<br />
 	 * <code>isTapped = false</code> (this property make sense only on the BATTLEFIELD context).
 	 * <br /><br />
-	 * When calling this method, a special event is created. It contains other events depending on the new
-	 * context value. When the observers will be notified, they have to manage the {@link ChangeMtgCardContextEvent}
-	 * and also, all the related events.
 	 * 
 	 * @param context the context of the card
-	 * @see ChangeMtgCardContextEvent
+	 * @see MtgCardContextUpdatedEvent
 	 */
 	public void setContext(MtgContext context) {
 
-		ChangeMtgCardContextEvent event = new ChangeMtgCardContextEvent(this);
+		MtgCardContextUpdatedEvent event = new MtgCardContextUpdatedEvent(this);
 
 		switch (context) {
 			case OUT_OF_GAME:
 			case LIBRARY:
 			case HAND:
-				// Update the state values
-				this.state.setRevealed(false);
-				this.state.setTapped(false);
-				this.state.setVisible(false);
-				this.state.setLocation(-1.0, -1.0);
-				// Creates the associated events related to the previous state modification
-				event.add(new RevealedMtgCardEvent(this));
-				event.add(new TappedMtgCardEvent(this));
-				event.add(new VisibilityMtgCardEvent(this));
-				event.add(new MoveMtgCardEvent(this));
+				// Update the state values and notify the observers if necessary
+				this.setRevealed(false);
+				this.setTapped(false);
+				this.setVisible(false);
+				this.setLocation(-1.0, -1.0);
 				break;
 			case GRAVEYARD:
-				this.state.setRevealed(false);
-				this.state.setTapped(false);
-				this.state.setVisible(true); // when moving a card to grave yard, it becomes visible automatically
-				event.add(new RevealedMtgCardEvent(this));
-				event.add(new TappedMtgCardEvent(this));
-				event.add(new VisibilityMtgCardEvent(this));
+				this.setRevealed(false);
+				this.setTapped(false);
+				this.setVisible(true); // when moving a card to grave yard, it becomes visible automatically
 				break;
 			case BATTLEFIELD:
 			case EXILE:
-				this.state.setRevealed(false);
-				this.state.setTapped(false);
-				event.add(new RevealedMtgCardEvent(this));
-				event.add(new TappedMtgCardEvent(this));
+				this.setRevealed(false);
+				this.setTapped(false);
 				// When moving to exile, the visible status is kept as it was
 				break;
 		}
@@ -816,7 +804,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	/**
 	 * 
 	 * @param selected
-	 * @see MtgCardSelectionEvent
+	 * @see MtgCardSelectionUpdatedEvent
 	 */
 	public void setSelected(boolean selected) {
 	
@@ -824,7 +812,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 		if (this.state.isSelected() != selected) {
 			this.state.setSelected(selected);
 			super.setChanged();
-			super.notifyObservers(new MtgCardSelectionEvent(this));
+			super.notifyObservers(new MtgCardSelectionUpdatedEvent(this));
 		}
 	}
 

@@ -1,31 +1,35 @@
 package asenka.mtgfree.model.mtg.events;
 
-import org.apache.log4j.Logger;
 /**
- * 
- * 
+ * Mother class of all the events happening on the MtgFree application
  * 
  * @author asenka
- *
  */
-public class AbstractEvent {
+public abstract class AbstractEvent {
 
 	/**
-	 * 
+	 * The message associated to the event.
 	 */
-	protected String eventMessage;
-	
-	private static final Logger LOGGER = Logger.getLogger(AbstractEvent.class);
+	protected final String eventMessage;
 
 	/**
+	 * Build a new event with an empty message
+	 */
+	public AbstractEvent() {
+
+		super();
+		this.eventMessage = "";
+	}
+
+	/**
+	 * Build a new event with its message
 	 * 
 	 * @param eventMessage
 	 */
-	public AbstractEvent(String eventMessage) {
+	public AbstractEvent(final String eventMessage) {
+
 		super();
 		this.eventMessage = eventMessage;
-		
-		LOGGER.info(this);
 	}
 
 	/**
@@ -35,5 +39,4 @@ public class AbstractEvent {
 
 		return eventMessage;
 	}
-
 }
