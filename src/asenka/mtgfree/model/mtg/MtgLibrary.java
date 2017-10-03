@@ -160,6 +160,7 @@ public class MtgLibrary extends Observable {
 	 * 
 	 * @param index the index to remove the card
 	 * @return the card removed
+	 * @throws IndexOutOfBoundsException
 	 * @see MtgLibraryRemoveCardEvent
 	 */
 	public MtgCard removeCardAt(final int index) {
