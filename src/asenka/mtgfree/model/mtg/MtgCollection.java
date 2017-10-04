@@ -1,5 +1,6 @@
 package asenka.mtgfree.model.mtg;
 
+import java.io.Serializable;
 import java.text.Collator;
 import java.util.Date;
 import java.util.HashSet;
@@ -14,7 +15,12 @@ import asenka.mtgfree.model.utilities.Localized;
  * 
  * @author asenka
  */
-public class MtgCollection implements Comparable<MtgCollection>, Localized {
+public class MtgCollection implements Comparable<MtgCollection>, Localized, Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4695104489270370385L;
 
 	/**
 	 * The average number of cards in a MTG collection. Used to initiate the set of cards collection

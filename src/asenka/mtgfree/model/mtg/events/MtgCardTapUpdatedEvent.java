@@ -14,9 +14,14 @@ import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 public class MtgCardTapUpdatedEvent extends AbstractMtgCardUpdatedEvent {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8429007006086307554L;
+	
+	/**
 	 * Log4j logger use to trace events.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(MtgCardTapUpdatedEvent.class);
+	private static final transient Logger LOGGER = Logger.getLogger(MtgCardTapUpdatedEvent.class);
 
 	/**
 	 * Constructor

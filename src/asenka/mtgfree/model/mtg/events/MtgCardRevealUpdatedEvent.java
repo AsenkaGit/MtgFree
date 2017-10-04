@@ -6,14 +6,18 @@ import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 
 /**
  * 
- * This class represents an update event on a card related to its <strong>revealed</strong> value.
- * This events can only be triggered for a card in the context of a player's hand. Otherwise this event
- * does not make sense.
+ * This class represents an update event on a card related to its <strong>revealed</strong> value. This events can only be
+ * triggered for a card in the context of a player's hand. Otherwise this event does not make sense.
  * 
  * @author asenka
  *
  */
 public class MtgCardRevealUpdatedEvent extends AbstractMtgCardUpdatedEvent {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3797488545165903618L;
 
 	/**
 	 * Log4j logger use to trace events.

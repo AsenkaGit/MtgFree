@@ -14,9 +14,14 @@ import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 public class MtgCardVisibilityUpdatedEvent extends AbstractMtgCardUpdatedEvent {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9104593069494194840L;
+	
+	/**
 	 * Log4j logger use to trace events.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(MtgCardVisibilityUpdatedEvent.class);
+	private static final transient Logger LOGGER = Logger.getLogger(MtgCardVisibilityUpdatedEvent.class);
 
 	/**
 	 * Constructor

@@ -1,12 +1,17 @@
 package asenka.mtgfree.model.mtg;
 
+import java.io.Serializable;
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Set;
 
+import asenka.mtgfree.model.mtg.events.MtgPlayerEnergyUpdatedEvent;
+import asenka.mtgfree.model.mtg.events.MtgPlayerLifeUpdatedEvent;
+import asenka.mtgfree.model.mtg.events.MtgPlayerPoisonUpdatedEvent;
 import asenka.mtgfree.model.mtg.exceptions.MtgDeckException;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
@@ -28,15 +33,20 @@ import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
  * 
  * @author asenka
  */
-public class MtgPlayer extends Observable implements Comparable<MtgPlayer> {
+public class MtgPlayer extends Observable implements Comparable<MtgPlayer>, Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1737279371197986879L;
 
 	/**
 	 * The collator used to compare the deck's names
 	 */
-	private static final Collator DEFAULT_COLLATOR = Collator.getInstance();
+	private static final transient Collator DEFAULT_COLLATOR = Collator.getInstance();
 
 	/**
-	 * 
+	 * The default initial life points of a player.
 	 */
 	public static final int DEFAULT_LIFE_POINTS = 20;
 
@@ -135,15 +145,20 @@ public class MtgPlayer extends Observable implements Comparable<MtgPlayer> {
 	}
 
 	/**
+	 * Update the number of life points for the player
 	 * @param remainingLifePoints
 	 */
 	public void setRemainingLifePoints(int remainingLifePoints) {
 
+		if(this.remainingLifePoints != remainingLifePoints) {
+			super.setChanged(); // if this method is not called, the observers will not be notified
+		}	
 		this.remainingLifePoints = remainingLifePoints;
+		super.notifyObservers(new MtgPlayerLifeUpdatedEvent(this));
 	}
 
 	/**
-	 * @return
+	 * @return the number of poison counter of the player
 	 */
 	public int getPoisonCounters() {
 
@@ -151,54 +166,79 @@ public class MtgPlayer extends Observable implements Comparable<MtgPlayer> {
 	}
 
 	/**
-	 * @param poisonCounters
+	 * Set the number of poison counters on the player and notify the observers
+	 * if necessary
+	 * @param poisonCounters  
 	 */
-	public void setPoisonCounters(int poisonCounters) {
+	public void setPoisonCounters(final int poisonCounters) {
 
+		if(this.poisonCounters != poisonCounters) {
+			super.setChanged(); // if this method is not called, the observers will not be notified
+		}	
 		this.poisonCounters = poisonCounters;
+		super.notifyObservers(new MtgPlayerPoisonUpdatedEvent(this));
 	}
 
 	/**
-	 * @return
+	 * @return the number of energy counters of the player
 	 */
 	public int getEnergyCounters() {
 
 		return energyCounters;
 	}
+	
+	
 
 	/**
-	 * @return
+	 * 
+	 * @param energyCounters
+	 */
+	public void setEnergyCounters(final int energyCounters) {
+	
+		if(this.energyCounters != energyCounters) {
+			super.setChanged(); // if this method is not called, the observers will not be notified
+		}	
+		this.energyCounters = energyCounters;
+		super.notifyObservers(new MtgPlayerEnergyUpdatedEvent(this));
+	}
+
+	/**
+	 * Returns an unmodifiable list of cards
+	 * @return the current list of cards in the player's hand
 	 */
 	public List<MtgCard> getHand() {
 
-		return hand;
+		return Collections.unmodifiableList(this.hand);
 	}
 
 	/**
-	 * @return
+	 * Returns an unmodifiable list of cards
+	 * @return the current list of cards of the player that are exiled
 	 */
 	public List<MtgCard> getExile() {
 
-		return exile;
+		return Collections.unmodifiableList(this.exile);
 	}
 
 	/**
-	 * @return
+	 * Returns an unmodifiable list of cards
+	 * @return the current list of cards of the player that are in the graveyard
 	 */
 	public List<MtgCard> getGraveyard() {
 
-		return graveyard;
+		return Collections.unmodifiableList(this.graveyard);
 	}
 
 	/**
-	 * @return the library
+	 * @return The player's library
 	 */
 	public MtgLibrary getLibrary() {
 
-		return library;
+		return this.library;
 	}
 
 	/**
+	 * Set the player library
 	 * @param library the library to set
 	 */
 	public void setLibrary(MtgLibrary library) {
@@ -207,7 +247,7 @@ public class MtgPlayer extends Observable implements Comparable<MtgPlayer> {
 	}
 
 	/**
-	 * @return
+	 * @return the set of available decks for this players
 	 */
 	public Set<MtgDeck> getAvailableDecks() {
 
@@ -215,7 +255,7 @@ public class MtgPlayer extends Observable implements Comparable<MtgPlayer> {
 	}
 
 	/**
-	 * @return
+	 * @return the current deck of this players. 
 	 */
 	public MtgDeck getCurrentDeck() {
 
@@ -243,7 +283,7 @@ public class MtgPlayer extends Observable implements Comparable<MtgPlayer> {
 	 */
 	public void addCardToGraveyard(MtgCard card) throws IllegalArgumentException {
 
-		updateCardState(card, MtgContext.GRAVEYARD);
+		card.setContext(MtgContext.GRAVEYARD);
 		this.graveyard.add(card);
 	}
 
@@ -255,7 +295,7 @@ public class MtgPlayer extends Observable implements Comparable<MtgPlayer> {
 	 */
 	public void addCardToExile(MtgCard card) throws IllegalArgumentException {
 
-		updateCardState(card, MtgContext.EXILE);
+		card.setContext(MtgContext.EXILE);
 		this.exile.add(card);
 	}
 
@@ -267,7 +307,7 @@ public class MtgPlayer extends Observable implements Comparable<MtgPlayer> {
 	 */
 	public void addCardToHand(MtgCard card) throws IllegalArgumentException {
 
-		updateCardState(card, MtgContext.HAND);
+		card.setContext(MtgContext.HAND);
 		this.hand.add(card);
 	}
 
@@ -322,15 +362,15 @@ public class MtgPlayer extends Observable implements Comparable<MtgPlayer> {
 		return DEFAULT_COLLATOR.compare(this.name, player.name);
 	}
 
-	/**
-	 * Check if the card has a state and update the context in the card state
-	 * 
-	 * @param card the card to update
-	 * @param context the context to set on the card
-	 * @throws IllegalArgumentException if the card state is null
-	 */
-	private static void updateCardState(MtgCard card, MtgContext context) throws IllegalArgumentException {
-
-		card.setContext(context);
-	}
+//	/**
+//	 * Check if the card has a state and update the context in the card state
+//	 * 
+//	 * @param card the card to update
+//	 * @param context the context to set on the card
+//	 * @throws IllegalArgumentException if the card state is null
+//	 */
+//	private static void updateCardState(MtgCard card, MtgContext context) throws IllegalArgumentException {
+//
+//		card.setContext(context);
+//	}
 }

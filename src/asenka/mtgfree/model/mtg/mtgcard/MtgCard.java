@@ -1,6 +1,7 @@
 package asenka.mtgfree.model.mtg.mtgcard;
 
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
@@ -27,8 +28,14 @@ import asenka.mtgfree.model.utilities.Localized;
  * @see Observable
  * @see Comparable
  * @see Localized
+ * @see Serializable
  */
-public class MtgCard extends Observable implements Comparable<MtgCard>, Localized {
+public class MtgCard extends Observable implements Comparable<MtgCard>, Localized, Serializable {
+
+	/**
+	 * The serial number use to serialize this object
+	 */
+	private static final long serialVersionUID = 1554761911799087091L;
 
 	/**
 	 * The unique id of a card (based on the ID in the database)
@@ -131,7 +138,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	 * The default comparator used to sort the cards in a collection. The default behavior is to sort 1/ with the card name and
 	 * then 2/ with the collection name
 	 */
-	private CardComparator defaultComparator;
+	private transient CardComparator defaultComparator; // The default comparator is not serialized because it is built from another value
 
 	/**
 	 * Create a exact copy of the card <code>copyFrom</code>

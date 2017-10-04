@@ -1,6 +1,7 @@
 package asenka.mtgfree.model.mtg.mtgcard;
 
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 
 import asenka.mtgfree.model.mtg.exceptions.MtgContextException;
 
@@ -14,7 +15,12 @@ import asenka.mtgfree.model.mtg.exceptions.MtgContextException;
  * </ul>
  * @author asenka
  */
-public class MtgCardState {
+public class MtgCardState implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1475222783582738918L;
 
 	/**
 	 * if <code>true</code> => the card is tapped. If the card is not on the battlefield, this value should be false.

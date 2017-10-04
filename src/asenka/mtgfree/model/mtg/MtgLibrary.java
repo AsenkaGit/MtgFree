@@ -1,6 +1,8 @@
 package asenka.mtgfree.model.mtg;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -8,9 +10,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Observable;
 
-import asenka.mtgfree.model.mtg.events.MtgLibraryAddCardEvent;
-import asenka.mtgfree.model.mtg.events.MtgLibraryDrawCardEvent;
-import asenka.mtgfree.model.mtg.events.MtgLibraryRemoveCardEvent;
+import asenka.mtgfree.model.mtg.events.MtgLibraryAddCardsEvent;
+import asenka.mtgfree.model.mtg.events.MtgLibraryRemoveCardsEvent;
+import asenka.mtgfree.model.mtg.events.MtgLibraryReorderEvent;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
 
@@ -19,7 +21,12 @@ import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
  * 
  * @author asenka
  */
-public class MtgLibrary extends Observable {
+public class MtgLibrary extends Observable implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 464786817994595291L;
 
 	/**
 	 * The cards in the library
@@ -62,7 +69,7 @@ public class MtgLibrary extends Observable {
 
 		if (card != null) {
 			super.setChanged();
-			super.notifyObservers(new MtgLibraryDrawCardEvent(this, card));
+			super.notifyObservers(new MtgLibraryRemoveCardsEvent(this, card));
 		}
 		return card;
 	}
@@ -97,7 +104,8 @@ public class MtgLibrary extends Observable {
 	}
 
 	/**
-	 * Returns the x first cards from the library. The returned cards remain inside the library (no need to notify the observers)
+	 * Returns the x first cards from the library. The returned cards remain inside the library 
+	 * (no need to notify the observers)
 	 * 
 	 * @param xFirst the number of cards to get
 	 * @return the x first cards from the library
@@ -131,28 +139,28 @@ public class MtgLibrary extends Observable {
 	 * Add one card at the top of the library and notify the observers
 	 * 
 	 * @param card
-	 * @see MtgLibraryAddCardEvent
+	 * @see MtgLibraryAddCardsEvent
 	 */
 	public void addFirst(final MtgCard card) {
 
 		this.cards.addFirst(card);
 		card.setContext(MtgContext.LIBRARY);
 		super.setChanged();
-		super.notifyObservers(new MtgLibraryAddCardEvent(this, card, 0));
+		super.notifyObservers(new MtgLibraryAddCardsEvent(this, new MtgCard[] { card }, new int[] {0}));
 	}
 
 	/**
 	 * Add one card at the bottom of the library and notify the observers
 	 * 
 	 * @param card
-	 * @see MtgLibraryAddCardEvent
+	 * @see MtgLibraryAddCardsEvent
 	 */
 	public void addLast(final MtgCard card) {
 
 		this.cards.addLast(card);
 		card.setContext(MtgContext.LIBRARY);
 		super.setChanged();
-		super.notifyObservers(new MtgLibraryAddCardEvent(this, card, (this.cards.size() - 1)));
+		super.notifyObservers(new MtgLibraryAddCardsEvent(this, new MtgCard[] { card }, new int[] {this.cards.size() - 1}));
 	}
 
 	/**
@@ -161,7 +169,7 @@ public class MtgLibrary extends Observable {
 	 * @param index the index to remove the card
 	 * @return the card removed
 	 * @throws IndexOutOfBoundsException
-	 * @see MtgLibraryRemoveCardEvent
+	 * @see MtgLibraryRemoveCardsEvent
 	 */
 	public MtgCard removeCardAt(final int index) {
 
@@ -169,29 +177,34 @@ public class MtgLibrary extends Observable {
 
 		if (card != null) {
 			super.setChanged();
-			super.notifyObservers(new MtgLibraryRemoveCardEvent(this, card));
+			super.notifyObservers(new MtgLibraryRemoveCardsEvent(this, card));
 		}
 		return card;
 
 	}
 
 	/**
-	 * Returns and removes the x first cards from the library
+	 * Returns and removes the x first cards from the library. It notify the observers
+	 * that new cards are removed
 	 * 
 	 * @param xFirst the number of cards to remove from the library
 	 * @return the x first cards from the library
+	 * @see MtgLibraryRemoveCardsEvent
 	 */
 	public List<MtgCard> removeFirstCards(int xFirst) {
 
 		if (xFirst > this.cards.size()) {
 			xFirst = this.cards.size();
 		}
-		List<MtgCard> xFirstList = new ArrayList<MtgCard>(xFirst);
+		MtgCard[] xFirstCards = new MtgCard[xFirst];
 
 		for (int i = 0; i < xFirst; i++) {
-			xFirstList.add(this.cards.remove(i));
+			xFirstCards[i] = this.cards.remove(i);
 		}
-		return xFirstList;
+		super.setChanged();
+		super.notifyObservers(new MtgLibraryRemoveCardsEvent(this, xFirstCards));
+		
+		return Arrays.asList(xFirstCards);
 	}
 
 	/**
@@ -203,11 +216,15 @@ public class MtgLibrary extends Observable {
 	}
 
 	/**
-	 * Randomize the order of the card in the stack
+	 * Randomize the order of the card in the stack. 
+	 * It notify the observers that the library has been updated
 	 */
 	public void shuffle() {
 
 		Collections.shuffle(this.cards);
+		
+		super.hasChanged();
+		super.notifyObservers(new MtgLibraryReorderEvent(this));
 	}
 
 	@Override

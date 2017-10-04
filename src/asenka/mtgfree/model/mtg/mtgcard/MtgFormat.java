@@ -1,5 +1,6 @@
 package asenka.mtgfree.model.mtg.mtgcard;
 
+import java.io.Serializable;
 import java.text.Collator;
 import java.util.Locale;
 
@@ -10,10 +11,15 @@ import asenka.mtgfree.model.utilities.Localized;
  * 
  * @author Asenka
  */
-public class MtgFormat implements Comparable<MtgFormat>, Localized {
+public class MtgFormat implements Comparable<MtgFormat>, Localized, Serializable {
 
 	// This class could have been a enumeration. But I want to anticipate the creation
 	// of another format and I want this data stored in the database.
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7823825497400458563L;
 
 	/**
 	 * The format id (same as the primary key in the database)

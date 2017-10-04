@@ -1,5 +1,6 @@
 package asenka.mtgfree.model.mtg;
 
+import java.io.Serializable;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,7 +22,12 @@ import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
  * 
  * @author asenka
  */
-public class MtgDeck implements Comparable<MtgDeck> {
+public class MtgDeck implements Comparable<MtgDeck>, Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1141091591290396766L;
 
 	/**
 	 * The collator used to compare the deck's names

@@ -13,9 +13,14 @@ import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 public class MtgCardLocationUpdatedEvent extends AbstractMtgCardUpdatedEvent {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2525052048324109222L;
+
+	/**
 	 * Log4j logger use to trace events.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(MtgCardLocationUpdatedEvent.class);
+	private static final transient Logger LOGGER = Logger.getLogger(MtgCardLocationUpdatedEvent.class);
 
 	/**
 	 * Constructor

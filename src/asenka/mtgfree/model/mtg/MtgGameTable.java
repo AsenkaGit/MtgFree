@@ -1,6 +1,8 @@
 package asenka.mtgfree.model.mtg;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 
@@ -12,7 +14,12 @@ import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
  * 
  * @author asenka
  */
-public class MtgGameTable extends Observable {
+public class MtgGameTable extends Observable implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5283884575139799352L;
 
 	/**
 	 * The table name
@@ -33,8 +40,7 @@ public class MtgGameTable extends Observable {
 	 * The list of cards on the battlefield
 	 */
 	private List<MtgCard> cardsOnBattlefield;
-	
-	// TODO add the logs
+
 
 	/**
 	 * Constructor
@@ -81,13 +87,13 @@ public class MtgGameTable extends Observable {
 	/**
 	 * @param maxPlayers the maxPlayers to set
 	 */
-	public void setMaxPlayers(int maxPlayers) {
+	public void setMaxPlayers(final int maxPlayers) {
 
 		this.maxPlayers = maxPlayers;
 	}
 
 	/**
-	 * @return
+	 * @return the players on the table
 	 */
 	public List<MtgPlayer> getPlayers() {
 
@@ -95,6 +101,7 @@ public class MtgGameTable extends Observable {
 	}
 
 	/**
+	 * Set the list of players
 	 * @param players
 	 */
 	public void setPlayers(List<MtgPlayer> players) {
@@ -103,35 +110,34 @@ public class MtgGameTable extends Observable {
 	}
 	
 	/**
-	 * 
+	 * Add a new player on the table
 	 * @param player
 	 */
 	public void addPlayer(MtgPlayer player) {
 		
 		this.players.add(player);
-		// TODO Add event
 	}
 	
 	/**
-	 * 
+	 * Remove a player from the table
 	 * @param player
 	 */
 	public void removePlayer(MtgPlayer player) {
 		
 		this.players.remove(player);
-		// TODO add event
 	}
  
 	/**
-	 * @return
+	 * Returns the cards that are on the battlefield
+	 * @return an unmodifiable list of cards
 	 */
 	public List<MtgCard> getCardsOnBattlefield() {
 
-		return cardsOnBattlefield;
+		return Collections.unmodifiableList(this.cardsOnBattlefield);
 	}
 
 	/**
-	 * Add card to the battle field
+	 * Add card to the battle field and notify the observers
 	 * 
 	 * @param card
 	 */
@@ -139,11 +145,10 @@ public class MtgGameTable extends Observable {
 
 		card.setContext(MtgContext.BATTLEFIELD);
 		this.cardsOnBattlefield.add(card);
-		// TODO Add event
 	}
 
 	/**
-	 * Remove a card from the battlefield
+	 * Remove a card from the battlefield and notify the observers
 	 * 
 	 * @param card the card to remove
 	 */

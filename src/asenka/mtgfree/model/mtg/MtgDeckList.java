@@ -4,6 +4,16 @@ import java.util.Locale;
 
 import asenka.mtgfree.model.utilities.Localized;
 
+/**
+ * Enumeration used only with MtgDeck. It indicates witch list in the deck must be updated :
+ * <ul>
+ * <li>The main list (the cards going to the player's library during a game)</li>
+ * <li>The sideboard</li>
+ * </ul>
+ * 
+ * @author asenka
+ * @see MtgDeck
+ */
 public enum MtgDeckList implements Localized {
 
 	MAIN(getLocalizedDeckListName("main")), 
@@ -20,7 +30,7 @@ public enum MtgDeckList implements Localized {
 	private Locale locale;
 
 	/*
-	 * Constructor
+	 * Private Constructor
 	 */
 	MtgDeckList(String localizedName) {
 
@@ -31,7 +41,7 @@ public enum MtgDeckList implements Localized {
 	}
 
 	/**
-	 * @return The localized name of the color
+	 * @return The localized name of the deck list
 	 */
 	public String getName() {
 

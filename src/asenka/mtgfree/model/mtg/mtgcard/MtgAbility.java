@@ -1,5 +1,6 @@
 package asenka.mtgfree.model.mtg.mtgcard;
 
+import java.io.Serializable;
 import java.text.Collator;
 import java.util.Locale;
 
@@ -10,7 +11,12 @@ import asenka.mtgfree.model.utilities.Localized;
  * 
  * @author asenka
  */
-public class MtgAbility implements Comparable<MtgAbility>, Localized {
+public class MtgAbility implements Comparable<MtgAbility>, Localized, Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8455269110778328894L;
 
 	/**
 	 * The ability id (from the database primary key)
