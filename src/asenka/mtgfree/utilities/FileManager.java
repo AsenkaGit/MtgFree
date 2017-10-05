@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 
 /**
- * Singleton class used to load images. It
+ * Singleton class used to load data from files
  * 
  * @author asenka
  *
@@ -31,23 +31,18 @@ public final class FileManager {
 
 	private static final String FILENAME_MTG_CARD_BACK = "card_mtg_back.jpg";
 
-	/**
-	 * 
-	 */
 	public static final String PREFIX_MTGCARD_FILES = "card_mtg_";
 
-	/**
-	 * 
-	 */
 	private static FileManager singleton = new FileManager();
 
 	/**
-	 * 
+	 * The back of the Mtg card image will be loaded a lot of time. The unique instance of the file manager
+	 * keep an open input stream to the file in order to limit to number of access to this file.
 	 */
 	private InputStream backImageInputStream;
 
 	/**
-	 * 
+	 * Private default constructor. This class cannot be instanciate outside with a constructor
 	 */
 	private FileManager() {
 
@@ -55,8 +50,8 @@ public final class FileManager {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Design pattern Singleton method.
+	 * @return the unique instance of the file manager
 	 */
 	public static FileManager getInstance() {
 
@@ -114,13 +109,16 @@ public final class FileManager {
 	/**
 	 * Returns the back image of a mtg card
 	 * @return an InputStream to the back of the Card Image
+	 * @throws RuntimeErrorException if neither the expected image can be loaded nor the "file not found" image. 
+	 * This scenario should not happen and is considered as a serious error
 	 */
 	public InputStream getMtgBackInputStream() {
 
+		// If the file has been already loaded, it returns the existing input stream
 		if (this.backImageInputStream != null) {
 			return this.backImageInputStream;
 		} else {
-
+			// Initialization of the input stream to the image of the back of a card
 			try {
 				this.backImageInputStream = new FileInputStream(FILEPATH_MTG_CARD + FILENAME_MTG_CARD_BACK);
 			} catch (FileNotFoundException e) {
@@ -132,7 +130,7 @@ public final class FileManager {
 					throw new RuntimeErrorException(new Error(e1));
 				}
 			}
-			return backImageInputStream;
+			return this.backImageInputStream;
 		}
 	}
 

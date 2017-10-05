@@ -15,38 +15,40 @@ public abstract class CardTextComparator extends CardComparator {
 	/**
 	 * The localized collator use to compare two strings
 	 */
-	protected Collator collator;
+	protected final Collator collator;
 
 	/**
 	 * Constructor. Create a default text comparator with the locale set in the used preferences
 	 */
-	public CardTextComparator() {
+	protected CardTextComparator() {
 
 		this(null, getPreferedLocale());
 	}
 
 	/**
-	 * 
-	 * @param locale
+	 * Constructor with locale
+	 * @param locale 
 	 */
-	public CardTextComparator(Locale locale) {
+	protected CardTextComparator(Locale locale) {
 
 		this(null, locale);
 	}
 
 	/**
-	 * @param optionalComparator
+	 * Constructor with sub comparator
+	 * @param optionalComparator 
 	 */
-	public CardTextComparator(CardComparator optionalComparator) {
+	protected CardTextComparator(CardComparator optionalComparator) {
 
 		this(optionalComparator, getPreferedLocale());
 	}
 
 	/**
+	 * Constructor with sub comparator and locale
 	 * @param optionalComparator
 	 * @param locale
 	 */
-	public CardTextComparator(CardComparator optionalComparator, Locale locale) {
+	protected CardTextComparator(CardComparator optionalComparator, Locale locale) {
 
 		super(optionalComparator);
 		this.collator = Collator.getInstance(locale);
@@ -56,7 +58,7 @@ public abstract class CardTextComparator extends CardComparator {
 	 * 
 	 * @param order
 	 */
-	public CardTextComparator(int order) {
+	protected CardTextComparator(int order) {
 
 		this(null, getPreferedLocale(), order);
 	}
@@ -66,7 +68,7 @@ public abstract class CardTextComparator extends CardComparator {
 	 * @param locale
 	 * @param order
 	 */
-	public CardTextComparator(Locale locale, int order) {
+	protected CardTextComparator(Locale locale, int order) {
 
 		this(null, locale, order);
 	}
@@ -76,7 +78,7 @@ public abstract class CardTextComparator extends CardComparator {
 	 * @param optionalComparator
 	 * @param order
 	 */
-	public CardTextComparator(CardComparator optionalComparator, int order) {
+	protected CardTextComparator(CardComparator optionalComparator, int order) {
 
 		this(optionalComparator, getPreferedLocale(), order);
 	}
@@ -87,15 +89,17 @@ public abstract class CardTextComparator extends CardComparator {
 	 * @param locale
 	 * @param order
 	 */
-	public CardTextComparator(CardComparator optionalComparator, Locale locale, int order) {
+	protected CardTextComparator(CardComparator optionalComparator, Locale locale, int order) {
 
 		super(optionalComparator, order);
 		this.collator = Collator.getInstance(locale);
 	}
 
 	/**
-	 * 
-	 * @return
+	 * For the moment this method returns the default locale. It would
+	 * be nice to use a configuration file instead
+	 * @return the default locale
+	 * @see Locale#getDefault()
 	 */
 	private static final Locale getPreferedLocale() {
 

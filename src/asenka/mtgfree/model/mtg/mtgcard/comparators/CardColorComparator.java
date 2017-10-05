@@ -23,7 +23,7 @@ import asenka.mtgfree.model.mtg.mtgcard.MtgColor;
 public class CardColorComparator extends CardComparator {
 
 	/**
-	 * 
+	 * The map of integer weights associated to each color.
 	 */
 	private static final Map<MtgColor, Integer> COLORS_WEIGHTS = getColorWeigths();
 
@@ -99,9 +99,17 @@ public class CardColorComparator extends CardComparator {
 	}
 
 	/**
-	 * Creates the map with the weight associated to each colors.
+	 * Creates the map with the weight associated to each colors.<br />
+	 * <p>
+	 * The value used for the weight works like the value used for the access rights
+	 * in Linux system : 1, 2, 4, 8, 16. Using the a geometric serie like that is interesting
+	 * because you can easily get combinaison of colors by additionning the weight together.
+	 * </p>
+	 * <p>
+	 * For example, if a card as a weight of 3, it can only means that it is a RED (1) and BLACK (2) card.
+	 * </p>
 	 * 
-	 * @return a map
+	 * @return a map with the weight of each color
 	 */
 	private static final Map<MtgColor, Integer> getColorWeigths() {
 

@@ -4,10 +4,16 @@ import java.util.Locale;
 
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 
+/**
+ * Comparator used to sort the card according to the collection name
+ * 
+ * @author asenka
+ *
+ */
 public final class CardCollectionComparator extends CardTextComparator {
 
 	/**
-	 * 
+	 * Default constructor
 	 */
 	public CardCollectionComparator() {
 
