@@ -8,22 +8,9 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane minHeight="600.0" minWidth="800.0" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="asenka.mtgfree.javafx.RootPaneController">
-   <bottom>
-      <HBox minHeight="200.0" prefHeight="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <AnchorPane maxHeight="200.0" maxWidth="160.0" minHeight="200.0" minWidth="160.0" prefHeight="200.0" prefWidth="160.0">
-               <children>
-                  <Button fx:id="drawButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#drawCard" text="Draw" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                  <Button fx:id="drawPlay" layoutX="76.0" layoutY="14.0" mnemonicParsing="false" onAction="#playCard" text="Play" AnchorPane.leftAnchor="70.0" AnchorPane.topAnchor="10.0" />
-               </children>
-            </AnchorPane>
-            <ScrollPane minHeight="200.0" prefHeight="200.0" vbarPolicy="NEVER" />
-         </children>
-      </HBox>
-   </bottom>
+<BorderPane minHeight="600.0" minWidth="800.0" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" >
    <right>
-      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane prefHeight="200.0" prefWidth="300.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
           <Tab text="Card View" />
           <Tab text="Card Data" />

@@ -2,10 +2,13 @@ package asenka.mtgfree.javafx;
 
 import java.io.IOException;
 
+import asenka.mtgfree.javafx.views.BattlefieldView;
+import asenka.mtgfree.javafx.views.PlayerHandView;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 /**
@@ -54,9 +57,12 @@ public class MainApp extends Application {
 			// Load root layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("RootPane.fxml"));
-			BorderPane rootLayout = (BorderPane) loader.load();
+			BorderPane rootPane = (BorderPane) loader.load();
+			
+			rootPane.setCenter(new BattlefieldView());
+			rootPane.setBottom(new PlayerHandView());
 
-			return rootLayout;
+			return rootPane;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
