@@ -1,18 +1,12 @@
 package asenka.mtgfree.model.mtg.events;
 
-import java.io.Serializable;
-
 /**
  * Mother class of all the events happening on the MtgFree application
  * 
  * @author asenka
  */
-public abstract class AbstractEvent implements Serializable {
+public abstract class AbstractEvent {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -506793224243983347L;
 	
 	/**
 	 * The message associated to the event.

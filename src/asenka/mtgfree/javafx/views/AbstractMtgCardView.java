@@ -3,7 +3,7 @@ package asenka.mtgfree.javafx.views;
 
 import java.util.Observer;
 
-import asenka.mtgfree.javafx.controllers.MtgCardController;
+import asenka.mtgfree.controllers.MtgCardController;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 import asenka.mtgfree.utilities.FileManager;
 import javafx.geometry.Dimension2D;

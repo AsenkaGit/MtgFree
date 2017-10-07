@@ -1,14 +1,11 @@
 package asenka.mtgfree.javafx;
 
-import java.io.IOException;
-
-import asenka.mtgfree.javafx.views.BattlefieldView;
-import asenka.mtgfree.javafx.views.PlayerHandView;
+import asenka.mtgfree.controllers.MtgGameTableController;
+import asenka.mtgfree.javafx.views.GameTableView;
+import asenka.mtgfree.model.mtg.MtgGameTable;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 /**
@@ -52,21 +49,10 @@ public class MainApp extends Application {
 	 * @return the root pane with all the javafx components
 	 */
 	private BorderPane getRootPane() {
-
-		try {
-			// Load root layout from fxml file.
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("RootPane.fxml"));
-			BorderPane rootPane = (BorderPane) loader.load();
-			
-			rootPane.setCenter(new BattlefieldView());
-			rootPane.setBottom(new PlayerHandView());
-
-			return rootPane;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+		
+		MtgGameTable gameTable = null;
+		MtgGameTableController gameTableController = new MtgGameTableController(gameTable);
+		return new GameTableView(gameTableController);
 	}
 
 	/**

@@ -7,8 +7,7 @@ import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
 import asenka.mtgfree.model.mtg.mtgcard.MtgRarity;
 import asenka.mtgfree.model.mtg.mtgcard.MtgType;
-import asenka.mtgfree.javafx.controllers.MtgCardController;
-import javafx.collections.ObservableList;
+import asenka.mtgfree.controllers.MtgCardController;
 import javafx.scene.layout.Pane;
 
 public class BattlefieldView extends Pane {
@@ -24,7 +23,7 @@ public class BattlefieldView extends Pane {
 		card.setContext(MtgContext.BATTLEFIELD);
 		
 		MtgCardController cardController = new MtgCardController(card);
-		SimpleBattlefieldMtgCardView battleCardView = new SimpleBattlefieldMtgCardView(cardController);
+		SimpleBattlefieldCardView battleCardView = new SimpleBattlefieldCardView(cardController);
 		
 		getChildren().add(battleCardView);
 	}

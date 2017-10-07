@@ -1,4 +1,4 @@
-package asenka.mtgfree.javafx.controllers;
+package asenka.mtgfree.controllers;
 
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
@@ -18,6 +18,7 @@ public class MtgCardController {
 
 	/**
 	 * Constructor with an MtgCard
+	 * 
 	 * @param card
 	 */
 	public MtgCardController(MtgCard card) {
@@ -43,6 +44,7 @@ public class MtgCardController {
 
 	/**
 	 * Action : set if a card is visible (i.e. display the front side)
+	 * 
 	 * @param visible <code>true</code> to display the front side
 	 */
 	public void setVisible(boolean visible) {

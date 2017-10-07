@@ -6,6 +6,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 
+import asenka.mtgfree.model.mtg.events.MtgGameTableAddCardEvent;
+import asenka.mtgfree.model.mtg.events.MtgGameTableAddPlayerEvent;
+import asenka.mtgfree.model.mtg.events.MtgGameTableRemoveCardEvent;
+import asenka.mtgfree.model.mtg.events.MtgGameTableRemovePlayerEvent;
+import asenka.mtgfree.model.mtg.events.SelectionUpdateEvent;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
 
@@ -17,9 +22,9 @@ import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
 public class MtgGameTable extends Observable implements Serializable {
 
 	/**
-	 * 
+	 * The generated ID used for serialization
 	 */
-	private static final long serialVersionUID = 5283884575139799352L;
+	private static final long serialVersionUID = 0L;
 
 	/**
 	 * The table name
@@ -41,6 +46,10 @@ public class MtgGameTable extends Observable implements Serializable {
 	 */
 	private List<MtgCard> cardsOnBattlefield;
 
+	/**
+	 * The list of selected cards
+	 */
+	private List<MtgCard> selectedCards;
 
 	/**
 	 * Constructor
@@ -93,42 +102,45 @@ public class MtgGameTable extends Observable implements Serializable {
 	}
 
 	/**
-	 * @return the players on the table
+	 * Returns the players on the table
+	 * 
+	 * @return an unmodifiable list of players
 	 */
 	public List<MtgPlayer> getPlayers() {
 
-		return players;
+		return Collections.unmodifiableList(players);
 	}
 
 	/**
-	 * Set the list of players
-	 * @param players
-	 */
-	public void setPlayers(List<MtgPlayer> players) {
-
-		this.players = players;
-	}
-	
-	/**
-	 * Add a new player on the table
+	 * Add a new player on the table and notify the observers
+	 * 
 	 * @param player
 	 */
 	public void addPlayer(MtgPlayer player) {
-		
+
 		this.players.add(player);
+
+		super.setChanged();
+		super.notifyObservers(new MtgGameTableAddPlayerEvent(player));
 	}
-	
+
 	/**
-	 * Remove a player from the table
+	 * Remove a player from the table and notify the observers
+	 * 
 	 * @param player
 	 */
 	public void removePlayer(MtgPlayer player) {
-		
-		this.players.remove(player);
+
+		if (this.players.remove(player)) {
+
+			super.setChanged();
+			super.notifyObservers(new MtgGameTableRemovePlayerEvent(player));
+		}
 	}
- 
+
 	/**
 	 * Returns the cards that are on the battlefield
+	 * 
 	 * @return an unmodifiable list of cards
 	 */
 	public List<MtgCard> getCardsOnBattlefield() {
@@ -141,10 +153,13 @@ public class MtgGameTable extends Observable implements Serializable {
 	 * 
 	 * @param card
 	 */
-	public void addCardToBattleField(MtgCard card) {
+	public void addCardToBattlefield(MtgCard card) {
 
 		card.setContext(MtgContext.BATTLEFIELD);
 		this.cardsOnBattlefield.add(card);
+
+		super.hasChanged();
+		super.notifyObservers(new MtgGameTableAddCardEvent(card));
 	}
 
 	/**
@@ -154,8 +169,38 @@ public class MtgGameTable extends Observable implements Serializable {
 	 */
 	public void removeCardFromBattlefield(MtgCard card) {
 
-		this.cardsOnBattlefield.remove(card);
+		// If the card was in the battlefield, notify the observers
+		if (this.cardsOnBattlefield.remove(card)) {
+
+			super.hasChanged();
+			super.notifyObservers(new MtgGameTableRemoveCardEvent(card));
+		}
+
 	}
+
+	/**
+	 * The selected cards
+	 * 
+	 * @return an unmodifiable list of cards
+	 * @see Collections#unmodifiableList(List)
+	 */
+	public List<MtgCard> getSelectedCards() {
+
+		return Collections.unmodifiableList(selectedCards);
+	}
+
+	/**
+	 * Set the selected cards and notify the observers
+	 * @param selectedCards a list of cards
+	 */
+	public void setSelectedCards(List<MtgCard> selectedCards) {
+
+		this.selectedCards = selectedCards;
+		
+		super.setChanged();
+		super.notifyObservers(new SelectionUpdateEvent(selectedCards));
+	}
+
 
 	@Override
 	public String toString() {

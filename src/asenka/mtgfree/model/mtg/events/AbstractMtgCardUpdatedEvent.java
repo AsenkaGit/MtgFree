@@ -1,5 +1,7 @@
 package asenka.mtgfree.model.mtg.events;
 
+import java.io.Serializable;
+
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 
 /**
@@ -8,7 +10,7 @@ import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
  * @author asenka
  * @see MtgCard
  */
-public abstract class AbstractMtgCardUpdatedEvent extends AbstractEvent {
+public abstract class AbstractMtgCardUpdatedEvent extends AbstractEvent implements Serializable {
 
 	/**
 	 * 

@@ -2,7 +2,7 @@ package asenka.mtgfree.javafx.views;
 
 import java.util.Observable;
 
-import asenka.mtgfree.javafx.controllers.MtgCardController;
+import asenka.mtgfree.controllers.MtgCardController;
 import asenka.mtgfree.model.mtg.events.MtgCardLocationUpdatedEvent;
 import asenka.mtgfree.model.mtg.events.MtgCardTapUpdatedEvent;
 import asenka.mtgfree.model.mtg.events.MtgCardVisibilityUpdatedEvent;
@@ -14,7 +14,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 
-public class SimpleBattlefieldMtgCardView extends AbstractMtgCardView {
+public class SimpleBattlefieldCardView extends AbstractMtgCardView {
 	
 	private static final String CSS_SELECTED_STYLE = "-fx-effect: dropshadow(  gaussian  , blue , 15 , 0.0 , 0 , 0 );";
 	
@@ -38,7 +38,7 @@ public class SimpleBattlefieldMtgCardView extends AbstractMtgCardView {
 	 * 
 	 * @param cardController
 	 */
-	public SimpleBattlefieldMtgCardView(MtgCardController cardController) {
+	public SimpleBattlefieldCardView(MtgCardController cardController) {
 
 		super(cardController, MEDIUM_CARD_SIZES);
 		
