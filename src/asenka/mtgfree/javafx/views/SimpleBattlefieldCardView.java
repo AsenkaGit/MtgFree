@@ -13,11 +13,13 @@ import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class SimpleBattlefieldCardView extends AbstractMtgCardView {
-	
+
 	private static final String CSS_SELECTED_STYLE = "-fx-effect: dropshadow(  gaussian  , blue , 15 , 0.0 , 0 , 0 );";
-	
+
 	private ContextMenu contextMenu;
 
 	private MenuItem tapMenuItem;
@@ -29,10 +31,12 @@ public class SimpleBattlefieldCardView extends AbstractMtgCardView {
 	private MenuItem showCardMenuItem;
 
 	private Point2D previousCursorLocation;
-	
+
 	private double newPositionX;
-	
+
 	private double newPositionY;
+
+	private final MtgCardController cardController;
 
 	/**
 	 * 
@@ -40,18 +44,21 @@ public class SimpleBattlefieldCardView extends AbstractMtgCardView {
 	 */
 	public SimpleBattlefieldCardView(MtgCardController cardController) {
 
-		super(cardController, MEDIUM_CARD_SIZES);
-		
+		super(MEDIUM_CARD_SIZES);
+
+		this.cardController = cardController;
+		this.cardController.getCard().addObserver(this);
+
 		initContextMenu();
 		initMovementActions();
 	}
-	
+
 	@Override
 	public void setSelected(boolean selected) {
-	
+
 		super.setStyle(selected ? CSS_SELECTED_STYLE : "");
 	}
-	
+
 	@Override
 	public void setVisibleCardSide(boolean displayFront) {
 		super.setVisibleCardSide(displayFront);
@@ -70,7 +77,7 @@ public class SimpleBattlefieldCardView extends AbstractMtgCardView {
 	private void setTapped(boolean tapped) {
 
 		super.setRotate(tapped ? 90.0 : 0.0);
-		
+
 		this.tapMenuItem.setDisable(tapped);
 		this.untapMenuItem.setDisable(!tapped);
 	}
@@ -80,8 +87,8 @@ public class SimpleBattlefieldCardView extends AbstractMtgCardView {
 	 */
 	private void initContextMenu() {
 
-		final boolean visible = super.cardController.getCard().isVisible();
-		final boolean tapped = super.cardController.getCard().isTapped();
+		final boolean visible = this.cardController.getCard().isVisible();
+		final boolean tapped = this.cardController.getCard().isTapped();
 
 		// Create the context menu components
 		this.contextMenu = new ContextMenu();
@@ -89,12 +96,12 @@ public class SimpleBattlefieldCardView extends AbstractMtgCardView {
 		this.untapMenuItem = new MenuItem("Untap");
 		this.tapMenuItem.setDisable(tapped);
 		this.untapMenuItem.setDisable(!tapped);
-		
+
 		this.showCardMenuItem = new MenuItem("Show");
 		this.hideCardMenuItem = new MenuItem("Hide");
 		this.showCardMenuItem.setDisable(visible);
 		this.hideCardMenuItem.setDisable(!visible);
-		
+
 		// Add the behaviors associated to each context menu item
 		initContextMenuActions();
 
@@ -103,23 +110,23 @@ public class SimpleBattlefieldCardView extends AbstractMtgCardView {
 		this.contextMenu.getItems().add(new SeparatorMenuItem());
 		this.contextMenu.getItems().addAll(this.showCardMenuItem, this.hideCardMenuItem);
 	}
-	
+
 	/**
 	 * 
 	 */
 	private void initContextMenuActions() {
 
-		this.tapMenuItem.setOnAction((event) -> super.cardController.setTapped(true));
-		this.untapMenuItem.setOnAction((event) -> super.cardController.setTapped(false));
-		this.showCardMenuItem.setOnAction((event) -> super.cardController.setVisible(true));
-		this.hideCardMenuItem.setOnAction((event) -> super.cardController.setVisible(false));
+		this.tapMenuItem.setOnAction((event) -> this.cardController.setTapped(true));
+		this.untapMenuItem.setOnAction((event) -> this.cardController.setTapped(false));
+		this.showCardMenuItem.setOnAction((event) -> this.cardController.setVisible(true));
+		this.hideCardMenuItem.setOnAction((event) -> this.cardController.setVisible(false));
 	}
-	
+
 	/**
 	 * 
 	 */
 	private void initMovementActions() {
-		
+
 		// When the use press a mouse button on the card view
 		this.setOnMousePressed((event) -> {
 
@@ -168,18 +175,37 @@ public class SimpleBattlefieldCardView extends AbstractMtgCardView {
 			// Update the previous location of the cursor
 			this.previousCursorLocation = new Point2D(
 					updateX ? event.getSceneX() : this.previousCursorLocation.getX(),
-					updateY ? event.getSceneY() : this.previousCursorLocation.getY());
+							updateY ? event.getSceneY() : this.previousCursorLocation.getY());
 		});
-		
+
 		//On mouse release the new location of the card is updated
-		this.setOnMouseReleased((event) -> super.cardController.setLocation(newPositionX, newPositionY));
+		this.setOnMouseReleased((event) -> this.cardController.setLocation(newPositionX, newPositionY));
+	}
+
+	@Override
+	protected void initImageViews() {
+
+		final MtgCard card = this.cardController.getCard();
+
+		super.frontView = new ImageView(new Image(FILES_MANAGER.getCardImageInputStream(card)));
+		super.frontView.setSmooth(true);
+		super.frontView.setFitHeight(this.defaultDimensions.getHeight());
+		super.frontView.setFitWidth(this.defaultDimensions.getWidth());
+
+		super.backView = new ImageView(BACK_IMAGE);
+		super.backView.setSmooth(false);
+		super.backView.setFitHeight(this.defaultDimensions.getHeight());
+		super.backView.setFitWidth(this.defaultDimensions.getWidth());
+
+		setVisibleCardSide(card.isVisible());
+		getChildren().addAll(this.backView, this.frontView);
 	}
 
 	@Override
 	public void update(Observable observedObject, Object event) {
 
 		final MtgCard card = (MtgCard) observedObject;
-		
+
 		if (event instanceof MtgCardTapUpdatedEvent) {
 			this.setTapped(card.isTapped());
 		} else if (event instanceof MtgCardLocationUpdatedEvent) {

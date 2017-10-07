@@ -28,8 +28,6 @@ public abstract class AbstractMtgCardView extends Group implements Observer {
 	
 	protected static final Image BACK_IMAGE = new Image(FILES_MANAGER.getMtgBackInputStream());
 	
-	protected final MtgCardController cardController;
-	
 	protected ImageView frontView;
 	
 	protected ImageView backView;
@@ -41,15 +39,11 @@ public abstract class AbstractMtgCardView extends Group implements Observer {
 	 * @param cardController
 	 * @param dimensions
 	 */
-	public AbstractMtgCardView(MtgCardController cardController, Dimension2D dimensions) {
+	public AbstractMtgCardView(Dimension2D dimensions) {
 
 		super();
-		this.cardController = cardController;
 		this.defaultDimensions = dimensions;
-		
 		initImageViews();
-		
-		this.cardController.getCard().addObserver(this);
 	}
 	
 	/**
@@ -72,21 +66,5 @@ public abstract class AbstractMtgCardView extends Group implements Observer {
 	/**
 	 * Initialize the front and the back image views with the set dimensions
 	 */
-	private void initImageViews() {
-		
-		final MtgCard card = this.cardController.getCard();
-		
-		this.frontView = new ImageView(new Image(FILES_MANAGER.getCardImageInputStream(card)));
-		this.frontView.setSmooth(true);
-		this.frontView.setFitHeight(this.defaultDimensions.getHeight());
-		this.frontView.setFitWidth(this.defaultDimensions.getWidth());
-		
-		this.backView = new ImageView(BACK_IMAGE);
-		this.backView.setSmooth(false);
-		this.backView.setFitHeight(this.defaultDimensions.getHeight());
-		this.backView.setFitWidth(this.defaultDimensions.getWidth());
-		
-		setVisibleCardSide(card.isVisible());
-		this.getChildren().addAll(this.backView, this.frontView);
-	}
+	protected abstract void initImageViews();
 }
