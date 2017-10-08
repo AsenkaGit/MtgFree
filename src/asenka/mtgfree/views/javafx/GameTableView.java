@@ -1,4 +1,4 @@
-package asenka.mtgfree.javafx.views;
+package asenka.mtgfree.views.javafx;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -38,19 +38,13 @@ public class GameTableView extends BorderPane implements Observer {
 	public GameTableView(MtgGameTableController controller) {
 		this.controller = controller;
 		this.controller.getGameTable().addObserver(this);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public MtgGameTableController getController() {
-
-		return controller;
+		this.selectedCardView = new SelectedCardView(controller);
+		
+		setRight(this.selectedCardView);
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
+	public void update(Observable observedObject, Object event) {
 
 		// TODO Auto-generated method stub
 		

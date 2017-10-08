@@ -1,6 +1,7 @@
-package asenka.mtgfree.javafx.views;
+package asenka.mtgfree.views.javafx;
 
 import java.util.Observable;
+import java.util.Observer;
 
 import asenka.mtgfree.controllers.MtgCardController;
 import asenka.mtgfree.model.mtg.events.MtgCardLocationUpdatedEvent;
@@ -16,8 +17,11 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class SimpleBattlefieldCardView extends AbstractMtgCardView {
+public class SimpleBattlefieldCardView extends AbstractMtgCardView implements Observer {
 
+	/**
+	 * The CSS effect to add on the component when it is selected
+	 */
 	private static final String CSS_SELECTED_STYLE = "-fx-effect: dropshadow(  gaussian  , blue , 15 , 0.0 , 0 , 0 );";
 
 	private ContextMenu contextMenu;
@@ -48,25 +52,19 @@ public class SimpleBattlefieldCardView extends AbstractMtgCardView {
 
 		this.cardController = cardController;
 		this.cardController.getCard().addObserver(this);
+		this.setCardDisplayed(this.cardController.getCard());
 
 		initContextMenu();
 		initMovementActions();
 	}
 
-	@Override
+	/**
+	 * Change the style of the card if the component is selected
+	 * @param selected
+	 */
 	public void setSelected(boolean selected) {
 
 		super.setStyle(selected ? CSS_SELECTED_STYLE : "");
-	}
-
-	@Override
-	public void setVisibleCardSide(boolean displayFront) {
-		super.setVisibleCardSide(displayFront);
-
-		if(this.showCardMenuItem != null && this.hideCardMenuItem != null) {
-			this.showCardMenuItem.setDisable(displayFront);
-			this.hideCardMenuItem.setDisable(!displayFront);
-		}
 	}
 
 	/**
@@ -183,27 +181,37 @@ public class SimpleBattlefieldCardView extends AbstractMtgCardView {
 	}
 
 	@Override
-	protected void initImageViews() {
+	public void setCardDisplayed(final MtgCard card) {
 
-		final MtgCard card = this.cardController.getCard();
-
+		// The back image must have been initialized in the constructor of the super class
+		
+		super.getChildren().remove(this.frontView);
+			
 		super.frontView = new ImageView(new Image(FILES_MANAGER.getCardImageInputStream(card)));
 		super.frontView.setSmooth(true);
 		super.frontView.setFitHeight(this.defaultDimensions.getHeight());
 		super.frontView.setFitWidth(this.defaultDimensions.getWidth());
 
-		super.backView = new ImageView(BACK_IMAGE);
-		super.backView.setSmooth(false);
-		super.backView.setFitHeight(this.defaultDimensions.getHeight());
-		super.backView.setFitWidth(this.defaultDimensions.getWidth());
+		super.setVisibleCardSide(card.isVisible());
+		super.getChildren().add(this.frontView);
+	}
 
-		setVisibleCardSide(card.isVisible());
-		getChildren().addAll(this.backView, this.frontView);
+	@Override
+	public void setVisibleCardSide(boolean displayFront) {
+		// Apply the default behavior of this method defined in the super class
+		super.setVisibleCardSide(displayFront);
+	
+		// Change the availability of the context menu items
+		if(this.showCardMenuItem != null && this.hideCardMenuItem != null) {
+			this.showCardMenuItem.setDisable(displayFront);
+			this.hideCardMenuItem.setDisable(!displayFront);
+		}
 	}
 
 	@Override
 	public void update(Observable observedObject, Object event) {
-
+		
+		// The observed object must be an MtgCard here. If not, well... Huston, we have a problem !
 		final MtgCard card = (MtgCard) observedObject;
 
 		if (event instanceof MtgCardTapUpdatedEvent) {

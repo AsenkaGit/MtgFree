@@ -21,6 +21,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/controlsfx-8.40.14.jar"/>
-	<classpathentry kind="lib" path="/usr/share/java/openjfx/jre/lib/ext/jfxrt.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/openjfx/jre/lib/ext/jfxrt.jar" sourcepath="/usr/lib/jvm/java-8-openjdk-amd64/javafx-src.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="https://docs.oracle.com/javase/8/javafx/api/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

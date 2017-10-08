@@ -1,7 +1,6 @@
-package asenka.mtgfree.javafx;
+package asenka.mtgfree.views.javafx;
 
 import asenka.mtgfree.controllers.MtgGameTableController;
-import asenka.mtgfree.javafx.views.GameTableView;
 import asenka.mtgfree.model.mtg.MtgGameTable;
 import javafx.application.Application;
 import javafx.scene.Scene;

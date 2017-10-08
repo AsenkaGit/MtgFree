@@ -1,4 +1,4 @@
-package asenka.mtgfree.javafx.views;
+package asenka.mtgfree.views.javafx;
 
 import javafx.scene.layout.TilePane;
 
