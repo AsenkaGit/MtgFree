@@ -1,15 +1,22 @@
 package asenka.mtgfree.tests.utilities;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
+import asenka.mtgfree.model.mtg.MtgCollection;
 import asenka.mtgfree.model.mtg.MtgDeck;
 import asenka.mtgfree.model.mtg.MtgGameTable;
 import asenka.mtgfree.model.mtg.MtgPlayer;
 import asenka.mtgfree.model.mtg.mtgcard.MtgAbility;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
+import asenka.mtgfree.model.mtg.mtgcard.MtgCardBuilder;
+import asenka.mtgfree.model.mtg.mtgcard.MtgColor;
 import asenka.mtgfree.model.mtg.mtgcard.MtgFormat;
+import asenka.mtgfree.model.mtg.mtgcard.MtgRarity;
 import asenka.mtgfree.model.mtg.mtgcard.MtgType;
 
 /**
@@ -17,6 +24,7 @@ import asenka.mtgfree.model.mtg.mtgcard.MtgType;
  * 
  * 
  * @author asenka
+ * @param <E>
  *
  */
 public class TestDataModel_French {
@@ -41,6 +49,8 @@ public class TestDataModel_French {
 	private final Map<String, MtgCard> cardsMap;
 
 	private final Map<String, MtgDeck> decksMap;
+	
+	private final Map<String, MtgCollection> collectionsMap;
 
 	private final Locale locale;
 
@@ -55,12 +65,14 @@ public class TestDataModel_French {
 		this.cardsMap = new HashMap<String, MtgCard>();
 		this.formatsMap = new HashMap<String, MtgFormat>();
 		this.decksMap = new HashMap<String, MtgDeck>();
+		this.collectionsMap = new HashMap<String, MtgCollection>();
 		this.player1 = new MtgPlayer("Asenka");
 		this.player2 = new MtgPlayer("GrosBébé");
 
 		initTypes();
 		initAbilities();
 		initFormats();
+		initCollections();
 		initCards();
 		initDecks();
 		initializePlayer1();
@@ -96,6 +108,8 @@ public class TestDataModel_French {
 		this.typesMap.put("creatureElfArtificerDruid", new MtgType(110011, "Créature", "Créature : elfe et artificier et druide", "", locale));
 		this.typesMap.put("creatureLizard", new MtgType(110012, "Créature", "Créature : Lézard", "", locale));
 		this.typesMap.put("creatureMonster", new MtgType(110013, "Créature", "Créature : monstruosité", "", locale));
+		this.typesMap.put("creatureHumanArtificer", new MtgType(110014, "Créature", "Créature : humain et artificier", "", locale));
+		this.typesMap.put("creatureGremlin", new MtgType(110015, "Créature", "Créature : gremlin", "", locale));
 		
 
 		// Instant type
@@ -129,14 +143,12 @@ public class TestDataModel_French {
 				new MtgAbility(200002, "Piétinement",
 						"Le piétinement est une capacité statique qui modifie les règles d'assignation des blessures de combat d'une créature attaquante. La capacité n'a aucun effet quand la créature avec le piétinement bloque ou inflige des blessures non-combat.",
 						locale));
-		this.abilitiesMap.put("Vigilance", new MtgAbility(200003, "Vigilance", "Attaquer ne fait pas s'engager les créatures avec la vigilance", locale));
+		this.abilitiesMap.put("vigilance", new MtgAbility(200003, "Vigilance", "Attaquer ne fait pas s'engager les créatures avec la vigilance", locale));
 		this.abilitiesMap.put("deathtouch", new MtgAbility(200004, "Contact Mortel", "", locale));
 		this.abilitiesMap.put("fly", new MtgAbility(200005, "Vol", "Une créature avec le vol ne peut être bloquée que par des créatures avec le vol et/ou la portée. Une créature avec le vol peut bloquer une créature sans le vol", locale));
 		this.abilitiesMap.put("reach", new MtgAbility(200006, "Portée", "", locale));
 		this.abilitiesMap.put("flash", new MtgAbility(200007, "Flash", "", locale));
 		this.abilitiesMap.put("scry", new MtgAbility(200008, "Regard", "", locale));
-		
-
 	}
 
 	/**
@@ -169,10 +181,66 @@ public class TestDataModel_French {
 	/**
 	 * 
 	 */
-	private void initCards() {
-
+	private void initCollections() {
+	
+		this.collectionsMap.put("shadowOverInnistrad", new MtgCollection(400000, "Ténébres sur Innistrad", this.locale));
+		this.collectionsMap.put("eldritchMoon", new MtgCollection(400001, "La Lune Hermétique", this.locale));
+		this.collectionsMap.put("amonket", new MtgCollection(400002, "Amonket", this.locale));
+		this.collectionsMap.put("hourOfDevastation", new MtgCollection(400003, "L'Âge de la Destruction", this.locale));
+		this.collectionsMap.put("kaladesh", new MtgCollection(400004, "Kaladesh", this.locale));
+		this.collectionsMap.put("aetherRevolt", new MtgCollection(400005, "La Révolte éthérique", this.locale));
 	}
 
+	/**
+	 * 
+	 */
+	private void initCards() {
+		
+		MtgCardBuilder cardBuilder = new MtgCardBuilder(
+				typesMap.get("instant"), 
+				collectionsMap.get("eldritchMoon"), 
+				new MtgFormat[] {formatsMap.get("standard"), formatsMap.get("modern"), formatsMap.get("commander"), formatsMap.get("legacy")}, 
+				new MtgAbility[] {}, 
+				new MtgColor[] {MtgColor.WHITE}, 
+				MtgRarity.UNCOMMUN, 
+				this.locale);
+		
+		this.cardsMap.put("Alliance bénie", cardBuilder.buildCard(50001, "Alliance bénie", "1w", 
+				"Intensification {2}\n"
+				+ "Choisissez l'un plus -\n"
+				+ "-Le joueur ciblé gagne 4 points de vie\n"
+				+ "-L'adversaire ciblé sacrifie une créature attaquante.", "", "", "", -1));
+		
+		cardBuilder.setCollection(collectionsMap.get("shadowOverInnistrad"));
+		
+		this.cardsMap.put("Pertinacité", cardBuilder.buildCard(50002, "Pertinacité", "3w", 
+				"Les créatures que vous controlez gagnent +1/+1 et acquièrent le lien de vie jusqu'à la fin du tour. Dégagez ces créatures", 
+				"Thalia a créé l'Ordre de Saint Traft pour rassembler les cathares disposés à lutter contre la corruption du conseil des lunarques.", "", "", -1));
+		
+		cardBuilder.setCollection(collectionsMap.get("hourOfDevastation"));
+		cardBuilder.setRarity(MtgRarity.COMMUN);
+		
+		this.cardsMap.put("Acte héroïque", cardBuilder.buildCard(50003, "Acte héroïque", "1w", 
+				"Dégagez la créature ciblée. Elle gagne +2/+2 jusqu'à la fin du tour et peut bloquer une créature supplémentaire ce tour-ci.", 
+				"", "", "", -1));
+		
+		cardBuilder.setColors(MtgColor.BLUE);
+		
+		this.cardsMap.put("Désinvocation", cardBuilder.buildCard(50004, "Désinvocation", "u", 
+				"Renvoyez la créature ciblée dans la main de son propriétaire", 
+				"", "", "", -1));
+		
+		cardBuilder.setColors(MtgColor.WHITE);
+		cardBuilder.setType(this.typesMap.get("enchantment"));
+		
+		this.cardsMap.put("Observation Constante", cardBuilder.buildCard(50005, "Observation Constante", "1ww", 
+				"Les créatures non-jeton que vous contôlez gagnent +1/+1 et ont la vigilance.", 
+				"", "", "", -1));
+		
+		
+	}
+
+	
 	/**
 	 * 
 	 */
