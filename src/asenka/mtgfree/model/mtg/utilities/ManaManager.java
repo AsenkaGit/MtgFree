@@ -148,14 +148,14 @@ public class ManaManager {
 	public int getConvertedCostMana(String cost) throws IllegalArgumentException {
 
 		if (cost == null) {
-			throw new IllegalArgumentException("The mana string [" + cost + "] is null or empty");
+			throw new IllegalArgumentException("The mana string {" + cost + "} is null or empty");
 		} else if(cost.isEmpty()) {
 			return 0;
 		}
 		StringTokenizer tokenizer = new StringTokenizer(cost.trim(), SEPARATOR);
 		
 		if (tokenizer.countTokens() == 0) {
-			throw new IllegalArgumentException("The mana string [" + cost + "] is not correct");
+			throw new IllegalArgumentException("The mana string {" + cost + "} is not correct");
 		}
 		int ccm = 0; // ccm <=> Converted Cost Mana
 
@@ -167,7 +167,7 @@ public class ManaManager {
 			if (manaValue != null) {
 				ccm += manaValue;
 			} else {
-				throw new IllegalArgumentException("The mana string [" + cost + "] contains illegal values");
+				throw new IllegalArgumentException("The mana string {" + cost + "} contains illegal values");
 			}
 		}
 		return ccm;
@@ -202,13 +202,13 @@ public class ManaManager {
 		
 		// Check if cost is not null or empty
 		if (cost == null || cost.isEmpty()) {
-			throw new IllegalArgumentException("The mana string [" + cost + "] is null or empty");
+			throw new IllegalArgumentException("The mana string {" + cost + "} is null or empty");
 		}
 		StringTokenizer tokenizer = new StringTokenizer(cost.trim(), SEPARATOR);
 		
 		// If the tokenizer is empty, it means that the string is not correct
 		if (tokenizer.countTokens() == 0) {
-			throw new IllegalArgumentException("The mana string [" + cost + "] is not correct");
+			throw new IllegalArgumentException("The mana string {" + cost + "} is not correct");
 		}
 		Set<String> legalValues = this.manaLegalValues.keySet();
 		Set<MtgColor> colors = new HashSet<MtgColor>(1);
@@ -237,7 +237,7 @@ public class ManaManager {
 				}
 			} else {
 				// If a token is not in the legal values map, it means it is an illegal value
-				throw new IllegalArgumentException("The mana string [" + cost + "] is not correct");
+				throw new IllegalArgumentException("The mana string {" + cost + "} is not correct");
 			}
 		}
 		return colors;

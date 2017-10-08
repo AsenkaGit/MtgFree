@@ -68,7 +68,7 @@ public enum MtgDeckList implements Localized {
 
 		if ("main".equals(strDeckList)) {
 			return "Main cards";
-		} else if ("sideBoard".equals(strDeckList)) {
+		} else if ("sideboard".equals(strDeckList)) {
 			return "Side board";
 		} else {
 			throw new IllegalArgumentException(strDeckList + " is not an valid argument for this method");

@@ -355,6 +355,12 @@ public class MtgPlayer extends Observable implements Comparable<MtgPlayer>, Seri
 
 		this.availableDecks.remove(deck);
 	}
+	
+	@Override
+	public String toString() {
+
+		return "[" + name + ", " + remainingLifePoints + ", " + energyCounters + ", " + poisonCounters + ", " + currentDeck + "]";
+	}
 
 	@Override
 	public int compareTo(MtgPlayer player) {
