@@ -12,7 +12,6 @@ import asenka.mtgfree.model.mtg.events.MtgGameTableRemoveCardEvent;
 import asenka.mtgfree.model.mtg.events.MtgGameTableRemovePlayerEvent;
 import asenka.mtgfree.model.mtg.events.SelectionUpdateEvent;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
-import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
 
 /**
  * This class represents a game table
@@ -155,11 +154,11 @@ public class MtgGameTable extends Observable implements Serializable {
 	 */
 	public void addCardToBattlefield(MtgCard card) {
 
-		card.setContext(MtgContext.BATTLEFIELD);
 		this.cardsOnBattlefield.add(card);
 
-		super.hasChanged();
-		super.notifyObservers(new MtgGameTableAddCardEvent(card));
+		super.setChanged();
+		MtgGameTableAddCardEvent event = new MtgGameTableAddCardEvent(card);
+		super.notifyObservers(event);
 	}
 
 	/**
@@ -172,7 +171,7 @@ public class MtgGameTable extends Observable implements Serializable {
 		// If the card was in the battlefield, notify the observers
 		if (this.cardsOnBattlefield.remove(card)) {
 
-			super.hasChanged();
+			super.setChanged();
 			super.notifyObservers(new MtgGameTableRemoveCardEvent(card));
 		}
 

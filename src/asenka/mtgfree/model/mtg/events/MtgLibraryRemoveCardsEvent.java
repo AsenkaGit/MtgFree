@@ -14,7 +14,7 @@ import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
 public class MtgLibraryRemoveCardsEvent extends AbstractMtgLibraryUpdatedEvent {
 
 	/**
-	 * 
+	 * The generated ID for serialization
 	 */
 	private static final long serialVersionUID = 5994593090307173403L;
 
@@ -49,15 +49,20 @@ public class MtgLibraryRemoveCardsEvent extends AbstractMtgLibraryUpdatedEvent {
 	}
 
 	/**
-	 * 
-	 * @param updatedLibrary
-	 * @param addedCards
-	 * @param indexes
-	 * @return
+	 * Create the event message explaining the event
+	 * @param updatedLibrary the library updated
+	 * @param removedCards the cards removed
+	 * @return a string explaining the event
 	 */
-	private static final String buildEventMessage(final MtgLibrary updatedLibrary, final MtgCard... addedCards) {
-
-		// TODO event Message
-		return "";
+	private static final String buildEventMessage(final MtgLibrary updatedLibrary, final MtgCard... removedCards) {
+		
+		StringBuffer buf = new StringBuffer();
+		buf.append('[');
+		for(MtgCard card : removedCards) {
+			buf.append(card.getName() + ", ");
+		}
+		buf.append(']');
+		
+		return "The cards " + buf.toString() + " have been removed from library";
 	}
 }

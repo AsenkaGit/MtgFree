@@ -14,7 +14,6 @@ import asenka.mtgfree.model.mtg.events.MtgLibraryAddCardsEvent;
 import asenka.mtgfree.model.mtg.events.MtgLibraryRemoveCardsEvent;
 import asenka.mtgfree.model.mtg.events.MtgLibraryReorderEvent;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
-import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
 
 /**
  * This class represents the player's library used during a game
@@ -144,7 +143,6 @@ public class MtgLibrary extends Observable implements Serializable {
 	public void addFirst(final MtgCard card) {
 
 		this.cards.addFirst(card);
-		card.setContext(MtgContext.LIBRARY);
 		super.setChanged();
 		super.notifyObservers(new MtgLibraryAddCardsEvent(this, new MtgCard[] { card }, new int[] {0}));
 	}
@@ -158,7 +156,6 @@ public class MtgLibrary extends Observable implements Serializable {
 	public void addLast(final MtgCard card) {
 
 		this.cards.addLast(card);
-		card.setContext(MtgContext.LIBRARY);
 		super.setChanged();
 		super.notifyObservers(new MtgLibraryAddCardsEvent(this, new MtgCard[] { card }, new int[] {this.cards.size() - 1}));
 	}
@@ -223,7 +220,7 @@ public class MtgLibrary extends Observable implements Serializable {
 
 		Collections.shuffle(this.cards);
 		
-		super.hasChanged();
+		super.setChanged();
 		super.notifyObservers(new MtgLibraryReorderEvent(this));
 	}
 

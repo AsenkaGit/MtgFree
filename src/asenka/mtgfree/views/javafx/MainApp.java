@@ -1,7 +1,7 @@
 package asenka.mtgfree.views.javafx;
 
 import asenka.mtgfree.controllers.MtgGameTableController;
-import asenka.mtgfree.model.mtg.MtgGameTable;
+import asenka.mtgfree.tests.utilities.TestDataModel_French;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -48,10 +48,14 @@ public class MainApp extends Application {
 	 * @return the root pane with all the javafx components
 	 */
 	private BorderPane getRootPane() {
+		TestDataModel_French data = TestDataModel_French.getInstance();
 		
-		MtgGameTable gameTable = null;
-		MtgGameTableController gameTableController = new MtgGameTableController(gameTable);
-		return new GameTableView(gameTableController);
+		MtgGameTableController gameTableController = new MtgGameTableController(data.getGameTable());
+		GameTableView gameTableView = new GameTableView(gameTableController);
+		
+		data.action_drawCardPlayer1();
+		
+		return gameTableView;
 	}
 
 	/**

@@ -97,11 +97,7 @@ public class MtgCardState implements Serializable {
 	 */
 	void setTapped(boolean isTapped) throws MtgContextException {
 
-		if (isTapped && this.context != MtgContext.BATTLEFIELD) {
-			throw new MtgContextException(this, "Try to tap a card that is not on the battlefield");
-		} else {
-			this.tapped = isTapped;
-		}
+		this.tapped = isTapped;
 	}
 
 	/**
@@ -137,15 +133,10 @@ public class MtgCardState implements Serializable {
 	 * Set if a card from the player's hand is revealed to other or not
 	 * @param isRevealed <code>true</code> if you want to reveal a card in a player's hand. <code>false</code> to go back to the
 	 *        default secret state.
-	 * @throws MtgContextException if you try to reveal a card than is not in the HAND context
 	 */
-	void setRevealed(boolean isRevealed) throws MtgContextException {
+	void setRevealed(boolean isRevealed) {
 
-		if (isRevealed && this.context != MtgContext.HAND) {
-			throw new MtgContextException(this, "Try to set 'isRevealed' to true when context is not HAND");
-		} else {
-			this.revealed = isRevealed;
-		}
+		this.revealed = isRevealed;
 	}
 
 	/**

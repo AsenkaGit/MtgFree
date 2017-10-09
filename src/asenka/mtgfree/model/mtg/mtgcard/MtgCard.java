@@ -767,8 +767,6 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	 */
 	public void setContext(MtgContext context) {
 
-		MtgCardContextUpdatedEvent event = new MtgCardContextUpdatedEvent(this);
-
 		switch (context) {
 			case OUT_OF_GAME:
 			case LIBRARY:
@@ -793,7 +791,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 		}
 		this.state.setContext(context);
 		super.setChanged();
-		super.notifyObservers(event);
+		super.notifyObservers(new MtgCardContextUpdatedEvent(this));
 	}
 
 	/**

@@ -14,7 +14,6 @@ import asenka.mtgfree.model.mtg.events.MtgPlayerLifeUpdatedEvent;
 import asenka.mtgfree.model.mtg.events.MtgPlayerPoisonUpdatedEvent;
 import asenka.mtgfree.model.mtg.exceptions.MtgDeckException;
 import asenka.mtgfree.model.mtg.mtgcard.MtgCard;
-import asenka.mtgfree.model.mtg.mtgcard.MtgContext;
 
 /**
  * This class represents a player and stores all the data related to the player
@@ -283,7 +282,6 @@ public class MtgPlayer extends Observable implements Comparable<MtgPlayer>, Seri
 	 */
 	public void addCardToGraveyard(MtgCard card) throws IllegalArgumentException {
 
-		card.setContext(MtgContext.GRAVEYARD);
 		this.graveyard.add(card);
 	}
 
@@ -295,7 +293,6 @@ public class MtgPlayer extends Observable implements Comparable<MtgPlayer>, Seri
 	 */
 	public void addCardToExile(MtgCard card) throws IllegalArgumentException {
 
-		card.setContext(MtgContext.EXILE);
 		this.exile.add(card);
 	}
 
@@ -307,7 +304,6 @@ public class MtgPlayer extends Observable implements Comparable<MtgPlayer>, Seri
 	 */
 	public void addCardToHand(MtgCard card) throws IllegalArgumentException {
 
-		card.setContext(MtgContext.HAND);
 		this.hand.add(card);
 	}
 

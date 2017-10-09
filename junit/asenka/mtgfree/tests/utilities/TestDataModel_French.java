@@ -445,6 +445,14 @@ public class TestDataModel_French {
 
 		return gameTable;
 	}
+	
+	/**
+	 * 
+	 */
+	public void action_drawCardPlayer1() {
+		MtgCard card = this.player1.getLibrary().draw();
+		this.gameTable.addCardToBattlefield(card);
+	}
 
 	/**
 	 * 
@@ -463,12 +471,5 @@ public class TestDataModel_French {
 	public static TestDataModel_French getInstance() {
 
 		return singleton;
-	}
-
-	public static void main(String[] args) {
-
-		TestDataModel_French test = TestDataModel_French.getInstance();
-
-		System.out.println(test.getGameTable());
 	}
 }

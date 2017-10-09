@@ -53,6 +53,7 @@ public class SimpleBattlefieldCardView extends AbstractMtgCardView implements Ob
 		this.cardController = cardController;
 		this.cardController.getCard().addObserver(this);
 		this.setCardDisplayed(this.cardController.getCard());
+		this.setPickOnBounds(true);
 
 		initContextMenu();
 		initMovementActions();
@@ -144,8 +145,8 @@ public class SimpleBattlefieldCardView extends AbstractMtgCardView implements Ob
 			// Calculate the new card location.
 			final double deltaX = event.getSceneX() - previousCursorLocation.getX();
 			final double deltaY = event.getSceneY() - previousCursorLocation.getY();
-			this.newPositionX = this.getTranslateX() + deltaX;
-			this.newPositionY = this.getTranslateY() + deltaY;
+			final double newPositionX = this.getTranslateX() + deltaX;
+			final double newPositionY = this.getTranslateY() + deltaY;
 
 			// Get the necessary values to control the new card location
 			final Parent battlefieldPane = this.getParent();
@@ -162,11 +163,13 @@ public class SimpleBattlefieldCardView extends AbstractMtgCardView implements Ob
 			// Control and update the card location
 			if (newPositionX >= 0 && (newPositionX + cardWidth) <= parentWidth) {
 				this.setTranslateX(newPositionX);
+				this.newPositionX = newPositionX;
 				updateX = true;
 			}
 
 			if (newPositionY >= 0 && (newPositionY + cardHeight) <= parentHeight) {
 				this.setTranslateY(newPositionY);
+				this.newPositionY = newPositionY;
 				updateY = true;
 			}
 
@@ -196,6 +199,14 @@ public class SimpleBattlefieldCardView extends AbstractMtgCardView implements Ob
 		super.getChildren().add(this.frontView);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public MtgCard getCard() {
+		return this.cardController.getCard();
+	}
+	
 	@Override
 	public void setVisibleCardSide(boolean displayFront) {
 		// Apply the default behavior of this method defined in the super class
