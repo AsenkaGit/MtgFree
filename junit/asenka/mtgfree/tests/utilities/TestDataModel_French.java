@@ -183,12 +183,12 @@ public class TestDataModel_French {
 	 */
 	private void initCollections() {
 
-		this.collectionsMap.put("shadowOverInnistrad", new MtgCollection(400000, "Ténébres sur Innistrad", this.locale));
-		this.collectionsMap.put("eldritchMoon", new MtgCollection(400001, "La Lune Hermétique", this.locale));
-		this.collectionsMap.put("amonket", new MtgCollection(400002, "Amonket", this.locale));
-		this.collectionsMap.put("hourOfDevastation", new MtgCollection(400003, "L'Âge de la Destruction", this.locale));
-		this.collectionsMap.put("kaladesh", new MtgCollection(400004, "Kaladesh", this.locale));
-		this.collectionsMap.put("aetherRevolt", new MtgCollection(400005, "La Révolte éthérique", this.locale));
+		this.collectionsMap.put("shadowOverInnistrad", new MtgCollection("SOI", "Ténébres sur Innistrad", this.locale));
+		this.collectionsMap.put("eldritchMoon", new MtgCollection("EMN", "La Lune Hermétique", this.locale));
+		this.collectionsMap.put("amonket", new MtgCollection("AKH", "Amonket", this.locale));
+		this.collectionsMap.put("hourOfDevastation", new MtgCollection("HOU", "L'Âge de la Destruction", this.locale));
+		this.collectionsMap.put("kaladesh", new MtgCollection("KLD", "Kaladesh", this.locale));
+		this.collectionsMap.put("aetherRevolt", new MtgCollection("AER", "La Révolte éthérique", this.locale));
 	}
 
 	/**

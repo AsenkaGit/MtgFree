@@ -88,13 +88,10 @@ public final class CardCollectionComparator extends CardTextComparator {
 		super(optionalComparator, locale, order);
 	}
 
-	/**
-	 * 
-	 */
 	@Override
 	public int compare(final MtgCard card1, final MtgCard card2) {
 
-		int result = super.orderResult(super.collator.compare(card1.getCollectionName(), card2.getCollectionName()));
+		int result = super.orderResult(super.collator.compare(card1.getCollectionCode(), card2.getCollectionCode()));
 
 		if (super.optionalComparator != null && result == 0) {
 			result = super.optionalComparator.compare(card1, card2);

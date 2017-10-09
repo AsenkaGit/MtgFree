@@ -93,7 +93,7 @@ public final class FileManager {
 		// Get the necessary data to look for the image
 		final String cardName = card.getName();
 		final String cardLanguage = card.getLocale().getLanguage();
-		final String cardCollection = card.getCollectionName();
+		final String cardCollection = card.getCollectionCode();
 		final String imageFilePath = FILEPATH_MTG_CARD + PREFIX_MTGCARD_FILES + cardLanguage + SEPARATOR + cardCollection + SEPARATOR
 				+ cardName + IMAGE_FILE_EXTENSION;
 		File file = new File(imageFilePath);

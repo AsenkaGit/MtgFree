@@ -169,7 +169,7 @@ public class TestCardComparators {
 
 			while (it.hasNext()) {
 				MtgCard current = it.next();
-				int result = collatorFrench.compare(previous.getCollectionName(), current.getCollectionName());
+				int result = collatorFrench.compare(previous.getCollectionCode(), current.getCollectionCode());
 				boolean sorted = (order == ASCENDING) ? (result > 0) : (result < 0);
 
 				if (sorted) {

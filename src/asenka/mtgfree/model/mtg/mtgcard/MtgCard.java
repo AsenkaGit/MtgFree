@@ -35,7 +35,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	/**
 	 * The serial number use to serialize this object
 	 */
-	private static final long serialVersionUID = 1554761911799087091L;
+	private static final long serialVersionUID = 4071897534264908170L;
 
 	/**
 	 * The unique id of a card (based on the ID in the database)
@@ -76,7 +76,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	/**
 	 * The name of the card collection.
 	 */
-	private String collectionName; // I don't to use an MtgCollection here to
+	private String collectionCode; // I don't to use an MtgCollection here to
 									// avoid circular references
 
 	/**
@@ -154,7 +154,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 		this.rulesText = new String(copyFrom.rulesText);
 		this.backgroundText = new String(copyFrom.backgroundText);
 		this.colors = new HashSet<MtgColor>(copyFrom.colors);
-		this.collectionName = new String(copyFrom.collectionName);
+		this.collectionCode = new String(copyFrom.collectionCode);
 		this.power = new String(copyFrom.power);
 		this.toughness = new String(copyFrom.toughness);
 		this.loyalty = copyFrom.loyalty;
@@ -173,7 +173,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	 * 
 	 * @param id
 	 * @param name
-	 * @param collectionName
+	 * @param collectionCode
 	 * @param color
 	 * @param type
 	 * @param rarity
@@ -191,7 +191,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	 * 
 	 * @param id
 	 * @param name
-	 * @param collectionName
+	 * @param collectionCode
 	 * @param cost
 	 * @param type
 	 * @param rarity
@@ -208,7 +208,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	 * 
 	 * @param id
 	 * @param name
-	 * @param collectionName
+	 * @param collectionCode
 	 * @param power
 	 * @param toughness
 	 * @param cost
@@ -232,7 +232,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	 * @param rulesText
 	 * @param backgroundText
 	 * @param colors
-	 * @param collectionName
+	 * @param collectionCode
 	 * @param power a string with a number from 0 to 99 or X or * or a combination of the previous
 	 * @param toughness a string with a number from 0 to 99 or X or * or a combination of the previous
 	 * @param loyalty an integer > 0 for planeswalker and -1 for all other types of card
@@ -255,7 +255,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 		this.rulesText = rulesText;
 		this.backgroundText = backgroundText;
 		this.colors = colors;
-		this.collectionName = collectionName;
+		this.collectionCode = collectionName;
 		this.power = power;
 		this.toughness = toughness;
 		this.loyalty = loyalty;
@@ -428,19 +428,19 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	/**
 	 * @return the localized name of the card's collection
 	 */
-	public String getCollectionName() {
+	public String getCollectionCode() {
 
-		return collectionName;
+		return collectionCode;
 	}
 
 	/**
-	 * Set the collectionName
+	 * Set the collectionCode
 	 * 
-	 * @param collectionName the localized name of the card's collection
+	 * @param collectionCode the localized name of the card's collection
 	 */
-	public void setCollectionName(String collectionName) {
+	public void setCollectionCode(String collectionCode) {
 
-		this.collectionName = collectionName;
+		this.collectionCode = collectionCode;
 	}
 
 	/**
@@ -832,7 +832,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	@Override
 	public String toString() {
 
-		return "[" + id + ", " + name + ", " + cost + ", " + rulesText + ", " + backgroundText + ", " + colors + ", " + collectionName
+		return "[" + id + ", " + name + ", " + cost + ", " + rulesText + ", " + backgroundText + ", " + colors + ", " + collectionCode
 				+ ", " + power + ", " + toughness + ", " + loyalty + ", " + type + ", " + state + ", " + rarity + ", " + formats + ", "
 				+ abilities + ", " + comments + ", " + locale + "]\n";
 	}
@@ -844,7 +844,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 		int result = 1;
 		result = prime * result + ((abilities == null) ? 0 : abilities.hashCode());
 		result = prime * result + ((backgroundText == null) ? 0 : backgroundText.hashCode());
-		result = prime * result + ((collectionName == null) ? 0 : collectionName.hashCode());
+		result = prime * result + ((collectionCode == null) ? 0 : collectionCode.hashCode());
 		result = prime * result + ((colors == null) ? 0 : colors.hashCode());
 		result = prime * result + ((comments == null) ? 0 : comments.hashCode());
 		result = prime * result + ((cost == null) ? 0 : cost.hashCode());
@@ -882,10 +882,10 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 				return false;
 		} else if (!backgroundText.equals(other.backgroundText))
 			return false;
-		if (collectionName == null) {
-			if (other.collectionName != null)
+		if (collectionCode == null) {
+			if (other.collectionCode != null)
 				return false;
-		} else if (!collectionName.equals(other.collectionName))
+		} else if (!collectionCode.equals(other.collectionCode))
 			return false;
 		if (colors == null) {
 			if (other.colors != null)
@@ -956,4 +956,5 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 
 		return this.defaultComparator.compare(this, card);
 	}
+
 }

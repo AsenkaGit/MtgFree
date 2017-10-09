@@ -118,7 +118,7 @@ public class TestMtgCard {
 				int result = collatorFrench.compare(previous.getName(), current.getName());
 
 				if (result == 0) {
-					result = collatorFrench.compare(previous.getCollectionName(), current.getCollectionName());
+					result = collatorFrench.compare(previous.getCollectionCode(), current.getCollectionCode());
 				}
 
 				// Check if 'current' if greater than 'previous'

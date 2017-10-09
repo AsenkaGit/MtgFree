@@ -149,8 +149,8 @@ public class TestDataProvider {
 		this.listOfCards.add(mtgCard17);
 		this.listOfCards.add(mtgCard18);
 		
-		this.amonketCollection = new MtgCollection(1, "Amonket", Locale.FRENCH);
-		this.kaladeshCollection = new MtgCollection(1, "Kaladesh", Locale.FRENCH);
+		this.amonketCollection = new MtgCollection("AKH", "Amonket", Locale.FRENCH);
+		this.kaladeshCollection = new MtgCollection("KLD", "Kaladesh", Locale.FRENCH);
 
 		
 		this.amonketCollection.addCards(this.mtgCard1, this.mtgCard2, this.mtgCard3, this.mtgCard4, this.mtgCard5, 
