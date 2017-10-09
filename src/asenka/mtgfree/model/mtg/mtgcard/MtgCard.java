@@ -399,9 +399,6 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	 */
 	public void setColors(Set<MtgColor> colors) throws IllegalArgumentException {
 
-		if (colors != null && colors.equals(ManaManager.getInstance().getColors(this.cost))) {
-			throw new IllegalArgumentException("The new color(s) " + colors + " do not match the card cost : " + cost);
-		}
 		this.colors = colors;
 	}
 

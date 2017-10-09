@@ -202,7 +202,7 @@ public class ManaManager {
 		
 		// Check if cost is not null or empty
 		if (cost == null || cost.isEmpty()) {
-			throw new IllegalArgumentException("The mana string {" + cost + "} is null or empty");
+			return new HashSet<MtgColor>(0);
 		}
 		StringTokenizer tokenizer = new StringTokenizer(cost.trim(), SEPARATOR);
 		

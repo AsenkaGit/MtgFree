@@ -1,18 +1,16 @@
 package asenka.mtgfree.model.mtg.mtgcard;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-
-import com.sun.org.glassfish.gmbal.ManagedAttribute;
-
 import asenka.mtgfree.model.mtg.MtgCollection;
 import asenka.mtgfree.model.mtg.utilities.ManaManager;
 
 /**
- * 
- * 
+ * Class used to help create MtgCards easily for the tests
  * 
  * @author asenka
  *
@@ -43,13 +41,13 @@ public class MtgCardBuilder {
 	 * @param formats
 	 * @param abilities
 	 */
-	public MtgCardBuilder(int initID, MtgType type, MtgCollection collection, MtgFormat[] formats, MtgAbility[] abilities, MtgColor[] colors, MtgRarity rarity, Locale locale) {
+	public MtgCardBuilder(int initID, MtgType type, MtgCollection collection, MtgFormat[] formats, Collection<MtgAbility> abilities, MtgColor[] colors, MtgRarity rarity, Locale locale) {
 		
 		this.idCounter = initID;
 		this.type = type;
 		this.collection = collection;
 		this.formats = Arrays.asList(formats);
-		this.abilities = Arrays.asList(abilities);
+		this.abilities = new ArrayList<MtgAbility>(abilities);
 		this.colors = Arrays.asList(colors);
 		this.locale = locale;
 		this.rarity = rarity;
@@ -72,7 +70,7 @@ public class MtgCardBuilder {
 		MtgCard card = new MtgCard(this.idCounter, name, cost, rulesText, backgroundText, 
 				new HashSet<MtgColor>(this.colors), this.collection.getName(), power, toughness, loyalty, this.type,
 				MtgCardState.getNewInitialState(), this.rarity, new HashSet<MtgFormat>(this.formats), 
-				new HashSet<MtgAbility>(this.abilities), "No comments",  this.locale);
+				new HashSet<MtgAbility>(), "No comments",  this.locale);
 		
 		ManaManager manaManager = ManaManager.getInstance();
 		
@@ -81,10 +79,30 @@ public class MtgCardBuilder {
 		} catch(IllegalArgumentException ex) {
 			ex.printStackTrace();
 		}
-		
+		this.addAbilities(card);
 		this.collection.addCards(card);
 		this.idCounter++;
 		return card;
+	}
+	
+	/**
+	 * Analyse the card text to automatically add the ability on the card
+	 * @param card
+	 */
+	private void addAbilities(MtgCard card) {
+		
+		String cardText = card.getRulesText().toLowerCase();
+		
+		// If the card has a text and if the card is a creature...
+		if(cardText != null && !cardText.isEmpty() && !card.getPower().isEmpty()) {
+			
+			for(MtgAbility ability : this.abilities) {
+				
+				if(cardText.contains(ability.getName().toLowerCase())) {
+					card.addAbilities(ability);
+				}
+			}
+		}
 	}
 
 
@@ -140,7 +158,10 @@ public class MtgCardBuilder {
 	
 	public void setAbilities(MtgAbility... abilities) {
 	
-		this.abilities = Arrays.asList(abilities);
+		this.abilities = new ArrayList<MtgAbility>();
+		for (MtgAbility ability : abilities) {
+			this.abilities.add(ability);
+		}
 	}
 
 
