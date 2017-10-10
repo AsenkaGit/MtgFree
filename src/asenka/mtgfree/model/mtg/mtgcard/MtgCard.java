@@ -35,10 +35,10 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	/**
 	 * The serial number use to serialize this object
 	 */
-	private static final long serialVersionUID = 4071897534264908170L;
+	private static final long serialVersionUID = 4079166833701525299L;
 
 	/**
-	 * The unique id of a card (based on the ID in the database)
+	 * The id of the card in its collection. A card if identified by a concatenation of [id]+[collectionCode]+[localeCode]
 	 */
 	private int id;
 
@@ -602,6 +602,15 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 
 		this.comments = comments;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getUniqueIdentifier() {
+		
+		return this.collectionCode + '-' + this.id + '-' + this.locale.getLanguage();
+	}
 
 	/**
 	 * @return the current card state (location, context, tapped or not, visible or not, etc...)
@@ -832,9 +841,7 @@ public class MtgCard extends Observable implements Comparable<MtgCard>, Localize
 	@Override
 	public String toString() {
 
-		return "[" + id + ", " + name + ", " + cost + ", " + rulesText + ", " + backgroundText + ", " + colors + ", " + collectionCode
-				+ ", " + power + ", " + toughness + ", " + loyalty + ", " + type + ", " + state + ", " + rarity + ", " + formats + ", "
-				+ abilities + ", " + comments + ", " + locale + "]\n";
+		return '[' + this.getUniqueIdentifier() + ']';
 	}
 
 	@Override

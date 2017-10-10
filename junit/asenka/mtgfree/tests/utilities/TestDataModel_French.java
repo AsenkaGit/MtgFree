@@ -55,6 +55,8 @@ public class TestDataModel_French {
 	private final Locale locale;
 
 	/**
+	 * Create the data model with French locale
+	 * 
 	 * @throws MtgDeckException
 	 * 
 	 */
@@ -84,7 +86,7 @@ public class TestDataModel_French {
 	}
 
 	/**
-	 * 
+	 * Initialize the map of types
 	 */
 	private void initTypes() {
 
@@ -135,7 +137,7 @@ public class TestDataModel_French {
 	}
 
 	/**
-	 * 
+	 * Initialize the map of abilities
 	 */
 	private void initAbilities() {
 
@@ -157,7 +159,7 @@ public class TestDataModel_French {
 	}
 
 	/**
-	 * 
+	 * Initialize the map of formats
 	 */
 	private void initFormats() {
 
@@ -179,24 +181,25 @@ public class TestDataModel_French {
 	}
 
 	/**
-	 * 
+	 * Initialize the map of collections
 	 */
 	private void initCollections() {
 
-		this.collectionsMap.put("shadowOverInnistrad", new MtgCollection("SOI", "Ténébres sur Innistrad", this.locale));
-		this.collectionsMap.put("eldritchMoon", new MtgCollection("EMN", "La Lune Hermétique", this.locale));
-		this.collectionsMap.put("amonket", new MtgCollection("AKH", "Amonket", this.locale));
-		this.collectionsMap.put("hourOfDevastation", new MtgCollection("HOU", "L'Âge de la Destruction", this.locale));
-		this.collectionsMap.put("kaladesh", new MtgCollection("KLD", "Kaladesh", this.locale));
-		this.collectionsMap.put("aetherRevolt", new MtgCollection("AER", "La Révolte éthérique", this.locale));
+		this.collectionsMap.put("SOI", new MtgCollection("SOI", "Ténébres sur Innistrad", this.locale));
+		this.collectionsMap.put("EMN", new MtgCollection("EMN", "La Lune Hermétique", this.locale));
+		this.collectionsMap.put("AKH", new MtgCollection("AKH", "AKH", this.locale));
+		this.collectionsMap.put("HOU", new MtgCollection("HOU", "L'Âge de la Destruction", this.locale));
+		this.collectionsMap.put("KLD", new MtgCollection("KLD", "KLD", this.locale));
+		this.collectionsMap.put("AER", new MtgCollection("AER", "La Révolte éthérique", this.locale));
 	}
 
 	/**
-	 * 
+	 * Initialize the map of cards
+	 * @see MtgCardBuilder
 	 */
 	private void initCards() {
 
-		final MtgCardBuilder cardBuilder = new MtgCardBuilder(500000, typesMap.get("instant"), collectionsMap.get("eldritchMoon"),
+		final MtgCardBuilder cardBuilder = new MtgCardBuilder(500000, typesMap.get("instant"), collectionsMap.get("EMN"),
 			new MtgFormat[] { formatsMap.get("standard"), formatsMap.get("modern"), formatsMap.get("commander"), formatsMap.get("legacy") },
 			this.abilitiesMap.values(), new MtgColor[] { MtgColor.WHITE }, MtgRarity.UNCOMMUN, this.locale);
 
@@ -207,7 +210,7 @@ public class TestDataModel_French {
 						+ "-Le joueur ciblé gagne 4 points de vie\n" + "-L'adversaire ciblé sacrifie une créature attaquante.",
 					"", "", "", -1));
 
-		cardBuilder.setCollection(collectionsMap.get("shadowOverInnistrad"));
+		cardBuilder.setCollection(collectionsMap.get("SOI"));
 
 		this.cardsMap.put("Pertinacité",
 			cardBuilder.buildCard("Pertinacité", "3|w",
@@ -217,7 +220,7 @@ public class TestDataModel_French {
 					+ "contre la corruption du conseil des lunarques.",
 				"", "", -1));
 
-		cardBuilder.setCollection(collectionsMap.get("hourOfDevastation"));
+		cardBuilder.setCollection(collectionsMap.get("HOU"));
 		cardBuilder.setRarity(MtgRarity.COMMUN);
 
 		this.cardsMap.put("Acte héroïque",
@@ -231,13 +234,13 @@ public class TestDataModel_French {
 
 		cardBuilder.setColors(MtgColor.WHITE);
 		cardBuilder.setType(this.typesMap.get("enchantment"));
-		cardBuilder.setCollection(collectionsMap.get("shadowOverInnistrad"));
+		cardBuilder.setCollection(collectionsMap.get("SOI"));
 
 		this.cardsMap.put("Observation Constante", cardBuilder.buildCard("Observation Constante", "1|w|w",
 			"Les créatures non-jeton que vous contôlez gagnent +1/+1 et ont la vigilance.", "", "", "", -1));
 
 		cardBuilder.setColors(MtgColor.GREEN, MtgColor.BLUE);
-		cardBuilder.setCollection(collectionsMap.get("amonket"));
+		cardBuilder.setCollection(collectionsMap.get("AKH"));
 
 		this.cardsMap.put("Don du Luxa",
 			cardBuilder.buildCard("Don du Luxa", "2|g|u",
@@ -257,7 +260,7 @@ public class TestDataModel_French {
 				"", "", "", -1));
 
 		cardBuilder.setColors(MtgColor.RED);
-		cardBuilder.setCollection(collectionsMap.get("amonket"));
+		cardBuilder.setCollection(collectionsMap.get("AKH"));
 		cardBuilder.setType(typesMap.get("creatureHumanWarrior"));
 		cardBuilder.setRarity(MtgRarity.MYTHIC);
 
@@ -301,7 +304,7 @@ public class TestDataModel_French {
 				"", "3", "2", -1));
 
 		cardBuilder.setType(typesMap.get("creatureHumanWarrior"));
-		cardBuilder.setCollection(collectionsMap.get("hourOfDevastation"));
+		cardBuilder.setCollection(collectionsMap.get("HOU"));
 
 		this.cardsMap.put("Survivants déterminés",
 			cardBuilder.buildCard("Survivants déterminés", "1|r|w",
@@ -320,7 +323,7 @@ public class TestDataModel_French {
 				"En infériorité numérique, mais pas dépassé.", "3", "2", -1));
 
 		cardBuilder.setType(typesMap.get("creatureHumanWarrior"));
-		cardBuilder.setCollection(collectionsMap.get("amonket"));
+		cardBuilder.setCollection(collectionsMap.get("AKH"));
 
 		this.cardsMap
 			.put("Adepte guidé par la gloire",
@@ -331,7 +334,7 @@ public class TestDataModel_French {
 						"", "3", "1", -1));
 
 		cardBuilder.setType(typesMap.get("creatureBird"));
-		cardBuilder.setCollection(collectionsMap.get("aetherRevolt"));
+		cardBuilder.setCollection(collectionsMap.get("AER"));
 
 		this.cardsMap.put("Aigle aux plumes d'aube",
 			cardBuilder.buildCard("Aigle aux plumes d'aube", "4|w",
@@ -340,7 +343,7 @@ public class TestDataModel_French {
 				"", "3", "3", -1));
 
 		cardBuilder.setType(typesMap.get("creatureAngel"));
-		cardBuilder.setCollection(collectionsMap.get("hourOfDevastation"));
+		cardBuilder.setCollection(collectionsMap.get("HOU"));
 		cardBuilder.setRarity(MtgRarity.RARE);
 
 		this.cardsMap.put("Ange de la réprobation",
@@ -428,13 +431,13 @@ public class TestDataModel_French {
 	 */
 	private void addCardsToDeck(MtgDeck deck, MtgCard card, int amount) {
 
-		for (int i = 0; i < amount; i++) {
+		do {
 			try {
 				deck.addCards(MtgDeckList.MAIN, card);
 			} catch (MtgDeckException e) {
 				System.out.println(e);
 			}
-		}
+		} while(--amount > 0);
 	}
 
 	/**
