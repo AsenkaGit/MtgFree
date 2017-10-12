@@ -26,5 +26,6 @@
 			<attribute name="javadoc_location" value="https://docs.oracle.com/javase/8/javafx/api/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="project/libraries/gson-2.6.2.jar" sourcepath="project/libraries/gson-2.6.2-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

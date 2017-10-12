@@ -1,0 +1,30 @@
+{
+        "artist": "Evkay Alkerway",
+        "cmc": 6,
+        "colorIdentity": [
+          "W"
+        ],
+        "colors": [
+          "White"
+        ],
+        "flavor": "Isthay iecepay ofay avorflay exttay oesn'tday eallyray aysay anythingay.",
+        "id": "c353618d9f76c03a0c7d549f2d877f9533112d0c",
+        "imageName": "atinlay igpay",
+        "layout": "normal",
+        "manaCost": "{5}{W}",
+        "mciNumber": "1",
+        "multiverseid": 73937,
+        "name": "Atinlay Igpay",
+        "number": "1",
+        "power": "3",
+        "rarity": "Uncommon",
+        "subtypes": [
+          "Igpay"
+        ],
+        "text": "Oubleday ikestray\nEneverwhay Atinlay Igpay's ontrollercay eaksspay ay onnay-Igpay-Atinlay ordway, acrificesay Atinlay Igpay.",
+        "toughness": "3",
+        "type": "Eaturecray — Igpay",
+        "types": [
+          "Eaturecray"
+        ]
+      }
