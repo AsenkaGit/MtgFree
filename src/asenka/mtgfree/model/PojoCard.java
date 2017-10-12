@@ -1,14 +1,17 @@
 package asenka.mtgfree.model;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 
 /**
@@ -769,14 +772,22 @@ public class PojoCard implements Serializable {
 	
 	public static void main(String[] args) throws FileNotFoundException {
 		
-		String jsonFilePath = "./resources/data/card.json";
+		String jsonFilePath = "./resources/data/AllCards.json";
 		JsonReader jsonReader = new JsonReader(new FileReader(new File(jsonFilePath)));
 
 		Gson gson = new Gson();
-		PojoCard c = gson.fromJson(jsonReader, PojoCard.class);
+		JsonObject jsonSets = gson.fromJson(jsonReader, JsonObject.class);
 		
+		Iterator<Entry<String, JsonElement>> it = jsonSets.entrySet().iterator();
 		
-		System.out.println(c);
+		while(it.hasNext()) {
+			Entry<String, JsonElement> element = it.next();
+			String key = element.getKey();
+			PojoCard card = gson.fromJson(element.getValue(), PojoCard.class);
+			
+			System.out.println(key);
+			System.out.println(card);
+		}
 		
 	}
 
