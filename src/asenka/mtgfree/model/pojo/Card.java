@@ -1,27 +1,21 @@
-package asenka.mtgfree.model;
+package asenka.mtgfree.model.pojo;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonReader;
+import java.util.Arrays;
 
 /**
+ * <p>
+ * Store all the data related to a card
+ * </p>
  * 
+ * <p>
+ * This implementation is fully based on the specifications described in the <a href="https://mtgjson.com/documentation.html">MTG
+ * Json documentation</a>
+ * </p>
  * 
  * @author asenka
- * @see https://mtgjson.com/documentation.html
- *
  */
-public class PojoCard implements Serializable {
+public class Card implements Serializable {
 
 	/**
 	 * A unique id for this card. It is made up by doing an SHA1 hash of setCode + cardName + cardImageName
@@ -29,17 +23,21 @@ public class PojoCard implements Serializable {
 	private String id;
 
 	/**
-	 * 
+	 * The card layout. Possible values: normal, split, flip, double-faced, token, plane, scheme, phenomenon, leveler, vanguard,
+	 * meld
 	 */
 	private String layout;
 
 	/**
-	 * 
+	 * The card name. For split, double-faced and flip cards, just the name of one side of the card. Basically each 'sub-card' has
+	 * its own record.
 	 */
 	private String name;
 
 	/**
-	 * 
+	 * Only used for split, flip, double-faced, and meld cards. Will contain all the names on this card, front or back. For meld
+	 * cards, the first name is the card with the meld ability, which has the top half on its back, the second name is the card
+	 * with the reminder text, and the third name is the melded back face.
 	 */
 	private String[] names;
 
@@ -183,7 +181,47 @@ public class PojoCard implements Serializable {
 	 */
 	private int mciNumber;
 
+	// From here this is extra data about the card that are not available with all JSON files from MTG JSON
+
 	/**
+	 * The rulings for the card. An array of objects, each object having 'date' and 'text' keys.
+	 */
+	private Ruling[] rulings;
+
+	/**
+	 * Foreign language names for the card, if this card in this set was printed in another language. An array of objects, each
+	 * object having 'language', 'name' and 'multiverseid' keys. Not available for all sets.
+	 */
+	private ForeignName[] foreignNames;
+
+	/**
+	 * The sets that this card was printed in, expressed as an array of set codes.
+	 */
+	private String[] printings;
+
+	/**
+	 * The original text on the card at the time it was printed. This field is not available for promo cards.
+	 */
+	private String originalText;
+
+	/**
+	 * The original type on the card at the time it was printed. This field is not available for promo cards.
+	 */
+	private String originalType;
+
+	/**
+	 * Which formats this card is legal, restricted or banned in. An array of objects, each object having 'format' and 'legality'.
+	 */
+	private Legality[] legalities;
+
+	/**
+	 * For promo cards, this is where this card was originally obtained. For box sets that are theme decks, this is which theme
+	 * deck the card is from. For clash packs, this is which deck it is from.
+	 */
+	private String source;
+
+	/**
+	 * 
 	 * @param id
 	 * @param layout
 	 * @param name
@@ -216,12 +254,20 @@ public class PojoCard implements Serializable {
 	 * @param releaseDate
 	 * @param starter
 	 * @param mciNumber
+	 * @param rulings
+	 * @param foreignNames
+	 * @param printings
+	 * @param originalText
+	 * @param originalType
+	 * @param legalities
+	 * @param source
 	 */
-	public PojoCard(String id, String layout, String name, String[] names, String manaCost, float cmc, String[] colors,
-			String[] colorIdentity, String type, String[] supertypes, String[] types, String[] subtypes, String rarity, String text,
-			String flavor, String artist, String number, String power, String toughness, int loyalty, int multiverseid, int[] variations,
-			String imageName, String watermark, String border, boolean timeshifted, int hand, int life, boolean reserved,
-			String releaseDate, boolean starter, int mciNumber) {
+	public Card(String id, String layout, String name, String[] names, String manaCost, float cmc, String[] colors, String[] colorIdentity,
+			String type, String[] supertypes, String[] types, String[] subtypes, String rarity, String text, String flavor, String artist,
+			String number, String power, String toughness, int loyalty, int multiverseid, int[] variations, String imageName,
+			String watermark, String border, boolean timeshifted, int hand, int life, boolean reserved, String releaseDate, boolean starter,
+			int mciNumber, Ruling[] rulings, ForeignName[] foreignNames, String[] printings, String originalText, String originalType,
+			Legality[] legalities, String source) {
 		super();
 		this.id = id;
 		this.layout = layout;
@@ -255,540 +301,437 @@ public class PojoCard implements Serializable {
 		this.releaseDate = releaseDate;
 		this.starter = starter;
 		this.mciNumber = mciNumber;
+		this.rulings = rulings;
+		this.foreignNames = foreignNames;
+		this.printings = printings;
+		this.originalText = originalText;
+		this.originalType = originalType;
+		this.legalities = legalities;
+		this.source = source;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getId() {
 
 		return id;
 	}
 
-	/**
-	 * @param id
-	 */
 	public void setId(String id) {
 
 		this.id = id;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getLayout() {
 
 		return layout;
 	}
 
-	/**
-	 * @param layout
-	 */
 	public void setLayout(String layout) {
 
 		this.layout = layout;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getName() {
 
 		return name;
 	}
 
-	/**
-	 * @param name
-	 */
 	public void setName(String name) {
 
 		this.name = name;
 	}
 
-	/**
-	 * @return
-	 */
 	public String[] getNames() {
 
 		return names;
 	}
 
-	/**
-	 * @param names
-	 */
 	public void setNames(String[] names) {
 
 		this.names = names;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getManaCost() {
 
 		return manaCost;
 	}
 
-	/**
-	 * @param manaCost
-	 */
 	public void setManaCost(String manaCost) {
 
 		this.manaCost = manaCost;
 	}
 
-	/**
-	 * @return
-	 */
 	public float getCmc() {
 
 		return cmc;
 	}
 
-	/**
-	 * @param cmc
-	 */
 	public void setCmc(float cmc) {
 
 		this.cmc = cmc;
 	}
 
-	/**
-	 * @return
-	 */
 	public String[] getColors() {
 
 		return colors;
 	}
 
-	/**
-	 * @param colors
-	 */
 	public void setColors(String[] colors) {
 
 		this.colors = colors;
 	}
 
-	/**
-	 * @return
-	 */
 	public String[] getColorIdentity() {
 
 		return colorIdentity;
 	}
 
-	/**
-	 * @param colorIdentity
-	 */
 	public void setColorIdentity(String[] colorIdentity) {
 
 		this.colorIdentity = colorIdentity;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getType() {
 
 		return type;
 	}
 
-	/**
-	 * @param type
-	 */
 	public void setType(String type) {
 
 		this.type = type;
 	}
 
-	/**
-	 * @return
-	 */
 	public String[] getSupertypes() {
 
 		return supertypes;
 	}
 
-	/**
-	 * @param supertypes
-	 */
 	public void setSupertypes(String[] supertypes) {
 
 		this.supertypes = supertypes;
 	}
 
-	/**
-	 * @return
-	 */
 	public String[] getTypes() {
 
 		return types;
 	}
 
-	/**
-	 * @param types
-	 */
 	public void setTypes(String[] types) {
 
 		this.types = types;
 	}
 
-	/**
-	 * @return
-	 */
 	public String[] getSubtypes() {
 
 		return subtypes;
 	}
 
-	/**
-	 * @param subtypes
-	 */
 	public void setSubtypes(String[] subtypes) {
 
 		this.subtypes = subtypes;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getRarity() {
 
 		return rarity;
 	}
 
-	/**
-	 * @param rarity
-	 */
 	public void setRarity(String rarity) {
 
 		this.rarity = rarity;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getText() {
 
 		return text;
 	}
 
-	/**
-	 * @param text
-	 */
 	public void setText(String text) {
 
 		this.text = text;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getFlavor() {
 
 		return flavor;
 	}
 
-	/**
-	 * @param flavor
-	 */
 	public void setFlavor(String flavor) {
 
 		this.flavor = flavor;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getArtist() {
 
 		return artist;
 	}
 
-	/**
-	 * @param artist
-	 */
 	public void setArtist(String artist) {
 
 		this.artist = artist;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getNumber() {
 
 		return number;
 	}
 
-	/**
-	 * @param number
-	 */
 	public void setNumber(String number) {
 
 		this.number = number;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getPower() {
 
 		return power;
 	}
 
-	/**
-	 * @param power
-	 */
 	public void setPower(String power) {
 
 		this.power = power;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getToughness() {
 
 		return toughness;
 	}
 
-	/**
-	 * @param toughness
-	 */
 	public void setToughness(String toughness) {
 
 		this.toughness = toughness;
 	}
 
-	/**
-	 * @return
-	 */
 	public int getLoyalty() {
 
 		return loyalty;
 	}
 
-	/**
-	 * @param loyalty
-	 */
 	public void setLoyalty(int loyalty) {
 
 		this.loyalty = loyalty;
 	}
 
-	/**
-	 * @return
-	 */
 	public int getMultiverseid() {
 
 		return multiverseid;
 	}
 
-	/**
-	 * @param multiverseid
-	 */
 	public void setMultiverseid(int multiverseid) {
 
 		this.multiverseid = multiverseid;
 	}
 
-	/**
-	 * @return
-	 */
 	public int[] getVariations() {
 
 		return variations;
 	}
 
-	/**
-	 * @param variations
-	 */
 	public void setVariations(int[] variations) {
 
 		this.variations = variations;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getImageName() {
 
 		return imageName;
 	}
 
-	/**
-	 * @param imageName
-	 */
 	public void setImageName(String imageName) {
 
 		this.imageName = imageName;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getWatermark() {
 
 		return watermark;
 	}
 
-	/**
-	 * @param watermark
-	 */
 	public void setWatermark(String watermark) {
 
 		this.watermark = watermark;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getBorder() {
 
 		return border;
 	}
 
-	/**
-	 * @param border
-	 */
 	public void setBorder(String border) {
 
 		this.border = border;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isTimeshifted() {
 
 		return timeshifted;
 	}
 
-	/**
-	 * @param timeshifted
-	 */
 	public void setTimeshifted(boolean timeshifted) {
 
 		this.timeshifted = timeshifted;
 	}
 
-	/**
-	 * @return
-	 */
 	public int getHand() {
 
 		return hand;
 	}
 
-	/**
-	 * @param hand
-	 */
 	public void setHand(int hand) {
 
 		this.hand = hand;
 	}
 
-	/**
-	 * @return
-	 */
 	public int getLife() {
 
 		return life;
 	}
 
-	/**
-	 * @param life
-	 */
 	public void setLife(int life) {
 
 		this.life = life;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isReserved() {
 
 		return reserved;
 	}
 
-	/**
-	 * @param reserved
-	 */
 	public void setReserved(boolean reserved) {
 
 		this.reserved = reserved;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getReleaseDate() {
 
 		return releaseDate;
 	}
 
-	/**
-	 * @param releaseDate
-	 */
 	public void setReleaseDate(String releaseDate) {
 
 		this.releaseDate = releaseDate;
 	}
 
-	/**
-	 * @return
-	 */
 	public boolean isStarter() {
 
 		return starter;
 	}
 
-	/**
-	 * @param starter
-	 */
 	public void setStarter(boolean starter) {
 
 		this.starter = starter;
 	}
 
-	/**
-	 * @return
-	 */
 	public int getMciNumber() {
 
 		return mciNumber;
 	}
 
-	/**
-	 * @param mciNumber
-	 */
 	public void setMciNumber(int mciNumber) {
 
 		this.mciNumber = mciNumber;
 	}
-	
-	
-	public static void main(String[] args) throws FileNotFoundException {
-		
-		String jsonFilePath = "./resources/data/AllCards.json";
-		JsonReader jsonReader = new JsonReader(new FileReader(new File(jsonFilePath)));
 
-		Gson gson = new Gson();
-		JsonObject jsonSets = gson.fromJson(jsonReader, JsonObject.class);
-		
-		Iterator<Entry<String, JsonElement>> it = jsonSets.entrySet().iterator();
-		
-		while(it.hasNext()) {
-			Entry<String, JsonElement> element = it.next();
-			String key = element.getKey();
-			PojoCard card = gson.fromJson(element.getValue(), PojoCard.class);
-			
-			System.out.println(key);
-			System.out.println(card);
-		}
-		
+	public Ruling[] getRulings() {
+
+		return rulings;
+	}
+
+	public void setRulings(Ruling[] rulings) {
+
+		this.rulings = rulings;
+	}
+
+	public ForeignName[] getForeignNames() {
+
+		return foreignNames;
+	}
+
+	public void setForeignNames(ForeignName[] foreignNames) {
+
+		this.foreignNames = foreignNames;
+	}
+
+	public String[] getPrintings() {
+
+		return printings;
+	}
+
+	public void setPrintings(String[] printings) {
+
+		this.printings = printings;
+	}
+
+	public String getOriginalText() {
+
+		return originalText;
+	}
+
+	public void setOriginalText(String originalText) {
+
+		this.originalText = originalText;
+	}
+
+	public String getOriginalType() {
+
+		return originalType;
+	}
+
+	public void setOriginalType(String originalType) {
+
+		this.originalType = originalType;
+	}
+
+	public Legality[] getLegalities() {
+
+		return legalities;
+	}
+
+	public void setLegalities(Legality[] legalities) {
+
+		this.legalities = legalities;
+	}
+
+	public String getSource() {
+
+		return source;
+	}
+
+	public void setSource(String source) {
+
+		this.source = source;
+	}
+
+	@Override
+	public String toString() {
+
+		return "Card [" + name + ", " + Arrays.toString(colorIdentity) + ", " + type + ", " + rarity + ", " + multiverseid + ", "
+				+ mciNumber + "]";
+	}
+
+	@Override
+	public int hashCode() {
+
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Card other = (Card) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 
 }
