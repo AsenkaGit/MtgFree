@@ -13,9 +13,9 @@ import java.io.Serializable;
  * </p>
  * 
  * @author asenka
- * @see Card
+ * @see MtgCard
  */
-public class ForeignName implements Serializable {
+public class MtgForeignName implements Serializable {
 
 	/**
 	 * The generated ID for the serialization
@@ -43,7 +43,7 @@ public class ForeignName implements Serializable {
 	 * @param name
 	 * @param multiverseid
 	 */
-	public ForeignName(String language, String name, int multiverseid) {
+	public MtgForeignName(String language, String name, int multiverseid) {
 		super();
 		this.language = language;
 		this.name = name;
@@ -124,7 +124,7 @@ public class ForeignName implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ForeignName other = (ForeignName) obj;
+		MtgForeignName other = (MtgForeignName) obj;
 		if (language == null) {
 			if (other.language != null)
 				return false;

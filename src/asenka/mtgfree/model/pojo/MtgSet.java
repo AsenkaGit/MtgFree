@@ -12,9 +12,9 @@ import java.util.Arrays;
  * </p>
  * 
  * @author asenka
- * @see Card
+ * @see MtgCard
  */
-public class Set implements Serializable {
+public class MtgSet implements Serializable {
 
 	/**
 	 * The generated ID used for serialization
@@ -83,7 +83,7 @@ public class Set implements Serializable {
 	/**
 	 * The cards in the set
 	 */
-	private Card[] cards;
+	private MtgCard[] cards;
 
 	/**
 	 * Constructor with all values 
@@ -100,8 +100,8 @@ public class Set implements Serializable {
 	 * @param booster
 	 * @param cards
 	 */
-	public Set(String name, String code, String gathererCode, String oldCode, String magicCardsInfoCode, String releaseDate, String border,
-			String type, String block, boolean onlineOnly, String[] booster, Card[] cards) {
+	public MtgSet(String name, String code, String gathererCode, String oldCode, String magicCardsInfoCode, String releaseDate, String border,
+			String type, String block, boolean onlineOnly, String[] booster, MtgCard[] cards) {
 		super();
 		this.name = name;
 		this.code = code;
@@ -227,12 +227,12 @@ public class Set implements Serializable {
 		this.booster = booster;
 	}
 
-	public Card[] getCards() {
+	public MtgCard[] getCards() {
 
 		return cards;
 	}
 
-	public void setCards(Card[] cards) {
+	public void setCards(MtgCard[] cards) {
 
 		this.cards = cards;
 	}
@@ -272,7 +272,7 @@ public class Set implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Set other = (Set) obj;
+		MtgSet other = (MtgSet) obj;
 		if (code == null) {
 			if (other.code != null)
 				return false;

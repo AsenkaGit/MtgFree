@@ -14,9 +14,9 @@ import java.io.Serializable;
  * </p>
  * 
  * @author asenka
- * @see Card
+ * @see MtgCard
  */
-public class Legality implements Serializable {
+public class MtgLegality implements Serializable {
 
 	/**
 	 * The generated ID for serialization
@@ -37,7 +37,7 @@ public class Legality implements Serializable {
 	 * @param format
 	 * @param legality
 	 */
-	public Legality(String format, String legality) {
+	public MtgLegality(String format, String legality) {
 		super();
 		this.format = format;
 		this.legality = legality;
@@ -100,7 +100,7 @@ public class Legality implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Legality other = (Legality) obj;
+		MtgLegality other = (MtgLegality) obj;
 		if (format == null) {
 			if (other.format != null)
 				return false;

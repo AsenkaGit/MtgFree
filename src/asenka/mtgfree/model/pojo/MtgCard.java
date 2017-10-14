@@ -15,7 +15,7 @@ import java.util.Arrays;
  * 
  * @author asenka
  */
-public class Card implements Serializable {
+public class MtgCard implements Serializable {
 
 	/**
 	 * The generated ID for serialization
@@ -212,13 +212,13 @@ public class Card implements Serializable {
 	/**
 	 * The rulings for the card. An array of objects, each object having 'date' and 'text' keys.
 	 */
-	private Ruling[] rulings;
+	private MtgRuling[] rulings;
 
 	/**
 	 * Foreign language names for the card, if this card in this set was printed in another language. An array of objects, each
 	 * object having 'language', 'name' and 'multiverseid' keys. Not available for all sets.
 	 */
-	private ForeignName[] foreignNames;
+	private MtgForeignName[] foreignNames;
 
 	/**
 	 * The sets that this card was printed in, expressed as an array of set codes.
@@ -238,7 +238,7 @@ public class Card implements Serializable {
 	/**
 	 * Which formats this card is legal, restricted or banned in. An array of objects, each object having 'format' and 'legality'.
 	 */
-	private Legality[] legalities;
+	private MtgLegality[] legalities;
 
 	/**
 	 * For promo cards, this is where this card was originally obtained. For box sets that are theme decks, this is which theme
@@ -288,12 +288,12 @@ public class Card implements Serializable {
 	 * @param legalities
 	 * @param source
 	 */
-	public Card(String id, String layout, String name, String[] names, String manaCost, float cmc, String[] colors, String[] colorIdentity,
+	public MtgCard(String id, String layout, String name, String[] names, String manaCost, float cmc, String[] colors, String[] colorIdentity,
 			String type, String[] supertypes, String[] types, String[] subtypes, String rarity, String text, String flavor, String artist,
 			String number, String power, String toughness, int loyalty, int multiverseid, int[] variations, String imageName,
 			String watermark, String border, boolean timeshifted, int hand, int life, boolean reserved, String releaseDate, boolean starter,
-			int mciNumber, Ruling[] rulings, ForeignName[] foreignNames, String[] printings, String originalText, String originalType,
-			Legality[] legalities, String source) {
+			int mciNumber, MtgRuling[] rulings, MtgForeignName[] foreignNames, String[] printings, String originalText, String originalType,
+			MtgLegality[] legalities, String source) {
 		super();
 		this.id = id;
 		this.layout = layout;
@@ -656,22 +656,22 @@ public class Card implements Serializable {
 		this.mciNumber = mciNumber;
 	}
 
-	public Ruling[] getRulings() {
+	public MtgRuling[] getRulings() {
 
 		return rulings;
 	}
 
-	public void setRulings(Ruling[] rulings) {
+	public void setRulings(MtgRuling[] rulings) {
 
 		this.rulings = rulings;
 	}
 
-	public ForeignName[] getForeignNames() {
+	public MtgForeignName[] getForeignNames() {
 
 		return foreignNames;
 	}
 
-	public void setForeignNames(ForeignName[] foreignNames) {
+	public void setForeignNames(MtgForeignName[] foreignNames) {
 
 		this.foreignNames = foreignNames;
 	}
@@ -706,12 +706,12 @@ public class Card implements Serializable {
 		this.originalType = originalType;
 	}
 
-	public Legality[] getLegalities() {
+	public MtgLegality[] getLegalities() {
 
 		return legalities;
 	}
 
-	public void setLegalities(Legality[] legalities) {
+	public void setLegalities(MtgLegality[] legalities) {
 
 		this.legalities = legalities;
 	}
@@ -789,7 +789,7 @@ public class Card implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Card other = (Card) obj;
+		MtgCard other = (MtgCard) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

@@ -13,9 +13,9 @@ import java.io.Serializable;
  * </p>
  * 
  * @author asenka
- * @see Card
+ * @see MtgCard
  */
-public class Ruling implements Serializable {
+public class MtgRuling implements Serializable {
 
 	/**
 	 * The generated ID for the serialization
@@ -36,7 +36,7 @@ public class Ruling implements Serializable {
 	 * @param date
 	 * @param text
 	 */
-	public Ruling(String date, String text) {
+	public MtgRuling(String date, String text) {
 		super();
 		this.date = date;
 		this.text = text;
@@ -99,7 +99,7 @@ public class Ruling implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Ruling other = (Ruling) obj;
+		MtgRuling other = (MtgRuling) obj;
 		if (date == null) {
 			if (other.date != null)
 				return false;
