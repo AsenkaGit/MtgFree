@@ -18,7 +18,7 @@ import java.util.Arrays;
 public class Card implements Serializable {
 
 	/**
-	 * 
+	 * The generated ID for serialization
 	 */
 	private static final long serialVersionUID = -631051945429138079L;
 
@@ -47,142 +47,163 @@ public class Card implements Serializable {
 	private String[] names;
 
 	/**
-	 * 
+	 * The mana cost of this card. Consists of one or more mana symbols. e.g. <code>"{2}{G}{B}"</code>
 	 */
 	private String manaCost;
 
 	/**
-	 * 
+	 * Converted mana cost. Always a number. NOTE: cmc may have a decimal point as cards from unhinged may contain "half mana"
+	 * (such as 'Little Girl' with a cmc of 0.5). Cards without this field have an implied cmc of zero as per rule 202.3a
 	 */
 	private float cmc;
 
 	/**
-	 * 
+	 * The card colors. Usually this is derived from the casting cost, but some cards are special (like the back of double-faced
+	 * cards and Ghostfire).
 	 */
 	private String[] colors;
 
 	/**
-	 * 
+	 * This is created reading all card color information and costs. It is the same for double-sided cards (if they have different
+	 * colors, the identity will have both colors). It also identifies all mana symbols in the card (cost and text). Mostly used
+	 * on commander decks.
 	 */
 	private String[] colorIdentity;
 
 	/**
-	 * 
+	 * The card type. This is the type you would see on the card if printed today. Note: The dash is a UTF8 'long dash' as per the
+	 * MTG rules
 	 */
 	private String type;
 
 	/**
-	 * 
+	 * The supertypes of the card. These appear to the far left of the card type. Example values: Basic, Legendary, Snow, World,
+	 * Ongoing
 	 */
 	private String[] supertypes;
 
 	/**
-	 * 
+	 * The types of the card. These appear to the left of the dash in a card type. Example values: Instant, Sorcery, Artifact,
+	 * Creature, Enchantment, Land, Planeswalker
 	 */
 	private String[] types;
 
 	/**
-	 * 
+	 * The subtypes of the card. These appear to the right of the dash in a card type. Usually each word is its own subtype.
+	 * Example values: Trap, Arcane, Equipment, Aura, Human, Rat, Squirrel, etc.
 	 */
 	private String[] subtypes;
 
 	/**
-	 * 
+	 * The rarity of the card. Examples: Common, Uncommon, Rare, Mythic Rare, Special, Basic Land
 	 */
 	private String rarity;
 
 	/**
-	 * 
+	 * The text of the card. May contain mana symbols and other symbols.
 	 */
 	private String text;
 
 	/**
-	 * 
+	 * The flavor text of the card.
 	 */
 	private String flavor;
 
 	/**
-	 * 
+	 * The artist of the card. This may not match what is on the card as MTGJSON corrects many card misprints.
 	 */
 	private String artist;
 
 	/**
-	 * 
+	 * The card number. This is printed at the bottom-center of the card in small text. This is a string, not an integer, because
+	 * some cards have letters in their numbers.
 	 */
 	private String number;
 
 	/**
-	 * 
+	 * The power of the card. This is only present for creatures. This is a string, not an integer, because some cards have powers
+	 * like: "1+*"
 	 */
 	private String power;
 
 	/**
-	 * 
+	 * The toughness of the card. This is only present for creatures. This is a string, not an integer, because some cards have
+	 * toughness like: "1+*"
 	 */
 	private String toughness;
 
 	/**
-	 * 
+	 * The loyalty of the card. This is only present for planeswalkers.
 	 */
 	private int loyalty;
 
 	/**
-	 * 
+	 * The multiverseid of the card on Wizard's Gatherer web page. Cards from sets that do not exist on Gatherer will NOT have a
+	 * multiverseid. Sets not on Gatherer are: ATH, ITP, DKM, RQS, DPA and all sets with a 4 letter code that starts with a
+	 * lowercase 'p'.
 	 */
 	private int multiverseid;
 
 	/**
-	 * 
+	 * If a card has alternate art (for example, 4 different Forests, or the 2 Brothers Yamazaki) then each other variation's
+	 * multiverseid will be listed here, NOT including the current card's multiverseid. NOTE: Only present for sets that exist on
+	 * Gatherer.
 	 */
 	private int[] variations;
 
 	/**
-	 * 
+	 * This used to refer to the mtgimage.com file name for this card. mtgimage.com has been SHUT DOWN by Wizards of the Coast.
+	 * This field will continue to be set correctly and is now only useful for UID purposes.
 	 */
 	private String imageName;
 
 	/**
-	 * 
+	 * The watermark on the card. Note: Split cards don't currently have this field set, despite having a watermark on each side
+	 * of the split card.
 	 */
 	private String watermark;
 
 	/**
-	 * 
+	 * If the border for this specific card is DIFFERENT than the border specified in the top level set JSON, then it will be
+	 * specified here. (Example: Unglued has silver borders, except for the lands which are black bordered)
 	 */
 	private String border;
 
 	/**
-	 * 
+	 * If this card was a timeshifted card in the set.
 	 */
 	private boolean timeshifted;
 
 	/**
-	 * 
+	 * Maximum hand size modifier. Only exists for Vanguard cards.
 	 */
 	private int hand;
 
 	/**
-	 * 
+	 * Starting life total modifier. Only exists for Vanguard cards.
 	 */
 	private int life;
 
 	/**
-	 * 
+	 * Set to true if this card is reserved by Wizards
+	 * <a href="https://magic.wizards.com/en/articles/archive/official-reprint-policy-2010-03-10">Official Reprint Policy</a>
 	 */
 	private boolean reserved;
 
 	/**
-	 * 
+	 * The date this card was released. This is only set for promo cards. The date may not be accurate to an exact day and month,
+	 * thus only a partial date may be set (YYYY-MM-DD or YYYY-MM or YYYY). Some promo cards do not have a known release date.
 	 */
 	private String releaseDate;
 
 	/**
-	 * 
+	 * Set to true if this card was only released as part of a core box set. These are technically part of the core sets and are
+	 * tournament legal despite not being available in boosters.
 	 */
 	private boolean starter;
 
 	/**
-	 * 
+	 * Number used by MagicCards.info for their indexing URLs (Most often it is the card number in the set)
 	 */
 	private int mciNumber;
 
@@ -906,5 +927,4 @@ public class Card implements Serializable {
 			return false;
 		return true;
 	}
-
 }
