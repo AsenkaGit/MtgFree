@@ -72,13 +72,13 @@ public class MtgSet implements Serializable {
 	 */
 	private boolean onlineOnly;
 
-	/**
-	 * The 'booster' key is present for each set that has physical boosters (so not present for box sets, duel decks, digital
-	 * masters editions, etc.). It is an array containing one item per card in the booster. Thus the array length is how many
-	 * cards are in a booster. Each item in the array is either a string representing the type of booster card or an array of
-	 * strings representing possible types for that booster card.
-	 */
-	private String[] booster;
+//	/**
+//	 * The 'booster' key is present for each set that has physical boosters (so not present for box sets, duel decks, digital
+//	 * masters editions, etc.). It is an array containing one item per card in the booster. Thus the array length is how many
+//	 * cards are in a booster. Each item in the array is either a string representing the type of booster card or an array of
+//	 * strings representing possible types for that booster card.
+//	 */
+//	private String[] booster;
 
 	/**
 	 * The cards in the set
@@ -101,7 +101,7 @@ public class MtgSet implements Serializable {
 	 * @param cards
 	 */
 	public MtgSet(String name, String code, String gathererCode, String oldCode, String magicCardsInfoCode, String releaseDate, String border,
-			String type, String block, boolean onlineOnly, String[] booster, MtgCard[] cards) {
+			String type, String block, boolean onlineOnly/*, String[] booster*/, MtgCard[] cards) {
 		super();
 		this.name = name;
 		this.code = code;
@@ -113,7 +113,7 @@ public class MtgSet implements Serializable {
 		this.type = type;
 		this.block = block;
 		this.onlineOnly = onlineOnly;
-		this.booster = booster;
+//		this.booster = booster;
 		this.cards = cards;
 	}
 
@@ -217,15 +217,15 @@ public class MtgSet implements Serializable {
 		this.onlineOnly = onlineOnly;
 	}
 
-	public String[] getBooster() {
-
-		return booster;
-	}
-
-	public void setBooster(String[] booster) {
-
-		this.booster = booster;
-	}
+//	public String[] getBooster() {
+//
+//		return booster;
+//	}
+//
+//	public void setBooster(String[] booster) {
+//
+//		this.booster = booster;
+//	}
 
 	public MtgCard[] getCards() {
 
@@ -249,7 +249,7 @@ public class MtgSet implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((block == null) ? 0 : block.hashCode());
-		result = prime * result + Arrays.hashCode(booster);
+//		result = prime * result + Arrays.hashCode(booster);
 		result = prime * result + ((border == null) ? 0 : border.hashCode());
 		result = prime * result + Arrays.hashCode(cards);
 		result = prime * result + ((code == null) ? 0 : code.hashCode());
@@ -283,8 +283,8 @@ public class MtgSet implements Serializable {
 				return false;
 		} else if (!block.equals(other.block))
 			return false;
-		if (!Arrays.equals(booster, other.booster))
-			return false;
+//		if (!Arrays.equals(booster, other.booster))
+//			return false;
 		if (border == null) {
 			if (other.border != null)
 				return false;

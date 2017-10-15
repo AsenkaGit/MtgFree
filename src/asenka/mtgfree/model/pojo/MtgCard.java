@@ -1,7 +1,10 @@
 package asenka.mtgfree.model.pojo;
 
 import java.io.Serializable;
+import java.text.Collator;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Locale;
 
 /**
  * <p>
@@ -15,7 +18,7 @@ import java.util.Arrays;
  * 
  * @author asenka
  */
-public class MtgCard implements Serializable {
+public class MtgCard implements Serializable, Comparable<MtgCard> {
 
 	/**
 	 * The generated ID for serialization
@@ -203,9 +206,10 @@ public class MtgCard implements Serializable {
 	private boolean starter;
 
 	/**
-	 * Number used by MagicCards.info for their indexing URLs (Most often it is the card number in the set)
+	 * Number used by MagicCards.info for their indexing URLs (Most often it is the card number in the set). It is a string
+	 * because it can contains letter : "120a"
 	 */
-	private int mciNumber;
+	private String mciNumber;
 
 	// From here this is extra data about the card that are not available with all JSON files from MTG JSON
 
@@ -245,6 +249,11 @@ public class MtgCard implements Serializable {
 	 * deck the card is from. For clash packs, this is which deck it is from.
 	 */
 	private String source;
+
+	/**
+	 * A default collator used in the compareTo method to sort the cards according to their names
+	 */
+	private static final Collator COLLATOR = Collator.getInstance(Locale.ENGLISH);
 
 	/**
 	 * 
@@ -288,12 +297,12 @@ public class MtgCard implements Serializable {
 	 * @param legalities
 	 * @param source
 	 */
-	public MtgCard(String id, String layout, String name, String[] names, String manaCost, float cmc, String[] colors, String[] colorIdentity,
-			String type, String[] supertypes, String[] types, String[] subtypes, String rarity, String text, String flavor, String artist,
-			String number, String power, String toughness, int loyalty, int multiverseid, int[] variations, String imageName,
-			String watermark, String border, boolean timeshifted, int hand, int life, boolean reserved, String releaseDate, boolean starter,
-			int mciNumber, MtgRuling[] rulings, MtgForeignName[] foreignNames, String[] printings, String originalText, String originalType,
-			MtgLegality[] legalities, String source) {
+	public MtgCard(String id, String layout, String name, String[] names, String manaCost, float cmc, String[] colors,
+			String[] colorIdentity, String type, String[] supertypes, String[] types, String[] subtypes, String rarity, String text,
+			String flavor, String artist, String number, String power, String toughness, int loyalty, int multiverseid, int[] variations,
+			String imageName, String watermark, String border, boolean timeshifted, int hand, int life, boolean reserved,
+			String releaseDate, boolean starter, String mciNumber, MtgRuling[] rulings, MtgForeignName[] foreignNames, String[] printings,
+			String originalText, String originalType, MtgLegality[] legalities, String source) {
 		super();
 		this.id = id;
 		this.layout = layout;
@@ -334,6 +343,12 @@ public class MtgCard implements Serializable {
 		this.originalType = originalType;
 		this.legalities = legalities;
 		this.source = source;
+	}
+
+	public static MtgCard getSearchCardBasedOnName(String name) {
+
+		return new MtgCard(null, null, name, null, null, 0f, null, null, null, null, null, null, null, null, null, null, null, null, null,
+				0, 0, null, null, null, null, false, 0, 0, false, null, false, null, null, null, null, null, null, null, null);
 	}
 
 	public String getId() {
@@ -646,12 +661,12 @@ public class MtgCard implements Serializable {
 		this.starter = starter;
 	}
 
-	public int getMciNumber() {
+	public String getMciNumber() {
 
 		return mciNumber;
 	}
 
-	public void setMciNumber(int mciNumber) {
+	public void setMciNumber(String mciNumber) {
 
 		this.mciNumber = mciNumber;
 	}
@@ -753,7 +768,7 @@ public class MtgCard implements Serializable {
 		result = prime * result + life;
 		result = prime * result + loyalty;
 		result = prime * result + ((manaCost == null) ? 0 : manaCost.hashCode());
-		result = prime * result + mciNumber;
+		result = prime * result + ((mciNumber == null) ? 0 : mciNumber.hashCode());
 		result = prime * result + multiverseid;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + Arrays.hashCode(names);
@@ -926,5 +941,12 @@ public class MtgCard implements Serializable {
 		} else if (!watermark.equals(other.watermark))
 			return false;
 		return true;
+	}
+
+	@Override
+	public int compareTo(MtgCard otherCard) {
+
+		// Uses an English collator to compare the cards' name
+		return COLLATOR.compare(this.name, otherCard.name);
 	}
 }
