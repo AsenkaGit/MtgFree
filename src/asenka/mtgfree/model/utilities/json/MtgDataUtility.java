@@ -5,19 +5,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.Locale;
 import java.util.Set;
-import java.util.TreeSet;
-
 import javax.management.RuntimeErrorException;
+
+import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -42,6 +42,11 @@ import asenka.mtgfree.model.pojo.MtgSet;
  *
  */
 public class MtgDataUtility {
+	
+	/**
+	 * Log4j logger
+	 */
+	private static final Logger LOGGER = Logger.getLogger(MtgDataUtility.class);
 
 	/**
 	 * The default file path to the JSON file properly formatted
@@ -53,6 +58,22 @@ public class MtgDataUtility {
 	 * better to have this estimated value to properly initialize the HashSet parameter <code>sets</code>.
 	 */
 	private static final int ESTIMATED_NUMBER_OF_SETS = 215;
+	
+	/**
+	 * An estimate int value of the number of MTG cards in the JSON file. the value is 34506 with the default JSON file
+	 */
+	private static final int ESTIMATED_NUMBER_OF_CARDS = 34500;
+
+	/**
+	 * Comparator used in the standard binarySearch method to find a card among the list of cards. Thank to this comparator you
+	 * can compare the name of an MtgCard to a string
+	 * 
+	 * @see MtgDataUtility#getMtgCard(String)
+	 * @see Comparator
+	 * @see Collator
+	 */
+	private static final Comparator<Object> SEARCH_CARD_BY_NAME_COMPARATOR = (Object card, Object name) -> Collator
+			.getInstance(Locale.ENGLISH).compare(((MtgCard) card).getName().toLowerCase(), ((String) name).toLowerCase());
 
 	/**
 	 * The unique instance of this class on a JVM. You cannot create more than 1 instance of this object.
@@ -97,9 +118,9 @@ public class MtgDataUtility {
 	}
 
 	/**
-	 * 
-	 * @param code
-	 * @return
+	 * Return an MtgSet
+	 * @param code the code of the set (e.g. <code>"AKH", "KLD",</code> etc....). This value is case sensitive
+	 * @return the requested MtgSet according the the code
 	 */
 	public MtgSet getMtgSet(String code) {
 
@@ -128,10 +149,29 @@ public class MtgDataUtility {
 		return Collections.unmodifiableList(this.cards);
 	}
 
+	/**
+	 * Returns the card with the requested name (not case sensitive)
+	 * 
+	 * @param name the card name requested
+	 * @return an MtgCard or <code>null</code> if the card is not found
+	 * @see Collections#binarySearch(List, Object, Comparator)
+	 */
 	public MtgCard getMtgCard(String name) {
 
-		int index = Collections.binarySearch(this.cards, MtgCard.getSearchCardBasedOnName(name));
+		// Use the standard binarySearch with a custom Comparator to compare an instance of MtgCard with an instance of String
+		int index = Collections.binarySearch(this.cards, name, SEARCH_CARD_BY_NAME_COMPARATOR);
 		return index > 0 ? this.cards.get(index) : null;
+	}
+
+	/**
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public List<MtgCard> getListOfCardsFromSet(String code) {
+
+		MtgSet set = getMtgSet(code);
+		return set != null ? Arrays.asList(set.getCards()) : null;
 	}
 
 	/**
@@ -160,36 +200,41 @@ public class MtgDataUtility {
 	private MtgDataUtility(String jsonFilepath) {
 
 		this.sets = new HashSet<MtgSet>(ESTIMATED_NUMBER_OF_SETS);
-
+		this.cards = new ArrayList<MtgCard>(ESTIMATED_NUMBER_OF_CARDS);
+		LOGGER.trace("Start to load MTG data");
 		loadDataFromFile(jsonFilepath);
-
-		this.cards = new ArrayList<MtgCard>();
 		initializeCardsSet();
+		LOGGER.trace("MTG Data succesfully loaded");
 	}
 
 	/**
+	 * Read the JSON file and load the data from this file into the <code>sets</code> and <code>cards</code> parameters of
+	 * this MtgDataUtility instance.
+	 * @param jsonFilePath the path to the JSON file to parse. The structure of the file must be compliant with
+	 * the method expectation (see the constructor parameters javadoc of this class)
 	 * 
-	 * @param jsonFilePath
 	 */
 	private void loadDataFromFile(String jsonFilePath) {
-
-		// final long start = System.currentTimeMillis();
-		Gson jsonParser = new Gson();
+		
+		
+		final Gson jsonParser = new Gson();
 		FileReader jsonFileReader = null;
 		BufferedReader bufferedJsonFileReader = null;
 
 		try {
-			// Read the JSON file an parse it into a JsonArray
+			// Read the JSON file an parse it into a JsonArray 
+			// TODO Optimization would be nice here (it is this part that take quite a while to load)
 			jsonFileReader = new FileReader(new File(jsonFilePath));
 			bufferedJsonFileReader = new BufferedReader(jsonFileReader);
 			JsonArray jsonContent = jsonParser.fromJson(bufferedJsonFileReader, JsonArray.class);
 
+			// Go through the array to create all the MtgSet with all the MtgCards inside
 			for (JsonElement jsonSet : jsonContent) {
 
 				this.sets.add(jsonParser.fromJson(jsonSet, MtgSet.class));
 			}
-
 		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
+			LOGGER.error("Error while loading JSON file with MTG Data", e);
 			throw new RuntimeException(e);
 		} finally {
 			try {
@@ -201,15 +246,18 @@ public class MtgDataUtility {
 				if (bufferedJsonFileReader != null) {
 					bufferedJsonFileReader.close();
 				}
-
 			} catch (IOException e) {
+				LOGGER.fatal("Unable to close readers", e);
 				throw new RuntimeErrorException(new Error(e));
 			}
 		}
 	}
 
 	/**
+	 * Initialize the list of cards. Then the list is sorted according to the card names
 	 * 
+	 * @see Collections#sort(List)
+	 * @see Comparable
 	 */
 	private void initializeCardsSet() {
 
@@ -223,16 +271,12 @@ public class MtgDataUtility {
 				this.cards.add(card);
 			}
 		}
+		// Sort the list of cards according to the implementation of MtgCard.compareTo(...) method (compares the card's name)
 		Collections.sort(this.cards);
 	}
+	
+	public static void main(String[] args) {
 
-	public static void main(String[] args) throws Exception {
-
-		long start = System.currentTimeMillis();
-		MtgDataUtility dataUtility = MtgDataUtility.getInstance();
-		System.out.println(System.currentTimeMillis() - start + " ms");
-		System.out.println(dataUtility.getMtgCard("Black Lotus"));
-
+		MtgDataUtility.getInstance();
 	}
-
 }

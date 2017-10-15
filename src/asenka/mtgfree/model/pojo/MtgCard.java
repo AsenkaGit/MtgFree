@@ -3,9 +3,7 @@ package asenka.mtgfree.model.pojo;
 import java.io.Serializable;
 import java.text.Collator;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Locale;
-
 /**
  * <p>
  * Store all the data related to a card
@@ -15,8 +13,13 @@ import java.util.Locale;
  * This implementation is fully based on the specifications described in the <a href="https://mtgjson.com/documentation.html">MTG
  * Json documentation</a>
  * </p>
+ * <p>
+ * The card also implements the Comparable interface to have a default comparison behavior with the method
+ * {@link MtgCard#compareTo(MtgCard)}
+ * </p>
  * 
  * @author asenka
+ * @see Comparable
  */
 public class MtgCard implements Serializable, Comparable<MtgCard> {
 
@@ -343,12 +346,6 @@ public class MtgCard implements Serializable, Comparable<MtgCard> {
 		this.originalType = originalType;
 		this.legalities = legalities;
 		this.source = source;
-	}
-
-	public static MtgCard getSearchCardBasedOnName(String name) {
-
-		return new MtgCard(null, null, name, null, null, 0f, null, null, null, null, null, null, null, null, null, null, null, null, null,
-				0, 0, null, null, null, null, false, 0, 0, false, null, false, null, null, null, null, null, null, null, null);
 	}
 
 	public String getId() {
@@ -943,6 +940,12 @@ public class MtgCard implements Serializable, Comparable<MtgCard> {
 		return true;
 	}
 
+	/**
+	 * Compare two cards together according to their name parameter only.
+	 * 
+	 * @param otherCard the other MtgCard to compare with the current instance
+	 * @see Collator
+	 */
 	@Override
 	public int compareTo(MtgCard otherCard) {
 
