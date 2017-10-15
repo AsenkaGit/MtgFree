@@ -141,8 +141,9 @@ public class MtgDataUtility {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Returns a sorted list (on the card's name) of all the cards
+	 * @return the list with all the cards available
+	 * @see Collections#unmodifiableList(List)
 	 */
 	public List<MtgCard> getMtgCards() {
 
@@ -201,9 +202,12 @@ public class MtgDataUtility {
 
 		this.sets = new HashSet<MtgSet>(ESTIMATED_NUMBER_OF_SETS);
 		this.cards = new ArrayList<MtgCard>(ESTIMATED_NUMBER_OF_CARDS);
+		
 		LOGGER.trace("Start to load MTG data");
+		
 		loadDataFromFile(jsonFilepath);
-		initializeCardsSet();
+		initializeCardsList();
+		
 		LOGGER.trace("MTG Data succesfully loaded");
 	}
 
@@ -259,7 +263,7 @@ public class MtgDataUtility {
 	 * @see Collections#sort(List)
 	 * @see Comparable
 	 */
-	private void initializeCardsSet() {
+	private void initializeCardsList() {
 
 		Iterator<MtgSet> it = this.sets.iterator();
 
