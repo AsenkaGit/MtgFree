@@ -124,7 +124,7 @@ public class Card extends Observable {
 
 	public void setLocation(final double x, final double y) {
 
-		// If one of the value has changed...
+		// If one of the value has changed
 		if (x != this.location.getX() || y != this.location.getY()) {
 			this.location.setLocation(x, y);
 			super.setChanged();
