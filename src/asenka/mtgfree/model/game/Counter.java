@@ -1,13 +1,19 @@
 package asenka.mtgfree.model.game;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 /**
  * 
  * @author asenka
  *
  */
-public class Counter {
+public class Counter implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6713400592234603589L;
 
 	/**
 	 * The value display by the counter (it could be empty)
