@@ -741,7 +741,7 @@ public class MtgCard implements Serializable, Comparable<MtgCard> {
 	@Override
 	public String toString() {
 
-		return "Card [" + name + ", " + Arrays.toString(colorIdentity) + ", " + type + ", " + rarity + ", " + multiverseid + ", "
+		return "MtgCard [" + name + ", " + Arrays.toString(colorIdentity) + ", " + type + ", " + rarity + ", " + multiverseid + ", "
 				+ mciNumber + "]";
 	}
 

@@ -78,7 +78,7 @@ public class MtgLegality implements Serializable {
 	@Override
 	public String toString() {
 
-		return "Legality [" + format + ", " + legality + "]";
+		return "MtgLegality [" + format + ", " + legality + "]";
 	}
 
 	@Override

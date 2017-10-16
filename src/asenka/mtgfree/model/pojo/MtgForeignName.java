@@ -101,7 +101,7 @@ public class MtgForeignName implements Serializable {
 	@Override
 	public String toString() {
 
-		return "ForeignName [" + language + ", " + name + ", " + multiverseid + "]";
+		return "MtgForeignName [" + language + ", " + name + ", " + multiverseid + "]";
 	}
 
 	@Override

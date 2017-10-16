@@ -77,7 +77,7 @@ public class MtgRuling implements Serializable {
 	@Override
 	public String toString() {
 
-		return "Ruling [" + date + ", " + text + "]";
+		return "MtgRuling [" + date + ", " + text + "]";
 	}
 
 	@Override

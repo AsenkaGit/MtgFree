@@ -240,7 +240,7 @@ public class MtgSet implements Serializable {
 	@Override
 	public String toString() {
 
-		return "Set [" + name + ", " + code + ", " + releaseDate + ", " + type + ", " + block + "]";
+		return "MtgSet [" + name + ", " + code + ", " + releaseDate + ", " + type + ", " + block + "]";
 	}
 
 	@Override
