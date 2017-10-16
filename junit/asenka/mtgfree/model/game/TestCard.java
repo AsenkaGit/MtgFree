@@ -27,6 +27,16 @@ public class TestCard {
 		this.dataUtility = MtgDataUtility.getInstance();
 		this.observerCalled = false;
 	}
+	
+	@Test
+	public void testDoubleFacedCards() {
+		
+		Card doubleFacedCard = new Card(dataUtility.getMtgCard("Chalice OF Life"));
+	
+		assertEquals("double-faced", doubleFacedCard.getLayout());
+		assertEquals("Chalice of Life", doubleFacedCard.getPrimaryCardData().getName());
+		assertEquals("Chalice of Death", doubleFacedCard.getSecondaryCardData().getName());
+	}
 
 	@Test
 	public void testCard() {

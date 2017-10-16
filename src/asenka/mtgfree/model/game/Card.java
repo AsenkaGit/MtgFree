@@ -10,6 +10,7 @@ import java.util.Set;
 
 import asenka.mtgfree.model.events.CardEvent;
 import asenka.mtgfree.model.pojo.MtgCard;
+import asenka.mtgfree.model.utilities.json.MtgDataUtility;
 
 /**
  * 
@@ -18,8 +19,7 @@ import asenka.mtgfree.model.pojo.MtgCard;
  *
  */
 public class Card extends Observable implements Serializable {
-	
-	
+
 	/**
 	 * 
 	 */
@@ -29,17 +29,22 @@ public class Card extends Observable implements Serializable {
 	 * The counter used to generated card battle id
 	 */
 	private static long battleIdCounter = 0;
-	
+
 	/**
-	 * The ID of the card on the battlefield. It is automativally generated when
-	 * the card is created and does not change
+	 * The ID of the card on the battlefield. It is automativally generated when the card is created and does not change
 	 */
 	private final long battleId;
 
 	/**
-	 * The data of the card (name, text, color(s), type(s), etc...
+	 * The primary card data.
 	 */
-	private final MtgCard cardData;
+	private final MtgCard primaryCardData;
+
+	/**
+	 * The secondary card data. It will remain null 99% of the time, but there are some cards with 2 cards on it (double-faced,
+	 * split, flip)
+	 */
+	private final MtgCard secondaryCardData;
 
 	/**
 	 * Is the card tapped or not. Only available while a card is on the battlefield. This value is useless in other contexts
@@ -82,28 +87,53 @@ public class Card extends Observable implements Serializable {
 
 		super();
 		this.battleId = ++Card.battleIdCounter;
-		this.cardData = cardData;
+		this.primaryCardData = cardData;
 		this.visible = true;
 		this.revealed = false;
 		this.tapped = false;
 		this.location = new Point2D.Double(-1.0, -1.0);
 		this.associatedCards = new LinkedList<Card>();
 		this.counters = new HashSet<Counter>(2);
+		
+		// Initialize the secondary card data if necessary
+		String[] names = this.primaryCardData.getNames();
+		
+		if (names != null && names.length > 1) {
+			this.secondaryCardData = MtgDataUtility.getInstance().getMtgCard(names[1]);
+		} else {
+			this.secondaryCardData = null;
+		}
 	}
 
 	/**
 	 * @return the battleId
 	 */
 	public long getBattleId() {
-	
+
 		return battleId;
 	}
 
-	public MtgCard getCardData() {
+	/**
+	 * This is the method you will have to use most of the time
+	 * @return the main data about the card
+	 */
+	public MtgCard getPrimaryCardData() {
 
-		return cardData;
+		return primaryCardData;
+	}
+	
+	/**
+	 * This method is only useful when the card layout is not 'normal'
+	 * @return the secondary card data
+	 */
+	public MtgCard getSecondaryCardData() {
+
+		return secondaryCardData;
 	}
 
+	/**
+	 * @return <code>true</code> if the card is tapped
+	 */
 	public boolean isTapped() {
 
 		return tapped;
@@ -118,11 +148,21 @@ public class Card extends Observable implements Serializable {
 		}
 	}
 
+	/**
+	 * Check if the card is visible. If not it, means that you should only be able to see the back of the card.
+	 * @return
+	 */
 	public boolean isVisible() {
 
 		return visible;
 	}
 
+	/**
+	 * Set to <code>true</code> if the card is visible on the battlefield. By default the value is <code>true</code>. The method
+	 * creates a CardEvent to notify the observers.
+	 * 
+	 * @param visible true/false
+	 */
 	public void setVisible(boolean visible) {
 
 		if (this.visible != visible) {
@@ -132,11 +172,22 @@ public class Card extends Observable implements Serializable {
 		}
 	}
 
+	/**
+	 * Use this method only in the context of the player hand. Otherwise this value does not make sense
+	 * 
+	 * @return <code>true</code> if the card is revealed to opponent while on the player hand
+	 */
 	public boolean isRevealed() {
 
 		return revealed;
 	}
 
+	/**
+	 * Set to <code>true</code> if the card should be revealed to other player(s) when it is in the player's hand. By default the
+	 * value is <code>false</code>. The method creates a CardEvent to notify the observers.
+	 * 
+	 * @param revealed true/false
+	 */
 	public void setRevealed(boolean revealed) {
 
 		if (this.revealed != revealed) {
@@ -146,11 +197,21 @@ public class Card extends Observable implements Serializable {
 		}
 	}
 
+	/**
+	 * @return the location of the card : <code>(x, y)</code> where x and y are double values.
+	 */
 	public Point2D.Double getLocation() {
 
 		return location;
 	}
 
+	/**
+	 * Set the location of the card. The method creates a CardEvent to notify the observers.
+	 * 
+	 * @param x the double coordinate for horizontal position
+	 * @param y the double coordinate for vertical position
+	 * @see CardEvent
+	 */
 	public void setLocation(final double x, final double y) {
 
 		// If one of the value has changed
@@ -162,11 +223,21 @@ public class Card extends Observable implements Serializable {
 
 	}
 
+	/**
+	 * @return the list of the cards associated with this card
+	 */
 	public List<Card> getAssociatedCards() {
 
 		return associatedCards;
 	}
 
+	/**
+	 * Associates a card with another (like when a card enchants another, or when an artifact equips a creature). The method
+	 * creates a CardEvent to notify the observers.
+	 * 
+	 * @param card the associated card to add
+	 * @see CardEvent
+	 */
 	public void addAssociatedCard(Card card) {
 
 		if (card != null) {
@@ -176,6 +247,12 @@ public class Card extends Observable implements Serializable {
 		}
 	}
 
+	/**
+	 * Removes an associated card. The method creates a CardEvent to notify the observers.
+	 * 
+	 * @param card the associated card to remove
+	 * @see CardEvent
+	 */
 	public void removeAssociatedCard(Card card) {
 
 		if (this.associatedCards.remove(card)) {
@@ -184,11 +261,34 @@ public class Card extends Observable implements Serializable {
 		}
 	}
 
+	/**
+	 * Removes all the cards associated to this card. The method creates a CardEvent to notify the observers.
+	 * 
+	 * @see CardEvent
+	 */
+	public void clearAssociatedCards() {
+
+		if (!this.associatedCards.isEmpty()) {
+			this.associatedCards.clear();
+			super.setChanged();
+			super.notifyObservers(new CardEvent("clear", "associatedCards", null));
+		}
+	}
+
+	/**
+	 * @return the counters on the cards. It can not be null, but it could be empty
+	 */
 	public Set<Counter> getCounters() {
 
 		return counters;
 	}
 
+	/**
+	 * Adds a counter on the card. The method creates a CardEvent to notify the observers.
+	 * 
+	 * @param counter the counter to add
+	 * @see CardEvent
+	 */
 	public void addCounter(Counter counter) {
 
 		if (counter != null) {
@@ -198,6 +298,12 @@ public class Card extends Observable implements Serializable {
 		}
 	}
 
+	/**
+	 * Removes a counter on the card. The method creates a CardEvent to notify the observers.
+	 * 
+	 * @param counter the counter to remove
+	 * @see CardEvent
+	 */
 	public void removeCounter(Counter counter) {
 
 		if (this.counters.remove(counter)) {
@@ -206,13 +312,38 @@ public class Card extends Observable implements Serializable {
 		}
 	}
 
+	/**
+	 * Removes all the counters on the card. The method creates a CardEvent to notify the observers.
+	 * 
+	 * @see CardEvent
+	 */
+	public void clearCounters() {
+
+		if (!this.counters.isEmpty()) {
+			this.counters.clear();
+			super.setChanged();
+			super.notifyObservers(new CardEvent("clear", "counter", null));
+		}
+	}
+	
+	/**
+	 * The card layout. Possible values: normal, split, flip, double-faced, token, plane, scheme, phenomenon, leveler, vanguard,
+	 * meld. This method is important to know if a card is normal (only one face) or double-faced.
+	 * @return a string with the value of the layout.
+	 * @see MtgCard
+	 */
+	public String getLayout() {
+		
+		return this.primaryCardData.getLayout();
+	}
+
 	@Override
 	public String toString() {
 
-		return "Card [" + battleId + ", " +  (cardData != null ? cardData.getName() : "[no card data]") + ", " + tapped + ", " + visible + ", " + revealed + ", " + location + "]";
+		return "Card [" + battleId + ", " + (primaryCardData != null ? primaryCardData.getName() : "[no card data]") + ", " + tapped + ", "
+				+ visible + ", " + revealed + ", " + location + "]";
 	}
 
-	
 	@Override
 	public int hashCode() {
 
@@ -220,7 +351,7 @@ public class Card extends Observable implements Serializable {
 		int result = 1;
 		result = prime * result + ((associatedCards == null) ? 0 : associatedCards.hashCode());
 		result = prime * result + (int) (battleId ^ (battleId >>> 32));
-		result = prime * result + ((cardData == null) ? 0 : cardData.hashCode());
+		result = prime * result + ((primaryCardData == null) ? 0 : primaryCardData.hashCode());
 		result = prime * result + ((counters == null) ? 0 : counters.hashCode());
 		result = prime * result + ((location == null) ? 0 : location.hashCode());
 		result = prime * result + (revealed ? 1231 : 1237);
@@ -252,10 +383,10 @@ public class Card extends Observable implements Serializable {
 				return false;
 		} else if (!location.equals(other.location))
 			return false;
-		if (cardData == null) {
-			if (other.cardData != null)
+		if (primaryCardData == null) {
+			if (other.primaryCardData != null)
 				return false;
-		} else if (!cardData.equals(other.cardData))
+		} else if (!primaryCardData.equals(other.primaryCardData))
 			return false;
 		if (counters == null) {
 			if (other.counters != null)
@@ -271,14 +402,14 @@ public class Card extends Observable implements Serializable {
 	}
 
 	/**
-	 * Set the value of the battle id counter used to
-	 * generate the card battle id 
+	 * Set the value of the battle id counter used to generate the card battle id
+	 * 
 	 * @param value a long value >= 0
 	 * @throws IllegalArgumentException if value < 0
 	 */
 	public static final void setBattleIdCounter(long value) {
-		
-		if(value < 0) {
+
+		if (value < 0) {
 			throw new IllegalArgumentException("The battle id counter must be >= 0");
 		} else {
 			Card.battleIdCounter = value;
