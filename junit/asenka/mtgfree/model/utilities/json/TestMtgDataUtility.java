@@ -1,17 +1,15 @@
 package asenka.mtgfree.model.utilities.json;
 import static org.junit.Assert.*;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-
-import asenka.mtgfree.model.pojo.MtgCard;
 
 
 public class TestMtgDataUtility {
 	
 	private MtgDataUtility dataUtility;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public void setUpBeforeClass() throws Exception {
 		this.dataUtility = MtgDataUtility.getInstance();
 	}
 

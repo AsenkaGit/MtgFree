@@ -20,7 +20,6 @@ import asenka.mtgfree.model.utilities.json.MtgDataUtility;
  */
 public class Card extends Observable implements Serializable {
 
-
 	/**
 	 * 
 	 */
@@ -95,10 +94,10 @@ public class Card extends Observable implements Serializable {
 		this.location = new Point2D.Double(-1.0, -1.0);
 		this.associatedCards = new LinkedList<Card>();
 		this.counters = new HashSet<Counter>(2);
-		
+
 		// Initialize the secondary card data if necessary
 		String[] names = this.primaryCardData.getNames();
-		
+
 		if (names != null && names.length > 1) {
 			this.secondaryCardData = MtgDataUtility.getInstance().getMtgCard(names[1]);
 		} else {
@@ -116,15 +115,17 @@ public class Card extends Observable implements Serializable {
 
 	/**
 	 * This is the method you will have to use most of the time
+	 * 
 	 * @return the main data about the card
 	 */
 	public MtgCard getPrimaryCardData() {
 
 		return primaryCardData;
 	}
-	
+
 	/**
 	 * This method is only useful when the card layout is not 'normal'
+	 * 
 	 * @return the secondary card data
 	 */
 	public MtgCard getSecondaryCardData() {
@@ -140,6 +141,11 @@ public class Card extends Observable implements Serializable {
 		return tapped;
 	}
 
+	/**
+	 * Set if the card is tapped or not. The method creates a CardEvent to notify the observers.
+	 * 
+	 * @param tapped
+	 */
 	public void setTapped(boolean tapped) {
 
 		if (this.tapped != tapped) {
@@ -151,6 +157,7 @@ public class Card extends Observable implements Serializable {
 
 	/**
 	 * Check if the card is visible. If not it, means that you should only be able to see the back of the card.
+	 * 
 	 * @return
 	 */
 	public boolean isVisible() {
@@ -326,22 +333,23 @@ public class Card extends Observable implements Serializable {
 			super.notifyObservers(new CardEvent("clear", "counter", null));
 		}
 	}
-	
+
 	/**
 	 * The card layout. Possible values: normal, split, flip, double-faced, token, plane, scheme, phenomenon, leveler, vanguard,
 	 * meld. This method is important to know if a card is normal (only one face) or double-faced.
+	 * 
 	 * @return a string with the value of the layout.
 	 * @see MtgCard
 	 */
 	public String getLayout() {
-		
+
 		return this.primaryCardData.getLayout();
 	}
 
 	@Override
 	public String toString() {
 
-		return "Card [" + battleId + ", " + (primaryCardData != null ? primaryCardData.getName() : "[no card data]") + ", " + tapped + ", "
+		return "Card [" + battleId + ", " + (primaryCardData != null ? primaryCardData.getName() + ", " + primaryCardData.getLayout() : "[no card data]") + ", " + tapped + ", "
 				+ visible + ", " + revealed + ", " + location + "]";
 	}
 
@@ -353,6 +361,7 @@ public class Card extends Observable implements Serializable {
 		result = prime * result + ((associatedCards == null) ? 0 : associatedCards.hashCode());
 		result = prime * result + (int) (battleId ^ (battleId >>> 32));
 		result = prime * result + ((primaryCardData == null) ? 0 : primaryCardData.hashCode());
+		result = prime * result + ((secondaryCardData == null) ? 0 : secondaryCardData.hashCode());
 		result = prime * result + ((counters == null) ? 0 : counters.hashCode());
 		result = prime * result + ((location == null) ? 0 : location.hashCode());
 		result = prime * result + (revealed ? 1231 : 1237);
@@ -388,6 +397,11 @@ public class Card extends Observable implements Serializable {
 			if (other.primaryCardData != null)
 				return false;
 		} else if (!primaryCardData.equals(other.primaryCardData))
+			return false;
+		if (secondaryCardData == null) {
+			if (other.secondaryCardData != null)
+				return false;
+		} else if (!secondaryCardData.equals(other.secondaryCardData))
 			return false;
 		if (counters == null) {
 			if (other.counters != null)
