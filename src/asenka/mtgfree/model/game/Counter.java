@@ -55,7 +55,7 @@ public class Counter implements Serializable {
 	@Override
 	public String toString() {
 
-		return "MtgCounter [" + value + ", " + color + "]";
+		return "Counter [" + value + ", " + color + "]";
 	}
 
 	@Override
