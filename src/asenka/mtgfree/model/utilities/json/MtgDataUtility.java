@@ -24,7 +24,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-
 import asenka.mtgfree.model.pojo.MtgCard;
 import asenka.mtgfree.model.pojo.MtgSet;
 
@@ -42,7 +41,7 @@ import asenka.mtgfree.model.pojo.MtgSet;
  *
  */
 public class MtgDataUtility {
-	
+
 	/**
 	 * Log4j logger
 	 */
@@ -58,7 +57,7 @@ public class MtgDataUtility {
 	 * better to have this estimated value to properly initialize the HashSet parameter <code>sets</code>.
 	 */
 	private static final int ESTIMATED_NUMBER_OF_SETS = 215;
-	
+
 	/**
 	 * An estimate int value of the number of MTG cards in the JSON file. the value is 34506 with the default JSON file
 	 */
@@ -73,7 +72,7 @@ public class MtgDataUtility {
 	 * @see Collator
 	 */
 	private static final Comparator<Object> SEARCH_CARD_BY_NAME_COMPARATOR = (Object card, Object name) -> Collator
-			.getInstance(Locale.ENGLISH).compare(((MtgCard) card).getName().toLowerCase(), ((String) name).toLowerCase());
+		.getInstance(Locale.ENGLISH).compare(((MtgCard) card).getName().toLowerCase(), ((String) name).toLowerCase());
 
 	/**
 	 * The unique instance of this class on a JVM. You cannot create more than 1 instance of this object.
@@ -112,17 +111,18 @@ public class MtgDataUtility {
 	 * @see MtgSet
 	 * @see Collections#unmodifiableSet(Set)
 	 */
-	public Set<MtgSet> getMtgSets() {
+	public synchronized Set<MtgSet> getMtgSets() {
 
 		return Collections.unmodifiableSet(this.sets);
 	}
 
 	/**
 	 * Return an MtgSet
+	 * 
 	 * @param code the code of the set (e.g. <code>"AKH", "KLD",</code> etc....). This value is case sensitive
 	 * @return the requested MtgSet according the the code
 	 */
-	public MtgSet getMtgSet(String code) {
+	public synchronized MtgSet getMtgSet(String code) {
 
 		if (code != null) {
 
@@ -136,16 +136,19 @@ public class MtgDataUtility {
 					return set;
 				}
 			}
+			return null;
+		} else {
+			throw new IllegalArgumentException("null value is not supported for the method parameter 'code'");
 		}
-		return null;
 	}
 
 	/**
 	 * Returns a sorted list (on the card's name) of all the cards
+	 * 
 	 * @return the list with all the cards available
 	 * @see Collections#unmodifiableList(List)
 	 */
-	public List<MtgCard> getMtgCards() {
+	public synchronized List<MtgCard> getMtgCards() {
 
 		return Collections.unmodifiableList(this.cards);
 	}
@@ -159,9 +162,16 @@ public class MtgDataUtility {
 	 */
 	public MtgCard getMtgCard(String name) {
 
-		// Use the standard binarySearch with a custom Comparator to compare an instance of MtgCard with an instance of String
-		int index = Collections.binarySearch(this.cards, name, SEARCH_CARD_BY_NAME_COMPARATOR);
-		return index > 0 ? this.cards.get(index) : null;
+		if (name != null) {
+
+			// Use the standard binarySearch with a custom Comparator to compare an instance of MtgCard with an instance of
+			// String
+			int index = Collections.binarySearch(this.cards, name, SEARCH_CARD_BY_NAME_COMPARATOR);
+			return index > 0 ? this.cards.get(index) : null;
+		} else {
+			throw new IllegalArgumentException("null value is not supported for the method parameter 'name'");
+		}
+
 	}
 
 	/**
@@ -169,7 +179,7 @@ public class MtgDataUtility {
 	 * @param code
 	 * @return
 	 */
-	public List<MtgCard> getListOfCardsFromSet(String code) {
+	public synchronized List<MtgCard> getListOfCardsFromSet(String code) {
 
 		MtgSet set = getMtgSet(code);
 		return set != null ? Arrays.asList(set.getCards()) : null;
@@ -202,31 +212,29 @@ public class MtgDataUtility {
 
 		this.sets = new HashSet<MtgSet>(ESTIMATED_NUMBER_OF_SETS);
 		this.cards = new ArrayList<MtgCard>(ESTIMATED_NUMBER_OF_CARDS);
-		
-		LOGGER.trace("Start to load MTG data");
-		
+
 		loadDataFromFile(jsonFilepath);
-		initializeCardsList();
-		
-		LOGGER.trace("MTG Data succesfully loaded");
+
 	}
 
 	/**
-	 * Read the JSON file and load the data from this file into the <code>sets</code> and <code>cards</code> parameters of
-	 * this MtgDataUtility instance.
-	 * @param jsonFilePath the path to the JSON file to parse. The structure of the file must be compliant with
-	 * the method expectation (see the constructor parameters javadoc of this class)
+	 * Read the JSON file and load the data from this file into the <code>sets</code> and <code>cards</code> parameters of this
+	 * MtgDataUtility instance. The cards list is also created and sorted.
 	 * 
+	 * @param jsonFilePath the path to the JSON file to parse. The structure of the file must be compliant with the method
+	 *        expectation (see the constructor parameters javadoc of this class)
 	 */
 	private void loadDataFromFile(String jsonFilePath) {
-		
-		
+
+		LOGGER.trace("Start to load MTG data.");
+		final long start = System.currentTimeMillis();
+
 		final Gson jsonParser = new Gson();
 		FileReader jsonFileReader = null;
 		BufferedReader bufferedJsonFileReader = null;
 
 		try {
-			// Read the JSON file an parse it into a JsonArray 
+			// Read the JSON file an parse it into a JsonArray
 			// TODO Optimization would be nice here (it is this part that take quite a while to load)
 			jsonFileReader = new FileReader(new File(jsonFilePath));
 			bufferedJsonFileReader = new BufferedReader(jsonFileReader);
@@ -237,6 +245,11 @@ public class MtgDataUtility {
 
 				this.sets.add(jsonParser.fromJson(jsonSet, MtgSet.class));
 			}
+			// Fill and sort the cards list
+			initializeCardsList();
+
+			LOGGER.trace("MTG Data succesfully loaded in " + (System.currentTimeMillis() - start) + " ms.");
+
 		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
 			LOGGER.error("Error while loading JSON file with MTG Data", e);
 			throw new RuntimeException(e);
@@ -251,7 +264,7 @@ public class MtgDataUtility {
 					bufferedJsonFileReader.close();
 				}
 			} catch (IOException e) {
-				LOGGER.fatal("Unable to close readers", e);
+				LOGGER.fatal("Unable to close file readers", e);
 				throw new RuntimeErrorException(new Error(e));
 			}
 		}
@@ -277,10 +290,5 @@ public class MtgDataUtility {
 		}
 		// Sort the list of cards according to the implementation of MtgCard.compareTo(...) method (compares the card's name)
 		Collections.sort(this.cards);
-	}
-	
-	public static void main(String[] args) {
-
-		MtgDataUtility.getInstance();
 	}
 }
