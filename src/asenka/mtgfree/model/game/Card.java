@@ -20,10 +20,11 @@ import asenka.mtgfree.model.utilities.json.MtgDataUtility;
  */
 public class Card extends Observable implements Serializable {
 
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6222320505854153936L;
+	private static final long serialVersionUID = -6450719588687307909L;
 
 	/**
 	 * The counter used to generated card battle id
