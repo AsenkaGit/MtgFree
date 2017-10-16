@@ -111,7 +111,7 @@ public class MtgDataUtility {
 	 * @see MtgSet
 	 * @see Collections#unmodifiableSet(Set)
 	 */
-	public synchronized Set<MtgSet> getMtgSets() {
+	public Set<MtgSet> getMtgSets() {
 
 		return Collections.unmodifiableSet(this.sets);
 	}
@@ -122,7 +122,7 @@ public class MtgDataUtility {
 	 * @param code the code of the set (e.g. <code>"AKH", "KLD",</code> etc....). This value is case sensitive
 	 * @return the requested MtgSet according the the code
 	 */
-	public synchronized MtgSet getMtgSet(String code) {
+	public MtgSet getMtgSet(String code) {
 
 		if (code != null) {
 
@@ -148,7 +148,7 @@ public class MtgDataUtility {
 	 * @return the list with all the cards available
 	 * @see Collections#unmodifiableList(List)
 	 */
-	public synchronized List<MtgCard> getMtgCards() {
+	public List<MtgCard> getMtgCards() {
 
 		return Collections.unmodifiableList(this.cards);
 	}
@@ -179,7 +179,7 @@ public class MtgDataUtility {
 	 * @param code
 	 * @return
 	 */
-	public synchronized List<MtgCard> getListOfCardsFromSet(String code) {
+	public List<MtgCard> getListOfCardsFromSet(String code) {
 
 		MtgSet set = getMtgSet(code);
 		return set != null ? Arrays.asList(set.getCards()) : null;
