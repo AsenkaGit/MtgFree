@@ -3,6 +3,7 @@ package asenka.mtgfree.model.game;
 import java.io.Serializable;
 import java.text.Collator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Observable;
 import java.util.Set;
@@ -10,7 +11,7 @@ import java.util.Set;
 import asenka.mtgfree.model.events.PlayerEvent;
 
 /**
- * A player 
+ * A player
  * 
  * @author asenka
  */
@@ -92,6 +93,38 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 		this.exile = new HashSet<Card>();
 		this.selectedDeck = null;
 		this.library = null;
+	}
+
+	/**
+	 * The player draw a card
+	 */
+	public void draw() {
+
+		if (this.library != null) {
+			super.setChanged();
+			super.notifyObservers(new PlayerEvent("draw", "library", new Integer(1)));
+
+			Card card = this.library.draw();
+			this.addCardToHand(card);
+		} else {
+			throw new RuntimeException("The player's library is not ready");
+		}
+	}
+
+	/**
+	 * The player draw x cards
+	 */
+	public void draw(int x) {
+
+		if (this.library != null) {
+			super.setChanged();
+			super.notifyObservers(new PlayerEvent("draw", "library", new Integer(x)));
+
+			List<Card> cards = this.library.draw(x);
+			cards.forEach(card -> this.addCardToHand(card));
+		} else {
+			throw new RuntimeException("The player's library is not ready");
+		}
 	}
 
 	/**

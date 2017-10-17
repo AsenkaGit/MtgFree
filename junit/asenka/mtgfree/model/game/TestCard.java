@@ -24,13 +24,13 @@ public class TestCard {
 	public static void setUpBeforeClass() {
 
 		Logger.getLogger(TestCard.class).setLevel(Level.DEBUG);
-		Logger.getLogger(TestCard.class).debug("Begin Junit test");
+		Logger.getLogger(TestCard.class).debug("--------------------- Begin Junit test ---------------------");
 	}
 
 	@AfterClass
 	public static void afterClass() {
 
-		Logger.getLogger(TestCard.class).debug("End Junit test");
+		Logger.getLogger(TestCard.class).debug("--------------------- End Junit test ---------------------");
 	}
 
 	private MtgDataUtility dataUtility;

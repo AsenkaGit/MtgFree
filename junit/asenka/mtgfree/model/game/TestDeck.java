@@ -22,13 +22,13 @@ public class TestDeck {
 	public static void setUpBeforeClass() {
 
 		Logger.getLogger(TestDeck.class).setLevel(Level.DEBUG);
-		Logger.getLogger(TestDeck.class).debug("Begin Junit test");
+		Logger.getLogger(TestDeck.class).debug("--------------------- Begin Junit test ---------------------");
 	}
 
 	@AfterClass
 	public static void afterClass() {
 
-		Logger.getLogger(TestDeck.class).debug("End Junit test");
+		Logger.getLogger(TestDeck.class).debug("--------------------- End Junit test ---------------------");
 	}
 
 	private MtgDataUtility dataUtility;

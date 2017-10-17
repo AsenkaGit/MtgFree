@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 
+import org.apache.log4j.Logger;
+
 import asenka.mtgfree.model.events.LibraryEvent;
 
 /**
@@ -175,13 +177,15 @@ public class Library extends Observable implements Serializable {
 		// if xFirst is superior at the current number of cards in the library, the parameter value is reduced
 		if (x > this.cards.size()) {
 			x = this.cards.size();
+			Logger.getLogger(this.getClass()).warn("Try to remove more cards than the library have");
 		}
 		List<Card> xFirstCards = new ArrayList<Card>(x);
-
-		for (int i = 0; i < x; i++) {
-			xFirstCards.add(this.cards.remove(i));
-		}
-
+		
+		int i = x;
+		do {
+			xFirstCards.add(this.cards.removeFirst());
+		} while(--i > 0);
+		
 		if (!xFirstCards.isEmpty()) {
 			super.setChanged();
 			super.notifyObservers(new LibraryEvent("draw", "cards", new Integer(x)));

@@ -25,13 +25,13 @@ public class TestLibrary {
 	public static void setUpBeforeClass() {
 		
 		Logger.getLogger(TestLibrary.class).setLevel(Level.DEBUG);
-		Logger.getLogger(TestLibrary.class).debug("Begin Junit test");
+		Logger.getLogger(TestLibrary.class).debug("--------------------- Begin Junit test ---------------------");
 	}
 
 	@AfterClass
 	public static void afterClass() {
 
-		Logger.getLogger(TestLibrary.class).debug("End Junit test");
+		Logger.getLogger(TestLibrary.class).debug("--------------------- End Junit test ---------------------");
 	}
 
 	private MtgDataUtility dataUtility;

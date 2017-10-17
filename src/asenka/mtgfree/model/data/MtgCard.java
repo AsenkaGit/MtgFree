@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.Collator;
 import java.util.Arrays;
 import java.util.Locale;
+
 /**
  * <p>
  * Store all the data related to a card
@@ -27,6 +28,11 @@ public class MtgCard implements Serializable, Comparable<MtgCard> {
 	 * The generated ID for serialization
 	 */
 	private static final long serialVersionUID = -631051945429138079L;
+
+	/**
+	 * A default collator used in the compareTo method to sort the cards according to their names
+	 */
+	private static final Collator COLLATOR = Collator.getInstance(Locale.ENGLISH);
 
 	/**
 	 * A unique id for this card. It is made up by doing an SHA1 hash of setCode + cardName + cardImageName
@@ -253,53 +259,6 @@ public class MtgCard implements Serializable, Comparable<MtgCard> {
 	 */
 	private String source;
 
-	/**
-	 * A default collator used in the compareTo method to sort the cards according to their names
-	 */
-	private static final Collator COLLATOR = Collator.getInstance(Locale.ENGLISH);
-
-	/**
-	 * 
-	 * @param id
-	 * @param layout
-	 * @param name
-	 * @param names
-	 * @param manaCost
-	 * @param cmc
-	 * @param colors
-	 * @param colorIdentity
-	 * @param type
-	 * @param supertypes
-	 * @param types
-	 * @param subtypes
-	 * @param rarity
-	 * @param text
-	 * @param flavor
-	 * @param artist
-	 * @param number
-	 * @param power
-	 * @param toughness
-	 * @param loyalty
-	 * @param multiverseid
-	 * @param variations
-	 * @param imageName
-	 * @param watermark
-	 * @param border
-	 * @param timeshifted
-	 * @param hand
-	 * @param life
-	 * @param reserved
-	 * @param releaseDate
-	 * @param starter
-	 * @param mciNumber
-	 * @param rulings
-	 * @param foreignNames
-	 * @param printings
-	 * @param originalText
-	 * @param originalType
-	 * @param legalities
-	 * @param source
-	 */
 	public MtgCard(String id, String layout, String name, String[] names, String manaCost, float cmc, String[] colors,
 			String[] colorIdentity, String type, String[] supertypes, String[] types, String[] subtypes, String rarity, String text,
 			String flavor, String artist, String number, String power, String toughness, int loyalty, int multiverseid, int[] variations,
