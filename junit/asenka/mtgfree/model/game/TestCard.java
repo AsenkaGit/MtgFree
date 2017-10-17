@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import asenka.mtgfree.model.events.AbstractEvent;
@@ -21,8 +20,7 @@ public class TestCard {
 
 	private boolean observerCalled;
 
-	@BeforeClass
-	public void setUpBeforeClass() throws Exception {
+	public TestCard() {
 
 		this.dataUtility = MtgDataUtility.getInstance();
 		this.observerCalled = false;

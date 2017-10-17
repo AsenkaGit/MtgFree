@@ -13,10 +13,21 @@ import asenka.mtgfree.model.pojo.MtgCard;
 import asenka.mtgfree.model.utilities.json.MtgDataUtility;
 
 /**
- * 
+ * <p>A representation of a card during a MTG game. It stores the data of a card (MtgCard) and data about the state of
+ * the card during the game:</p>
+ * <ul>
+ * <li>Is the card tapped ?</li>
+ * <li>Is the card visible ?</li>
+ * <li>What is the location of the card on the battlefield ?</li>
+ * <li>Is the card associated with another ?</li>
+ * <li>What is the layout of the card ?</li>
+ * <li>Is there any counters on the card ?</li>
+ * </ul>
+ * <p>The class extends {@link Observable} to notify the observers when a value is updated.</p>
  * 
  * @author asenka
- *
+ * @see MtgCard
+ * @see Observable
  */
 public class Card extends Observable implements Serializable {
 
@@ -31,7 +42,7 @@ public class Card extends Observable implements Serializable {
 	private static long battleIdCounter = 0;
 
 	/**
-	 * The ID of the card on the battlefield. It is automativally generated when the card is created and does not change
+	 * The ID of the card on the battlefield. It is automatically generated when the card is created and does not change
 	 */
 	private final long battleId;
 
