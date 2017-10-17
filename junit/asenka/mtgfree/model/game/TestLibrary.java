@@ -179,7 +179,7 @@ public class TestLibrary {
 		displayLibrary(libTest);
 	}
 
-	private static final void displayLibrary(Library library) {
+	public static final void displayLibrary(Library library) {
 
 		for (Card c : library.getCards()) {
 			Logger.getLogger(TestLibrary.class).debug("Card - " + c.getBattleId() + ", " + c.getPrimaryCardData().getName());
