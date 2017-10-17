@@ -14,13 +14,13 @@ public class TestMtgDataUtility {
 	public static void setUpBeforeClass() {
 
 		Logger.getLogger(TestMtgDataUtility.class).setLevel(Level.DEBUG);
-		Logger.getLogger(TestMtgDataUtility.class).debug("Begin Junit test");
+		Logger.getLogger(TestMtgDataUtility.class).debug("--------------------- Begin Junit test ---------------------");
 	}
 
 	@AfterClass
 	public static void afterClass() {
 
-		Logger.getLogger(TestMtgDataUtility.class).debug("End Junit test");
+		Logger.getLogger(TestMtgDataUtility.class).debug("--------------------- End Junit test ---------------------");
 	}
 
 	private MtgDataUtility dataUtility;

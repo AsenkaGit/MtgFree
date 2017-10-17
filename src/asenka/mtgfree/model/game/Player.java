@@ -98,7 +98,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	/**
 	 * The player draw a card
 	 */
-	public void draw() {
+	public Card draw() {
 
 		if (this.library != null) {
 			super.setChanged();
@@ -106,6 +106,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 			Card card = this.library.draw();
 			this.addCardToHand(card);
+			return card;
 		} else {
 			throw new RuntimeException("The player's library is not ready");
 		}
@@ -114,7 +115,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	/**
 	 * The player draw x cards
 	 */
-	public void draw(int x) {
+	public List<Card> draw(int x) {
 
 		if (this.library != null) {
 			super.setChanged();
@@ -122,6 +123,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 			List<Card> cards = this.library.draw(x);
 			cards.forEach(card -> this.addCardToHand(card));
+			return cards;
 		} else {
 			throw new RuntimeException("The player's library is not ready");
 		}
