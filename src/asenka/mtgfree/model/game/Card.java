@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Set;
 
+import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.events.CardEvent;
-import asenka.mtgfree.model.pojo.MtgCard;
 import asenka.mtgfree.model.utilities.json.MtgDataUtility;
 
 /**
@@ -91,8 +91,8 @@ public class Card extends Observable implements Serializable {
 	private Set<Counter> counters;
 
 	/**
-	 * 
-	 * @param cardData
+	 * Constructor of game Card
+	 * @param cardData the MtgCard containing all the data related to the card played
 	 */
 	public Card(MtgCard cardData) {
 

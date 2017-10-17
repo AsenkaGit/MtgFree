@@ -1,4 +1,4 @@
-package asenka.mtgfree.model.pojo;
+package asenka.mtgfree.model.data;
 
 import java.io.Serializable;
 

@@ -10,9 +10,9 @@ import java.util.Observer;
 
 import org.junit.Test;
 
+import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.events.AbstractEvent;
 import asenka.mtgfree.model.events.LibraryEvent;
-import asenka.mtgfree.model.pojo.MtgCard;
 import asenka.mtgfree.model.utilities.json.MtgDataUtility;
 
 
@@ -196,5 +196,4 @@ public class TestLibrary {
 			}
 		}
 	}
-
 }

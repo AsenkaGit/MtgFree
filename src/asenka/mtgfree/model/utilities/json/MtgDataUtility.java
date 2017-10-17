@@ -24,8 +24,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import asenka.mtgfree.model.pojo.MtgCard;
-import asenka.mtgfree.model.pojo.MtgSet;
+
+import asenka.mtgfree.model.data.MtgCard;
+import asenka.mtgfree.model.data.MtgSet;
 
 /**
  * <p>
