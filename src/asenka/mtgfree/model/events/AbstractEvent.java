@@ -4,41 +4,49 @@ import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
-import asenka.mtgfree.model.game.Card;
 
 /**
+ * Abstract class for all the events
+ * 
  * 
  * @author asenka
  *
  */
 public abstract class AbstractEvent implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4640418331069086081L;
 
 	/**
-	 * 
+	 * The generated ID for serialization
+	 */
+	private static final long serialVersionUID = -7482695789283069106L;
+
+	/**
+	 * The type of event: <code>"add", "remove", "set", "clear", "shuffle", ...</code>
 	 */
 	protected final String event;
 
 	/**
-	 * 
+	 * The updated property
 	 */
 	protected final String property;
 
 	/**
-	 * 
+	 * The new value. On some events, it can be <code>null</code>. It must be a implementation
+	 * of {@link Serializable} to make sure that the event can be serialized.
 	 */
 	protected final Serializable value;
 
 	/**
-	 * @param event
-	 * @param property
-	 * @param value
+	 * Abstract constructor. Initializes the value and trace the event.
+	 * 
+	 * @param event the type of event
+	 * @param property the updated property
+	 * @param value the new value
+	 * @see AbstractEvent#event
+	 * @see AbstractEvent#property
+	 * @see AbstractEvent#value
 	 */
-	public AbstractEvent(String event, String property, Serializable value) {
+	protected AbstractEvent(String event, String property, Serializable value) {
 
 		super();
 		this.event = event;
@@ -49,15 +57,15 @@ public abstract class AbstractEvent implements Serializable {
 	}
 
 	/**
-	 * @return
+	 * @return the type of event
 	 */
 	public String getEvent() {
 
 		return event;
 	}
 
-	/**
-	 * @return
+	/** 
+	 * @return the updated property
 	 */
 	public String getProperty() {
 
@@ -65,7 +73,7 @@ public abstract class AbstractEvent implements Serializable {
 	}
 
 	/**
-	 * @return
+	 * @return the new value. It can be <code>null</code>
 	 */
 	public Serializable getValue() {
 
