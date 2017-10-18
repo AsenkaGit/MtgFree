@@ -24,10 +24,11 @@ import java.util.Locale;
  */
 public class MtgCard implements Serializable, Comparable<MtgCard> {
 
+
 	/**
 	 * The generated ID for serialization
 	 */
-	private static final long serialVersionUID = -631051945429138079L;
+	private static final long serialVersionUID = -1538874138546478924L;
 
 	/**
 	 * A default collator used in the compareTo method to sort the cards according to their names

@@ -20,7 +20,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	/**
 	 * The generated ID for serialization
 	 */
-	private static final long serialVersionUID = 8361147401627156413L;
+	private static final long serialVersionUID = -6984024632036631899L;
 
 	/**
 	 * The initial value of the player life points
@@ -78,13 +78,20 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	private Library library;
 
 	/**
+	 * The battlefield reference (it must be the same for all players)
+	 */
+	private final Battlefield battlefield;
+
+	/**
 	 * Build a player
 	 * 
 	 * @param name
 	 */
-	public Player(String name) {
+	public Player(String name, Battlefield battlefield) {
+
 		super();
 		this.name = name;
+		this.battlefield = battlefield;
 		this.lifeCounters = INITIAL_LIFE_COUNTERS;
 		this.poisonCounters = INITIAL_POISON_COUNTERS;
 		this.availableDecks = new HashSet<Deck>();
@@ -149,6 +156,15 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 			super.setChanged();
 			super.notifyObservers(new PlayerEvent("set", "name", name));
 		}
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Battlefield getBattlefield() {
+
+		return this.battlefield;
 	}
 
 	/**
@@ -337,16 +353,36 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	}
 
 	/**
+	 * 
+	 * @param origin
+	 * @param card
+	 * @param x
+	 * @param y
+	 * @param visible
+	 */
+	public void addCardToBattlefield(String origin, Card card, double x, double y, boolean visible) {
+	
+		super.setChanged();
+		super.notifyObservers(new PlayerEvent("add", "battlefield", card));
+		
+		checkAndRemoveFromOrigin(origin, card);
+		this.battlefield.addCard(card, x, y, visible);
+	}
+
+	/**
 	 * Removes a card from the hand area of the player
 	 * 
 	 * @param deck the deck to remove
 	 * @see PlayerEvent
 	 */
-	public void removeAvailableDeck(Deck deck) {
+	public boolean removeAvailableDeck(Deck deck) {
 
 		if (this.availableDecks.remove(deck)) {
 			super.setChanged();
 			super.notifyObservers(new PlayerEvent("remove", "availableDecks", deck));
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -356,11 +392,14 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	 * @param card the card to remove
 	 * @see PlayerEvent
 	 */
-	public void removeCardFromHand(Card card) {
+	public boolean removeCardFromHand(Card card) {
 
 		if (this.hand.remove(card)) {
 			super.setChanged();
 			super.notifyObservers(new PlayerEvent("remove", "hand", card));
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -370,11 +409,14 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	 * @param card the card to remove
 	 * @see PlayerEvent
 	 */
-	public void removeCardFromGraveyard(Card card) {
+	public boolean removeCardFromGraveyard(Card card) {
 
 		if (this.graveyard.remove(card)) {
 			super.setChanged();
 			super.notifyObservers(new PlayerEvent("remove", "graveyard", card));
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -384,11 +426,32 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	 * @param card the card to remove
 	 * @see PlayerEvent
 	 */
-	public void removeCardFromExile(Card card) {
+	public boolean removeCardFromExile(Card card) {
 
 		if (this.exile.remove(card)) {
 			super.setChanged();
 			super.notifyObservers(new PlayerEvent("remove", "exile", card));
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+
+	/**
+	 * Removes a card from the exile area of the player
+	 * 
+	 * @param card the card to remove
+	 * @see PlayerEvent
+	 */
+	public boolean removeCardFromBattlefield(Card card) {
+
+		if (this.battlefield.remove(card)) {
+			super.setChanged();
+			super.notifyObservers(new PlayerEvent("remove", "battlefield", card));
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -436,6 +499,49 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 		// Uses the default collator to sort the players by their names
 		return Collator.getInstance(Locale.getDefault()).compare(this.name, otherPlayer.name);
+	}
+
+	/**
+	 * Removes the card from the declared origin. If the card is not found in the origin collection,
+	 * an exception is raised
+	 * @param origin the origin of the card to play. Legal values are : <code>[hand, graveyard, exile, library]</code>
+	 * @param card the card to check and remove
+	 * @throws IllegalArgumentException if  <code>code</code> is not a legal value
+	 * @throws RuntimeException if the card is not in the origin collection
+	 */
+	private void checkAndRemoveFromOrigin(String origin, Card card) throws IllegalArgumentException, RuntimeException {
+	
+		String errorMessage = null;
+	
+		switch (origin) {
+			case "hand":
+				if (!this.removeCardFromHand(card)) {
+					errorMessage = "The card n°" + card.getBattleId() + " is not in the player's hand";
+				} 
+				break;
+			case "graveyard":
+				if (!this.removeCardFromGraveyard(card)) {
+					errorMessage = "The card n°" + card.getBattleId() + " is not in the players graveyard area";
+				}
+				break;
+			case "exile":
+				if (!this.removeCardFromExile(card)) {
+					errorMessage = "The card n°" + card.getBattleId() + " is not in the players exile area";
+				}
+				break;
+			case "library":
+				if (!this.library.remove(card)) {
+					errorMessage = "The card n°" + card.getBattleId() + " is not in the player's library";
+				}
+				break;
+			default:
+				throw new IllegalArgumentException("Origin value (" + origin + ") is unknown. Only legal values are "
+						+ "[hand, graveyard, exile, library]");
+		}
+		if (errorMessage != null) {
+			throw new RuntimeException(errorMessage);
+		}
+	
 	}
 
 }

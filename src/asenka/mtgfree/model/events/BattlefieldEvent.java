@@ -8,15 +8,15 @@ import java.io.Serializable;
  * @author asenka
  * @see Card
  */
-public class CardEvent extends AbstractEvent {
+public class BattlefieldEvent extends AbstractEvent {
 
 	/**
 	 * The generated id for serialization
 	 */
-	private static final long serialVersionUID = -1325290049137592105L;
+	private static final long serialVersionUID = 3947866940496054884L;
 
 	/**
-	 * Build a CardEvent 
+	 * Build a BattlefieldEvent 
 	 * @param event the type of event
 	 * @param property the updated property
 	 * @param value the new value
@@ -24,7 +24,7 @@ public class CardEvent extends AbstractEvent {
 	 * @see AbstractEvent#property
 	 * @see AbstractEvent#value
 	 */
-	public CardEvent(String event, String property, Serializable value) {
+	public BattlefieldEvent(String event, String property, Serializable value) {
 
 		super(event, property, value);
 	}

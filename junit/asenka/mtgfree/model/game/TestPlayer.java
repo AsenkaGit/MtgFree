@@ -44,7 +44,7 @@ public class TestPlayer {
 	@Test
 	public void testPlayer() throws Exception {
 		
-		Player playerTest = new Player("Asenka");
+		Player playerTest = new Player("Asenka", new Battlefield());
 		new TestPlayerObserver(playerTest);
 		
 		Deck deck = new Deck("Test deck", "");
