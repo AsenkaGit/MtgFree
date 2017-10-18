@@ -16,13 +16,15 @@ import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.events.DeckEvent;
 
 /**
- * The class represent a deck. The deck is devised in two zones : 
+ * The class represent a deck. The deck is devised in two zones :
  * <ul>
  * <li>The main zone : the cards to play</li>
  * <li>The sideboard zone : the cards you keep in reserve</li>
  * </ul>
- * <p>Each zone is represented by a map where the key is an MtgCard and the value is an Integer for the
- * number of time this cards is in the zone</p>
+ * <p>
+ * Each zone is represented by a map where the key is an MtgCard and the value is an Integer for the number of time this cards is
+ * in the zone
+ * </p>
  * 
  * @author asenka
  * @see Map
@@ -80,6 +82,22 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 		this.sideboard = new HashMap<MtgCard, Integer>(0);
 		this.description = decription != null ? decription : "";
 		this.name = name != null ? name : "[No Name]";
+	}
+
+	/**
+	 * @return the number of cards in the main zone of this deck
+	 */
+	public int sizeOfMain() {
+
+		return numberOfCards(this.main);
+	}
+
+	/**
+	 * @return the number of cards in the sideboard zone of this deck
+	 */
+	public int sizeOfSideboard() {
+
+		return numberOfCards(this.sideboard);
 	}
 
 	/**
@@ -329,7 +347,7 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 	 * @param map a map with integer values
 	 * @return the sum of all the integer values in the map
 	 */
-	public static int numberOfCards(Map<MtgCard, Integer> map) {
+	private static int numberOfCards(Map<MtgCard, Integer> map) {
 
 		Collection<Integer> values = map.values();
 		int result = 0;

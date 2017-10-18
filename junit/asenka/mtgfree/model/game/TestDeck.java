@@ -58,8 +58,8 @@ public class TestDeck {
 		this.deck.addCardToSideboard(dataUtility.getMtgCard("black lotus"), 1);
 		this.deck.addCardToSideboard(dataUtility.getMtgCard("Aegis of the Gods"), 3);
 		
-		assertEquals(60, Deck.numberOfCards(this.deck.getMain()));
-		assertEquals(4, Deck.numberOfCards(this.deck.getSideboard()));
+		assertEquals(60, this.deck.sizeOfMain());
+		assertEquals(4, this.deck.sizeOfSideboard());
 		assertTrue(observerCalled);
 	}
 
@@ -74,10 +74,10 @@ public class TestDeck {
 	public void testRemoveFrom() {
 		
 		this.deck.removeCardFromMain(dataUtility.getMtgCard("Aegis of the Gods"));
-		assertEquals(60, Deck.numberOfCards(deck.getMain()));
+		assertEquals(60, this.deck.sizeOfMain());
 		
 		this.deck.removeCardFromMain(dataUtility.getMtgCard("Plains"));
-		assertEquals(59, Deck.numberOfCards(deck.getMain()));
+		assertEquals(59, this.deck.sizeOfMain());
 	}
 	
 	/*
