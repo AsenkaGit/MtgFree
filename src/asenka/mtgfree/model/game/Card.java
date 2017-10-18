@@ -39,7 +39,7 @@ public class Card extends Observable implements Serializable {
 	/**
 	 * The counter used to generated card battle id
 	 */
-	private static long battleIdCounter = 0;
+	private static long battleIdCounter = 1;
 
 	/**
 	 * The ID of the card on the battlefield. It is automatically generated when the card is created and does not change
@@ -97,12 +97,12 @@ public class Card extends Observable implements Serializable {
 	public Card(MtgCard cardData) {
 
 		super();
-		this.battleId = ++Card.battleIdCounter;
+		this.battleId = Card.battleIdCounter++;
 		this.primaryCardData = cardData;
 		this.visible = true;
 		this.revealed = false;
 		this.tapped = false;
-		this.location = new Point2D.Double(-1.0, -1.0);
+		this.location = new Point2D.Double(0.0, 0.0);
 		this.associatedCards = new LinkedList<Card>();
 		this.counters = new HashSet<Counter>(2);
 
