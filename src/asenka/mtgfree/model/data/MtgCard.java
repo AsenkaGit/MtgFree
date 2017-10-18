@@ -260,11 +260,12 @@ public class MtgCard implements Serializable, Comparable<MtgCard> {
 	private String source;
 
 	public MtgCard(String id, String layout, String name, String[] names, String manaCost, float cmc, String[] colors,
-			String[] colorIdentity, String type, String[] supertypes, String[] types, String[] subtypes, String rarity, String text,
-			String flavor, String artist, String number, String power, String toughness, int loyalty, int multiverseid, int[] variations,
-			String imageName, String watermark, String border, boolean timeshifted, int hand, int life, boolean reserved,
-			String releaseDate, boolean starter, String mciNumber, MtgRuling[] rulings, MtgForeignName[] foreignNames, String[] printings,
-			String originalText, String originalType, MtgLegality[] legalities, String source) {
+		String[] colorIdentity, String type, String[] supertypes, String[] types, String[] subtypes, String rarity, String text,
+		String flavor, String artist, String number, String power, String toughness, int loyalty, int multiverseid, int[] variations,
+		String imageName, String watermark, String border, boolean timeshifted, int hand, int life, boolean reserved, String releaseDate,
+		boolean starter, String mciNumber, MtgRuling[] rulings, MtgForeignName[] foreignNames, String[] printings, String originalText,
+		String originalType, MtgLegality[] legalities, String source) {
+
 		super();
 		this.id = id;
 		this.layout = layout;
@@ -700,54 +701,27 @@ public class MtgCard implements Serializable, Comparable<MtgCard> {
 	@Override
 	public String toString() {
 
-		return "MtgCard [" + name + ", " + Arrays.toString(colorIdentity) + ", " + type + ", " + rarity + ", " + multiverseid + ", "
-				+ mciNumber + "]";
+		return "MtgCard [" + name + ", " + manaCost +  ", " + type + ", " + rarity + ", " + multiverseid
+			+ "]";
 	}
 
+	
+	
 	@Override
 	public int hashCode() {
 
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((artist == null) ? 0 : artist.hashCode());
-		result = prime * result + ((border == null) ? 0 : border.hashCode());
 		result = prime * result + Float.floatToIntBits(cmc);
 		result = prime * result + Arrays.hashCode(colorIdentity);
 		result = prime * result + Arrays.hashCode(colors);
-		result = prime * result + ((flavor == null) ? 0 : flavor.hashCode());
-		result = prime * result + Arrays.hashCode(foreignNames);
-		result = prime * result + hand;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((imageName == null) ? 0 : imageName.hashCode());
 		result = prime * result + ((layout == null) ? 0 : layout.hashCode());
-		result = prime * result + Arrays.hashCode(legalities);
-		result = prime * result + life;
-		result = prime * result + loyalty;
-		result = prime * result + ((manaCost == null) ? 0 : manaCost.hashCode());
-		result = prime * result + ((mciNumber == null) ? 0 : mciNumber.hashCode());
-		result = prime * result + multiverseid;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + Arrays.hashCode(names);
-		result = prime * result + ((number == null) ? 0 : number.hashCode());
-		result = prime * result + ((originalText == null) ? 0 : originalText.hashCode());
-		result = prime * result + ((originalType == null) ? 0 : originalType.hashCode());
 		result = prime * result + ((power == null) ? 0 : power.hashCode());
-		result = prime * result + Arrays.hashCode(printings);
-		result = prime * result + ((rarity == null) ? 0 : rarity.hashCode());
-		result = prime * result + ((releaseDate == null) ? 0 : releaseDate.hashCode());
-		result = prime * result + (reserved ? 1231 : 1237);
-		result = prime * result + Arrays.hashCode(rulings);
-		result = prime * result + ((source == null) ? 0 : source.hashCode());
-		result = prime * result + (starter ? 1231 : 1237);
-		result = prime * result + Arrays.hashCode(subtypes);
-		result = prime * result + Arrays.hashCode(supertypes);
-		result = prime * result + ((text == null) ? 0 : text.hashCode());
-		result = prime * result + (timeshifted ? 1231 : 1237);
 		result = prime * result + ((toughness == null) ? 0 : toughness.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		result = prime * result + Arrays.hashCode(types);
-		result = prime * result + Arrays.hashCode(variations);
-		result = prime * result + ((watermark == null) ? 0 : watermark.hashCode());
 		return result;
 	}
 
@@ -761,121 +735,28 @@ public class MtgCard implements Serializable, Comparable<MtgCard> {
 		if (getClass() != obj.getClass())
 			return false;
 		MtgCard other = (MtgCard) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (mciNumber != other.mciNumber)
-			return false;
-		if (multiverseid != other.multiverseid)
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (artist == null) {
-			if (other.artist != null)
-				return false;
-		} else if (!artist.equals(other.artist))
-			return false;
-		if (border == null) {
-			if (other.border != null)
-				return false;
-		} else if (!border.equals(other.border))
-			return false;
 		if (Float.floatToIntBits(cmc) != Float.floatToIntBits(other.cmc))
 			return false;
 		if (!Arrays.equals(colorIdentity, other.colorIdentity))
 			return false;
 		if (!Arrays.equals(colors, other.colors))
 			return false;
-		if (flavor == null) {
-			if (other.flavor != null)
-				return false;
-		} else if (!flavor.equals(other.flavor))
-			return false;
-		if (!Arrays.equals(foreignNames, other.foreignNames))
-			return false;
-		if (hand != other.hand)
-			return false;
-		if (imageName == null) {
-			if (other.imageName != null)
-				return false;
-		} else if (!imageName.equals(other.imageName))
-			return false;
 		if (layout == null) {
 			if (other.layout != null)
 				return false;
 		} else if (!layout.equals(other.layout))
 			return false;
-		if (!Arrays.equals(legalities, other.legalities))
-			return false;
-		if (life != other.life)
-			return false;
-		if (loyalty != other.loyalty)
-			return false;
-		if (manaCost == null) {
-			if (other.manaCost != null)
+		if (name == null) {
+			if (other.name != null)
 				return false;
-		} else if (!manaCost.equals(other.manaCost))
+		} else if (!name.equals(other.name))
 			return false;
 		if (!Arrays.equals(names, other.names))
-			return false;
-		if (number == null) {
-			if (other.number != null)
-				return false;
-		} else if (!number.equals(other.number))
-			return false;
-		if (originalText == null) {
-			if (other.originalText != null)
-				return false;
-		} else if (!originalText.equals(other.originalText))
-			return false;
-		if (originalType == null) {
-			if (other.originalType != null)
-				return false;
-		} else if (!originalType.equals(other.originalType))
 			return false;
 		if (power == null) {
 			if (other.power != null)
 				return false;
 		} else if (!power.equals(other.power))
-			return false;
-		if (!Arrays.equals(printings, other.printings))
-			return false;
-		if (rarity == null) {
-			if (other.rarity != null)
-				return false;
-		} else if (!rarity.equals(other.rarity))
-			return false;
-		if (releaseDate == null) {
-			if (other.releaseDate != null)
-				return false;
-		} else if (!releaseDate.equals(other.releaseDate))
-			return false;
-		if (reserved != other.reserved)
-			return false;
-		if (!Arrays.equals(rulings, other.rulings))
-			return false;
-		if (source == null) {
-			if (other.source != null)
-				return false;
-		} else if (!source.equals(other.source))
-			return false;
-		if (starter != other.starter)
-			return false;
-		if (!Arrays.equals(subtypes, other.subtypes))
-			return false;
-		if (!Arrays.equals(supertypes, other.supertypes))
-			return false;
-		if (text == null) {
-			if (other.text != null)
-				return false;
-		} else if (!text.equals(other.text))
-			return false;
-		if (timeshifted != other.timeshifted)
 			return false;
 		if (toughness == null) {
 			if (other.toughness != null)
@@ -888,13 +769,6 @@ public class MtgCard implements Serializable, Comparable<MtgCard> {
 		} else if (!type.equals(other.type))
 			return false;
 		if (!Arrays.equals(types, other.types))
-			return false;
-		if (!Arrays.equals(variations, other.variations))
-			return false;
-		if (watermark == null) {
-			if (other.watermark != null)
-				return false;
-		} else if (!watermark.equals(other.watermark))
 			return false;
 		return true;
 	}

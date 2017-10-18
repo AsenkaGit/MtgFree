@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.function.Predicate;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -23,7 +24,7 @@ public class TestLibrary {
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
-		
+
 		Logger.getLogger(TestLibrary.class).setLevel(Level.DEBUG);
 		Logger.getLogger(TestLibrary.class).debug("--------------------- Begin Junit test ---------------------");
 	}
@@ -138,6 +139,19 @@ public class TestLibrary {
 		assertEquals(60, libTest.getCards().size());
 		assertEquals(this.cards.get(0), libTest.draw());
 		assertEquals(59, libTest.getCards().size());
+		
+		Predicate<Card> filterInstant = (card -> card.getPrimaryCardData().getType().contains("Instant"));
+		Predicate<Card> filterLand = (card -> card.getPrimaryCardData().getType().contains("Land"));
+		Predicate<Card> filterCreature = (card -> card.getPrimaryCardData().getType().contains("Creature"));
+		Predicate<Card> filterEnchantment = (card -> card.getPrimaryCardData().getType().contains("Enchantment"));
+		Predicate<Card> filterInstantOrEnchantment = filterInstant.or(filterEnchantment);
+
+		assertEquals(4, this.cards.stream().filter(filterInstant).count());
+		assertEquals(28, this.cards.stream().filter(filterLand).count());
+		assertEquals(20, this.cards.stream().filter(filterCreature).count());
+		assertEquals(4, this.cards.stream().filter(filterEnchantment).count());
+		assertEquals(8, this.cards.stream().filter(filterInstantOrEnchantment).count());
+
 
 		List<Card> draws = libTest.draw(7);
 		assertEquals(7, draws.size());
