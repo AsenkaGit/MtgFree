@@ -13,6 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import asenka.mtgfree.model.data.MtgCard;
+import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 
 public class TestMtgDataUtility {
 

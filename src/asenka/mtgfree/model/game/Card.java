@@ -9,8 +9,8 @@ import java.util.Observable;
 import java.util.Set;
 
 import asenka.mtgfree.model.data.MtgCard;
+import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.model.events.CardEvent;
-import asenka.mtgfree.model.utilities.json.MtgDataUtility;
 
 /**
  * <p>A representation of a card during a MTG game. It stores the data of a card (MtgCard) and data about the state of

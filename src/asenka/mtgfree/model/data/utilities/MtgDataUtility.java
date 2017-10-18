@@ -1,4 +1,4 @@
-package asenka.mtgfree.model.utilities.json;
+package asenka.mtgfree.model.data.utilities;
 
 import java.io.BufferedReader;
 import java.io.File;

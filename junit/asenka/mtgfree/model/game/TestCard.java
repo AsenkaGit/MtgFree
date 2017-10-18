@@ -14,9 +14,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.model.events.AbstractEvent;
 import asenka.mtgfree.model.events.CardEvent;
-import asenka.mtgfree.model.utilities.json.MtgDataUtility;
 
 public class TestCard {
 
