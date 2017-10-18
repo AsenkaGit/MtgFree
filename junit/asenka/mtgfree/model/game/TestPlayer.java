@@ -64,13 +64,13 @@ public class TestPlayer {
 		playerTest.setSelectedDeck(deck);
 		playerTest.setLibrary(deck.getLibrary());
 		
-		playerTest.draw(7);
-		
-		assertEquals(7, playerTest.getHand().size());
-		assertEquals(53, playerTest.getLibrary().getCards().size());
-		
-		Card card = playerTest.draw();
-		assertTrue(playerTest.getHand().contains(card));
+//		playerTest.draw(7);
+//		
+//		assertEquals(7, playerTest.getHand().size());
+//		assertEquals(53, playerTest.getLibrary().getCards().size());
+//		
+//		Card card = playerTest.draw();
+//		assertTrue(playerTest.getHand().contains(card));
 		
 		assertTrue(observerCalled);
 	}
