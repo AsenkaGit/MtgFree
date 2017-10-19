@@ -1,6 +1,5 @@
 package asenka.mtgfree.controlers.game;
 
-import java.util.Arrays;
 import java.util.List;
 
 import asenka.mtgfree.model.game.Card;
