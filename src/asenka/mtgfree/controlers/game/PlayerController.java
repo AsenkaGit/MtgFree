@@ -31,9 +31,18 @@ public class PlayerController extends Controller<Player> {
 		this.data.getBattlefield().addCard(card);
 	}
 	
-	public void removeCardFromBattlefield(Card card) {
+	public void sendToGraveyard(Card card) {
+		this.data.addCardToGraveyard(card);
+	}
+	
+	public void exile(Card card) {
+		this.data.addCardToExile(card);
+	}
+
+	
+	public void removeCardFromBattlefield(Card card) throws Exception {
 		
-		// TODO
+		this.data.getBattlefield().remove(card);
 	}
 
 	public void playFromHand(Card card, boolean visible, double x, double y) {
@@ -92,7 +101,5 @@ public class PlayerController extends Controller<Player> {
 
 		this.data.getLibrary().shuffle();
 	}
-	
-	
 
 }
