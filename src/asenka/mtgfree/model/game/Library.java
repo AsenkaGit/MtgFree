@@ -55,6 +55,14 @@ public class Library extends Observable implements Serializable {
 
 		return initialSize;
 	}
+	
+	/**
+	 * @return the current size (number of cards) in the library
+	 */
+	public int size() {
+		
+		return this.cards.size();
+	}
 
 	/**
 	 * Returns an unmodifiable list of Cards

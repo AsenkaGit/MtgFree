@@ -54,6 +54,15 @@ public class Battlefield extends Observable implements Serializable {
 	}
 
 	/**
+	 * 
+	 * @return
+	 */
+	public int size() {
+	
+		return this.cards.size();
+	}
+
+	/**
 	 * Adds a card on the battlefield and notify the observers
 	 * @param card the card to add
 	 * @see BattlefieldEvent

@@ -186,6 +186,24 @@ public class PlayerController extends Controller<Player> {
 	}
 
 	/**
+	 * 
+	 * @param lifeCounters
+	 */
+	public void setLifeCounters(int lifeCounters) {
+
+		this.data.setLifeCounters(lifeCounters);
+	}
+	
+	/**
+	 * 
+	 * @param poisonCounters
+	 */
+	public void setPoisonCounters(int poisonCounters) {
+		
+		this.data.setPoisonCounters(poisonCounters);
+	}
+
+	/**
 	 * Try to remove a card according to the origin. If the card is really removed from the origin collection, then everything is
 	 * okay. But otherwise, it means that the origin is wrong because the card is not is the origin collection.
 	 * 

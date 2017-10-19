@@ -215,7 +215,6 @@ public class MtgDataUtility {
 		this.cards = new ArrayList<MtgCard>(ESTIMATED_NUMBER_OF_CARDS);
 
 		loadDataFromFile(jsonFilepath);
-
 	}
 
 	/**
