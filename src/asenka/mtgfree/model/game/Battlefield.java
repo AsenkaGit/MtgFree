@@ -20,7 +20,7 @@ public class Battlefield extends Observable implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 4503726991451727009L;
-	
+
 	/**
 	 * 
 	 */
@@ -39,9 +39,8 @@ public class Battlefield extends Observable implements Serializable {
 	 */
 	public Set<Card> getCards() {
 
-		synchronized (this.cards) {
-			return cards;
-		}
+		return cards;
+
 	}
 
 	/**
@@ -50,25 +49,10 @@ public class Battlefield extends Observable implements Serializable {
 	 */
 	public void addCard(Card card) {
 
-		synchronized (this.cards) {
-			this.cards.add(card);
-		}
+		this.cards.add(card);
+
 		super.setChanged();
 		super.notifyObservers(new BattlefieldEvent("add", "cards", card));
-	}
-
-	/**
-	 * 
-	 * @param card
-	 * @param x
-	 * @param y
-	 * @param visible
-	 */
-	public void addCard(Card card, double x, double y, boolean visible) {
-
-		card.setLocation(x, y);
-		card.setVisible(visible);
-		this.addCard(card);
 	}
 
 	/**
@@ -78,14 +62,12 @@ public class Battlefield extends Observable implements Serializable {
 	 */
 	public boolean remove(Card card) {
 
-		synchronized (this.cards) {
-			if (this.cards.remove(card)) {
-				super.setChanged();
-				super.notifyObservers(new BattlefieldEvent("remove", "cards", card));
-				return true;
-			} else {
-				return false;
-			}
+		if (this.cards.remove(card)) {
+			super.setChanged();
+			super.notifyObservers(new BattlefieldEvent("remove", "cards", card));
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -94,9 +76,8 @@ public class Battlefield extends Observable implements Serializable {
 	 */
 	public void clear() {
 
-		synchronized (this.cards) {
-			this.cards.clear();
-		}
+		this.cards.clear();
+
 		super.setChanged();
 		super.notifyObservers(new BattlefieldEvent("clear", "cards", null));
 	}
