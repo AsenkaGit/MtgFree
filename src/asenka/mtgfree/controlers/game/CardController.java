@@ -3,10 +3,45 @@ package asenka.mtgfree.controlers.game;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.Counter;
 
+/**
+ * The controller of a card
+ * 
+ * 
+ * @author asenka
+ *
+ */
 public class CardController extends Controller<Card> {
+	
+	/**
+	 * The controller of the card
+	 */
+	private PlayerController playerController;
 
-	public CardController(Card card) {
+	/**
+	 * 
+	 * @param card
+	 * @param playerController
+	 */
+	public CardController(Card card, PlayerController playerController) {
 		super(card);
+		this.playerController = playerController;
+	}
+
+	/**
+	 * @return the player Controller
+	 */
+	public PlayerController getPlayerController() {
+	
+		return playerController;
+	}
+
+	/**
+	 * Change the controller of the card
+	 * @param playerController the playerController to set
+	 */
+	public void setPlayerController(PlayerController playerController) {
+	
+		this.playerController = playerController;
 	}
 
 	public void setTapped(boolean tapped) {
@@ -68,5 +103,10 @@ public class CardController extends Controller<Card> {
 		} else {
 			throw new IllegalArgumentException("Unable to remove from " + this.data + " the associated card  " + associatedCard);
 		}
+	}
+	
+	public void clearAssociatedCards() {
+
+		this.data.clearAssociatedCards();
 	}
 }

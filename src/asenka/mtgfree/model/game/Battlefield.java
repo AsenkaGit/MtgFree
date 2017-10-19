@@ -42,12 +42,21 @@ public class Battlefield extends Observable implements Serializable {
 		return cards;
 
 	}
+	
+	/**
+	 * 
+	 * @param card
+	 * @return
+	 */
+	public boolean contains(Card card) {
+		return this.cards.contains(card);
+	}
 
 	/**
 	 * 
 	 * @param card
 	 */
-	public void addCard(Card card) {
+	public void add(Card card) {
 
 		this.cards.add(card);
 
