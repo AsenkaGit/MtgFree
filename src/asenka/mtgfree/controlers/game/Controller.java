@@ -9,7 +9,7 @@ import java.util.Observer;
  * @author asenka
  *
  */
-public abstract class AbstractController<T extends Observable> {
+public abstract class Controller<T extends Observable> {
 
 	/**
 	 * 
@@ -24,7 +24,7 @@ public abstract class AbstractController<T extends Observable> {
 	/**
 	 * @param observedData
 	 */
-	protected AbstractController(T observedData) {
+	protected Controller(T observedData) {
 		this.views = new ArrayList<Observer>(2);
 		this.data = observedData;
 	}

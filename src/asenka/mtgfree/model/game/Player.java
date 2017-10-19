@@ -77,7 +77,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	private Library library;
 
 	/**
-	 * The battlefield reference (it must be the same for all players)
+	 * The battlefield reference 
 	 */
 	private final Battlefield battlefield;
 

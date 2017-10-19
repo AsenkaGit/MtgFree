@@ -3,7 +3,7 @@ package asenka.mtgfree.controlers.game;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.Counter;
 
-public class CardController extends AbstractController<Card> {
+public class CardController extends Controller<Card> {
 
 	public CardController(Card card) {
 		super(card);
@@ -29,7 +29,7 @@ public class CardController extends AbstractController<Card> {
 		this.data.setLocation(x, y);
 	}
 
-	public void addCounter(Counter counter) {
+	public void addCounter(Counter counter) throws IllegalArgumentException {
 
 		if (counter == null) {
 			throw new IllegalArgumentException("null counters are not allowed");
@@ -38,7 +38,7 @@ public class CardController extends AbstractController<Card> {
 		}
 	}
 
-	public void removeCounter(Counter counter) {
+	public void removeCounter(Counter counter) throws IllegalArgumentException {
 
 		if (counter == null) {
 			throw new IllegalArgumentException("Try to remove a null counter");
@@ -52,7 +52,7 @@ public class CardController extends AbstractController<Card> {
 		this.data.clearCounters();
 	}
 
-	public void addAssociatedCard(Card associatedCard) {
+	public void addAssociatedCard(Card associatedCard) throws IllegalArgumentException {
 		
 		if (associatedCard != null && !this.data.equals(associatedCard)) {
 			this.data.addAssociatedCard(associatedCard);
@@ -61,7 +61,7 @@ public class CardController extends AbstractController<Card> {
 		}
 	}
 	
-	public void removeAssociatedCard(Card associatedCard) {
+	public void removeAssociatedCard(Card associatedCard) throws IllegalArgumentException {
 
 		if (associatedCard != null && !this.data.equals(associatedCard)) {
 			this.data.removeAssociatedCard(associatedCard);
