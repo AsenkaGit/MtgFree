@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import asenka.mtgfree.controlers.game.PlayerController;
-import asenka.mtgfree.controlers.game.PlayerController.Origin;
+import asenka.mtgfree.controlers.game.Controller.Origin;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.model.game.Battlefield;
 import asenka.mtgfree.model.game.Card;
@@ -68,14 +68,14 @@ public class TestPlayerController {
 
 	@Before
 	public void setUp() {
-		
+
 		Card.setBattleIdCounter(1);
-		
+
 		Library library = null;
 		try {
 			library = testDeck.getLibrary();
 		} catch (Exception e) {
-			fail("Unexcpected exception :" + e.getMessage());
+			fail("Unexpected exception :" + e.getMessage());
 		}
 		Battlefield battlefield = new Battlefield();
 
@@ -90,10 +90,10 @@ public class TestPlayerController {
 		this.libraryView = new TestObserver(this.playerController);
 		this.playerView = new TestObserver(this.playerController);
 	}
-	
-	@Test 
+
+	@Test
 	public void testObservers() {
-		
+
 		assertEquals(3, playerController.getData().countObservers());
 		assertEquals(3, playerController.getData().getLibrary().countObservers());
 		assertEquals(3, playerController.getData().getBattlefield().countObservers());
@@ -112,7 +112,7 @@ public class TestPlayerController {
 
 	@Test
 	public void testDraw() {
-		
+
 		playerController.shuffleLibrary();
 		playerController.draw();
 
@@ -148,7 +148,7 @@ public class TestPlayerController {
 
 	@Test
 	public void testCardLife() {
-		
+
 		playerController.shuffleLibrary();
 
 		final Card card = playerController.getData().getLibrary().get(0);
@@ -173,10 +173,11 @@ public class TestPlayerController {
 		try {
 			playerController.backToHand(card, Origin.BATTLEFIELD);
 			fail("Exception was expected here");
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 
 		playerController.backToHand(card, Origin.EXILE);
-		
+
 		assertTrue(playerController.getData().getHand().contains(card));
 		assertFalse(playerController.getData().getLibrary().contains(card));
 		assertFalse(playerController.getData().getBattlefield().contains(card));

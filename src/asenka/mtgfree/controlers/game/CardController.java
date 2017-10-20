@@ -1,6 +1,6 @@
 package asenka.mtgfree.controlers.game;
 
-import asenka.mtgfree.controlers.game.PlayerController.Origin;
+import asenka.mtgfree.controlers.game.Controller.Origin;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.Counter;
 
