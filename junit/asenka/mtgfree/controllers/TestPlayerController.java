@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -21,8 +19,9 @@ import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.Deck;
 import asenka.mtgfree.model.game.Library;
 import asenka.mtgfree.model.game.Player;
+import asenka.mtgfree.tests.MtgFreeTest;
 
-public class TestPlayerController {
+public class TestPlayerController extends MtgFreeTest {
 
 	private static MtgDataUtility dataUtility;
 
@@ -31,8 +30,9 @@ public class TestPlayerController {
 	@BeforeClass
 	public static void setUpBeforeClass() {
 
-		Logger.getLogger(TestPlayerController.class).setLevel(Level.DEBUG);
-		Logger.getLogger(TestPlayerController.class).debug("--------------------- Begin Junit test ---------------------");
+		System.out.println("====================================================");
+		System.out.println("=========  TestPlayerController(START) =============");
+		System.out.println("====================================================");
 
 		dataUtility = MtgDataUtility.getInstance();
 
@@ -67,8 +67,11 @@ public class TestPlayerController {
 	private TestObserver playerView;
 
 	@Before
+	@Override
 	public void setUp() {
-
+		
+		super.setUp();
+		
 		Card.setBattleIdCounter(1);
 
 		Library library = null;
@@ -188,7 +191,9 @@ public class TestPlayerController {
 	@AfterClass
 	public static void afterClass() {
 
-		Logger.getLogger(TestPlayerController.class).debug("---------------------  End Junit test  ---------------------");
+		System.out.println("====================================================");
+		System.out.println("=========  TestPlayerController (END)  =============");
+		System.out.println("====================================================");
 	}
 
 	private class TestObserver implements Observer {

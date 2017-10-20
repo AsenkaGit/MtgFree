@@ -8,8 +8,6 @@ import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,29 +15,34 @@ import org.junit.Test;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.model.events.AbstractEvent;
 import asenka.mtgfree.model.events.CardEvent;
+import asenka.mtgfree.tests.MtgFreeTest;
 
-public class TestCard {
+public class TestCard extends MtgFreeTest {
+
+	private static MtgDataUtility dataUtility;
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
 
-		Logger.getLogger(TestCard.class).setLevel(Level.DEBUG);
-		Logger.getLogger(TestCard.class).debug("--------------------- Begin Junit test ---------------------");
+		System.out.println("====================================================");
+		System.out.println("=========       TestCard   (START)     =============");
+		System.out.println("====================================================");
+
+		dataUtility = MtgDataUtility.getInstance();
 	}
 
 	@AfterClass
 	public static void afterClass() {
 
-		Logger.getLogger(TestCard.class).debug("--------------------- End Junit test ---------------------");
+		System.out.println("====================================================");
+		System.out.println("=========       TestCard   (END)       =============");
+		System.out.println("====================================================");
 	}
-
-	private MtgDataUtility dataUtility;
 
 	private boolean observerCalled;
 
 	public TestCard() {
 
-		this.dataUtility = MtgDataUtility.getInstance();
 		this.observerCalled = false;
 	}
 

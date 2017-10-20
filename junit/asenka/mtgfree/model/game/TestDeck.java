@@ -6,40 +6,48 @@ import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.model.events.AbstractEvent;
 import asenka.mtgfree.model.events.DeckEvent;
+import asenka.mtgfree.tests.MtgFreeTest;
 
-public class TestDeck {
+public class TestDeck extends MtgFreeTest {
+
+	private static MtgDataUtility dataUtility;
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
 
-		Logger.getLogger(TestDeck.class).setLevel(Level.DEBUG);
-		Logger.getLogger(TestDeck.class).debug("--------------------- Begin Junit test ---------------------");
+		System.out.println("====================================================");
+		System.out.println("=========       TestDeck   (START)     =============");
+		System.out.println("====================================================");
+
+		dataUtility = MtgDataUtility.getInstance();
 	}
 
 	@AfterClass
 	public static void afterClass() {
 
-		Logger.getLogger(TestDeck.class).debug("--------------------- End Junit test ---------------------");
+		System.out.println("====================================================");
+		System.out.println("=========       TestDeck   (END)       =============");
+		System.out.println("====================================================");
 	}
-
-	private MtgDataUtility dataUtility;
 
 	private boolean observerCalled;
 
 	private Deck deck;
 
-	public TestDeck() throws Exception {
+	@Before
+	@Override
+	public void setUp() {
+		
+		super.setUp();
 
-		this.dataUtility = MtgDataUtility.getInstance();
 		this.observerCalled = false;
 		this.deck = new Deck("Test deck", "This deck is for JUnit test");
 		new TestDeckObserver(this.deck);
@@ -55,12 +63,16 @@ public class TestDeck {
 		this.deck.addCardToMain(dataUtility.getMtgCard("Bloodlust Inciter"), 4);
 		this.deck.addCardToMain(dataUtility.getMtgCard("Brute Strength"), 4);
 
-		this.deck.addCardToSideboard(dataUtility.getMtgCard("black lotus"), 1);
-		this.deck.addCardToSideboard(dataUtility.getMtgCard("Aegis of the Gods"), 3);
-		
+		try {
+			this.deck.addCardToSideboard(dataUtility.getMtgCard("black lotus"), 1);
+			this.deck.addCardToSideboard(dataUtility.getMtgCard("Aegis of the Gods"), 3);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
 		assertEquals(60, this.deck.sizeOfMain());
 		assertEquals(4, this.deck.sizeOfSideboard());
 		assertTrue(observerCalled);
+		System.out.println("--------------------------------------------");
 	}
 
 	@Test
@@ -69,17 +81,17 @@ public class TestDeck {
 		Library library = this.deck.getLibrary();
 		assertEquals(60, library.getCards().size());
 	}
-	
+
 	@Test
 	public void testRemoveFrom() {
-		
+
 		this.deck.removeCardFromMain(dataUtility.getMtgCard("Aegis of the Gods"));
 		assertEquals(60, this.deck.sizeOfMain());
-		
+
 		this.deck.removeCardFromMain(dataUtility.getMtgCard("Plains"));
 		assertEquals(59, this.deck.sizeOfMain());
 	}
-	
+
 	/*
 	 * Class used to test the observer implementation
 	 */

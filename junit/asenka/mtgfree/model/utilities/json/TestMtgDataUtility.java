@@ -6,35 +6,36 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
+import asenka.mtgfree.tests.MtgFreeTest;
 
-public class TestMtgDataUtility {
+public class TestMtgDataUtility extends MtgFreeTest {
+
+	private static MtgDataUtility dataUtility;
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
 
-		Logger.getLogger(TestMtgDataUtility.class).setLevel(Level.DEBUG);
-		Logger.getLogger(TestMtgDataUtility.class).debug("--------------------- Begin Junit test ---------------------");
+		System.out.println("====================================================");
+		System.out.println("=========   TestMtgDataUtility (START) =============");
+		System.out.println("====================================================");
+		
+		dataUtility = MtgDataUtility.getInstance();
 	}
 
 	@AfterClass
 	public static void afterClass() {
 
-		Logger.getLogger(TestMtgDataUtility.class).debug("--------------------- End Junit test ---------------------");
+		System.out.println("====================================================");
+		System.out.println("=========   TestMtgDataUtility (END)   =============");
+		System.out.println("====================================================");
 	}
 
-	private MtgDataUtility dataUtility;
-
-	public TestMtgDataUtility() {
-		this.dataUtility = MtgDataUtility.getInstance();
-	}
 
 	@Test
 	public void testGetMtgCard() {

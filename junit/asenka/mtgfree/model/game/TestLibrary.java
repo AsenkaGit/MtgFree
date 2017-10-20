@@ -9,8 +9,6 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.function.Predicate;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,23 +17,29 @@ import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.model.events.AbstractEvent;
 import asenka.mtgfree.model.events.LibraryEvent;
+import asenka.mtgfree.tests.MtgFreeTest;
 
-public class TestLibrary {
+public class TestLibrary extends MtgFreeTest {
+
+	private static MtgDataUtility dataUtility;
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
 
-		Logger.getLogger(TestLibrary.class).setLevel(Level.DEBUG);
-		Logger.getLogger(TestLibrary.class).debug("--------------------- Begin Junit test ---------------------");
+		System.out.println("====================================================");
+		System.out.println("=========     TestLibrary   (START)    =============");
+		System.out.println("====================================================");
+
+		dataUtility = MtgDataUtility.getInstance();
 	}
 
 	@AfterClass
 	public static void afterClass() {
 
-		Logger.getLogger(TestLibrary.class).debug("--------------------- End Junit test ---------------------");
+		System.out.println("====================================================");
+		System.out.println("=========     TestLibrary   (END)      =============");
+		System.out.println("====================================================");
 	}
-
-	private MtgDataUtility dataUtility;
 
 	private boolean observerCalled;
 
@@ -45,7 +49,6 @@ public class TestLibrary {
 
 		Card.setBattleIdCounter(0);
 
-		this.dataUtility = MtgDataUtility.getInstance();
 		this.observerCalled = false;
 		this.cards = new ArrayList<Card>(60);
 
@@ -139,7 +142,7 @@ public class TestLibrary {
 		assertEquals(60, libTest.getCards().size());
 		assertEquals(this.cards.get(0), libTest.draw());
 		assertEquals(59, libTest.getCards().size());
-		
+
 		Predicate<Card> filterInstant = (card -> card.getPrimaryCardData().getType().contains("Instant"));
 		Predicate<Card> filterLand = (card -> card.getPrimaryCardData().getType().contains("Land"));
 		Predicate<Card> filterCreature = (card -> card.getPrimaryCardData().getType().contains("Creature"));
@@ -151,7 +154,6 @@ public class TestLibrary {
 		assertEquals(20, this.cards.stream().filter(filterCreature).count());
 		assertEquals(4, this.cards.stream().filter(filterEnchantment).count());
 		assertEquals(8, this.cards.stream().filter(filterInstantOrEnchantment).count());
-
 
 		List<Card> draws = libTest.draw(7);
 		assertEquals(7, draws.size());
@@ -181,22 +183,25 @@ public class TestLibrary {
 	@Test
 	public void testShuffle() {
 
-		Logger.getLogger(TestLibrary.class).debug("Visual test for library shuffle");
-		Logger.getLogger(TestLibrary.class).debug("Current library order");
+		System.out.println("------------------------------------------");
+		System.out.println(" Before:");
+		System.out.println("------------------------------------------");
 
 		Library libTest = new Library(this.cards);
 
 		displayLibrary(libTest);
 		libTest.shuffle();
 
-		Logger.getLogger(TestLibrary.class).debug("After shuffle :");
+		System.out.println("------------------------------------------");
+		System.out.println(" After:");
+		System.out.println("------------------------------------------");
 		displayLibrary(libTest);
 	}
 
 	public static final void displayLibrary(Library library) {
 
 		for (Card c : library.getCards()) {
-			Logger.getLogger(TestLibrary.class).debug("Card - " + c.getBattleId() + ", " + c.getPrimaryCardData().getName());
+			System.out.println("Card - " + c.getBattleId() + ",\t" + c.getPrimaryCardData().getName());
 		}
 	}
 

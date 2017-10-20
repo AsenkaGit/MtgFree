@@ -7,46 +7,53 @@ import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.model.events.AbstractEvent;
 import asenka.mtgfree.model.events.PlayerEvent;
+import asenka.mtgfree.tests.MtgFreeTest;
 
-public class TestPlayer {
-	
+public class TestPlayer extends MtgFreeTest {
+
+	private static MtgDataUtility dataUtility;
+
 	@BeforeClass
 	public static void setUpBeforeClass() {
-		
-		Logger.getLogger(TestPlayer.class).setLevel(Level.DEBUG);
-		Logger.getLogger(TestPlayer.class).debug("--------------------- Begin Junit test ---------------------");
+
+		System.out.println("====================================================");
+		System.out.println("=========      TestPlayer   (START)    =============");
+		System.out.println("====================================================");
+
+		dataUtility = MtgDataUtility.getInstance();
 	}
 
 	@AfterClass
 	public static void afterClass() {
 
-		Logger.getLogger(TestPlayer.class).debug("--------------------- End Junit test ---------------------");
+		System.out.println("====================================================");
+		System.out.println("=========      TestPlayer   (END)      =============");
+		System.out.println("====================================================");
 	}
-	
-	private MtgDataUtility dataUtility;
 
 	private boolean observerCalled;
-	
-	public TestPlayer() {
-		
-		this.dataUtility = MtgDataUtility.getInstance();
+
+	@Before
+	@Override
+	public void setUp() {
+		super.setUp();
+		observerCalled = false;
 	}
-	
+
 	@Test
 	public void testPlayer() throws Exception {
-		
+
 		Player playerTest = new Player("Asenka", new Battlefield());
 		new TestPlayerObserver(playerTest);
-		
+
 		Deck deck = new Deck("Test deck", "");
 
 		deck.addCardToMain(dataUtility.getMtgCard("Plains"), 14);
@@ -59,24 +66,22 @@ public class TestPlayer {
 		deck.addCardToMain(dataUtility.getMtgCard("Blazing Volley"), 4);
 		deck.addCardToMain(dataUtility.getMtgCard("Bloodlust Inciter"), 4);
 		deck.addCardToMain(dataUtility.getMtgCard("Brute Strength"), 4);
-		
+
 		playerTest.addAvailableDeck(deck);
 		playerTest.setSelectedDeck(deck);
 		playerTest.setLibrary(deck.getLibrary());
-		
-//		playerTest.draw(7);
-//		
-//		assertEquals(7, playerTest.getHand().size());
-//		assertEquals(53, playerTest.getLibrary().getCards().size());
-//		
-//		Card card = playerTest.draw();
-//		assertTrue(playerTest.getHand().contains(card));
-		
+
+		// playerTest.draw(7);
+		//
+		// assertEquals(7, playerTest.getHand().size());
+		// assertEquals(53, playerTest.getLibrary().getCards().size());
+		//
+		// Card card = playerTest.draw();
+		// assertTrue(playerTest.getHand().contains(card));
+
 		assertTrue(observerCalled);
 	}
 
-	
-	
 	/*
 	 * Class used to test the observer implementation
 	 */
