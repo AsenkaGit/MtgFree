@@ -1,30 +1,34 @@
 package asenka.mtgfree.controlers.game;
 
+import java.util.Observer;
+
 import asenka.mtgfree.controlers.game.Controller.Origin;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.Counter;
 
 /**
- * The controller of a card. 
+ * The controller of a card.
  * 
  * 
  * @author asenka
  *
  */
 public class CardController extends Controller<Card> {
-	
+
 	/**
-	 * The player's controller. Having this controller helps you to perform operations that needs data
-	 * outside the card scope. Such as send back the card to player hand, destroy the card, etc...
+	 * The player's controller. Having this controller helps you to perform operations that needs data outside the card scope.
+	 * Such as send back the card to player hand, destroy the card, etc...
 	 */
 	private PlayerController playerController;
 
 	/**
 	 * Build a card controller
+	 * 
 	 * @param card the card controlled
 	 * @param playerController the player controller
 	 */
 	public CardController(Card card, PlayerController playerController) {
+
 		super(card);
 		this.playerController = playerController;
 	}
@@ -33,21 +37,23 @@ public class CardController extends Controller<Card> {
 	 * @return the player Controller
 	 */
 	public PlayerController getPlayerController() {
-	
+
 		return playerController;
 	}
 
 	/**
 	 * Change the controller of the card. You can use this
+	 * 
 	 * @param playerController the playerController to set
 	 */
 	public void setPlayerController(PlayerController playerController) {
-	
+
 		this.playerController = playerController;
 	}
 
 	/**
 	 * Tap/untap the card
+	 * 
 	 * @param tapped true/false
 	 */
 	public void setTapped(boolean tapped) {
@@ -57,6 +63,7 @@ public class CardController extends Controller<Card> {
 
 	/**
 	 * Hide/show the card
+	 * 
 	 * @param visible true/false
 	 */
 	public void setVisible(boolean visible) {
@@ -66,6 +73,7 @@ public class CardController extends Controller<Card> {
 
 	/**
 	 * Revealed/hide the card to other players
+	 * 
 	 * @param revealed true/false
 	 */
 	public void setRevealed(boolean revealed) {
@@ -75,6 +83,7 @@ public class CardController extends Controller<Card> {
 
 	/**
 	 * Update the card location
+	 * 
 	 * @param x horizontal coordinate
 	 * @param y vertical coordinate
 	 */
@@ -85,6 +94,7 @@ public class CardController extends Controller<Card> {
 
 	/**
 	 * Add a counter on the card
+	 * 
 	 * @param counter the counter to add
 	 * @throws IllegalArgumentException if the counter is null
 	 */
@@ -99,6 +109,7 @@ public class CardController extends Controller<Card> {
 
 	/**
 	 * Removes a counter from the card
+	 * 
 	 * @param counter the counter to removes
 	 * @throws IllegalArgumentException if counter is null
 	 */
@@ -121,20 +132,22 @@ public class CardController extends Controller<Card> {
 
 	/**
 	 * Associate another card to this one
+	 * 
 	 * @param associatedCard the other card to assicate
 	 * @throws IllegalArgumentException if <code>associatedCard</code> is <code>null</code> or is the same as this card
 	 */
 	public void addAssociatedCard(Card associatedCard) throws IllegalArgumentException {
-		
+
 		if (associatedCard != null && this.data != associatedCard) {
 			this.data.addAssociatedCard(associatedCard);
 		} else {
 			throw new IllegalArgumentException("Unable to associate the card " + this.data + " with " + associatedCard);
 		}
 	}
-	
+
 	/**
 	 * Remove an associated card
+	 * 
 	 * @param associatedCard the card to remove
 	 * @throws IllegalArgumentException
 	 */
@@ -146,7 +159,7 @@ public class CardController extends Controller<Card> {
 			throw new IllegalArgumentException("Unable to remove from " + this.data + " the associated card  " + associatedCard);
 		}
 	}
-	
+
 	/**
 	 * Removes all the associated cards
 	 */
@@ -154,30 +167,33 @@ public class CardController extends Controller<Card> {
 
 		this.data.clearAssociatedCards();
 	}
-	
+
 	/**
 	 * Send the card to grave yard
+	 * 
 	 * @param origin the origin of the card
 	 * @see Origin
 	 */
 	public void destroy(Origin origin) {
-		
+
 		this.playerController.destroy(this.data, origin);
 	}
-	
+
 	/**
 	 * Exile the card
+	 * 
 	 * @param origin
 	 * @param visible
 	 * @see Origin
 	 */
 	public void exile(Origin origin, boolean visible) {
-		
+
 		this.playerController.exile(this.data, origin, visible);
 	}
-	
+
 	/**
 	 * Play the card on the battlefield
+	 * 
 	 * @param origin
 	 * @param visible
 	 * @param x
@@ -185,17 +201,39 @@ public class CardController extends Controller<Card> {
 	 * @see Origin
 	 */
 	public void play(Origin origin, boolean visible, double x, double y) {
-		
+
 		this.playerController.play(this.data, origin, visible, x, y);
 	}
-	
+
 	/**
 	 * Send back the card to the player's hand
+	 * 
 	 * @param origin
 	 */
 	public void backToHand(Origin origin) {
-		
+
 		this.playerController.backToHand(this.data, origin);
+	}
+
+	@Override
+	public void addObserver(Observer observer) {
+	
+		super.addObserver(observer);
+		this.playerController.addObserver(observer);
+	}
+
+	@Override
+	public void deleteObserver(Observer observer) {
+	
+		super.deleteObserver(observer);
+		this.playerController.deleteObserver(observer);
+	}
+
+	@Override
+	public void deleteObservers() {
+	
+		super.deleteObservers();
+		this.playerController.deleteObservers();
 	}
 
 }
