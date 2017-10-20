@@ -65,6 +65,15 @@ public class Library extends Observable implements Serializable {
 	}
 
 	/**
+	 * @param card
+	 * @return <code>true</code> if card is in the library
+	 */
+	public boolean contains(Card card) {
+	
+		return this.cards.contains(card);
+	}
+
+	/**
 	 * Returns an unmodifiable list of Cards
 	 * 
 	 * @return the list of cards
@@ -102,7 +111,7 @@ public class Library extends Observable implements Serializable {
 	 * @return a card from the library at a specific location
 	 * @see LibraryEvent
 	 */
-	public Card getCardAt(final int index) {
+	public Card get(final int index) {
 
 		return this.cards.get(index);
 	}

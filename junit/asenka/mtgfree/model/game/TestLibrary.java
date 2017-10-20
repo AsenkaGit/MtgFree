@@ -159,19 +159,19 @@ public class TestLibrary {
 
 		libTest.addToBottom(draws.get(0));
 		assertEquals(53, libTest.getCards().size());
-		assertEquals(draws.get(0), libTest.getCardAt(52));
+		assertEquals(draws.get(0), libTest.get(52));
 		draws.remove(0);
 		assertEquals(6, draws.size());
 
 		libTest.addFromTop(draws.get(0), 100);
 		assertEquals(54, libTest.getCards().size());
-		assertEquals(draws.get(0), libTest.getCardAt(53));
+		assertEquals(draws.get(0), libTest.get(53));
 		draws.remove(0);
 		assertEquals(5, draws.size());
 
 		libTest.addFromTop(draws.get(0), 10);
 		assertEquals(55, libTest.getCards().size());
-		assertEquals(draws.get(0), libTest.getCardAt(10));
+		assertEquals(draws.get(0), libTest.get(10));
 		draws.remove(0);
 		assertEquals(4, draws.size());
 

@@ -1,8 +1,11 @@
 package asenka.mtgfree.controlers.game;
 
 import java.util.List;
+import java.util.Observer;
 
+import asenka.mtgfree.model.game.Battlefield;
 import asenka.mtgfree.model.game.Card;
+import asenka.mtgfree.model.game.Library;
 import asenka.mtgfree.model.game.Player;
 
 /**
@@ -130,7 +133,7 @@ public class PlayerController extends Controller<Player> {
 			checkOriginAndRemove(origin, card);
 			card.setRevealed(false);
 			card.setVisible(true);
-			this.data.addCardToGraveyard(card);
+			this.data.addCardToHand(card);
 		}
 	}
 
@@ -193,14 +196,62 @@ public class PlayerController extends Controller<Player> {
 
 		this.data.setLifeCounters(lifeCounters);
 	}
-	
+
 	/**
 	 * 
 	 * @param poisonCounters
 	 */
 	public void setPoisonCounters(int poisonCounters) {
-		
+
 		this.data.setPoisonCounters(poisonCounters);
+	}
+
+	/**
+	 * PlayerController overrides the Controller method to add the observer to the
+	 * library and the battlefield
+	 */
+	@Override
+	public void addObserver(Observer observer) {
+	
+		super.addObserver(observer);
+	
+		Library library = this.data.getLibrary();
+		Battlefield battlefield = this.data.getBattlefield();
+	
+		library.addObserver(observer);
+		battlefield.addObserver(observer);
+	}
+
+	/**
+	 * PlayerController overrides the Controller method to remove the observer from the
+	 * library and the battlefield
+	 */
+	@Override
+	public void deleteObserver(Observer observer) {
+	
+		super.deleteObserver(observer);
+	
+		Library library = this.data.getLibrary();
+		Battlefield battlefield = this.data.getBattlefield();
+	
+		library.deleteObserver(observer);
+		battlefield.deleteObserver(observer);
+	}
+
+	/**
+	 * PlayerController overrides the Controller method to clear the observers from the
+	 * library and the battlefield
+	 */
+	@Override
+	public void deleteObservers() {
+	
+		super.deleteObservers();
+	
+		Library library = this.data.getLibrary();
+		Battlefield battlefield = this.data.getBattlefield();
+	
+		library.deleteObservers();
+		battlefield.deleteObservers();
 	}
 
 	/**
