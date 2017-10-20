@@ -1,7 +1,5 @@
 package asenka.mtgfree.tests;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -23,14 +21,31 @@ public class TestsLauncher {
 	@BeforeClass
 	public static void setUpBeforeClass() {
 
-		Logger.getLogger(TestsLauncher.class).setLevel(Level.DEBUG);
-		Logger.getLogger(TestsLauncher.class).debug(" ######################## BEGIN ######################## ");
+		System.out.println("##########################################################");
+		System.out.println("#                                                        #");
+		System.out.println("#                                                        #");
+		System.out.println("#                LAUNCH ALL TESTS                        #");
+		System.out.println("#                                                        #");
+		System.out.println("#                                                        #");
+		System.out.println("##########################################################");
+		System.out.println("");
+		System.out.println("==========================================================");
+		System.out.println("==========              DATA LOADING                ======");
+		System.out.println("==========================================================");
+		
+		
 		MtgDataUtility.getInstance();
 	}
 
 	@AfterClass
 	public static void afterClass() {
 
-		Logger.getLogger(TestsLauncher.class).debug(" ######################## END ########################");
+		System.out.println("##########################################################");
+		System.out.println("#                                                        #");
+		System.out.println("#                                                        #");
+		System.out.println("#                        END                             #");
+		System.out.println("#                                                        #");
+		System.out.println("#                                                        #");
+		System.out.println("##########################################################");
 	}
 }
