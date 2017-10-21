@@ -26,10 +26,6 @@ public class TestCardController extends MtgFreeTest {
 
 	private static MtgDataUtility dataUtility;
 
-	private static Deck testDeck;
-
-	private static PlayerController playerController;
-
 	@BeforeClass
 	public static void setUpBeforeClass() {
 
@@ -38,7 +34,27 @@ public class TestCardController extends MtgFreeTest {
 		System.out.println("====================================================");
 
 		dataUtility = MtgDataUtility.getInstance();
+	}
+	
+	private Deck testDeck;
 
+	private PlayerController playerController;
+
+	private MtgCard cardData;
+
+	private Card card;
+
+	private CardController cardController;
+
+	private TestObserver cardView;
+
+	@Before
+	@Override
+	public void setUp() {
+
+		super.setUp();
+		Card.setBattleIdCounter(1);
+		
 		testDeck = new Deck("Test Controller deck", "");
 		testDeck.addCardToMain(dataUtility.getMtgCard("Temple of Malady"), 4);
 		testDeck.addCardToMain(dataUtility.getMtgCard("Forest"), 6);
@@ -77,22 +93,6 @@ public class TestCardController extends MtgFreeTest {
 			fail("Unexpected exception :" + e.getMessage());
 		}
 		playerController = new PlayerController(player);
-	}
-
-	private MtgCard cardData;
-
-	private Card card;
-
-	private CardController cardController;
-
-	private TestObserver cardView;
-
-	@Before
-	@Override
-	public void setUp() {
-
-		super.setUp();
-		Card.setBattleIdCounter(1);
 
 		cardData = dataUtility.getMtgCard("Shrine of Burning Rage");
 		card = new Card(cardData);
