@@ -5,6 +5,7 @@ import java.util.Observer;
 import asenka.mtgfree.controlers.game.Controller.Origin;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.Counter;
+import asenka.mtgfree.model.game.Library;
 
 /**
  * The controller of a card.
@@ -214,24 +215,52 @@ public class CardController extends Controller<Card> {
 
 		this.playerController.backToHand(this.data, origin);
 	}
+	
+	/**
+	 * Move the controlled card to the top of the library. The controlled card has to be in
+	 * the player library.
+	 * @throws RuntimeException if the controlled is not in the player library
+	 */
+	public void moveToTopOfLibrary() {
+		
+		final Library library = this.playerController.data.getLibrary();
+		
+		if(!library.changeCardIndex(this.data, 0)) {
+			throw new RuntimeException(this.data + " is not in the player's library");
+		}
+	}
+	
+	/**
+	 * Move the controlled card to the bottom of the library. The controlled card has to be in
+	 * the player library.
+	 * @throws RuntimeException if the controlled is not in the player library
+	 */
+	public void moveToBottompOfLibrary() {
+		
+		final Library library = this.playerController.data.getLibrary();
+		
+		if(!library.changeCardIndex(this.data, library.size() - 1)) {
+			throw new RuntimeException(this.data + " is not in the player's library");
+		}
+	}
 
 	@Override
 	public void addObserver(Observer observer) {
-	
+
 		super.addObserver(observer);
 		this.playerController.addObserver(observer);
 	}
 
 	@Override
 	public void deleteObserver(Observer observer) {
-	
+
 		super.deleteObserver(observer);
 		this.playerController.deleteObserver(observer);
 	}
 
 	@Override
 	public void deleteObservers() {
-	
+
 		super.deleteObservers();
 		this.playerController.deleteObservers();
 	}

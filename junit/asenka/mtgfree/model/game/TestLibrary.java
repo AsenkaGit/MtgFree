@@ -10,6 +10,7 @@ import java.util.Observer;
 import java.util.function.Predicate;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -42,106 +43,113 @@ public class TestLibrary extends MtgFreeTest {
 	}
 
 	private boolean observerCalled;
-
+	
 	private List<Card> cards;
 
-	public TestLibrary() {
+	private Library library;
+
+	@Override
+	@Before
+	public void setUp() {
+	
+		super.setUp();
 
 		Card.setBattleIdCounter(0);
 
 		this.observerCalled = false;
-		this.cards = new ArrayList<Card>(60);
+		cards = new ArrayList<Card>(60);
 
 		MtgCard plains = dataUtility.getMtgCard("Plains");
-		this.cards.add(new Card(plains));
-		this.cards.add(new Card(plains));
-		this.cards.add(new Card(plains));
-		this.cards.add(new Card(plains));
-		this.cards.add(new Card(plains));
-		this.cards.add(new Card(plains));
-		this.cards.add(new Card(plains));
-		this.cards.add(new Card(plains));
-		this.cards.add(new Card(plains));
-		this.cards.add(new Card(plains));
-		this.cards.add(new Card(plains));
-		this.cards.add(new Card(plains));
-		this.cards.add(new Card(plains));
-		this.cards.add(new Card(plains));
+		cards.add(new Card(plains));
+		cards.add(new Card(plains));
+		cards.add(new Card(plains));
+		cards.add(new Card(plains));
+		cards.add(new Card(plains));
+		cards.add(new Card(plains));
+		cards.add(new Card(plains));
+		cards.add(new Card(plains));
+		cards.add(new Card(plains));
+		cards.add(new Card(plains));
+		cards.add(new Card(plains));
+		cards.add(new Card(plains));
+		cards.add(new Card(plains));
+		cards.add(new Card(plains));
 
 		MtgCard mountain = dataUtility.getMtgCard("Mountain");
-		this.cards.add(new Card(mountain));
-		this.cards.add(new Card(mountain));
-		this.cards.add(new Card(mountain));
-		this.cards.add(new Card(mountain));
-		this.cards.add(new Card(mountain));
-		this.cards.add(new Card(mountain));
-		this.cards.add(new Card(mountain));
-		this.cards.add(new Card(mountain));
-		this.cards.add(new Card(mountain));
-		this.cards.add(new Card(mountain));
-		this.cards.add(new Card(mountain));
-		this.cards.add(new Card(mountain));
-		this.cards.add(new Card(mountain));
-		this.cards.add(new Card(mountain));
+		cards.add(new Card(mountain));
+		cards.add(new Card(mountain));
+		cards.add(new Card(mountain));
+		cards.add(new Card(mountain));
+		cards.add(new Card(mountain));
+		cards.add(new Card(mountain));
+		cards.add(new Card(mountain));
+		cards.add(new Card(mountain));
+		cards.add(new Card(mountain));
+		cards.add(new Card(mountain));
+		cards.add(new Card(mountain));
+		cards.add(new Card(mountain));
+		cards.add(new Card(mountain));
+		cards.add(new Card(mountain));
 
 		MtgCard gloryBringer = dataUtility.getMtgCard("glorybringer");
-		this.cards.add(new Card(gloryBringer));
-		this.cards.add(new Card(gloryBringer));
-		this.cards.add(new Card(gloryBringer));
-		this.cards.add(new Card(gloryBringer));
+		cards.add(new Card(gloryBringer));
+		cards.add(new Card(gloryBringer));
+		cards.add(new Card(gloryBringer));
+		cards.add(new Card(gloryBringer));
 
 		MtgCard ahnCropCrasher = dataUtility.getMtgCard("Ahn-Crop Crasher");
-		this.cards.add(new Card(ahnCropCrasher));
-		this.cards.add(new Card(ahnCropCrasher));
-		this.cards.add(new Card(ahnCropCrasher));
-		this.cards.add(new Card(ahnCropCrasher));
+		cards.add(new Card(ahnCropCrasher));
+		cards.add(new Card(ahnCropCrasher));
+		cards.add(new Card(ahnCropCrasher));
+		cards.add(new Card(ahnCropCrasher));
 
 		MtgCard alwaysWatching = dataUtility.getMtgCard("Always watching");
-		this.cards.add(new Card(alwaysWatching));
-		this.cards.add(new Card(alwaysWatching));
-		this.cards.add(new Card(alwaysWatching));
-		this.cards.add(new Card(alwaysWatching));
+		cards.add(new Card(alwaysWatching));
+		cards.add(new Card(alwaysWatching));
+		cards.add(new Card(alwaysWatching));
+		cards.add(new Card(alwaysWatching));
 
 		MtgCard angelOfSanctions = dataUtility.getMtgCard("Angel of Sanctions");
-		this.cards.add(new Card(angelOfSanctions));
-		this.cards.add(new Card(angelOfSanctions));
-		this.cards.add(new Card(angelOfSanctions));
-		this.cards.add(new Card(angelOfSanctions));
+		cards.add(new Card(angelOfSanctions));
+		cards.add(new Card(angelOfSanctions));
+		cards.add(new Card(angelOfSanctions));
+		cards.add(new Card(angelOfSanctions));
 
 		MtgCard battlefieldScavenger = dataUtility.getMtgCard("Battlefield Scavenger");
-		this.cards.add(new Card(battlefieldScavenger));
-		this.cards.add(new Card(battlefieldScavenger));
-		this.cards.add(new Card(battlefieldScavenger));
-		this.cards.add(new Card(battlefieldScavenger));
+		cards.add(new Card(battlefieldScavenger));
+		cards.add(new Card(battlefieldScavenger));
+		cards.add(new Card(battlefieldScavenger));
+		cards.add(new Card(battlefieldScavenger));
 
 		MtgCard blazingVolley = dataUtility.getMtgCard("Blazing Volley");
-		this.cards.add(new Card(blazingVolley));
-		this.cards.add(new Card(blazingVolley));
-		this.cards.add(new Card(blazingVolley));
-		this.cards.add(new Card(blazingVolley));
+		cards.add(new Card(blazingVolley));
+		cards.add(new Card(blazingVolley));
+		cards.add(new Card(blazingVolley));
+		cards.add(new Card(blazingVolley));
 
 		MtgCard bloodlustInciter = dataUtility.getMtgCard("Bloodlust Inciter");
-		this.cards.add(new Card(bloodlustInciter));
-		this.cards.add(new Card(bloodlustInciter));
-		this.cards.add(new Card(bloodlustInciter));
-		this.cards.add(new Card(bloodlustInciter));
+		cards.add(new Card(bloodlustInciter));
+		cards.add(new Card(bloodlustInciter));
+		cards.add(new Card(bloodlustInciter));
+		cards.add(new Card(bloodlustInciter));
 
 		MtgCard bruteStrength = dataUtility.getMtgCard("Brute Strength");
-		this.cards.add(new Card(bruteStrength));
-		this.cards.add(new Card(bruteStrength));
-		this.cards.add(new Card(bruteStrength));
-		this.cards.add(new Card(bruteStrength));
+		cards.add(new Card(bruteStrength));
+		cards.add(new Card(bruteStrength));
+		cards.add(new Card(bruteStrength));
+		cards.add(new Card(bruteStrength));
+		
+		library = new Library(cards);
 	}
 
 	@Test
 	public void testLibrary() {
 
-		Library libTest = new Library(this.cards);
-		new TestLibraryObserver(libTest);
-		assertEquals(60, libTest.getInitialSize());
-		assertEquals(60, libTest.getCards().size());
-		assertEquals(this.cards.get(0), libTest.draw());
-		assertEquals(59, libTest.getCards().size());
+		new TestLibraryObserver(library);
+		assertEquals(60, library.getInitialSize());
+		assertEquals(60, library.getCards().size());
+		assertEquals(this.cards.get(0), library.draw());
+		assertEquals(59, library.getCards().size());
 
 		Predicate<Card> filterInstant = (card -> card.getPrimaryCardData().getType().contains("Instant"));
 		Predicate<Card> filterLand = (card -> card.getPrimaryCardData().getType().contains("Land"));
@@ -155,25 +163,25 @@ public class TestLibrary extends MtgFreeTest {
 		assertEquals(4, this.cards.stream().filter(filterEnchantment).count());
 		assertEquals(8, this.cards.stream().filter(filterInstantOrEnchantment).count());
 
-		List<Card> draws = libTest.draw(7);
+		List<Card> draws = library.draw(7);
 		assertEquals(7, draws.size());
-		assertEquals(52, libTest.getCards().size());
+		assertEquals(52, library.getCards().size());
 
-		libTest.addToBottom(draws.get(0));
-		assertEquals(53, libTest.getCards().size());
-		assertEquals(draws.get(0), libTest.get(52));
+		library.addToBottom(draws.get(0));
+		assertEquals(53, library.getCards().size());
+		assertEquals(draws.get(0), library.get(52));
 		draws.remove(0);
 		assertEquals(6, draws.size());
 
-		libTest.addFromTop(draws.get(0), 100);
-		assertEquals(54, libTest.getCards().size());
-		assertEquals(draws.get(0), libTest.get(53));
+		library.addFromTop(draws.get(0), 100);
+		assertEquals(54, library.getCards().size());
+		assertEquals(draws.get(0), library.get(53));
 		draws.remove(0);
 		assertEquals(5, draws.size());
 
-		libTest.addFromTop(draws.get(0), 10);
-		assertEquals(55, libTest.getCards().size());
-		assertEquals(draws.get(0), libTest.get(10));
+		library.addFromTop(draws.get(0), 10);
+		assertEquals(55, library.getCards().size());
+		assertEquals(draws.get(0), library.get(10));
 		draws.remove(0);
 		assertEquals(4, draws.size());
 
@@ -187,15 +195,27 @@ public class TestLibrary extends MtgFreeTest {
 		System.out.println(" Before:");
 		System.out.println("------------------------------------------");
 
-		Library libTest = new Library(this.cards);
-
-		displayLibrary(libTest);
-		libTest.shuffle();
+		displayLibrary(library);
+		library.shuffle();
 
 		System.out.println("------------------------------------------");
 		System.out.println(" After:");
 		System.out.println("------------------------------------------");
-		displayLibrary(libTest);
+		displayLibrary(library);
+	}
+	
+	@Test
+	public void testChangeCardIndex() {
+		
+		library.shuffle();
+		
+		final Card card = library.get(59);
+		
+		library.changeCardIndex(card, 0);
+		
+		assertSame(card, library.get(0));
+		assertNotSame(card, library.get(59));
+		assertNotEquals(card, library.get(59));
 	}
 
 	public static final void displayLibrary(Library library) {

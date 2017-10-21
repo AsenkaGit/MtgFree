@@ -13,8 +13,12 @@ import org.apache.log4j.Logger;
 import asenka.mtgfree.model.events.LibraryEvent;
 
 /**
- * <p>A representation of the library during an Mtg game. It contains a linked list of cards.</p>
- * <p>The class extends {@link Observable} to notify the observers when a value is updated.</p>
+ * <p>
+ * A representation of the library during an Mtg game. It contains a linked list of cards.
+ * </p>
+ * <p>
+ * The class extends {@link Observable} to notify the observers when a value is updated.
+ * </p>
  * 
  * @author asenka
  * @see Card
@@ -55,12 +59,12 @@ public class Library extends Observable implements Serializable {
 
 		return initialSize;
 	}
-	
+
 	/**
 	 * @return the current size (number of cards) in the library
 	 */
 	public int size() {
-		
+
 		return this.cards.size();
 	}
 
@@ -69,7 +73,7 @@ public class Library extends Observable implements Serializable {
 	 * @return <code>true</code> if card is in the library
 	 */
 	public boolean contains(Card card) {
-	
+
 		return this.cards.contains(card);
 	}
 
@@ -197,12 +201,12 @@ public class Library extends Observable implements Serializable {
 			Logger.getLogger(this.getClass()).warn("Try to remove more cards than the library have");
 		}
 		List<Card> xFirstCards = new ArrayList<Card>(x);
-		
+
 		int i = x;
 		do {
 			xFirstCards.add(this.cards.removeFirst());
-		} while(--i > 0);
-		
+		} while (--i > 0);
+
 		if (!xFirstCards.isEmpty()) {
 			super.setChanged();
 			super.notifyObservers(new LibraryEvent("draw", "cards", new Integer(x)));
@@ -239,6 +243,25 @@ public class Library extends Observable implements Serializable {
 		Collections.shuffle(this.cards);
 		super.setChanged();
 		super.notifyObservers(new LibraryEvent("shuffle", "cards", null));
+	}
+
+	/**
+	 * Update the index of a card in the library
+	 * 
+	 * @param card the card from the library
+	 * @param newIndex the new index of the card in the library
+	 * @return <code>true</code> if the card's index has been updated, if <code>false</code> the card was not in the library
+	 */
+	public boolean changeCardIndex(Card card, int newIndex) {
+
+		if (this.cards.remove(card)) {
+			this.cards.add(newIndex, card);
+			super.setChanged();
+			super.notifyObservers(new LibraryEvent("changeCardIndex(" + newIndex + ")", "cards", card));
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -281,12 +304,12 @@ public class Library extends Observable implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Library other = (Library) obj;
+		if (initialSize != other.initialSize)
+			return false;
 		if (cards == null) {
 			if (other.cards != null)
 				return false;
 		} else if (!cards.equals(other.cards))
-			return false;
-		if (initialSize != other.initialSize)
 			return false;
 		return true;
 	}

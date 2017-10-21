@@ -2,11 +2,10 @@ package asenka.mtgfree.model.game;
 
 import java.awt.geom.Point2D;
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
-import java.util.Set;
 
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
@@ -88,7 +87,7 @@ public class Card extends Observable implements Serializable {
 	/**
 	 * The counters on the card
 	 */
-	private Set<Counter> counters;
+	private List<Counter> counters;
 
 	/**
 	 * Constructor of game Card
@@ -104,7 +103,7 @@ public class Card extends Observable implements Serializable {
 		this.tapped = false;
 		this.location = new Point2D.Double(0.0, 0.0);
 		this.associatedCards = new LinkedList<Card>();
-		this.counters = new HashSet<Counter>(2);
+		this.counters = new ArrayList<Counter>(2);
 
 		// Initialize the secondary card data if necessary
 		String[] names = this.primaryCardData.getNames();
@@ -297,7 +296,7 @@ public class Card extends Observable implements Serializable {
 	/**
 	 * @return the counters on the cards. It can not be null, but it could be empty
 	 */
-	public Set<Counter> getCounters() {
+	public List<Counter> getCounters() {
 
 		return counters;
 	}
