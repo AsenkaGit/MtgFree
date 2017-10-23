@@ -58,22 +58,22 @@ public class TestUIApplication extends Application {
 
 	public static void main(String[] args) {
 		
-//		final String authUser = "AESN1\bourrero";
-//		final String authPassword = "Welcome2018";
-//		Authenticator.setDefault(
-//		   new Authenticator() {
-//		      @Override
-//		      public PasswordAuthentication getPasswordAuthentication() {
-//		         return new PasswordAuthentication(
-//		               authUser, authPassword.toCharArray());
-//		      }
-//		   }
-//		);
-//		
-//		System.setProperty("http.proxyHost", "140.9.9.249");
-//		System.setProperty("http.proxyPort", "8080");
-//		System.setProperty("http.proxyUser", authUser);
-//		System.setProperty("http.proxyPassword", authPassword);
+		final String authUser = "AESN1\bourrero";
+		final String authPassword = "Welcome2018";
+		Authenticator.setDefault(
+		   new Authenticator() {
+		      @Override
+		      public PasswordAuthentication getPasswordAuthentication() {
+		         return new PasswordAuthentication(
+		               authUser, authPassword.toCharArray());
+		      }
+		   }
+		);
+		
+		System.setProperty("http.proxyHost", "140.9.9.249");
+		System.setProperty("http.proxyPort", "8080");
+		System.setProperty("http.proxyUser", authUser);
+		System.setProperty("http.proxyPassword", authPassword);
 		launch(args);
 	}
 }

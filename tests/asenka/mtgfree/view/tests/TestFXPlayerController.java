@@ -84,7 +84,7 @@ public class TestFXPlayerController implements Observer {
 	private TableColumn<Card, String> btTypeTableColumn;
 
 	@FXML
-	private TableColumn<Card, String> btTextTableColumn;
+	private TableColumn<Card, String> btBattleIDTableColumn;
 
 	@FXML
 	private TableColumn<Card, String> btCostTableColumn;
@@ -105,7 +105,7 @@ public class TestFXPlayerController implements Observer {
 	private TableColumn<Card, String> hdTypeTableColumn;
 
 	@FXML
-	private TableColumn<Card, String> hdTextTableColumn;
+	private TableColumn<Card, String> hdBattleIDTableColumn;
 
 	@FXML
 	private TableColumn<Card, String> hdCostTableColumn;
@@ -211,6 +211,21 @@ public class TestFXPlayerController implements Observer {
 		this.hdNameTableColumn
 			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getName()));
 
+		this.btCostTableColumn
+			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getManaCost()));
+		this.hdCostTableColumn
+			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getManaCost()));
+
+		this.btPowerTableColumn
+			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getPower()));
+		this.hdPowerTableColumn
+			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getPower()));
+
+		this.btToughnessTableColumn
+			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getToughness()));
+		this.hdToughnessTableColumn
+			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getToughness()));
+
 		battlefieldTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 
 			Platform.runLater(() -> {
@@ -224,9 +239,10 @@ public class TestFXPlayerController implements Observer {
 					selectedCard = newSelection;
 					selectedCardOrigin = Origin.BATTLEFIELD;
 					int multiverseid = selectedCard.getPrimaryCardData().getMultiverseid();
-					
-					Thread t = new Thread(() -> this.selectedCardImageView.setImage(new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + multiverseid + "&type=card")));
-					t.start();
+
+					new Thread(() -> this.selectedCardImageView
+						.setImage(new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + multiverseid + "&type=card")))
+							.start();
 				}
 				displaySelectedCard();
 			});
@@ -242,15 +258,15 @@ public class TestFXPlayerController implements Observer {
 					selectedCard = null;
 				} else {
 					selectedCard = newSelection;
-					selectedCardOrigin = Origin.BATTLEFIELD;
+					selectedCardOrigin = Origin.HAND;
 					int multiverseid = selectedCard.getPrimaryCardData().getMultiverseid();
 
-					Thread t = new Thread(() -> this.selectedCardImageView.setImage(new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + multiverseid + "&type=card")));
-					t.start();
-			
+					new Thread(() -> this.selectedCardImageView
+						.setImage(new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + multiverseid + "&type=card")))
+							.start();
 				}
 				displaySelectedCard();
-				
+
 			});
 		});
 	}
@@ -294,9 +310,11 @@ public class TestFXPlayerController implements Observer {
 	@FXML
 	private void play() {
 
-		if (selectedCard != null && selectedCardOrigin != null) {
-			playerController.play(selectedCard, selectedCardOrigin, true, 0, 0);
-		}
+		new Thread(() -> {
+			if (selectedCard != null && selectedCardOrigin != null) {
+				playerController.play(selectedCard, selectedCardOrigin, true, 0, 0);
+			}
+		}).start();
 	}
 
 	@FXML
