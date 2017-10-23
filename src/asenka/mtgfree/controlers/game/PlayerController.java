@@ -75,7 +75,7 @@ public class PlayerController extends Controller<Player> {
 	 * 
 	 * @param card the card to put on the exile area
 	 * @param origin where the card was played from (hand, library, battlefield, grave yard)
-	 * @param visible do you want to put the card on the battlefield visible or not
+	 * @param visible do you want to put the card on the exile area visible or not
 	 */
 	public void exile(Card card, Origin origin, boolean visible) {
 
