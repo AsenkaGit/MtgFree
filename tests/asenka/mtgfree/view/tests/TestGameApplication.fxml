@@ -93,6 +93,8 @@
                <children>
                   <Button fx:id="drawHandButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#draw" text="Draw" />
                   <Button fx:id="revealeHideHandButton" layoutX="14.0" layoutY="49.0" mnemonicParsing="false" text="Reveal / Hide" />
+                  <Button fx:id="shuffleButton" layoutX="14.0" layoutY="88.0" mnemonicParsing="false" onAction="#shuffleLibrary" text="Shuffle" />
+                  <Button fx:id="playButton" layoutX="15.0" layoutY="123.0" mnemonicParsing="false" onAction="#play" text="Play" />
                </children>
             </AnchorPane>
             <TableView fx:id="handTableView" prefHeight="200.0" prefWidth="891.0">
@@ -117,10 +119,10 @@
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <TextArea fx:id="playerDataTextArea" prefHeight="200.0" prefWidth="200.0" text="Player's Data" />
-                        <Button fx:id="lifeUpPlayerButton" layoutX="14.0" layoutY="215.0" mnemonicParsing="false" text="Life Up" />
-                        <Button fx:id="lifeDownPlayerButton" layoutX="14.0" layoutY="252.0" mnemonicParsing="false" text="Life Down" />
-                        <Button fx:id="poisonUpPlayerButton" layoutX="13.0" layoutY="290.0" mnemonicParsing="false" text="Poison Up" />
-                        <Button fx:id="poisonDownPlayerButton" layoutX="13.0" layoutY="326.0" mnemonicParsing="false" text="Poison Down" />
+                        <Button fx:id="lifeUpPlayerButton" layoutX="14.0" layoutY="215.0" mnemonicParsing="false" onAction="#lifeUp" text="Life Up" />
+                        <Button fx:id="lifeDownPlayerButton" layoutX="14.0" layoutY="252.0" mnemonicParsing="false" onAction="#lifeDown" text="Life Down" />
+                        <Button fx:id="poisonUpPlayerButton" layoutX="13.0" layoutY="290.0" mnemonicParsing="false" onAction="#poisonUp" text="Poison Up" />
+                        <Button fx:id="poisonDownPlayerButton" layoutX="13.0" layoutY="326.0" mnemonicParsing="false" onAction="#poisonDown" text="Poison Down" />
                      </children>
                   </AnchorPane>
             </content>
@@ -129,7 +131,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TextArea prefHeight="495.0" prefWidth="200.0" text="Library" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <TextArea fx:id="libraryTextArea" prefHeight="495.0" prefWidth="200.0" text="Library" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
             </content>

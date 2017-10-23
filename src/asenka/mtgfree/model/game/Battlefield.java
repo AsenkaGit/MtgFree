@@ -1,10 +1,10 @@
 package asenka.mtgfree.model.game;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Observable;
-import java.util.Set;
 
 import asenka.mtgfree.model.events.BattlefieldEvent;
 
@@ -25,7 +25,7 @@ public class Battlefield extends Observable implements Serializable {
 	/**
 	 * The synchronized set of cards on the battlefield
 	 */
-	private Set<Card> cards;
+	private List<Card> cards;
 
 	/**
 	 * Create a battlefield without any cards
@@ -33,13 +33,13 @@ public class Battlefield extends Observable implements Serializable {
 	public Battlefield() {
 
 		// Use a synchronized set because several players may perform actions on the battlefield at the same time
-		this.cards = Collections.synchronizedSet(new HashSet<Card>());
+		this.cards = Collections.synchronizedList(new ArrayList<Card>());
 	}
 
 	/**
 	 * @return the cards on the battlefield
 	 */
-	public Set<Card> getCards() {
+	public List<Card> getCards() {
 
 		return cards;
 

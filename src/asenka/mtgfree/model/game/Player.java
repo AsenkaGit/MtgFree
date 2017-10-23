@@ -2,7 +2,9 @@ package asenka.mtgfree.model.game;
 
 import java.io.Serializable;
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Observable;
 import java.util.Set;
@@ -59,17 +61,17 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	/**
 	 * The player's hand
 	 */
-	private Set<Card> hand;
+	private List<Card> hand;
 
 	/**
 	 * The player's grave yard
 	 */
-	private Set<Card> graveyard;
+	private List<Card> graveyard;
 
 	/**
 	 * The player's exile area
 	 */
-	private Set<Card> exile;
+	private List<Card> exile;
 
 	/**
 	 * The player's library
@@ -94,9 +96,9 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 		this.lifeCounters = INITIAL_LIFE_COUNTERS;
 		this.poisonCounters = INITIAL_POISON_COUNTERS;
 		this.availableDecks = new HashSet<Deck>();
-		this.hand = new HashSet<Card>();
-		this.graveyard = new HashSet<Card>();
-		this.exile = new HashSet<Card>();
+		this.hand = new ArrayList<Card>();
+		this.graveyard = new ArrayList<Card>();
+		this.exile = new ArrayList<Card>();
 		this.selectedDeck = null;
 		this.library = null;
 	}
@@ -232,7 +234,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	/**
 	 * @return the set of all the cards in the player's hand
 	 */
-	public Set<Card> getHand() {
+	public List<Card> getHand() {
 
 		return hand;
 	}
@@ -240,7 +242,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	/**
 	 * @return the set of all the cards in the player's grave yard
 	 */
-	public Set<Card> getGraveyard() {
+	public List<Card> getGraveyard() {
 
 		return graveyard;
 	}
@@ -248,7 +250,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	/**
 	 * @return the set of all the cards in the player's exile area
 	 */
-	public Set<Card> getExile() {
+	public List<Card> getExile() {
 
 		return exile;
 	}
