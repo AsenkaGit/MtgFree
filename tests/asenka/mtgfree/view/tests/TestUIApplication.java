@@ -74,6 +74,8 @@ public class TestUIApplication extends Application {
 //		System.setProperty("http.proxyPort", "8080");
 //		System.setProperty("http.proxyUser", authUser);
 //		System.setProperty("http.proxyPassword", authPassword);
+		
+		
 		launch(args);
 	}
 }
