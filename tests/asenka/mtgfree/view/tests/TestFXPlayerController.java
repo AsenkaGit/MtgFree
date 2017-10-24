@@ -1,17 +1,21 @@
 package asenka.mtgfree.view.tests;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Queue;
 
+import asenka.mtgfree.controlers.game.CardController;
 import asenka.mtgfree.controlers.game.PlayerController;
 import asenka.mtgfree.controlers.game.Controller.Origin;
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.model.events.AbstractEvent;
 import asenka.mtgfree.model.events.BattlefieldEvent;
+import asenka.mtgfree.model.events.CardEvent;
 import asenka.mtgfree.model.events.LibraryEvent;
 import asenka.mtgfree.model.events.PlayerEvent;
 import asenka.mtgfree.model.game.Battlefield;
@@ -65,6 +69,7 @@ public class TestFXPlayerController implements Observer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 
 		battlefield = new Battlefield();
 
@@ -94,6 +99,12 @@ public class TestFXPlayerController implements Observer {
 
 	@FXML
 	private TableColumn<Card, String> btToughnessTableColumn;
+
+	@FXML
+	private TableColumn<Card, String> btTappedTableColumn;
+
+	@FXML
+	private TableColumn<Card, String> btVisibleTableColumn;
 
 	@FXML
 	private TableView<Card> handTableView;
@@ -195,16 +206,27 @@ public class TestFXPlayerController implements Observer {
 
 	@FXML
 	private void initialize() {
+		
+		
+		
 
 		logs = new LinkedList<AbstractEvent>();
 		playerController = new PlayerController(player);
 		playerController.addObserver(this);
+		
+		library.getCards().forEach(card -> new CardController(card, this.playerController).addObserver(this));
+		
 		selectedCard = null;
 		selectedCardOrigin = null;
 
 		this.selectedCardDataTextArea.setWrapText(true);
 		this.libraryTextArea.setText(buildStringFromCardsCollection(library.getCards()));
 		this.playerDataTextArea.setText(buildPlayerDataString(player));
+
+		this.btBattleIDTableColumn
+			.setCellValueFactory(cellData -> new SimpleStringProperty(Long.toString(cellData.getValue().getBattleId())));
+		this.hdBattleIDTableColumn
+			.setCellValueFactory(cellData -> new SimpleStringProperty(Long.toString(cellData.getValue().getBattleId())));
 
 		this.btNameTableColumn
 			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getName()));
@@ -216,6 +238,11 @@ public class TestFXPlayerController implements Observer {
 		this.hdCostTableColumn
 			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getManaCost()));
 
+		this.btTypeTableColumn
+			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getType()));
+		this.hdTypeTableColumn
+			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getType()));
+
 		this.btPowerTableColumn
 			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getPower()));
 		this.hdPowerTableColumn
@@ -225,6 +252,14 @@ public class TestFXPlayerController implements Observer {
 			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getToughness()));
 		this.hdToughnessTableColumn
 			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getToughness()));
+
+		this.btTappedTableColumn
+			.setCellValueFactory(cellData -> new SimpleStringProperty(Boolean.toString(cellData.getValue().isTapped())));
+		this.btVisibleTableColumn
+			.setCellValueFactory(cellData -> new SimpleStringProperty(Boolean.toString(cellData.getValue().isVisible())));
+
+		this.hdColorTableColumn
+			.setCellValueFactory(cellData -> new SimpleStringProperty(Arrays.toString(cellData.getValue().getPrimaryCardData().getColorIdentity())));
 
 		battlefieldTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 
@@ -332,12 +367,67 @@ public class TestFXPlayerController implements Observer {
 			playerController.exile(selectedCard, selectedCardOrigin, true);
 		}
 	}
+	
+	@FXML
+	private void backToHand() {
+
+		if (selectedCard != null && selectedCardOrigin != null) {
+			playerController.backToHand(selectedCard, selectedCardOrigin);
+		}
+	}
+	
+
+	@FXML
+	private void libraryTop() {
+
+		if (selectedCard != null && selectedCardOrigin != null) {
+			playerController.getData().getLibrary().addOnTop(selectedCard);
+			
+			switch(selectedCardOrigin) {
+				case BATTLEFIELD: playerController.getData().getBattlefield().remove(selectedCard); break;
+				case HAND: playerController.getData().removeCardFromHand(selectedCard); break;
+				default: throw new RuntimeException("NO other case for the moment");
+			}
+		}
+	}
+	
+	@FXML
+	private void libraryDown() {
+
+		if (selectedCard != null && selectedCardOrigin != null) {
+			playerController.getData().getLibrary().addToBottom(selectedCard);
+			
+			switch(selectedCardOrigin) {
+				case BATTLEFIELD: playerController.getData().getBattlefield().remove(selectedCard); break;
+				case HAND: playerController.getData().removeCardFromHand(selectedCard); break;
+				default: throw new RuntimeException("No other case for the moment");
+			}
+		}
+	}
+	
+	@FXML
+	private void toggleTapped() {
+		
+		if (selectedCard != null) {
+			selectedCard.setTapped(!selectedCard.isTapped());
+		}
+	}
+	
+
+	@FXML
+	private void toggleVisible() {
+		
+		if (selectedCard != null) {
+			selectedCard.setVisible(!selectedCard.isVisible());
+		}
+	}
 
 	@Override
 	public void update(Observable observedObject, Object event) {
 
 		this.logs.add((AbstractEvent) event);
 		this.logsTextArea.setText(buildLogsString(this.logs));
+		this.logsTextArea.selectPositionCaret(this.logsTextArea.getLength());
 
 		if (event instanceof LibraryEvent) {
 			manageLibraryEvent((Library) observedObject, (LibraryEvent) event);
@@ -345,6 +435,8 @@ public class TestFXPlayerController implements Observer {
 			managePlayerEvent((Player) observedObject, (PlayerEvent) event);
 		} else if (event instanceof BattlefieldEvent) {
 			manageBattlefieldEvent((Battlefield) observedObject, (BattlefieldEvent) event);
+		} else if(event instanceof CardEvent) {
+			manageCardEvent((Card) observedObject, (CardEvent) event);
 		}
 	}
 
@@ -355,12 +447,12 @@ public class TestFXPlayerController implements Observer {
 			this.selectedCardDataTextArea.setText("");
 		} else {
 
-			MtgCard cardData = selectedCard.getPrimaryCardData();
+			final MtgCard cardData = selectedCard.getPrimaryCardData();
 			String cardDataString = "";
 			cardDataString = "Name:\t " + cardData.getName() + "\n";
 			cardDataString += "Cost: \t " + cardData.getManaCost() + "\n";
-			cardDataString += "Type:\t " + cardData.getType() + "\n";
-			cardDataString += "Text:\n " + cardData.getText() + "\n";
+			cardDataString += "Type:\t " + cardData.getType() + "\n\n";
+			cardDataString += "Text:\n" + cardData.getText() + "\n";
 
 			this.selectedCardDataTextArea.setText(cardDataString);
 		}
@@ -398,6 +490,16 @@ public class TestFXPlayerController implements Observer {
 	private void manageLibraryEvent(Library library, LibraryEvent event) {
 
 		this.libraryTextArea.setText(buildStringFromCardsCollection(playerController.getData().getLibrary().getCards()));
+	}
+
+	private void manageCardEvent(Card observedObject, CardEvent event) {
+	
+		int index = this.battlefieldTableView.getSelectionModel().getSelectedIndex();
+		this.battlefieldTableView.getItems().set(index, observedObject);
+		this.battlefieldTableView.requestFocus();
+		this.battlefieldTableView.getSelectionModel().select(index);
+		this.battlefieldTableView.getFocusModel().focus(index);
+		
 	}
 
 	private static final String buildStringFromCardsCollection(Collection<Card> cards) {
