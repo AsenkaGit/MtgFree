@@ -13,22 +13,22 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="asenka.mtgfree.view.tests.TestFXPlayerController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="asenka.mtgfree.view.tests.TestFXPlayerController">
 	<right>
-		<VBox BorderPane.alignment="CENTER">
+		<VBox prefHeight="800.0" prefWidth="280.0" BorderPane.alignment="CENTER">
 			<children>
-				<Accordion prefHeight="400.0">
+				<Accordion prefHeight="531.0" prefWidth="280.0">
 					<panes>
-						<TitledPane animated="false" text="Card Image">
+						<TitledPane text="Card Image">
 							<content>
 								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
 									<children>
-										<ImageView fx:id="selectedCardImageView" fitHeight="289.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+										<ImageView fx:id="selectedCardImageView" fitHeight="367.0" fitWidth="277.0" pickOnBounds="true" preserveRatio="true" />
 									</children>
 								</AnchorPane>
 							</content>
 						</TitledPane>
-						<TitledPane animated="false" text="Card Data">
+						<TitledPane expanded="false" text="Card Data">
 							<content>
 								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
 									<children>
@@ -37,7 +37,7 @@
 								</AnchorPane>
 							</content>
 						</TitledPane>
-						<TitledPane animated="false" text="Logs">
+						<TitledPane expanded="false" prefHeight="482.0" prefWidth="280.0" text="Logs">
 							<content>
 								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
 									<children>
@@ -48,19 +48,19 @@
 						</TitledPane>
 					</panes>
 				</Accordion>
-				<AnchorPane prefHeight="200.0">
+				<AnchorPane maxHeight="80.0" prefHeight="80.0" prefWidth="280.0">
 					<children>
-						<Button fx:id="tapUntapSelectedButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#toggleTapped" text="Tap / Untap" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
-						<Button fx:id="showHideSelectedButton" layoutX="14.0" layoutY="49.0" mnemonicParsing="false" onAction="#toggleVisible" text="Show / Hide" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="40.0" />
-						<Button fx:id="handSelectedButton" layoutX="14.0" layoutY="87.0" mnemonicParsing="false" onAction="#backToHand" prefHeight="26.0" prefWidth="96.0" text="Hand" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="75.0" />
-						<Button fx:id="exileSelectedButton" layoutX="120.0" layoutY="48.0" mnemonicParsing="false" onAction="#exile" prefHeight="26.0" prefWidth="67.0" text="Exile" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="40.0" />
-						<Button fx:id="killSelectedButton" layoutX="119.0" layoutY="15.0" mnemonicParsing="false" onAction="#destroy" prefHeight="26.0" prefWidth="69.0" text="Kill" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="5.0" />
-						<Button fx:id="libraryTopSelectedButton" layoutX="32.0" layoutY="113.0" mnemonicParsing="false" onAction="#libraryTop" prefHeight="26.0" prefWidth="96.0" text="Library (top)" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="110.0">
+						<Button fx:id="tapUntapSelectedButton" layoutX="35.0" layoutY="14.0" mnemonicParsing="false" onAction="#toggleTapped" text="Tap / Untap" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="14.0" />
+						<Button fx:id="showHideSelectedButton" layoutX="140.0" layoutY="14.0" mnemonicParsing="false" onAction="#toggleVisible" text="Show / Hide" AnchorPane.leftAnchor="140.0" AnchorPane.topAnchor="14.0" />
+						<Button fx:id="handSelectedButton" layoutX="11.0" layoutY="50.0" mnemonicParsing="false" onAction="#backToHand" prefHeight="26.0" prefWidth="96.0" text="Hand" AnchorPane.leftAnchor="11.0" AnchorPane.topAnchor="50.0" />
+						<Button fx:id="exileSelectedButton" layoutX="189.0" layoutY="50.0" mnemonicParsing="false" onAction="#exile" prefHeight="26.0" prefWidth="67.0" text="Exile" AnchorPane.leftAnchor="189.0" AnchorPane.topAnchor="50.0" />
+						<Button fx:id="killSelectedButton" layoutX="114.0" layoutY="50.0" mnemonicParsing="false" onAction="#destroy" prefHeight="26.0" prefWidth="69.0" text="Kill" AnchorPane.leftAnchor="114.0" AnchorPane.topAnchor="50.0" />
+						<Button fx:id="libraryTopSelectedButton" layoutX="10.0" layoutY="82.0" mnemonicParsing="false" onAction="#libraryTop" prefHeight="26.0" prefWidth="96.0" text="Library (top)" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="82.0">
 							<font>
 								<Font size="10.0" />
 							</font>
 						</Button>
-						<Button fx:id="libraryBottomSelectedButton" layoutX="5.0" layoutY="148.0" mnemonicParsing="false" onAction="#libraryDown" prefHeight="26.0" prefWidth="96.0" text="Library (bottom)" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="145.0">
+						<Button fx:id="libraryBottomSelectedButton" layoutX="112.0" layoutY="82.0" mnemonicParsing="false" onAction="#libraryDown" prefHeight="26.0" prefWidth="147.0" text="Library (bottom)" AnchorPane.leftAnchor="112.0" AnchorPane.topAnchor="82.0">
 							<font>
 								<Font size="10.0" />
 							</font>
@@ -91,7 +91,7 @@
 	<bottom>
 		<HBox prefHeight="200.0" BorderPane.alignment="CENTER">
 			<children>
-				<AnchorPane prefHeight="200.0" prefWidth="200.0">
+				<AnchorPane prefHeight="200.0" prefWidth="280.0">
 					<children>
 						<Button fx:id="drawHandButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#draw" text="Draw" />
 						<Button fx:id="revealeHideHandButton" layoutX="14.0" layoutY="49.0" mnemonicParsing="false" text="Reveal / Hide" />
@@ -99,7 +99,7 @@
 						<Button fx:id="playButton" layoutX="15.0" layoutY="123.0" mnemonicParsing="false" onAction="#play" text="Play" />
 					</children>
 				</AnchorPane>
-				<TableView fx:id="handTableView" prefHeight="200.0" prefWidth="891.0">
+				<TableView fx:id="handTableView" prefHeight="200.0" prefWidth="920.0">
 					<columns>
 						<TableColumn fx:id="hdBattleIDTableColumn" prefWidth="80.0" text="BattleID" />
 						<TableColumn fx:id="hdNameTableColumn" prefWidth="130.0" text="Card Name" />
@@ -114,13 +114,13 @@
 		</HBox>
 	</bottom>
 	<left>
-		<Accordion BorderPane.alignment="CENTER">
+		<Accordion prefHeight="600.0" prefWidth="280.0" BorderPane.alignment="CENTER">
 			<panes>
 				<TitledPane animated="false" text="Player">
 					<content>
 						<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
 							<children>
-								<TextArea fx:id="playerDataTextArea" prefHeight="200.0" prefWidth="200.0" text="Player's Data" />
+								<TextArea fx:id="playerDataTextArea" prefHeight="200.0" prefWidth="278.0" text="Player's Data" />
 								<Button fx:id="lifeUpPlayerButton" layoutX="14.0" layoutY="215.0" mnemonicParsing="false" onAction="#lifeUp" text="Life Up" />
 								<Button fx:id="lifeDownPlayerButton" layoutX="14.0" layoutY="252.0" mnemonicParsing="false" onAction="#lifeDown" text="Life Down" />
 								<Button fx:id="poisonUpPlayerButton" layoutX="13.0" layoutY="290.0" mnemonicParsing="false" onAction="#poisonUp" text="Poison Up" />

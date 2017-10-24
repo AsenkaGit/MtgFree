@@ -69,9 +69,9 @@ public class TestPlayerController extends MtgFreeTest {
 	@Before
 	@Override
 	public void setUp() {
-		
+
 		super.setUp();
-		
+
 		Card.setBattleIdCounter(1);
 
 		Library library = null;
@@ -100,7 +100,7 @@ public class TestPlayerController extends MtgFreeTest {
 		assertEquals(3, playerController.getData().countObservers());
 		assertEquals(3, playerController.getData().getLibrary().countObservers());
 		assertEquals(3, playerController.getData().getBattlefield().countObservers());
-//		assertEquals(3, playerController.getObservers().size());
+		// assertEquals(3, playerController.getObservers().size());
 	}
 
 	@Test
@@ -117,7 +117,11 @@ public class TestPlayerController extends MtgFreeTest {
 	public void testDraw() {
 
 		playerController.shuffleLibrary();
-		playerController.draw();
+		try {
+			playerController.draw();
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
 
 		assertEquals(59, playerController.getData().getLibrary().size());
 		assertEquals(1, playerController.getData().getHand().size());
@@ -156,7 +160,11 @@ public class TestPlayerController extends MtgFreeTest {
 
 		final Card card = playerController.getData().getLibrary().get(0);
 
-		playerController.draw();
+		try {
+			playerController.draw();
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
 		playerController.play(card, Origin.HAND, true, 120d, 56d);
 		playerController.destroy(card, Origin.BATTLEFIELD);
 

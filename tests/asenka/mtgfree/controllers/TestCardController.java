@@ -163,7 +163,11 @@ public class TestCardController extends MtgFreeTest {
 	public void testAssociatedCards() {
 
 		playerController.shuffleLibrary();
-		playerController.draw();
+		try {
+			playerController.draw();
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
 
 		final Card associatedCard = playerController.getData().getHand().iterator().next();
 
@@ -191,7 +195,11 @@ public class TestCardController extends MtgFreeTest {
 
 		assertSame(card, playerController.getData().getLibrary().get(0));
 
-		playerController.draw();
+		try {
+			playerController.draw();
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
 
 		assertTrue(playerController.getData().getHand().contains(card));
 		assertEquals(1, playerController.getData().getHand().size());

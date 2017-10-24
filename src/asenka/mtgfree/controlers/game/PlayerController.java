@@ -1,6 +1,7 @@
 package asenka.mtgfree.controlers.game;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Observer;
 
 import asenka.mtgfree.model.game.Battlefield;
@@ -31,11 +32,17 @@ public class PlayerController extends Controller<Player> {
 
 	/**
 	 * Draw a card. It gets and removes the first card from the library and put it in the player 's hand
+	 * @throws Exception 
 	 */
-	public void draw() {
+	public void draw() throws Exception {
 
-		Card card = this.data.getLibrary().draw();
-		this.data.addCardToHand(card);
+		try {
+			Card card = this.data.getLibrary().draw();
+			this.data.addCardToHand(card);
+		} catch(NoSuchElementException ex) {
+			throw new Exception("The player's library is empty, you can not draw card anymore", ex);
+		}
+		 
 	}
 
 	/**
@@ -120,6 +127,41 @@ public class PlayerController extends Controller<Player> {
 			card.setRevealed(false);
 			card.setVisible(true);
 			this.data.addCardToHand(card);
+		}
+	}
+	
+	/**
+	 * Send a card to the library (on the top)
+	 * @param card
+	 * @param origin
+	 */
+	public void backToTopOfLibrary(Card card, Origin origin) {
+		
+		if (origin == Origin.LIBRARY) {
+			throw new IllegalArgumentException("You cannot send back to library a card that is already in the player's library");
+		} else {
+			checkOriginAndRemove(origin, card);
+			card.setRevealed(false);
+			card.setVisible(true);
+			this.data.getLibrary().addOnTop(card);
+		}
+	}
+	
+
+	/**
+	 * Send a card to the library (on the bottom)
+	 * @param card
+	 * @param origin
+	 */
+	public void backToBottomOfLibrary(Card card, Origin origin) {
+		
+		if (origin == Origin.LIBRARY) {
+			throw new IllegalArgumentException("You cannot send back to library a card that is already in the player's library");
+		} else {
+			checkOriginAndRemove(origin, card);
+			card.setRevealed(false);
+			card.setVisible(true);
+			this.data.getLibrary().addToBottom(card);
 		}
 	}
 
