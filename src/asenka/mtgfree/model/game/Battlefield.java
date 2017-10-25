@@ -21,64 +21,73 @@ public class Battlefield extends Observable implements Serializable {
 	/**
 	 * The generated id for serialization
 	 */
-	private static final long serialVersionUID = -8273268654036110921L;
+	private static final long serialVersionUID = 247576395066971120L;
+
 	/**
-	 * The synchronized set of cards on the battlefield
+	 * The synchronized list of cards on the battlefield
 	 */
 	private List<Card> cards;
 
 	/**
-	 * Create a battlefield without any cards
+	 * Create a battlefield without any cards. It initializes the list of cards
+	 * with {@link Collections#synchronizedList(List)} 
 	 */
 	public Battlefield() {
 
-		// Use a synchronized set because several players may perform actions on the battlefield at the same time
+		// Use a synchronized list because several players may perform actions on the battlefield at the same time
 		this.cards = Collections.synchronizedList(new ArrayList<Card>());
 	}
 
 	/**
+	 * Returns an unmodifiable list of cards
+	 * 
 	 * @return the cards on the battlefield
+	 * @see Collections#unmodifiableList(List)
 	 */
 	public List<Card> getCards() {
 
-		return cards;
+		return Collections.unmodifiableList(cards);
 
 	}
-	
+
 	/**
 	 * @param card the card to check
 	 * @return <code>true</code> if <code>card</code> is on the battlefield
 	 */
 	public boolean contains(Card card) {
+
 		return this.cards.contains(card);
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return the number of card on this battlefield
 	 */
 	public int size() {
-	
+
 		return this.cards.size();
 	}
 
 	/**
 	 * Adds a card on the battlefield and notify the observers
-	 * @param card the card to add
+	 * 
+	 * @param card the card to add (if <code>null</code> nothing happens)
 	 * @see BattlefieldEvent
 	 */
 	public void add(Card card) {
 
-		this.cards.add(card);
-
-		super.setChanged();
-		super.notifyObservers(new BattlefieldEvent("add", "cards", card));
+		if (card != null) {
+			this.cards.add(card);
+			super.setChanged();
+			super.notifyObservers(new BattlefieldEvent("add", "cards", card));
+		}
 	}
 
 	/**
 	 * Removes a card from the battlefield and notify the observers
+	 * 
 	 * @param card the card to remove
-	 * @return <code>true</code> if the card has been successfully removed, <code>false</code> if the card wasn't on the battlefield
+	 * @return <code>true</code> if the card has been successfully removed, <code>false</code> if the card wasn't on the
+	 *         battlefield
 	 * @see BattlefieldEvent
 	 */
 	public boolean remove(Card card) {
@@ -94,12 +103,12 @@ public class Battlefield extends Observable implements Serializable {
 
 	/**
 	 * Removes all the cards on the battlefield
+	 * 
 	 * @see BattlefieldEvent
 	 */
 	public void clear() {
 
 		this.cards.clear();
-
 		super.setChanged();
 		super.notifyObservers(new BattlefieldEvent("clear", "cards", null));
 	}
