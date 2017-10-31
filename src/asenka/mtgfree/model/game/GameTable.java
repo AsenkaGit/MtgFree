@@ -31,22 +31,25 @@ public class GameTable {
 	private final Map<Player, PlayerController> otherPlayers;
 
 	/**
-	 * 
-	 * @param localPlayer
-	 * @param opponent
+	 * Build a game table with two players
+	 * @param localPlayer the local player
+	 * @param opponent the opponent using another client
 	 */
 	public GameTable(Player localPlayer, Player opponent) {
 
-		this.localPlayer = localPlayer;
-		this.localPlayerController = new PlayerController(localPlayer, true);
-		this.otherPlayers = new HashMap<Player, PlayerController>();
-		this.otherPlayers.put(opponent, new PlayerController(opponent, false));
+		if (localPlayer == null || opponent == null || localPlayer.equals(opponent)) {
+			throw new RuntimeException("Wrong initialization of the game table");
+		} else {
+			this.localPlayer = localPlayer;
+			this.localPlayerController = new PlayerController(localPlayer, true);
+			this.otherPlayers = new HashMap<Player, PlayerController>();
+			this.otherPlayers.put(opponent, new PlayerController(opponent, false));
+		}
 	}
 
 	/**
-	 * 
-	 * @param player
-	 * @return
+	 * @param player the player to check
+	 * @return <code>true</code> if <code>player</code> is equals to <code>localPlayer</code>
 	 */
 	public boolean isLocalPlayer(Player player) {
 
