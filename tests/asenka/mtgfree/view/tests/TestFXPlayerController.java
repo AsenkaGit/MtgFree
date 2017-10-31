@@ -7,7 +7,6 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Queue;
 
-import asenka.mtgfree.controlers.game.CardController;
 import asenka.mtgfree.controlers.game.PlayerController;
 import asenka.mtgfree.controlers.game.Controller.Origin;
 import asenka.mtgfree.model.data.MtgCard;
@@ -208,10 +207,8 @@ public class TestFXPlayerController implements Observer {
 	private void initialize() {
 
 		logs = new LinkedList<AbstractClientEvent>();
-		playerController = new PlayerController(player, false);
+		playerController = new PlayerController(player, true);
 		playerController.addObserver(this);
-
-		library.getCards().forEach(card -> new CardController(card, this.playerController, false).addObserver(this));
 
 		selectedCard = null;
 		selectedCardOrigin = null;

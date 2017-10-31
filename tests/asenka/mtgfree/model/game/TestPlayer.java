@@ -96,7 +96,6 @@ public class TestPlayer extends MtgFreeTest {
 		public void update(Observable observedCard, Object event) {
 
 			assertTrue(observedCard instanceof Serializable);
-			assertTrue(event instanceof Serializable);
 			assertTrue(event instanceof AbstractClientEvent);
 			assertEquals(PlayerEvent.class, event.getClass());
 

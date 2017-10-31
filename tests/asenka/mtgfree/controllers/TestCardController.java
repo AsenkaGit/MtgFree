@@ -22,6 +22,7 @@ import asenka.mtgfree.model.game.Deck;
 import asenka.mtgfree.model.game.Player;
 import asenka.mtgfree.tests.MtgFreeTest;
 
+@Deprecated
 public class TestCardController extends MtgFreeTest {
 
 	private static MtgDataUtility dataUtility;

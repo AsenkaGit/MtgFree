@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import asenka.mtgfree.controllers.TestCardController;
 import asenka.mtgfree.controllers.TestPlayerController;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.model.game.TestCard;
@@ -19,7 +18,7 @@ import asenka.mtgfree.model.utilities.json.TestMtgDataUtility;
 
 @RunWith(Suite.class)
 @SuiteClasses(value = { TestMtgDataUtility.class, TestCard.class, TestLibrary.class, TestDeck.class, TestPlayer.class,
-		TestPlayerController.class, TestCardController.class })
+		TestPlayerController.class })
 public class TestsLauncher {
 
 	@BeforeClass

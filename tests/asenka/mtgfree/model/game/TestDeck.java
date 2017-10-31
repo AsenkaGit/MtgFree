@@ -106,7 +106,6 @@ public class TestDeck extends MtgFreeTest {
 		public void update(Observable observedDeck, Object event) {
 
 			assertTrue(observedDeck instanceof Serializable);
-			assertTrue(event instanceof Serializable);
 			assertTrue(event instanceof AbstractClientEvent);
 			assertEquals(DeckEvent.class, event.getClass());
 			assertTrue(((DeckEvent) event).getValue() instanceof Serializable);

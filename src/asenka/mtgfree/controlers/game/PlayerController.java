@@ -1,11 +1,16 @@
 package asenka.mtgfree.controlers.game;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Observer;
 
+import org.apache.log4j.Logger;
+
+import asenka.mtgfree.model.events.NetworkEvent;
 import asenka.mtgfree.model.game.Battlefield;
 import asenka.mtgfree.model.game.Card;
+import asenka.mtgfree.model.game.Counter;
 import asenka.mtgfree.model.game.Library;
 import asenka.mtgfree.model.game.Player;
 
@@ -24,7 +29,8 @@ public class PlayerController extends Controller<Player> {
 	 * Build the controller for a player.
 	 * 
 	 * @param player the player controlled
-	 * @param playerManaged <code>true</code> if the player controller is used by a human player, <code>false</code> if it is used by the program
+	 * @param playerManaged <code>true</code> if the player controller is used by a human player, <code>false</code> if it is used
+	 *        by the program
 	 */
 	public PlayerController(Player player, boolean playerManaged) {
 
@@ -33,17 +39,23 @@ public class PlayerController extends Controller<Player> {
 
 	/**
 	 * Draw a card. It gets and removes the first card from the library and put it in the player 's hand
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	public void draw() throws Exception {
 
 		try {
 			Card card = this.data.getLibrary().draw();
 			this.data.addCardToHand(card);
-		} catch(NoSuchElementException ex) {
+
+			if (playerManaged) {
+				notifyNetworkObserver(new NetworkEvent("draw", this.data));
+			}
+
+		} catch (NoSuchElementException ex) {
 			throw new Exception("The player's library is empty, you can not draw card anymore", ex);
 		}
-		 
+
 	}
 
 	/**
@@ -55,6 +67,10 @@ public class PlayerController extends Controller<Player> {
 
 		List<Card> cards = this.data.getLibrary().draw(x);
 		cards.forEach(card -> this.data.addCardToHand(card));
+
+		if (playerManaged) {
+			notifyNetworkObserver(new NetworkEvent("draw", this.data, new Integer(x)));
+		}
 	}
 
 	/**
@@ -75,6 +91,10 @@ public class PlayerController extends Controller<Player> {
 			card.setLocation(x, y);
 			card.setVisible(visible);
 			this.data.getBattlefield().add(card);
+
+			if (playerManaged) {
+				notifyNetworkObserver(new NetworkEvent("play", this.data, new Serializable[] { card, origin }));
+			}
 		}
 	}
 
@@ -93,6 +113,10 @@ public class PlayerController extends Controller<Player> {
 			checkOriginAndRemove(origin, card);
 			card.setVisible(visible);
 			this.data.addCardToExile(card);
+
+			if (playerManaged) {
+				notifyNetworkObserver(new NetworkEvent("exile", this.data, new Serializable[] { card, origin }));
+			}
 		}
 	}
 
@@ -110,6 +134,10 @@ public class PlayerController extends Controller<Player> {
 			checkOriginAndRemove(origin, card);
 			card.setVisible(true);
 			this.data.addCardToGraveyard(card);
+
+			if (playerManaged) {
+				notifyNetworkObserver(new NetworkEvent("destroy", this.data, new Serializable[] { card, origin }));
+			}
 		}
 	}
 
@@ -128,16 +156,21 @@ public class PlayerController extends Controller<Player> {
 			card.setRevealed(false);
 			card.setVisible(true);
 			this.data.addCardToHand(card);
+
+			if (playerManaged) {
+				notifyNetworkObserver(new NetworkEvent("backToHand", this.data, new Serializable[] { card, origin }));
+			}
 		}
 	}
-	
+
 	/**
 	 * Send a card to the library (on the top)
+	 * 
 	 * @param card
 	 * @param origin
 	 */
 	public void backToTopOfLibrary(Card card, Origin origin) {
-		
+
 		if (origin == Origin.LIBRARY) {
 			throw new IllegalArgumentException("You cannot send back to library a card that is already in the player's library");
 		} else {
@@ -145,17 +178,21 @@ public class PlayerController extends Controller<Player> {
 			card.setRevealed(false);
 			card.setVisible(true);
 			this.data.getLibrary().addOnTop(card);
+
+			if (playerManaged) {
+				notifyNetworkObserver(new NetworkEvent("backToTopOfLibrary", this.data, new Serializable[] { card, origin }));
+			}
 		}
 	}
-	
 
 	/**
 	 * Send a card to the library (on the bottom)
+	 * 
 	 * @param card
 	 * @param origin
 	 */
 	public void backToBottomOfLibrary(Card card, Origin origin) {
-		
+
 		if (origin == Origin.LIBRARY) {
 			throw new IllegalArgumentException("You cannot send back to library a card that is already in the player's library");
 		} else {
@@ -163,6 +200,25 @@ public class PlayerController extends Controller<Player> {
 			card.setRevealed(false);
 			card.setVisible(true);
 			this.data.getLibrary().addToBottom(card);
+
+			if (playerManaged) {
+				notifyNetworkObserver(new NetworkEvent("backToBottomOfLibrary", this.data, new Serializable[] { card, origin }));
+			}
+		}
+	}
+
+	/**
+	 * Tap or untap a card
+	 * 
+	 * @param tapped true/false
+	 * @param card the card to update
+	 */
+	public void setTapped(boolean tapped, Card card) {
+
+		card.setTapped(tapped);
+
+		if (playerManaged) {
+			notifyNetworkObserver(new NetworkEvent("setTapped", this.data, card));
 		}
 	}
 
@@ -175,16 +231,116 @@ public class PlayerController extends Controller<Player> {
 	public void setTapped(boolean tapped, List<Card> cards) {
 
 		cards.forEach(card -> card.setTapped(tapped));
+
+		if (playerManaged) {
+			notifyNetworkObserver(new NetworkEvent("setTapped", this.data, cards.toArray()));
+		}
 	}
 
 	/**
-	 * Tap or untap all the cards on the battlefield
+	 * Set the visiblity of a list of cards
 	 * 
-	 * @param tapped true/false
+	 * @param visible true/false
+	 * @param card the card to update
 	 */
-	public void setTappedAll(boolean tapped) {
+	public void setVisible(boolean visible, Card card) {
 
-		this.data.getBattlefield().getCards().forEach(card -> card.setTapped(tapped));
+		card.setVisible(visible);
+
+		if (playerManaged) {
+			notifyNetworkObserver(new NetworkEvent("setVisible", this.data, card));
+		}
+	}
+
+	/**
+	 * Set the visiblity of a card
+	 * 
+	 * @param visible true/false
+	 * @param cards the card to update
+	 */
+	public void setVisible(boolean visible, List<Card> cards) {
+
+		cards.forEach(card -> card.setVisible(visible));
+
+		if (playerManaged) {
+			notifyNetworkObserver(new NetworkEvent("setVisible", this.data, cards.toArray()));
+		}
+	}
+
+	/**
+	 * Set the visiblity of a list of cards
+	 * 
+	 * @param revealed true/false
+	 * @param card the card to update
+	 */
+	public void setRevealed(boolean revealed, Card card) {
+
+		card.setRevealed(revealed);
+
+		if (playerManaged) {
+			notifyNetworkObserver(new NetworkEvent("setRevealed", this.data, card));
+		}
+	}
+
+	/**
+	 * Set the visiblity of a card
+	 * 
+	 * @param revealed true/false
+	 * @param cards the card to update
+	 */
+	public void setRevealed(boolean revealed, List<Card> cards) {
+
+		cards.forEach(card -> card.setRevealed(revealed));
+
+		if (playerManaged) {
+			notifyNetworkObserver(new NetworkEvent("setRevealed", this.data, cards.toArray()));
+		}
+	}
+
+	/**
+	 * Update the card location
+	 * 
+	 * @param x new vertical coordinate
+	 * @param y new horizontal coordinate
+	 * @param card the card to update
+	 */
+	public void setLocation(double x, double y, Card card) {
+
+		card.setLocation(x, y);
+
+		if (playerManaged) {
+			notifyNetworkObserver(new NetworkEvent("setLocation", this.data, card));
+		}
+	}
+
+	/**
+	 * Add a new counter on the card
+	 * 
+	 * @param counter
+	 * @param card
+	 */
+	public void addCounter(Counter counter, Card card) {
+
+		card.addCounter(counter);
+
+		if (playerManaged) {
+			notifyNetworkObserver(new NetworkEvent("addCounter", this.data, new Serializable[] { card, counter }));
+		}
+	}
+
+	/**
+	 * Removes a counter from the card
+	 * 
+	 * @param counter the counter to remove
+	 * @param card the card
+	 */
+	public void removeCounter(Counter counter, Card card) {
+
+		card.removeCounter(counter);
+
+		if (playerManaged) {
+			notifyNetworkObserver(new NetworkEvent("removeCounter", this.data, new Serializable[] { card, counter }));
+		}
 	}
 
 	/**
@@ -193,6 +349,10 @@ public class PlayerController extends Controller<Player> {
 	public void shuffleLibrary() {
 
 		this.data.getLibrary().shuffle();
+
+		if (playerManaged) {
+			notifyNetworkObserver(new NetworkEvent("shuffleLibrary", this.data, this.data.getLibrary()));
+		}
 	}
 
 	/**
@@ -204,6 +364,10 @@ public class PlayerController extends Controller<Player> {
 	public void addCardToBattlefield(Card card) {
 
 		this.data.getBattlefield().add(card);
+
+		if (playerManaged) {
+			notifyNetworkObserver(new NetworkEvent("addCardToBattlefield", this.data, card));
+		}
 	}
 
 	/**
@@ -215,6 +379,10 @@ public class PlayerController extends Controller<Player> {
 	public void removeCardFromBattlefield(Card card) throws Exception {
 
 		this.data.getBattlefield().remove(card);
+
+		if (playerManaged) {
+			notifyNetworkObserver(new NetworkEvent("removeCardFromBattlefield", this.data, card));
+		}
 	}
 
 	/**
@@ -224,6 +392,10 @@ public class PlayerController extends Controller<Player> {
 	public void setLifeCounters(int lifeCounters) {
 
 		this.data.setLifeCounters(lifeCounters);
+
+		if (playerManaged) {
+			notifyNetworkObserver(new NetworkEvent("setLifeCounters", this.data));
+		}
 	}
 
 	/**
@@ -233,52 +405,53 @@ public class PlayerController extends Controller<Player> {
 	public void setPoisonCounters(int poisonCounters) {
 
 		this.data.setPoisonCounters(poisonCounters);
+
+		if (playerManaged) {
+			notifyNetworkObserver(new NetworkEvent("setPoisonCounters", this.data));
+		}
 	}
 
 	/**
-	 * PlayerController overrides the Controller method to add the observer to the
-	 * library and the battlefield
+	 * PlayerController overrides the Controller method to add the observer to the library and the battlefield
 	 */
 	@Override
 	public void addObserver(Observer observer) {
-	
+
 		super.addObserver(observer);
-	
+
 		Library library = this.data.getLibrary();
 		Battlefield battlefield = this.data.getBattlefield();
-	
+
 		library.addObserver(observer);
 		battlefield.addObserver(observer);
 	}
 
 	/**
-	 * PlayerController overrides the Controller method to remove the observer from the
-	 * library and the battlefield
+	 * PlayerController overrides the Controller method to remove the observer from the library and the battlefield
 	 */
 	@Override
 	public void deleteObserver(Observer observer) {
-	
+
 		super.deleteObserver(observer);
-	
+
 		Library library = this.data.getLibrary();
 		Battlefield battlefield = this.data.getBattlefield();
-	
+
 		library.deleteObserver(observer);
 		battlefield.deleteObserver(observer);
 	}
 
 	/**
-	 * PlayerController overrides the Controller method to clear the observers from the
-	 * library and the battlefield
+	 * PlayerController overrides the Controller method to clear the observers from the library and the battlefield
 	 */
 	@Override
 	public void deleteObservers() {
-	
+
 		super.deleteObservers();
-	
+
 		Library library = this.data.getLibrary();
 		Battlefield battlefield = this.data.getBattlefield();
-	
+
 		library.deleteObservers();
 		battlefield.deleteObservers();
 	}
@@ -322,4 +495,12 @@ public class PlayerController extends Controller<Player> {
 		}
 	}
 
+	/**
+	 * 
+	 * @param event
+	 */
+	private void notifyNetworkObserver(NetworkEvent event) {
+
+		Logger.getLogger(this.getClass()).info(event);
+	}
 }
