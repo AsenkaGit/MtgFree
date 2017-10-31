@@ -87,7 +87,7 @@ public class TestPlayerController extends MtgFreeTest {
 		player.setSelectedDeck(testDeck);
 		player.setLibrary(library);
 
-		this.playerController = new PlayerController(player);
+		this.playerController = new PlayerController(player, false);
 
 		this.battlefieldView = new TestObserver(this.playerController);
 		this.libraryView = new TestObserver(this.playerController);

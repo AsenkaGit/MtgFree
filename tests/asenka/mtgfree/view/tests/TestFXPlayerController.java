@@ -208,10 +208,10 @@ public class TestFXPlayerController implements Observer {
 	private void initialize() {
 
 		logs = new LinkedList<AbstractClientEvent>();
-		playerController = new PlayerController(player);
+		playerController = new PlayerController(player, false);
 		playerController.addObserver(this);
 
-		library.getCards().forEach(card -> new CardController(card, this.playerController).addObserver(this));
+		library.getCards().forEach(card -> new CardController(card, this.playerController, false).addObserver(this));
 
 		selectedCard = null;
 		selectedCardOrigin = null;

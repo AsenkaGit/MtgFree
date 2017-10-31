@@ -24,10 +24,11 @@ public class PlayerController extends Controller<Player> {
 	 * Build the controller for a player.
 	 * 
 	 * @param player the player controlled
+	 * @param playerManaged <code>true</code> if the player controller is used by a human player, <code>false</code> if it is used by the program
 	 */
-	public PlayerController(Player player) {
+	public PlayerController(Player player, boolean playerManaged) {
 
-		super(player);
+		super(player, playerManaged);
 	}
 
 	/**

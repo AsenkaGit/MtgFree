@@ -92,14 +92,14 @@ public class TestCardController extends MtgFreeTest {
 		} catch (Exception e) {
 			fail("Unexpected exception :" + e.getMessage());
 		}
-		playerController = new PlayerController(player);
+		playerController = new PlayerController(player, false);
 
 		cardData = dataUtility.getMtgCard("Shrine of Burning Rage");
 		card = new Card(cardData);
 		
 		playerController.getData().getLibrary().addToBottom(card);
 		
-		cardController = new CardController(card, playerController);
+		cardController = new CardController(card, playerController, false);
 		cardView = new TestObserver(cardController);
 	}
 
