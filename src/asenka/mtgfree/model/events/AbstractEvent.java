@@ -2,6 +2,8 @@ package asenka.mtgfree.model.events;
 
 import java.io.Serializable;
 
+import org.apache.log4j.Logger;
+
 /**
  * An abstract class for all the eventType
  * 
@@ -26,6 +28,8 @@ public abstract class AbstractEvent implements Serializable {
 	public AbstractEvent(String eventType) {
 
 		this.eventType = eventType;
+		
+		Logger.getLogger(this.getClass()).trace(this);
 	}
 	
 	/**

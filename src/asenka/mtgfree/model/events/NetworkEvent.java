@@ -9,11 +9,11 @@ import asenka.mtgfree.model.game.Player;
  * @see AbstractEvent
  */
 public class NetworkEvent extends AbstractEvent {
-	
+
 	/**
 	 * The generated ID for serialization
 	 */
-	private static final long serialVersionUID = -5787227409423452235L;
+	private static final long serialVersionUID = 8941056928929516539L;
 
 	/**
 	 * The player performing the eventType
@@ -62,5 +62,50 @@ public class NetworkEvent extends AbstractEvent {
 	public Player getPlayer() {
 
 		return player;
+	}
+
+	@Override
+	public String toString() {
+
+		return this.getClass().getSimpleName() + "[" + super.eventType + ", " + this.player.getName() + ", " + this.clientEvent + "]";
+	}
+
+	@Override
+	public int hashCode() {
+
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((eventType == null) ? 0 : eventType.hashCode());
+		result = prime * result + ((clientEvent == null) ? 0 : clientEvent.hashCode());
+		result = prime * result + ((player == null) ? 0 : player.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		NetworkEvent other = (NetworkEvent) obj;
+		if (eventType == null) {
+			if (other.eventType != null)
+				return false;
+		} else if (!eventType.equals(other.eventType))
+			return false;
+		if (clientEvent == null) {
+			if (other.clientEvent != null)
+				return false;
+		} else if (!clientEvent.equals(other.clientEvent))
+			return false;
+		if (player == null) {
+			if (other.player != null)
+				return false;
+		} else if (!player.equals(other.player))
+			return false;
+		return true;
 	}
 }
