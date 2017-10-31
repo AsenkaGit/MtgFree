@@ -16,7 +16,7 @@ import org.junit.Test;
 
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
-import asenka.mtgfree.model.events.AbstractEvent;
+import asenka.mtgfree.model.events.AbstractClientEvent;
 import asenka.mtgfree.model.events.LibraryEvent;
 import asenka.mtgfree.tests.MtgFreeTest;
 
@@ -240,7 +240,7 @@ public class TestLibrary extends MtgFreeTest {
 
 			assertTrue(observedCard instanceof Serializable);
 			assertTrue(event instanceof Serializable);
-			assertTrue(event instanceof AbstractEvent);
+			assertTrue(event instanceof AbstractClientEvent);
 			assertEquals(LibraryEvent.class, event.getClass());
 			assertTrue(((LibraryEvent) event).getValue() instanceof Serializable);
 

@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author asenka
  * @see Library
  */
-public class LibraryEvent extends AbstractEvent {
+public class LibraryEvent extends AbstractClientEvent {
 
 	/**
 	 * The generated ID for serialization
@@ -20,9 +20,9 @@ public class LibraryEvent extends AbstractEvent {
 	 * @param event the type of event
 	 * @param property the updated property
 	 * @param value the new value
-	 * @see AbstractEvent#event
-	 * @see AbstractEvent#property
-	 * @see AbstractEvent#value
+	 * @see AbstractClientEvent#event
+	 * @see AbstractClientEvent#property
+	 * @see AbstractClientEvent#value
 	 */
 	public LibraryEvent(String event, String property, Serializable value) {
 		super(event, property, value);

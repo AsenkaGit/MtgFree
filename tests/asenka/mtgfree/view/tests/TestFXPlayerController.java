@@ -12,7 +12,7 @@ import asenka.mtgfree.controlers.game.PlayerController;
 import asenka.mtgfree.controlers.game.Controller.Origin;
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
-import asenka.mtgfree.model.events.AbstractEvent;
+import asenka.mtgfree.model.events.AbstractClientEvent;
 import asenka.mtgfree.model.events.BattlefieldEvent;
 import asenka.mtgfree.model.events.CardEvent;
 import asenka.mtgfree.model.events.LibraryEvent;
@@ -198,7 +198,7 @@ public class TestFXPlayerController implements Observer {
 
 	private PlayerController playerController;
 
-	private Queue<AbstractEvent> logs;
+	private Queue<AbstractClientEvent> logs;
 
 	private Card selectedCard;
 
@@ -207,7 +207,7 @@ public class TestFXPlayerController implements Observer {
 	@FXML
 	private void initialize() {
 
-		logs = new LinkedList<AbstractEvent>();
+		logs = new LinkedList<AbstractClientEvent>();
 		playerController = new PlayerController(player);
 		playerController.addObserver(this);
 
@@ -417,7 +417,7 @@ public class TestFXPlayerController implements Observer {
 	@Override
 	public void update(Observable observedObject, Object event) {
 
-		this.logs.add((AbstractEvent) event);
+		this.logs.add((AbstractClientEvent) event);
 		this.logsTextArea.setText(buildLogsString(this.logs));
 		this.logsTextArea.selectPositionCaret(this.logsTextArea.getLength());
 
@@ -504,11 +504,11 @@ public class TestFXPlayerController implements Observer {
 		return result;
 	}
 
-	private static final String buildLogsString(Collection<AbstractEvent> events) {
+	private static final String buildLogsString(Collection<AbstractClientEvent> events) {
 
 		String result = "";
 
-		for (AbstractEvent event : events) {
+		for (AbstractClientEvent event : events) {
 			result += event.toString() + " \n";
 		}
 		return result;

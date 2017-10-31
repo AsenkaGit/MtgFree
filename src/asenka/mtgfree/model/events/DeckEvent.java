@@ -8,21 +8,21 @@ import java.io.Serializable;
  * @author asenka
  * @see Deck
  */
-public class DeckEvent extends AbstractEvent {
+public class DeckEvent extends AbstractClientEvent {
 
 	/**
-	 * The generated id for serialization
+	 * The generated ID for serialization
 	 */
-	private static final long serialVersionUID = -1325290049137592105L;
+	private static final long serialVersionUID = -4679013335240247037L;
 
 	/**
 	 * Build a DeckEvent 
 	 * @param event the type of event
 	 * @param property the updated property
 	 * @param value the new value
-	 * @see AbstractEvent#event
-	 * @see AbstractEvent#property
-	 * @see AbstractEvent#value
+	 * @see AbstractClientEvent#event
+	 * @see AbstractClientEvent#property
+	 * @see AbstractClientEvent#value
 	 */
 	public DeckEvent(String event, String property, Serializable value) {
 

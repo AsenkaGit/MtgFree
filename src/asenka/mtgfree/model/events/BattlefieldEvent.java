@@ -8,10 +8,10 @@ import java.io.Serializable;
  * @author asenka
  * @see Card
  */
-public class BattlefieldEvent extends AbstractEvent {
+public class BattlefieldEvent extends AbstractClientEvent {
 
 	/**
-	 * The generated id for serialization
+	 * The generated ID for serialization
 	 */
 	private static final long serialVersionUID = 3947866940496054884L;
 
@@ -21,8 +21,8 @@ public class BattlefieldEvent extends AbstractEvent {
 	 * @param property the updated property
 	 * @param value the new value
 	 * @see AbstractEvent#event
-	 * @see AbstractEvent#property
-	 * @see AbstractEvent#value
+	 * @see AbstractClientEvent#property
+	 * @see AbstractClientEvent#value
 	 */
 	public BattlefieldEvent(String event, String property, Serializable value) {
 
