@@ -27,10 +27,11 @@ public class CardController extends Controller<Card> {
 	 * 
 	 * @param card the card controlled
 	 * @param playerController the player controller
+	 * @param playerManaged <code>true</code> if the player controller is used by a human player, <code>false</code> if it is used by the program
 	 */
-	public CardController(Card card, PlayerController playerController) {
+	public CardController(Card card, PlayerController playerController, boolean playerManaged) {
 
-		super(card);
+		super(card, playerManaged);
 		this.playerController = playerController;
 	}
 

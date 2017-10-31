@@ -15,12 +15,13 @@ import asenka.mtgfree.model.game.Deck;
 public class DeckController extends Controller<Deck> {
 
 	/**
-	 * Build a deck controller
+	 * Build a deck controller. This constructor assumes that the deck controller is always 
+	 * used by a human player (see {@link Controller#playerManaged}).
 	 * 
 	 * @param data
 	 */
 	public DeckController(Deck data) {
-		super(data);
+		super(data, true);
 	}
 
 	/**
