@@ -3,7 +3,7 @@ package asenka.mtgfree.model.events;
 import java.io.Serializable;
 
 /**
- * This kind of event is triggered when a Card is updated
+ * This kind of eventType is triggered when a Card is updated
  * 
  * @author asenka
  * @see Card
@@ -17,15 +17,15 @@ public class CardEvent extends AbstractClientEvent {
 
 	/**
 	 * Build a CardEvent 
-	 * @param event the type of event
+	 * @param eventType the type of event
 	 * @param property the updated property
 	 * @param value the new value
-	 * @see AbstractClientEvent#event
+	 * @see AbstractEvent#eventType
 	 * @see AbstractClientEvent#property
 	 * @see AbstractClientEvent#value
 	 */
-	public CardEvent(String event, String property, Serializable value) {
+	public CardEvent(String eventType, String property, Serializable value) {
 
-		super(event, property, value);
+		super(eventType, property, value);
 	}
 }

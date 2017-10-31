@@ -25,23 +25,23 @@ public abstract class AbstractClientEvent extends AbstractEvent {
 
 	/**
 	 * The new value. On some events, it can be <code>null</code>. It must be a implementation
-	 * of {@link Serializable} to make sure that the event can be serialized.
+	 * of {@link Serializable} to make sure that the eventType can be serialized.
 	 */
 	protected final Serializable value;
 
 	/**
-	 * Abstract constructor. Initializes the value and trace the event.
+	 * Abstract constructor. Initializes the value and trace the eventType.
 	 * 
-	 * @param event the type of event
+	 * @param eventType the type of event
 	 * @param property the updated property
 	 * @param value the new value
-	 * @see AbstractEvent#event
+	 * @see AbstractEvent#eventType
 	 * @see AbstractClientEvent#property
 	 * @see AbstractClientEvent#value
 	 */
-	protected AbstractClientEvent(String event, String property, Serializable value) {
+	protected AbstractClientEvent(String eventType, String property, Serializable value) {
 
-		super(event);
+		super(eventType);
 		this.property = property;
 		this.value = value;
 		
@@ -49,11 +49,11 @@ public abstract class AbstractClientEvent extends AbstractEvent {
 	}
 
 	/**
-	 * @return the type of event
+	 * @return the type of eventType
 	 */
 	public String getEvent() {
 
-		return event;
+		return eventType;
 	}
 
 	/** 
@@ -75,7 +75,7 @@ public abstract class AbstractClientEvent extends AbstractEvent {
 	@Override
 	public String toString() {
 
-		return this.getClass().getSimpleName() + " [" + event + ", " + property + ", " + value + "]";
+		return this.getClass().getSimpleName() + " [" + eventType + ", " + property + ", " + value + "]";
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public abstract class AbstractClientEvent extends AbstractEvent {
 
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((event == null) ? 0 : event.hashCode());
+		result = prime * result + ((eventType == null) ? 0 : eventType.hashCode());
 		result = prime * result + ((property == null) ? 0 : property.hashCode());
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
@@ -99,10 +99,10 @@ public abstract class AbstractClientEvent extends AbstractEvent {
 		if (getClass() != obj.getClass())
 			return false;
 		AbstractClientEvent other = (AbstractClientEvent) obj;
-		if (event == null) {
-			if (other.event != null)
+		if (eventType == null) {
+			if (other.eventType != null)
 				return false;
-		} else if (!event.equals(other.event))
+		} else if (!eventType.equals(other.eventType))
 			return false;
 		if (property == null) {
 			if (other.property != null)

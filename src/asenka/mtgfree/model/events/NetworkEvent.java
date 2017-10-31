@@ -3,7 +3,7 @@ package asenka.mtgfree.model.events;
 import asenka.mtgfree.model.game.Player;
 
 /**
- * Event triggered when a player perform an action. This event is meant to be routed trough the network
+ * Event triggered when a player perform an action. This eventType is meant to be routed trough the network
  * 
  * @author romain.bourreau
  * @see AbstractEvent
@@ -16,18 +16,18 @@ public class NetworkEvent extends AbstractEvent {
 	private static final long serialVersionUID = -5787227409423452235L;
 
 	/**
-	 * The player performing the event
+	 * The player performing the eventType
 	 */
 	private final Player player;
 	
 	/**
-	 * The client event to transport on the other client
+	 * The client eventType to transport on the other client
 	 */
 	private final AbstractClientEvent clientEvent;
 
 	/**
-	 * Build a network event without any client event (when the player draws a card)
-	 * @param event the event name
+	 * Build a network eventType without any client eventType (when the player draws a card)
+	 * @param eventType the eventType name
 	 * @param player the player performing the action
 	 */
 	public NetworkEvent(String event, Player player) {
@@ -36,14 +36,14 @@ public class NetworkEvent extends AbstractEvent {
 	}
 	
 	/**
-	 * Build a network event with a client event
-	 * @param event the event name
+	 * Build a network eventType with a client eventType
+	 * @param eventType the type of event
 	 * @param player the player performing the action
-	 * @param clientEvent the client event used to transport data about the event
+	 * @param clientEvent the client eventType used to transport data about the eventType
 	 */
-	public NetworkEvent(String event, Player player, AbstractClientEvent clientEvent) {
+	public NetworkEvent(String eventType, Player player, AbstractClientEvent clientEvent) {
 
-		super(event);
+		super(eventType);
 		this.player = player;
 		this.clientEvent = clientEvent;
 	}
