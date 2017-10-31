@@ -1,7 +1,5 @@
 package asenka.mtgfree.model.events;
 
-import java.io.Serializable;
-
 /**
  * This kind of eventType is triggered when a deck is updated
  * 
@@ -9,11 +7,6 @@ import java.io.Serializable;
  * @see Deck
  */
 public class DeckEvent extends AbstractClientEvent {
-
-	/**
-	 * The generated ID for serialization
-	 */
-	private static final long serialVersionUID = -4679013335240247037L;
 
 	/**
 	 * Build a DeckEvent 
@@ -24,7 +17,7 @@ public class DeckEvent extends AbstractClientEvent {
 	 * @see AbstractClientEvent#property
 	 * @see AbstractClientEvent#value
 	 */
-	public DeckEvent(String eventType, String property, Serializable value) {
+	public DeckEvent(String eventType, String property, Object value) {
 
 		super(eventType, property, value);
 	}

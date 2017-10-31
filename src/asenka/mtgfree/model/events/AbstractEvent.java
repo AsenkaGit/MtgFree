@@ -1,21 +1,12 @@
 package asenka.mtgfree.model.events;
 
-import java.io.Serializable;
-
-import org.apache.log4j.Logger;
-
 /**
  * An abstract class for all the eventType
  * 
  * @author asenka
  */
-public abstract class AbstractEvent implements Serializable {
+public abstract class AbstractEvent {
 
-	/**
-	 * The generated ID for serialization
-	 */
-	private static final long serialVersionUID = 9091349447575383274L;
-	
 	/**
 	 * The type of eventType: <code>"add", "remove", "set", "clear", "shuffle", ...</code>
 	 */
@@ -28,8 +19,6 @@ public abstract class AbstractEvent implements Serializable {
 	public AbstractEvent(String eventType) {
 
 		this.eventType = eventType;
-		
-		Logger.getLogger(this.getClass()).trace(this);
 	}
 	
 	/**

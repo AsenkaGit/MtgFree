@@ -140,12 +140,12 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	 * @see PlayerEvent
 	 */
 	public void setLifeCounters(int lifeCounters) {
-
+		
 		if (this.lifeCounters != lifeCounters) {
 
 			this.lifeCounters = lifeCounters;
 			super.setChanged();
-			super.notifyObservers(new PlayerEvent("set", "lifeCounters", lifeCounters));
+			super.notifyObservers(new PlayerEvent("set", "lifeCounters", new Integer(lifeCounters)));
 		}
 	}
 
@@ -161,6 +161,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	 * Set the poison counters on the player
 	 * 
 	 * @param poisonCounters the number of poison counters
+	 * @return 
 	 * @see PlayerEvent
 	 */
 	public void setPoisonCounters(int poisonCounters) {
@@ -169,7 +170,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 			this.poisonCounters = poisonCounters;
 			super.setChanged();
-			super.notifyObservers(new PlayerEvent("set", "poisonCounters", poisonCounters));
+			super.notifyObservers(new PlayerEvent("set", "poisonCounters", new Integer(poisonCounters)));
 		}
 	}
 

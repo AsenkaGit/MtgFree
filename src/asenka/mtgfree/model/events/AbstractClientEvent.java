@@ -1,7 +1,5 @@
 package asenka.mtgfree.model.events;
 
-import java.io.Serializable;
-
 import org.apache.log4j.Logger;
 
 
@@ -14,20 +12,14 @@ import org.apache.log4j.Logger;
 public abstract class AbstractClientEvent extends AbstractEvent {
 
 	/**
-	 * The generated ID for serialization
-	 */
-	private static final long serialVersionUID = -2156337006502788122L;
-
-	/**
 	 * The updated property
 	 */
 	protected final String property;
 
 	/**
-	 * The new value. On some events, it can be <code>null</code>. It must be a implementation
-	 * of {@link Serializable} to make sure that the eventType can be serialized.
+	 * The new value. On some events, it can be <code>null</code>.
 	 */
-	protected final Serializable value;
+	protected final Object value;
 
 	/**
 	 * Abstract constructor. Initializes the value and trace the eventType.
@@ -39,7 +31,7 @@ public abstract class AbstractClientEvent extends AbstractEvent {
 	 * @see AbstractClientEvent#property
 	 * @see AbstractClientEvent#value
 	 */
-	protected AbstractClientEvent(String eventType, String property, Serializable value) {
+	protected AbstractClientEvent(String eventType, String property, Object value) {
 
 		super(eventType);
 		this.property = property;
@@ -67,7 +59,7 @@ public abstract class AbstractClientEvent extends AbstractEvent {
 	/**
 	 * @return the new value. It can be <code>null</code>
 	 */
-	public Serializable getValue() {
+	public Object getValue() {
 
 		return value;
 	}

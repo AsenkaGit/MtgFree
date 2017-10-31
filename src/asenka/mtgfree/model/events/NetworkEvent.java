@@ -1,5 +1,8 @@
 package asenka.mtgfree.model.events;
 
+import java.io.Serializable;
+import java.util.Arrays;
+
 import asenka.mtgfree.model.game.Player;
 
 /**
@@ -8,12 +11,12 @@ import asenka.mtgfree.model.game.Player;
  * @author romain.bourreau
  * @see AbstractEvent
  */
-public class NetworkEvent extends AbstractEvent {
+public class NetworkEvent extends AbstractEvent implements Serializable {
 
 	/**
 	 * The generated ID for serialization
 	 */
-	private static final long serialVersionUID = 8941056928929516539L;
+	private static final long serialVersionUID = 4918156440560685706L;
 
 	/**
 	 * The player performing the eventType
@@ -21,12 +24,12 @@ public class NetworkEvent extends AbstractEvent {
 	private final Player player;
 	
 	/**
-	 * The client eventType to transport on the other client
+	 * The data
 	 */
-	private final AbstractClientEvent clientEvent;
+	private final Serializable data;
 
 	/**
-	 * Build a network eventType without any client eventType (when the player draws a card)
+	 * Build a network eventType without any data
 	 * @param eventType the eventType name
 	 * @param player the player performing the action
 	 */
@@ -39,21 +42,21 @@ public class NetworkEvent extends AbstractEvent {
 	 * Build a network eventType with a client eventType
 	 * @param eventType the type of event
 	 * @param player the player performing the action
-	 * @param clientEvent the client eventType used to transport data about the eventType
+	 * @param data the client eventType used to transport data about the eventType
 	 */
-	public NetworkEvent(String eventType, Player player, AbstractClientEvent clientEvent) {
+	public NetworkEvent(String eventType, Player player, Serializable data) {
 
 		super(eventType);
 		this.player = player;
-		this.clientEvent = clientEvent;
+		this.data = data;
 	}
 
 	/**
-	 * @return the clientEvent
+	 * @return the data
 	 */
-	public AbstractClientEvent getClientEvent() {
+	public Serializable getData() {
 
-		return clientEvent;
+		return this.data;
 	}
 
 	/**
@@ -66,8 +69,11 @@ public class NetworkEvent extends AbstractEvent {
 
 	@Override
 	public String toString() {
+		String strEvent = this.data instanceof Serializable[] ?
+			this.getClass().getSimpleName() + "[" + super.eventType + ", " + this.player.getName() + ", " + Arrays.toString((Serializable[]) this.data) + "]":
+			this.getClass().getSimpleName() + "[" + super.eventType + ", " + this.player.getName() + ", " + this.data + "]";
 
-		return this.getClass().getSimpleName() + "[" + super.eventType + ", " + this.player.getName() + ", " + this.clientEvent + "]";
+		return strEvent;
 	}
 
 	@Override
@@ -75,8 +81,7 @@ public class NetworkEvent extends AbstractEvent {
 
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((eventType == null) ? 0 : eventType.hashCode());
-		result = prime * result + ((clientEvent == null) ? 0 : clientEvent.hashCode());
+		result = prime * result + ((data == null) ? 0 : data.hashCode());
 		result = prime * result + ((player == null) ? 0 : player.hashCode());
 		return result;
 	}
@@ -91,15 +96,10 @@ public class NetworkEvent extends AbstractEvent {
 		if (getClass() != obj.getClass())
 			return false;
 		NetworkEvent other = (NetworkEvent) obj;
-		if (eventType == null) {
-			if (other.eventType != null)
+		if (data == null) {
+			if (other.data != null)
 				return false;
-		} else if (!eventType.equals(other.eventType))
-			return false;
-		if (clientEvent == null) {
-			if (other.clientEvent != null)
-				return false;
-		} else if (!clientEvent.equals(other.clientEvent))
+		} else if (!data.equals(other.data))
 			return false;
 		if (player == null) {
 			if (other.player != null)

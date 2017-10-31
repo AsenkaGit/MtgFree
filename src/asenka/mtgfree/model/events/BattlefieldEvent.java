@@ -1,7 +1,5 @@
 package asenka.mtgfree.model.events;
 
-import java.io.Serializable;
-
 /**
  * This kind of eventType is triggered when a Card is updated
  * 
@@ -9,11 +7,6 @@ import java.io.Serializable;
  * @see Card
  */
 public class BattlefieldEvent extends AbstractClientEvent {
-
-	/**
-	 * The generated ID for serialization
-	 */
-	private static final long serialVersionUID = 3947866940496054884L;
 
 	/**
 	 * Build a BattlefieldEvent 
@@ -24,7 +17,7 @@ public class BattlefieldEvent extends AbstractClientEvent {
 	 * @see AbstractClientEvent#property
 	 * @see AbstractClientEvent#value
 	 */
-	public BattlefieldEvent(String eventType, String property, Serializable value) {
+	public BattlefieldEvent(String eventType, String property, Object value) {
 
 		super(eventType, property, value);
 	}

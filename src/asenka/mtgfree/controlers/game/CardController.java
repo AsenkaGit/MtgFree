@@ -12,8 +12,9 @@ import asenka.mtgfree.model.game.Library;
  * 
  * 
  * @author asenka
- *
+ * @deprecated uses the PlayerController instead
  */
+@Deprecated
 public class CardController extends Controller<Card> {
 
 	/**
