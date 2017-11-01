@@ -2,16 +2,14 @@ package asenka.mtgfree.view.tests;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Queue;
 
 import asenka.mtgfree.controlers.game.PlayerController;
+import asenka.mtgfree.communication.NetworkManager;
 import asenka.mtgfree.controlers.game.Controller.Origin;
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
-import asenka.mtgfree.model.events.AbstractClientEvent;
 import asenka.mtgfree.model.events.BattlefieldEvent;
 import asenka.mtgfree.model.events.CardEvent;
 import asenka.mtgfree.model.events.LibraryEvent;
@@ -19,6 +17,7 @@ import asenka.mtgfree.model.events.PlayerEvent;
 import asenka.mtgfree.model.game.Battlefield;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.Deck;
+import asenka.mtgfree.model.game.GameTable;
 import asenka.mtgfree.model.game.Library;
 import asenka.mtgfree.model.game.Player;
 import javafx.application.Platform;
@@ -51,6 +50,7 @@ public class TestFXPlayerController implements Observer {
 		Card.setBattleIdCounter(1);
 
 		dataUtility = MtgDataUtility.getInstance();
+		
 
 		testDeck = new Deck("Test Controller deck", "");
 		testDeck.addCardToMain(dataUtility.getMtgCard("Plains"), 14);
@@ -76,6 +76,7 @@ public class TestFXPlayerController implements Observer {
 		player.addAvailableDeck(testDeck);
 		player.setSelectedDeck(testDeck);
 		player.setLibrary(library);
+
 	}
 
 	@FXML
@@ -197,8 +198,6 @@ public class TestFXPlayerController implements Observer {
 
 	private PlayerController playerController;
 
-	private Queue<AbstractClientEvent> logs;
-
 	private Card selectedCard;
 
 	private Origin selectedCardOrigin;
@@ -206,9 +205,13 @@ public class TestFXPlayerController implements Observer {
 	@FXML
 	private void initialize() {
 
-		logs = new LinkedList<AbstractClientEvent>();
 		playerController = new PlayerController(player, true);
 		playerController.addObserver(this);
+		
+		GameTable gameTable = new GameTable(player, new Player("PPDA", new Battlefield()));
+		gameTable.addObserver(this);
+		
+		NetworkManager.createInstance(gameTable);
 
 		selectedCard = null;
 		selectedCardOrigin = null;
@@ -414,9 +417,11 @@ public class TestFXPlayerController implements Observer {
 	@Override
 	public void update(Observable observedObject, Object event) {
 
-		this.logs.add((AbstractClientEvent) event);
-		this.logsTextArea.setText(buildLogsString(this.logs));
-		this.logsTextArea.selectPositionCaret(this.logsTextArea.getLength());
+		if(observedObject instanceof GameTable) {
+			
+			this.logsTextArea.setText(((GameTable) observedObject).getLogs());
+			this.logsTextArea.selectPositionCaret(this.logsTextArea.getLength());
+		}
 
 		if (event instanceof LibraryEvent) {
 			manageLibraryEvent((Library) observedObject, (LibraryEvent) event);
@@ -501,15 +506,15 @@ public class TestFXPlayerController implements Observer {
 		return result;
 	}
 
-	private static final String buildLogsString(Collection<AbstractClientEvent> events) {
-
-		String result = "";
-
-		for (AbstractClientEvent event : events) {
-			result += event.toString() + " \n";
-		}
-		return result;
-	}
+//	private static final String buildLogsString(Collection<AbstractClientEvent> events) {
+//
+//		String result = "";
+//
+//		for (AbstractClientEvent event : events) {
+//			result += event.toString() + " \n";
+//		}
+//		return result;
+//	}
 
 	private static final String buildPlayerDataString(Player player) {
 

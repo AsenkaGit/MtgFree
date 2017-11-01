@@ -21,13 +21,17 @@ public class NetworkEvent extends AbstractEvent implements Serializable {
 	/**
 	 * The player performing the eventType
 	 */
-	private final Player player;
+	private Player player;
 	
 	/**
 	 * The parameters of the event
 	 */
-	private final Serializable data;
+	private Serializable data;
 
+	public NetworkEvent() {
+		super("");
+	}
+	
 	/**
 	 * Build a network eventType without any data
 	 * @param eventType the type of event, for network event use the method name

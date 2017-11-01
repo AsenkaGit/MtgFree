@@ -1,10 +1,14 @@
 package asenka.mtgfree.model.game;
 
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Observable;
 import java.util.Set;
 
 import asenka.mtgfree.controlers.game.PlayerController;
+import asenka.mtgfree.model.events.AbstractEvent;
 
 /**
  * Game object storing the game table with the players on the table
@@ -13,7 +17,7 @@ import asenka.mtgfree.controlers.game.PlayerController;
  * @see Player
  * @see PlayerController
  */
-public class GameTable {
+public class GameTable extends Observable {
 
 	/**
 	 * the player on this client side
@@ -29,6 +33,11 @@ public class GameTable {
 	 * A map associating the other players on the table to their controller
 	 */
 	private final Map<Player, PlayerController> otherPlayers;
+	
+	/**
+	 * All the events occurring during a game
+	 */
+	private Deque<String> logs;
 
 	/**
 	 * Build a game table with two players
@@ -44,6 +53,7 @@ public class GameTable {
 			this.localPlayerController = new PlayerController(localPlayer, true);
 			this.otherPlayers = new HashMap<Player, PlayerController>();
 			this.otherPlayers.put(opponent, new PlayerController(opponent, false));
+			this.logs = new LinkedList<String>();
 		}
 	}
 
@@ -95,5 +105,30 @@ public class GameTable {
 	public int numberOfPlayers() {
 
 		return (this.otherPlayers.size() + 1);
+	}
+	
+	/**
+	 * 
+	 * @param event
+	 */
+	public void addLog(AbstractEvent event) {
+		
+		this.logs.addLast(event.toString());
+		
+		super.setChanged();
+		super.notifyObservers();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getLogs() {
+
+		String strLogs = "";
+		for(String log : this.logs) {
+			strLogs += log + "\n";
+		}
+		return strLogs;
 	}
 }

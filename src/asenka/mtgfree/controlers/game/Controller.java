@@ -4,7 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * A generic class for all the controllers. 
+ * A generic class for all the controllers.
  * 
  * @author asenka
  * @see Observer
@@ -26,29 +26,25 @@ public abstract class Controller<Type extends Observable> {
 		BATTLEFIELD, HAND, LIBRARY, EXILE, GRAVEYARD
 	}
 
-//	/**
-//	 * All the observers controlled by the controller. All the observers should implements {@link Observer} interface
-//	 */
-//	protected final List<Observer> observers;
-
 	/**
 	 * The controlled data. It could be of any sub type of {@link Observable}
 	 */
 	protected final Type data;
-	
+
 	/**
-	 * This boolean indicates if the controller is used by the player. If <code>true</code>, then it
-	 * means it is a normal controller used by the player to manipulate the local data. If <code>false</code>,
-	 * it means it is a controller used by the network manager to update the opponent data during a game
+	 * This boolean indicates if the controller is used by the player. If <code>true</code>, then it means it is a normal
+	 * controller used by the player to manipulate the local data. If <code>false</code>, it means it is a controller used by the
+	 * network manager to update the opponent data during a game
 	 */
 	protected final boolean playerManaged;
 
 	/**
-	 * Protected controller. 
+	 * Protected controller.
+	 * 
 	 * @param data the controlled data
 	 */
 	protected Controller(Type data, boolean playerManaged) {
-//		this.observers = new ArrayList<Observer>(2);
+
 		this.data = data;
 		this.playerManaged = playerManaged;
 	}
@@ -60,19 +56,19 @@ public abstract class Controller<Type extends Observable> {
 
 		return this.data;
 	}
-	
+
 	/**
 	 * @return <code>true</code> if the controller is managed by a human player
 	 * @see Controller#playerManaged
 	 */
 	public boolean isPlayerManaged() {
-		
+
 		return this.playerManaged;
 	}
-	
 
 	/**
 	 * Add a view to the controller and to the observers of the data
+	 * 
 	 * @param observer the view
 	 */
 	public void addObserver(Observer observer) {
@@ -82,6 +78,7 @@ public abstract class Controller<Type extends Observable> {
 
 	/**
 	 * Remove a view from the controller and from the observers of the data
+	 * 
 	 * @param observer the view
 	 */
 	public void deleteObserver(Observer observer) {
@@ -96,7 +93,7 @@ public abstract class Controller<Type extends Observable> {
 
 		this.data.deleteObservers();
 	}
-	
+
 	@Override
 	public String toString() {
 
