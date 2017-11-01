@@ -208,7 +208,7 @@ public class TestFXPlayerController implements Observer {
 		playerController = new PlayerController(player, true);
 		playerController.addObserver(this);
 		
-		GameTable gameTable = new GameTable(player, new Player("PPDA", new Battlefield()));
+		GameTable gameTable = new GameTable(player);
 		gameTable.addObserver(this);
 		
 		NetworkManager.createInstance(gameTable);
@@ -402,7 +402,7 @@ public class TestFXPlayerController implements Observer {
 	private void toggleTapped() {
 
 		if (selectedCard != null) {
-			selectedCard.setTapped(!selectedCard.isTapped());
+			playerController.setTapped(!selectedCard.isTapped(), selectedCard);
 		}
 	}
 
@@ -410,7 +410,7 @@ public class TestFXPlayerController implements Observer {
 	private void toggleVisible() {
 
 		if (selectedCard != null) {
-			selectedCard.setVisible(!selectedCard.isVisible());
+			playerController.setVisible(!selectedCard.isVisible(), selectedCard);
 		}
 	}
 

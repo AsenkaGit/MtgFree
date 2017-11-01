@@ -8,7 +8,7 @@ import java.util.Observable;
 import java.util.Set;
 
 import asenka.mtgfree.controlers.game.PlayerController;
-import asenka.mtgfree.model.events.AbstractEvent;
+import asenka.mtgfree.model.events.NetworkEvent;
 
 /**
  * Game object storing the game table with the players on the table
@@ -33,7 +33,7 @@ public class GameTable extends Observable {
 	 * A map associating the other players on the table to their controller
 	 */
 	private final Map<Player, PlayerController> otherPlayers;
-	
+
 	/**
 	 * All the events occurring during a game
 	 */
@@ -41,20 +41,16 @@ public class GameTable extends Observable {
 
 	/**
 	 * Build a game table with two players
+	 * 
 	 * @param localPlayer the local player
 	 * @param opponent the opponent using another client
 	 */
-	public GameTable(Player localPlayer, Player opponent) {
+	public GameTable(Player localPlayer) {
 
-		if (localPlayer == null || opponent == null || localPlayer.equals(opponent)) {
-			throw new RuntimeException("Wrong initialization of the game table");
-		} else {
-			this.localPlayer = localPlayer;
-			this.localPlayerController = new PlayerController(localPlayer, true);
-			this.otherPlayers = new HashMap<Player, PlayerController>();
-			this.otherPlayers.put(opponent, new PlayerController(opponent, false));
-			this.logs = new LinkedList<String>();
-		}
+		this.localPlayer = localPlayer;
+		this.localPlayerController = new PlayerController(localPlayer, true);
+		this.otherPlayers = new HashMap<Player, PlayerController>();
+		this.logs = new LinkedList<String>();
 	}
 
 	/**
@@ -89,6 +85,36 @@ public class GameTable extends Observable {
 
 		return otherPlayers.keySet();
 	}
+	
+	/**
+	 * Add a player on the game table
+	 * @param player the new player
+	 */
+	public void addOtherPlayer(final Player player) {
+		
+		this.otherPlayers.put(player, new PlayerController(player, false));
+		super.setChanged();
+		super.notifyObservers("addOtherPlayer");
+	}
+	
+	/**
+	 * Removes the player from the map of other players
+	 * @param player the player to remove
+	 * @return <code>true</code> if the player was in the map of players, <code>false</code> if he wasn't
+	 */
+	public boolean removeOtherPlayer(final Player player) {
+		
+		PlayerController result = this.otherPlayers.remove(player);
+		
+		// If 'player' was in the map of players...
+		if(result != null) { 
+			super.setChanged();
+			super.notifyObservers("removeOtherPlayer");
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	/**
 	 * @param player the player
@@ -106,17 +132,17 @@ public class GameTable extends Observable {
 
 		return (this.otherPlayers.size() + 1);
 	}
-	
+
 	/**
 	 * 
 	 * @param event
 	 */
-	public void addLog(AbstractEvent event) {
-		
+	public void addLog(NetworkEvent event) {
+
 		this.logs.addLast(event.toString());
-		
+
 		super.setChanged();
-		super.notifyObservers();
+		super.notifyObservers("addLog");
 	}
 
 	/**
@@ -125,8 +151,10 @@ public class GameTable extends Observable {
 	 */
 	public String getLogs() {
 
+		// TODO mettre en forme les logs
+		
 		String strLogs = "";
-		for(String log : this.logs) {
+		for (String log : this.logs) {
 			strLogs += log + "\n";
 		}
 		return strLogs;
