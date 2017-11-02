@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 
-import asenka.mtgfree.communication.NetworkManager;
+import asenka.mtgfree.communication.NetworkEventManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -25,7 +25,7 @@ public class TestUIApplication extends Application {
 		
 //		// When the user close the window, close the connections with the broker
 //		primaryStage.setOnCloseRequest((event) -> {
-//			NetworkManager.getInstance().closeConnections();
+//			NetworkEventManager.getInstance().closeConnections();
 //		});
 
 		initRootLayout();
@@ -35,7 +35,7 @@ public class TestUIApplication extends Application {
 	@Override
 	public void stop() throws Exception {
 		super.stop();
-		NetworkManager.getInstance().closeConnections();
+		NetworkEventManager.getInstance().closeConnections();
 	}
 
 	/**

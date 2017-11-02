@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Set;
 
+import asenka.mtgfree.communication.events.NetworkEvent;
 import asenka.mtgfree.controlers.game.PlayerController;
-import asenka.mtgfree.model.events.NetworkEvent;
 
 /**
  * Game object storing the game table with the players on the table
