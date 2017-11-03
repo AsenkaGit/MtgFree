@@ -2,14 +2,18 @@ package asenka.mtgfree.events.local;
 
 import org.apache.log4j.Logger;
 
-
 /**
- * Abstract class for all the events on the client side only. 
+ * Abstract class for all the events on the client side only.
  * 
  * @author asenka
  *
  */
-public abstract class AbstractClientEvent extends AbstractEvent {
+public abstract class AbstractLocalEvent {
+
+	/**
+	 * The type of eventType: <code>"add", "remove", "set", "clear", "shuffle", ...</code>
+	 */
+	protected final String eventType;
 
 	/**
 	 * The updated property
@@ -27,28 +31,29 @@ public abstract class AbstractClientEvent extends AbstractEvent {
 	 * @param eventType the type of event
 	 * @param property the updated property
 	 * @param value the new value
-	 * @see AbstractEvent#eventType
-	 * @see AbstractClientEvent#property
-	 * @see AbstractClientEvent#value
+	 * @see AbstractLocalEvent#eventType
+	 * @see AbstractLocalEvent#property
+	 * @see AbstractLocalEvent#value
 	 */
-	protected AbstractClientEvent(String eventType, String property, Object value) {
+	protected AbstractLocalEvent(String eventType, String property, Object value) {
 
-		super(eventType);
+		this.eventType = eventType;
 		this.property = property;
 		this.value = value;
-		
+
 		Logger.getLogger(this.getClass()).trace(this);
 	}
 
 	/**
-	 * @return the type of eventType
+	 * @return the type of event
+	 * @see AbstractEvent#eventType
 	 */
-	public String getEvent() {
+	public String getEventType() {
 
-		return eventType;
+		return this.eventType;
 	}
 
-	/** 
+	/**
 	 * @return the updated property
 	 */
 	public String getProperty() {
@@ -90,7 +95,7 @@ public abstract class AbstractClientEvent extends AbstractEvent {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AbstractClientEvent other = (AbstractClientEvent) obj;
+		AbstractLocalEvent other = (AbstractLocalEvent) obj;
 		if (eventType == null) {
 			if (other.eventType != null)
 				return false;
@@ -108,5 +113,4 @@ public abstract class AbstractClientEvent extends AbstractEvent {
 			return false;
 		return true;
 	}
-
 }

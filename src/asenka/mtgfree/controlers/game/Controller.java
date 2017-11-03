@@ -23,7 +23,7 @@ public abstract class Controller<Type extends Observable> {
 	 * </p>
 	 */
 	public enum Origin {
-		BATTLEFIELD, HAND, LIBRARY, EXILE, GRAVEYARD
+		BATTLEFIELD, HAND, LIBRARY, EXILE, GRAVEYARD, OPPONENT_BATTLEFIELD
 	}
 
 	/**

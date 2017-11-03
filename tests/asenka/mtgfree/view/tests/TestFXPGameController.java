@@ -33,7 +33,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class TestFXPlayerController implements Observer {
+public class TestFXPGameController implements Observer {
 
 	private static MtgDataUtility dataUtility;
 
@@ -310,6 +310,28 @@ public class TestFXPlayerController implements Observer {
 				displaySelectedCard();
 			});
 		});
+		
+		opponentBattlefieldTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+
+			Platform.runLater(() -> {
+
+				if (newSelection == null) {
+					battlefieldTableView.getSelectionModel().clearSelection();
+					selectedCardOrigin = null;
+					selectedCard = null;
+					this.selectedCardImageView.setImage(null);
+				} else {
+					selectedCard = newSelection;
+					selectedCardOrigin = Origin.OPPONENT_BATTLEFIELD;
+					int multiverseid = selectedCard.getPrimaryCardData().getMultiverseid();
+
+					new Thread(() -> this.selectedCardImageView.setImage(
+							new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + multiverseid + "&type=card")))
+									.start();
+				}
+				displaySelectedCard();
+			});
+		});
 
 		handTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 
@@ -448,7 +470,7 @@ public class TestFXPlayerController implements Observer {
 	@Override
 	public void update(Observable observedObject, Object event) {
 
-		if(observedObject instanceof GameTable) {
+		if(event instanceof String) {
 			
 			this.logsTextArea.setText(((GameTable) observedObject).getLogs());
 			this.logsTextArea.selectPositionCaret(this.logsTextArea.getLength());
@@ -486,7 +508,7 @@ public class TestFXPlayerController implements Observer {
 
 	private void managePlayerEvent(Player observedObject, PlayerEvent event) {
 
-		switch (event.getEvent()) {
+		switch (event.getEventType()) {
 			case "set": {
 				this.playerDataTextArea.setText(buildPlayerDataString(playerController.getData()));
 			}
@@ -537,11 +559,11 @@ public class TestFXPlayerController implements Observer {
 		return result;
 	}
 
-//	private static final String buildLogsString(Collection<AbstractClientEvent> events) {
+//	private static final String buildLogsString(Collection<AbstractLocalEvent> events) {
 //
 //		String result = "";
 //
-//		for (AbstractClientEvent event : events) {
+//		for (AbstractLocalEvent event : events) {
 //			result += event.toString() + " \n";
 //		}
 //		return result;

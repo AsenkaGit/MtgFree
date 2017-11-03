@@ -87,6 +87,8 @@ public class PlayerController extends Controller<Player> {
 
 		if (origin == Origin.BATTLEFIELD) {
 			throw new IllegalArgumentException("You cannot play a card that is already on the battlefield");
+		} else if (origin == Origin.OPPONENT_BATTLEFIELD) {
+			throw new IllegalArgumentException("You cannot play a card from the opponent battlefield");
 		} else {
 			checkOriginAndRemove(origin, card);
 			card.setLocation(x, y);
@@ -110,6 +112,8 @@ public class PlayerController extends Controller<Player> {
 
 		if (origin == Origin.EXILE) {
 			throw new IllegalArgumentException("You cannot exile a card that is already exiled");
+		} else if (origin == Origin.OPPONENT_BATTLEFIELD) {
+			throw new IllegalArgumentException("You cannot exile a card that belong to your opponent");
 		} else {
 			checkOriginAndRemove(origin, card);
 			card.setVisible(visible);
@@ -131,6 +135,8 @@ public class PlayerController extends Controller<Player> {
 
 		if (origin == Origin.GRAVEYARD) {
 			throw new IllegalArgumentException("You cannot destroy a card that is already in the graveyard");
+		} else if (origin == Origin.OPPONENT_BATTLEFIELD) {
+			throw new IllegalArgumentException("You cannot destroy a card that belong to your opponent");
 		} else {
 			checkOriginAndRemove(origin, card);
 			card.setVisible(true);
@@ -152,6 +158,8 @@ public class PlayerController extends Controller<Player> {
 
 		if (origin == Origin.HAND) {
 			throw new IllegalArgumentException("You cannot send back to hand a card that is already in the player's hand");
+		} else if (origin == Origin.OPPONENT_BATTLEFIELD) {
+			throw new IllegalArgumentException("You cannot put in your hand a card on the opponent's battlefield");
 		} else {
 			checkOriginAndRemove(origin, card);
 			card.setRevealed(false);
@@ -174,6 +182,8 @@ public class PlayerController extends Controller<Player> {
 
 		if (origin == Origin.LIBRARY) {
 			throw new IllegalArgumentException("You cannot send back to library a card that is already in the player's library");
+		} else if (origin == Origin.OPPONENT_BATTLEFIELD) {
+			throw new IllegalArgumentException("You cannot send back to your library a card on the opponent's battlefield");
 		} else {
 			checkOriginAndRemove(origin, card);
 			card.setRevealed(false);
@@ -196,6 +206,8 @@ public class PlayerController extends Controller<Player> {
 
 		if (origin == Origin.LIBRARY) {
 			throw new IllegalArgumentException("You cannot send back to library a card that is already in the player's library");
+		} else if (origin == Origin.OPPONENT_BATTLEFIELD) {
+			throw new IllegalArgumentException("You cannot send back to your library a card on the opponent's battlefield");
 		} else {
 			checkOriginAndRemove(origin, card);
 			card.setRevealed(false);
@@ -493,16 +505,18 @@ public class PlayerController extends Controller<Player> {
 					throw new RuntimeException("The " + card + " is not in the graveyard");
 				}
 				break;
+			case OPPONENT_BATTLEFIELD:
+				throw new IllegalArgumentException("You cannot remove a card from the opponent battlefield");
 		}
 	}
 
 	/**
+	 * Send a netw
 	 * 
 	 * @param event
 	 */
 	private void notifyNetworkObserver(NetworkEvent event) {
 
-		Logger.getLogger(this.getClass()).info(event);
 		try {
 			NetworkEventManager.getInstance().send(event);
 		} catch (Exception e) {

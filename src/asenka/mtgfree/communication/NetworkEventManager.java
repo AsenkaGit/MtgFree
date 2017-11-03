@@ -3,8 +3,13 @@ package asenka.mtgfree.communication;
 import org.apache.log4j.Logger;
 
 import asenka.mtgfree.communication.activemq.ActiveMQManager;
+import asenka.mtgfree.controlers.game.Controller.Origin;
+import asenka.mtgfree.controlers.game.PlayerController;
 import asenka.mtgfree.events.network.NetworkEvent;
+import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.GameTable;
+import asenka.mtgfree.model.game.Library;
+import asenka.mtgfree.model.game.Player;
 
 /**
  * 
@@ -42,10 +47,11 @@ public class NetworkEventManager {
 
 	/**
 	 * When the game start you should call this method to start the dialog with the other player(s)
+	 * 
 	 * @param gameTable a game table with at least the local player data ready
 	 */
 	public void startGame(GameTable gameTable) {
-	
+
 		try {
 			this.gameTable = gameTable;
 			this.brokerManager = new ActiveMQManager(gameTable.getTableName());
@@ -54,7 +60,7 @@ public class NetworkEventManager {
 			Logger.getLogger(this.getClass()).error(e.getMessage(), e);
 			throw new RuntimeException(e);
 		}
-	
+
 	}
 
 	/**
@@ -64,34 +70,57 @@ public class NetworkEventManager {
 	 * @throws Exception if the message cannot be sent
 	 */
 	public void send(NetworkEvent event) throws Exception {
-	
+
 		this.brokerManager.send(event);
 	}
 
 	/**
 	 * The method called to manage the received events from the other player(s)
 	 * 
-	 * @param data
+	 * @param event
 	 */
-	public void manageEvent(NetworkEvent data) {
+	public void manageEvent(NetworkEvent event) {
 
 		// TODO implement event manager
 
-		System.out.println(">>>>>>>>>>>>>>>> " + data + " <<<<<<<<<<<<<<<<<<");
+		String eventType = event.getEventType();
+		Player player = event.getPlayer();
+
+		this.gameTable.addLog(event);
+
+		if (!this.gameTable.isLocalPlayer(player)) {
+
+			final PlayerController otherPlayerController = this.gameTable.getOtherPlayerController(player);
+
+			switch (eventType) {
+				case "draw":
+					otherPlayerController.draw((Integer) event.getData()[0]);
+					break;
+				case "shuffleLibrary":
+					otherPlayerController.getData().setLibrary((Library) event.getData()[0]);
+					break;
+				case "play":
+					Card card = (Card) event.getData()[0];
+					Origin origin = (Origin) event.getData()[1];
+					otherPlayerController.play(card, origin, card.isVisible(), card.getLocation().getX(), card.getLocation().getY());
+					break;
+			}
+		}
 	}
 
 	/**
 	 * Close the connection with the broker
+	 * 
 	 * @throws RuntimeException if you try to call this method before the beginning of the game
 	 */
 	public void endGame() {
 
-		if(this.brokerManager != null) {
+		if (this.brokerManager != null) {
 			this.brokerManager.close();
 		} else {
 			throw new RuntimeException("Try to close a broker connection that is not initialized yet");
 		}
-		
+
 	}
 
 	// The default constructor is privatized to prevent its usage and make sure we have a single instance of NetworkEventManager

@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import asenka.mtgfree.events.local.AbstractClientEvent;
+import asenka.mtgfree.events.local.AbstractLocalEvent;
 import asenka.mtgfree.events.local.DeckEvent;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.tests.MtgFreeTest;
@@ -106,7 +106,7 @@ public class TestDeck extends MtgFreeTest {
 		public void update(Observable observedDeck, Object event) {
 
 			assertTrue(observedDeck instanceof Serializable);
-			assertTrue(event instanceof AbstractClientEvent);
+			assertTrue(event instanceof AbstractLocalEvent);
 			assertEquals(DeckEvent.class, event.getClass());
 			assertTrue(((DeckEvent) event).getValue() instanceof Serializable);
 

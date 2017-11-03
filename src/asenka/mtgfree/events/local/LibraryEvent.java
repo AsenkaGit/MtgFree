@@ -6,7 +6,7 @@ package asenka.mtgfree.events.local;
  * @author asenka
  * @see Library
  */
-public class LibraryEvent extends AbstractClientEvent {
+public class LibraryEvent extends AbstractLocalEvent {
 
 	/**
 	 * Build a LibraryEvent 
@@ -14,8 +14,8 @@ public class LibraryEvent extends AbstractClientEvent {
 	 * @param property the updated property
 	 * @param value the new value
 	 * @see AbstractEvent#eventType
-	 * @see AbstractClientEvent#property
-	 * @see AbstractClientEvent#value
+	 * @see AbstractLocalEvent#property
+	 * @see AbstractLocalEvent#value
 	 */
 	public LibraryEvent(String eventType, String property, Object value) {
 		super(eventType, property, value);

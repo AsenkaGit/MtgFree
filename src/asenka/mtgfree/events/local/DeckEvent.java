@@ -6,7 +6,7 @@ package asenka.mtgfree.events.local;
  * @author asenka
  * @see Deck
  */
-public class DeckEvent extends AbstractClientEvent {
+public class DeckEvent extends AbstractLocalEvent {
 
 	/**
 	 * Build a DeckEvent 
@@ -14,8 +14,8 @@ public class DeckEvent extends AbstractClientEvent {
 	 * @param property the updated property
 	 * @param value the new value
 	 * @see AbstractEvent#eventType
-	 * @see AbstractClientEvent#property
-	 * @see AbstractClientEvent#value
+	 * @see AbstractLocalEvent#property
+	 * @see AbstractLocalEvent#value
 	 */
 	public DeckEvent(String eventType, String property, Object value) {
 
