@@ -23,11 +23,6 @@ public class TestUIApplication extends Application {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Mtg Free [TEST GAME]");
 		
-//		// When the user close the window, close the connections with the broker
-//		primaryStage.setOnCloseRequest((event) -> {
-//			NetworkEventManager.getInstance().closeConnections();
-//		});
-
 		initRootLayout();
 
 	}
@@ -70,21 +65,21 @@ public class TestUIApplication extends Application {
 
 	public static void main(String[] args) {
 
-//		// Uses a proxy for Internet connection
-//		final String authUser = "AESN1\bourrero";
-//		final String authPassword = "Welcome2018";
-//		Authenticator.setDefault(new Authenticator() {
-//
-//			@Override
-//			public PasswordAuthentication getPasswordAuthentication() {
-//
-//				return new PasswordAuthentication(authUser, authPassword.toCharArray());
-//			}
-//		});
-//		System.setProperty("http.proxyHost", "140.9.9.249");
-//		System.setProperty("http.proxyPort", "8080");
-//		System.setProperty("http.proxyUser", authUser);
-//		System.setProperty("http.proxyPassword", authPassword);
+		// Uses a proxy for Internet connection
+		final String authUser = "AESN1\bourrero";
+		final String authPassword = "Welcome2018";
+		Authenticator.setDefault(new Authenticator() {
+
+			@Override
+			public PasswordAuthentication getPasswordAuthentication() {
+
+				return new PasswordAuthentication(authUser, authPassword.toCharArray());
+			}
+		});
+		System.setProperty("http.proxyHost", "140.9.9.249");
+		System.setProperty("http.proxyPort", "8080");
+		System.setProperty("http.proxyUser", authUser);
+		System.setProperty("http.proxyPassword", authPassword);
 
 		// Launch the JavaFX application
 		launch(args);

@@ -105,6 +105,34 @@ public class TestFXPlayerController implements Observer {
 
 	@FXML
 	private TableColumn<Card, String> btVisibleTableColumn;
+	
+
+	@FXML
+	private TableView<Card> opponentBattlefieldTableView;
+
+	@FXML
+	private TableColumn<Card, String> opponentBtNameTableColumn;
+
+	@FXML
+	private TableColumn<Card, String> opponentBtTypeTableColumn;
+
+	@FXML
+	private TableColumn<Card, String> opponentBtBattleIDTableColumn;
+
+	@FXML
+	private TableColumn<Card, String> opponentBtCostTableColumn;
+
+	@FXML
+	private TableColumn<Card, String> opponentBtPowerTableColumn;
+
+	@FXML
+	private TableColumn<Card, String> opponentBtToughnessTableColumn;
+
+	@FXML
+	private TableColumn<Card, String> opponentBtTappedTableColumn;
+
+	@FXML
+	private TableColumn<Card, String> opponentBtVisibleTableColumn;
 
 	@FXML
 	private TableView<Card> handTableView;
@@ -144,6 +172,9 @@ public class TestFXPlayerController implements Observer {
 
 	@FXML
 	private TextArea playerDataTextArea;
+	
+	@FXML
+	private TextArea opponentDataTextArea;
 
 	@FXML
 	private TextArea logsTextArea;
