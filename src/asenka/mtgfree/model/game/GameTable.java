@@ -18,6 +18,11 @@ import asenka.mtgfree.controlers.game.PlayerController;
  * @see PlayerController
  */
 public class GameTable extends Observable {
+	
+	/**
+	 * 
+	 */
+	private final String tableName;
 
 	/**
 	 * the player on this client side
@@ -45,12 +50,21 @@ public class GameTable extends Observable {
 	 * @param localPlayer the local player
 	 * @param opponent the opponent using another client
 	 */
-	public GameTable(Player localPlayer) {
+	public GameTable(String tableName, Player localPlayer) {
 
+		this.tableName = tableName;
 		this.localPlayer = localPlayer;
 		this.localPlayerController = new PlayerController(localPlayer, true);
 		this.otherPlayers = new HashMap<Player, PlayerController>();
 		this.logs = new LinkedList<String>();
+	}
+
+	/**
+	 * @return the tableName
+	 */
+	public String getTableName() {
+	
+		return this.tableName;
 	}
 
 	/**

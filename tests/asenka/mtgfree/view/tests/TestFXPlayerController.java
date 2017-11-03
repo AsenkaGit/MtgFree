@@ -208,10 +208,10 @@ public class TestFXPlayerController implements Observer {
 		playerController = new PlayerController(player, true);
 		playerController.addObserver(this);
 		
-		GameTable gameTable = new GameTable(player);
+		GameTable gameTable = new GameTable("Test table", player);
 		gameTable.addObserver(this);
 		
-		NetworkEventManager.getInstance().setGameTable(gameTable);
+		NetworkEventManager.getInstance().startGame(gameTable);
 
 		selectedCard = null;
 		selectedCardOrigin = null;

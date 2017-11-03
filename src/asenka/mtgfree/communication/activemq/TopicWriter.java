@@ -1,12 +1,12 @@
 package asenka.mtgfree.communication.activemq;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.io.Serializable;
 
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
+import javax.jms.Session;
 import javax.jms.TopicPublisher;
+import javax.management.RuntimeErrorException;
 
 /**
  * The topic writer sending message to the broker. Don't forget to close the connection with the broker when the application exit.
@@ -14,7 +14,7 @@ import javax.jms.TopicPublisher;
  * @author asenka
  * @see Closeable
  */
-public class TopicWriter extends ActiveMQTopicCommunicator {
+final class TopicWriter extends AbstractActiveMQCommunicator {
 
 	/**
 	 * The publisher used to publish the data on the broker
@@ -31,22 +31,30 @@ public class TopicWriter extends ActiveMQTopicCommunicator {
 	 * 
 	 * @param brokerUrl the broker URL
 	 * @param topicId the ID of the topic
-	 * @throws Exception 
-	 * @throws JMSException
+	 * @throws RuntimeException if the connection with the broker cannot be initialized properly
 	 */
-	TopicWriter(String brokerUrl, String topicId) throws Exception {
+	TopicWriter(String brokerUrl, String topicId) throws RuntimeException {
 
 		super(brokerUrl, topicId);
-		
+
 		try {
-			// Create the topic publisher
+			// Start the connection with the broker
+			super.connection = super.factory.createTopicConnection();
+			super.connection.start();
+
+			// Create the session and the topic where the messages will be sent
+			super.session = super.connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+			super.topic = super.session.createTopic(super.topicId);
+
+			// Create the publisher and the message to send the data
 			this.publisher = super.session.createPublisher(super.topic);
 			this.message = super.session.createObjectMessage();
-			
+
 		} catch (JMSException e) {
 			this.close();
-			throw new Exception(e);
+			throw new RuntimeException(e);
 		}
+
 	}
 
 	/**
@@ -66,23 +74,27 @@ public class TopicWriter extends ActiveMQTopicCommunicator {
 		}
 	}
 
+	/**
+	 * Closes all the JMS objects (connection, session, etc...)
+	 * @throws RuntimeErrorException if unable to close a JMS object
+	 */
 	@Override
-	public void close() throws IOException {
+	public void close() {
 
 		try {
 			this.message = null;
 
-			if (this.connection != null) {
-				this.connection.close();
+			if (super.connection != null) {
+				super.connection.close();
 			}
-			if (this.session != null) {
-				this.session.close();
+			if (super.session != null) {
+				super.session.close();
 			}
 			if (this.publisher != null) {
 				this.publisher.close();
 			}
 		} catch (JMSException ex) {
-			throw new IOException(ex);
+			throw new RuntimeErrorException(new Error(ex));
 		}
 	}
 }

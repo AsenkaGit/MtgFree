@@ -35,7 +35,7 @@ public class TestUIApplication extends Application {
 	@Override
 	public void stop() throws Exception {
 		super.stop();
-		NetworkEventManager.getInstance().closeConnections();
+		NetworkEventManager.getInstance().endGame();
 	}
 
 	/**
