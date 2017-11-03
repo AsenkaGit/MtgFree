@@ -1,4 +1,4 @@
-package asenka.mtgfree.model.events;
+package asenka.mtgfree.events.local;
 
 /**
  * An abstract class for all the eventType

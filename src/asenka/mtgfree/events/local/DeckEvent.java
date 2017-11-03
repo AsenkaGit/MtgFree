@@ -1,15 +1,15 @@
-package asenka.mtgfree.model.events;
+package asenka.mtgfree.events.local;
 
 /**
- * This kind of eventType is triggered when a Library is updated
+ * This kind of eventType is triggered when a deck is updated
  * 
  * @author asenka
- * @see Library
+ * @see Deck
  */
-public class LibraryEvent extends AbstractClientEvent {
+public class DeckEvent extends AbstractClientEvent {
 
 	/**
-	 * Build a LibraryEvent 
+	 * Build a DeckEvent 
 	 * @param eventType the type of event
 	 * @param property the updated property
 	 * @param value the new value
@@ -17,7 +17,8 @@ public class LibraryEvent extends AbstractClientEvent {
 	 * @see AbstractClientEvent#property
 	 * @see AbstractClientEvent#value
 	 */
-	public LibraryEvent(String eventType, String property, Object value) {
+	public DeckEvent(String eventType, String property, Object value) {
+
 		super(eventType, property, value);
 	}
 

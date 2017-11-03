@@ -3,7 +3,7 @@ package asenka.mtgfree.communication;
 import org.apache.log4j.Logger;
 
 import asenka.mtgfree.communication.activemq.ActiveMQManager;
-import asenka.mtgfree.communication.events.NetworkEvent;
+import asenka.mtgfree.events.network.NetworkEvent;
 import asenka.mtgfree.model.game.GameTable;
 
 /**
@@ -77,7 +77,7 @@ public class NetworkEventManager {
 
 		// TODO implement event manager
 
-		System.out.println(data);
+		System.out.println(">>>>>>>>>>>>>>>> " + data + " <<<<<<<<<<<<<<<<<<");
 	}
 
 	/**

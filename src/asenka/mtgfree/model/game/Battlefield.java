@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 
-import asenka.mtgfree.model.events.BattlefieldEvent;
+import asenka.mtgfree.events.local.BattlefieldEvent;
 
 /**
  * Model class of the battlefield. It is basically a synchronized set of Card.

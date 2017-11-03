@@ -11,9 +11,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import asenka.mtgfree.events.local.AbstractClientEvent;
+import asenka.mtgfree.events.local.DeckEvent;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
-import asenka.mtgfree.model.events.AbstractClientEvent;
-import asenka.mtgfree.model.events.DeckEvent;
 import asenka.mtgfree.tests.MtgFreeTest;
 
 public class TestDeck extends MtgFreeTest {

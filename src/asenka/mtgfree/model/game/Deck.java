@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Map.Entry;
 
+import asenka.mtgfree.events.local.DeckEvent;
 import asenka.mtgfree.model.data.MtgCard;
-import asenka.mtgfree.model.events.DeckEvent;
 
 /**
  * The class represent a deck. The deck is devised in two zones :

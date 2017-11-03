@@ -1,8 +1,9 @@
-package asenka.mtgfree.communication.events;
+package asenka.mtgfree.events.network;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import asenka.mtgfree.model.events.AbstractEvent;
+
+import asenka.mtgfree.events.local.AbstractEvent;
 import asenka.mtgfree.model.game.Player;
 
 /**

@@ -9,7 +9,7 @@ import java.util.Locale;
 import java.util.Observable;
 import java.util.Set;
 
-import asenka.mtgfree.model.events.PlayerEvent;
+import asenka.mtgfree.events.local.PlayerEvent;
 
 /**
  * A player

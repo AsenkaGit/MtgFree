@@ -10,8 +10,6 @@ import javax.jms.TopicSession;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.Closeable;
 
-import asenka.mtgfree.communication.events.NetworkEvent;
-
 /**
  * Abstract class that mutualized the connection, session and topic data.
  * 
@@ -22,12 +20,12 @@ import asenka.mtgfree.communication.events.NetworkEvent;
 abstract class AbstractActiveMQCommunicator implements Closeable {
 
 	/**
-	 * The authorized packages. ActiveMQ requires to defines the authorized packages when using serialized object in messages. So
-	 * far, we only need the package <code>asenka.mtgfree.communication.events</code> for the class {@link NetworkEvent}
+	 * The authorized packages. ActiveMQ requires to defines the authorized packages when using serialized object in messages.
 	 * 
 	 * @see ActiveMQConnectionFactory#setTrustedPackages(java.util.List)
 	 */
-	private static final String[] TRUSTED_PACKAGES = new String[] { "asenka.mtgfree.communication.events" };
+	private static final String[] TRUSTED_PACKAGES = new String[] { "asenka.mtgfree.events.network", "asenka.mtgfree.model.game",
+			"asenka.mtgfree.model.data", "asenka.mtgfree.controlers.game", "java.util", "java.awt.geom", "java.lang" };
 
 	/**
 	 * The connection with the broker

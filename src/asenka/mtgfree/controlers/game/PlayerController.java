@@ -8,7 +8,7 @@ import java.util.Observer;
 import org.apache.log4j.Logger;
 
 import asenka.mtgfree.communication.NetworkEventManager;
-import asenka.mtgfree.communication.events.NetworkEvent;
+import asenka.mtgfree.events.network.NetworkEvent;
 import asenka.mtgfree.model.game.Battlefield;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.Counter;

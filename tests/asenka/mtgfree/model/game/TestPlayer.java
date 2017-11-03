@@ -12,9 +12,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import asenka.mtgfree.events.local.AbstractClientEvent;
+import asenka.mtgfree.events.local.PlayerEvent;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
-import asenka.mtgfree.model.events.AbstractClientEvent;
-import asenka.mtgfree.model.events.PlayerEvent;
 import asenka.mtgfree.tests.MtgFreeTest;
 
 public class TestPlayer extends MtgFreeTest {

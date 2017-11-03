@@ -1,4 +1,4 @@
-package asenka.mtgfree.model.events;
+package asenka.mtgfree.events.local;
 
 /**
  * This kind of eventType is triggered when a Card is updated
@@ -6,10 +6,10 @@ package asenka.mtgfree.model.events;
  * @author asenka
  * @see Card
  */
-public class BattlefieldEvent extends AbstractClientEvent {
+public class CardEvent extends AbstractClientEvent {
 
 	/**
-	 * Build a BattlefieldEvent 
+	 * Build a CardEvent 
 	 * @param eventType the type of event
 	 * @param property the updated property
 	 * @param value the new value
@@ -17,7 +17,7 @@ public class BattlefieldEvent extends AbstractClientEvent {
 	 * @see AbstractClientEvent#property
 	 * @see AbstractClientEvent#value
 	 */
-	public BattlefieldEvent(String eventType, String property, Object value) {
+	public CardEvent(String eventType, String property, Object value) {
 
 		super(eventType, property, value);
 	}

@@ -1,4 +1,4 @@
-package asenka.mtgfree.model.events;
+package asenka.mtgfree.events.local;
 
 /**
  * This kind of eventType is triggered when a Library is updated

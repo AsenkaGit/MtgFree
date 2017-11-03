@@ -1,4 +1,4 @@
-package asenka.mtgfree.model.events;
+package asenka.mtgfree.events.local;
 
 import org.apache.log4j.Logger;
 

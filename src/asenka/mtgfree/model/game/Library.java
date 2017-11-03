@@ -10,7 +10,7 @@ import java.util.Observable;
 
 import org.apache.log4j.Logger;
 
-import asenka.mtgfree.model.events.LibraryEvent;
+import asenka.mtgfree.events.local.LibraryEvent;
 
 /**
  * <p>
