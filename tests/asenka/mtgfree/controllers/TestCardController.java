@@ -22,7 +22,7 @@ import asenka.mtgfree.model.game.Deck;
 import asenka.mtgfree.model.game.Player;
 import asenka.mtgfree.tests.MtgFreeTest;
 
-@Deprecated
+@Deprecated 
 public class TestCardController extends MtgFreeTest {
 
 	private static MtgDataUtility dataUtility;
@@ -98,7 +98,7 @@ public class TestCardController extends MtgFreeTest {
 		cardData = dataUtility.getMtgCard("Shrine of Burning Rage");
 		card = new Card(cardData);
 		
-		playerController.getData().getLibrary().addToBottom(card);
+		playerController.getData().getLibrary().addToBottom(player, card);
 		
 		cardController = new CardController(card, playerController, false);
 		cardView = new TestObserver(cardController);

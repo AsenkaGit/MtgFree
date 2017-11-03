@@ -1,5 +1,6 @@
 package asenka.mtgfree.controlers.game;
 
+import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -10,7 +11,12 @@ import java.util.Observer;
  * @see Observer
  * @see Observable
  */
-public abstract class Controller<Type extends Observable> {
+public abstract class Controller<Type extends Observable> implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1250928326307690607L;
 
 	/**
 	 * <p>

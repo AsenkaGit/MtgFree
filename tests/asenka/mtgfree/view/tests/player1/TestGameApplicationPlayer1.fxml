@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="asenka.mtgfree.view.tests.player1.TestFXPGameControllerPlayer1">
+	<right>
+		<VBox prefHeight="800.0" prefWidth="280.0" BorderPane.alignment="CENTER">
+			<children>
+				<Accordion prefHeight="531.0" prefWidth="280.0">
+					<panes>
+						<TitledPane text="Card Image">
+							<content>
+								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+									<children>
+										<ImageView fx:id="selectedCardImageView" fitHeight="367.0" fitWidth="277.0" pickOnBounds="true" preserveRatio="true" />
+									</children>
+								</AnchorPane>
+							</content>
+						</TitledPane>
+						<TitledPane expanded="false" text="Card Data">
+							<content>
+								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+									<children>
+										<TextArea fx:id="selectedCardDataTextArea" prefHeight="521.0" prefWidth="200.0" promptText="Selected card" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+									</children>
+								</AnchorPane>
+							</content>
+						</TitledPane>
+						<TitledPane expanded="false" prefHeight="482.0" prefWidth="280.0" text="Logs">
+							<content>
+								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+									<children>
+										<TextArea fx:id="logsTextArea" prefHeight="521.0" prefWidth="200.0" promptText="Logs" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+									</children>
+								</AnchorPane>
+							</content>
+						</TitledPane>
+					</panes>
+				</Accordion>
+				<AnchorPane maxHeight="80.0" prefHeight="80.0" prefWidth="280.0">
+					<children>
+						<Button fx:id="tapUntapSelectedButton" layoutX="35.0" layoutY="14.0" mnemonicParsing="false" onAction="#toggleTapped" text="Tap / Untap" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="14.0" />
+						<Button fx:id="showHideSelectedButton" layoutX="140.0" layoutY="14.0" mnemonicParsing="false" onAction="#toggleVisible" text="Show / Hide" AnchorPane.leftAnchor="140.0" AnchorPane.topAnchor="14.0" />
+						<Button fx:id="handSelectedButton" layoutX="11.0" layoutY="50.0" mnemonicParsing="false" onAction="#backToHand" prefHeight="26.0" prefWidth="96.0" text="Hand" AnchorPane.leftAnchor="11.0" AnchorPane.topAnchor="50.0" />
+						<Button fx:id="exileSelectedButton" layoutX="189.0" layoutY="50.0" mnemonicParsing="false" onAction="#exile" prefHeight="26.0" prefWidth="67.0" text="Exile" AnchorPane.leftAnchor="189.0" AnchorPane.topAnchor="50.0" />
+						<Button fx:id="killSelectedButton" layoutX="114.0" layoutY="50.0" mnemonicParsing="false" onAction="#destroy" prefHeight="26.0" prefWidth="69.0" text="Kill" AnchorPane.leftAnchor="114.0" AnchorPane.topAnchor="50.0" />
+						<Button fx:id="libraryTopSelectedButton" layoutX="10.0" layoutY="82.0" mnemonicParsing="false" onAction="#libraryTop" prefHeight="26.0" prefWidth="96.0" text="Library (top)" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="82.0">
+							<font>
+								<Font size="10.0" />
+							</font>
+						</Button>
+						<Button fx:id="libraryBottomSelectedButton" layoutX="112.0" layoutY="82.0" mnemonicParsing="false" onAction="#libraryDown" prefHeight="26.0" prefWidth="147.0" text="Library (bottom)" AnchorPane.leftAnchor="112.0" AnchorPane.topAnchor="82.0">
+							<font>
+								<Font size="10.0" />
+							</font>
+						</Button>
+					</children>
+				</AnchorPane>
+			</children>
+		</VBox>
+	</right>
+	<center>
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL" BorderPane.alignment="CENTER">
+         <items>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <TableView fx:id="opponentBattlefieldTableView" prefHeight="296.0" prefWidth="638.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <columns>
+                        <TableColumn fx:id="opponentBtBattleIDTableColumn" prefWidth="57.0" text="Battle ID" />
+                        <TableColumn fx:id="opponentBtNameTableColumn" prefWidth="115.0" text="Card Name" />
+                        <TableColumn fx:id="opponentBtTypeTableColumn" minWidth="7.0" prefWidth="85.0" text="Type" />
+                        <TableColumn fx:id="opponentBtCostTableColumn" minWidth="0.0" prefWidth="52.0" text="Cost" />
+                        <TableColumn fx:id="opponentBtPowerTableColumn" prefWidth="57.0" text="Power" />
+                        <TableColumn fx:id="opponentBtToughnessTableColumn" prefWidth="73.0" text="Toughness" />
+                        <TableColumn fx:id="opponentBtTappedTableColumn" prefWidth="71.0" text="Tapped" />
+                        <TableColumn fx:id="opponentBtVisibleTableColumn" text="Visible" />
+                     </columns>
+                  </TableView>
+               </children></AnchorPane>
+      		<AnchorPane>
+      			<children>
+      				<TableView fx:id="battlefieldTableView" prefHeight="600.0" prefWidth="698.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      					<columns>
+      						<TableColumn fx:id="btBattleIDTableColumn" prefWidth="57.0" text="Battle ID" />
+      						<TableColumn fx:id="btNameTableColumn" prefWidth="118.0" text="Card Name" />
+      						<TableColumn fx:id="btTypeTableColumn" minWidth="7.0" prefWidth="84.0" text="Type" />
+      						<TableColumn fx:id="btCostTableColumn" minWidth="0.0" prefWidth="50.0" text="Cost" />
+      						<TableColumn fx:id="btPowerTableColumn" prefWidth="57.0" text="Power" />
+      						<TableColumn fx:id="btToughnessTableColumn" prefWidth="75.0" text="Toughness" />
+      						<TableColumn fx:id="btTappedTableColumn" prefWidth="72.0" text="Tapped" />
+      						<TableColumn fx:id="btVisibleTableColumn" prefWidth="78.0" text="Visible" />
+      					</columns>
+      				</TableView>
+      			</children>
+      		</AnchorPane>
+         </items>
+      </SplitPane>
+	</center>
+	<bottom>
+		<HBox prefHeight="200.0" BorderPane.alignment="CENTER">
+			<children>
+				<AnchorPane prefHeight="200.0" prefWidth="280.0">
+					<children>
+						<Button fx:id="drawHandButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#draw" text="Draw" />
+						<Button fx:id="revealeHideHandButton" layoutX="14.0" layoutY="49.0" mnemonicParsing="false" text="Reveal / Hide" />
+						<Button fx:id="shuffleButton" layoutX="14.0" layoutY="88.0" mnemonicParsing="false" onAction="#shuffleLibrary" text="Shuffle" />
+						<Button fx:id="playButton" layoutX="15.0" layoutY="123.0" mnemonicParsing="false" onAction="#play" text="Play" />
+					</children>
+				</AnchorPane>
+				<TableView fx:id="handTableView" prefHeight="200.0" prefWidth="920.0">
+					<columns>
+						<TableColumn fx:id="hdBattleIDTableColumn" prefWidth="80.0" text="BattleID" />
+						<TableColumn fx:id="hdNameTableColumn" prefWidth="130.0" text="Card Name" />
+						<TableColumn fx:id="hdTypeTableColumn" minWidth="7.0" prefWidth="97.0" text="Type" />
+						<TableColumn fx:id="hdCostTableColumn" minWidth="0.0" prefWidth="57.0" text="Cost" />
+						<TableColumn fx:id="hdPowerTableColumn" prefWidth="78.0" text="Power" />
+						<TableColumn fx:id="hdToughnessTableColumn" prefWidth="93.0" text="Toughness" />
+						<TableColumn fx:id="hdColorTableColumn" prefWidth="118.0" text="Color(s)" />
+					</columns>
+				</TableView>
+			</children>
+		</HBox>
+	</bottom>
+	<left>
+		<Accordion prefHeight="600.0" prefWidth="280.0" BorderPane.alignment="CENTER">
+			<panes>
+				<TitledPane animated="false" text="Players">
+					<content>
+						<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+							<children>
+								<TextArea fx:id="playerDataTextArea" prefHeight="200.0" prefWidth="278.0" text="Player's Data" />
+								<Button fx:id="lifeUpPlayerButton" layoutX="14.0" layoutY="215.0" mnemonicParsing="false" onAction="#lifeUp" text="Life Up" />
+								<Button fx:id="lifeDownPlayerButton" layoutX="14.0" layoutY="252.0" mnemonicParsing="false" onAction="#lifeDown" text="Life Down" />
+								<Button fx:id="poisonUpPlayerButton" layoutX="123.0" layoutY="215.0" mnemonicParsing="false" onAction="#poisonUp" text="Poison Up" />
+								<Button fx:id="poisonDownPlayerButton" layoutX="116.0" layoutY="252.0" mnemonicParsing="false" onAction="#poisonDown" text="Poison Down" />
+                        <TextArea fx:id="opponentDataTextArea" layoutX="16.0" layoutY="354.0" prefHeight="131.0" prefWidth="240.0" text="Opponent's data" />
+							</children>
+						</AnchorPane>
+					</content>
+				</TitledPane>
+				<TitledPane animated="false" text="Library">
+					<content>
+						<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+							<children>
+								<TextArea fx:id="libraryTextArea" prefHeight="495.0" prefWidth="200.0" text="Library" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+							</children>
+						</AnchorPane>
+					</content>
+				</TitledPane>
+				<TitledPane animated="false" text="Graveyard">
+					<content>
+						<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+							<children>
+								<TextArea fx:id="graveyardTextArea" prefHeight="495.0" prefWidth="200.0" text="Graveyard" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+							</children>
+						</AnchorPane>
+					</content>
+				</TitledPane>
+				<TitledPane animated="false" text="Exile area">
+					<content>
+						<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+							<children>
+								<TextArea fx:id="exileTextArea" prefHeight="495.0" prefWidth="200.0" text="Exile" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+							</children>
+						</AnchorPane>
+					</content>
+				</TitledPane>
+			</panes>
+		</Accordion>
+	</left>
+</BorderPane>

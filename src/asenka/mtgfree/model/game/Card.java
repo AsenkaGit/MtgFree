@@ -156,12 +156,12 @@ public class Card extends Observable implements Serializable {
 	 * 
 	 * @param tapped
 	 */
-	public void setTapped(boolean tapped) {
+	public void setTapped(Player player, boolean tapped) {
 
 		if (this.tapped != tapped) {
 			this.tapped = tapped;
 			super.setChanged();
-			super.notifyObservers(new CardEvent("set", "tapped", new Boolean(tapped)));
+			super.notifyObservers(new CardEvent(player, "set", "tapped", new Boolean(tapped)));
 		}
 	}
 
@@ -181,12 +181,12 @@ public class Card extends Observable implements Serializable {
 	 * 
 	 * @param visible true/false
 	 */
-	public void setVisible(boolean visible) {
+	public void setVisible(Player player, boolean visible) {
 
 		if (this.visible != visible) {
 			this.visible = visible;
 			super.setChanged();
-			super.notifyObservers(new CardEvent("set", "visible", new Boolean(visible)));
+			super.notifyObservers(new CardEvent(player, "set", "visible", new Boolean(visible)));
 		}
 	}
 
@@ -206,12 +206,12 @@ public class Card extends Observable implements Serializable {
 	 * 
 	 * @param revealed true/false
 	 */
-	public void setRevealed(boolean revealed) {
+	public void setRevealed(Player player, boolean revealed) {
 
 		if (this.revealed != revealed) {
 			this.revealed = revealed;
 			super.setChanged();
-			super.notifyObservers(new CardEvent("set", "revealed", new Boolean(revealed)));
+			super.notifyObservers(new CardEvent(player, "set", "revealed", new Boolean(revealed)));
 		}
 	}
 
@@ -230,13 +230,13 @@ public class Card extends Observable implements Serializable {
 	 * @param y the double coordinate for vertical position
 	 * @see CardEvent
 	 */
-	public void setLocation(final double x, final double y) {
+	public void setLocation(Player player, final double x, final double y) {
 
 		// If one of the value has changed
 		if (x != this.location.getX() || y != this.location.getY()) {
 			this.location.setLocation(x, y);
 			super.setChanged();
-			super.notifyObservers(new CardEvent("set", "location", this.location));
+			super.notifyObservers(new CardEvent(player, "set", "location", this.location));
 		}
 
 	}
@@ -256,12 +256,12 @@ public class Card extends Observable implements Serializable {
 	 * @param card the associated card to add
 	 * @see CardEvent
 	 */
-	public void addAssociatedCard(Card card) {
+	public void addAssociatedCard(Player player, Card card) {
 
 		if (card != null) {
 			this.associatedCards.add(card);
 			super.setChanged();
-			super.notifyObservers(new CardEvent("add", "associatedCards", card));
+			super.notifyObservers(new CardEvent(player, "add", "associatedCards", card));
 		}
 	}
 
@@ -271,11 +271,11 @@ public class Card extends Observable implements Serializable {
 	 * @param card the associated card to remove
 	 * @see CardEvent
 	 */
-	public void removeAssociatedCard(Card card) {
+	public void removeAssociatedCard(Player player, Card card) {
 
 		if (this.associatedCards.remove(card)) {
 			super.setChanged();
-			super.notifyObservers(new CardEvent("remove", "associatedCards", card));
+			super.notifyObservers(new CardEvent(player, "remove", "associatedCards", card));
 		}
 	}
 
@@ -284,12 +284,12 @@ public class Card extends Observable implements Serializable {
 	 * 
 	 * @see CardEvent
 	 */
-	public void clearAssociatedCards() {
+	public void clearAssociatedCards(Player player) {
 
 		if (!this.associatedCards.isEmpty()) {
 			this.associatedCards.clear();
 			super.setChanged();
-			super.notifyObservers(new CardEvent("clear", "associatedCards", null));
+			super.notifyObservers(new CardEvent(player, "clear", "associatedCards", null));
 		}
 	}
 
@@ -307,12 +307,12 @@ public class Card extends Observable implements Serializable {
 	 * @param counter the counter to add
 	 * @see CardEvent
 	 */
-	public void addCounter(Counter counter) {
+	public void addCounter(Player player, Counter counter) {
 
 		if (counter != null) {
 			this.counters.add(counter);
 			super.setChanged();
-			super.notifyObservers(new CardEvent("add", "counter", counter));
+			super.notifyObservers(new CardEvent(player, "add", "counter", counter));
 		}
 	}
 
@@ -322,11 +322,11 @@ public class Card extends Observable implements Serializable {
 	 * @param counter the counter to remove
 	 * @see CardEvent
 	 */
-	public void removeCounter(Counter counter) {
+	public void removeCounter(Player player, Counter counter) {
 
 		if (this.counters.remove(counter)) {
 			super.setChanged();
-			super.notifyObservers(new CardEvent("remove", "counter", counter));
+			super.notifyObservers(new CardEvent(player, "remove", "counter", counter));
 		}
 	}
 
@@ -335,12 +335,12 @@ public class Card extends Observable implements Serializable {
 	 * 
 	 * @see CardEvent
 	 */
-	public void clearCounters() {
+	public void clearCounters(Player player) {
 
 		if (!this.counters.isEmpty()) {
 			this.counters.clear();
 			super.setChanged();
-			super.notifyObservers(new CardEvent("clear", "counter", null));
+			super.notifyObservers(new CardEvent(player, "clear", "counter", null));
 		}
 	}
 

@@ -1,5 +1,6 @@
 package asenka.mtgfree.model.game;
 
+import java.io.Serializable;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -17,10 +18,15 @@ import asenka.mtgfree.events.network.NetworkEvent;
  * @see Player
  * @see PlayerController
  */
-public class GameTable extends Observable {
+public class GameTable extends Observable implements Serializable {
 	
 	/**
-	 * 
+	 * The generated id for serialization
+	 */
+	private static final long serialVersionUID = -3191823675635881810L;
+
+	/**
+	 * The name of this table
 	 */
 	private final String tableName;
 

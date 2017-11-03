@@ -84,9 +84,20 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	private final Battlefield battlefield;
 
 	/**
-	 * Build a player
+	 * Build a player with a new Battlefield
 	 * 
 	 * @param name
+	 */
+	public Player(String name) {
+
+		this(name, new Battlefield());
+	}
+	
+	/**
+	 * Build a player with a specified battlefield
+	 * 
+	 * @param name
+	 * @param battlefield
 	 */
 	public Player(String name, Battlefield battlefield) {
 
@@ -121,7 +132,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 		if (this.name.equals(name)) {
 			this.name = name;
 			super.setChanged();
-			super.notifyObservers(new PlayerEvent("set", "name", name));
+			super.notifyObservers(new PlayerEvent(this, "set", "name", name));
 		}
 	}
 
@@ -145,7 +156,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 			this.lifeCounters = lifeCounters;
 			super.setChanged();
-			super.notifyObservers(new PlayerEvent("set", "lifeCounters", new Integer(lifeCounters)));
+			super.notifyObservers(new PlayerEvent(this, "set", "lifeCounters", new Integer(lifeCounters)));
 		}
 	}
 
@@ -170,7 +181,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 			this.poisonCounters = poisonCounters;
 			super.setChanged();
-			super.notifyObservers(new PlayerEvent("set", "poisonCounters", new Integer(poisonCounters)));
+			super.notifyObservers(new PlayerEvent(this, "set", "poisonCounters", new Integer(poisonCounters)));
 		}
 	}
 
@@ -191,7 +202,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 		this.library = library;
 		super.setChanged();
-		super.notifyObservers(new PlayerEvent("set", "library", library));
+		super.notifyObservers(new PlayerEvent(this, "set", "library", library));
 	}
 
 	/**
@@ -212,7 +223,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 		this.selectedDeck = deck;
 		super.setChanged();
-		super.notifyObservers(new PlayerEvent("set", "selectedDeck", deck));
+		super.notifyObservers(new PlayerEvent(this, "set", "selectedDeck", deck));
 	}
 
 	/**
@@ -268,7 +279,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 			this.availableDecks.add(deck);
 			super.setChanged();
-			super.notifyObservers(new PlayerEvent("add", "availableDecks", deck));
+			super.notifyObservers(new PlayerEvent(this, "add", "availableDecks", deck));
 		}
 	}
 
@@ -284,7 +295,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 			this.hand.add(card);
 			super.setChanged();
-			super.notifyObservers(new PlayerEvent("add", "hand", card));
+			super.notifyObservers(new PlayerEvent(this, "add", "hand", card));
 		}
 	}
 
@@ -300,7 +311,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 			this.graveyard.add(card);
 			super.setChanged();
-			super.notifyObservers(new PlayerEvent("add", "graveyard", card));
+			super.notifyObservers(new PlayerEvent(this, "add", "graveyard", card));
 		}
 	}
 
@@ -316,7 +327,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 			this.exile.add(card);
 			super.setChanged();
-			super.notifyObservers(new PlayerEvent("add", "exile", card));
+			super.notifyObservers(new PlayerEvent(this, "add", "exile", card));
 		}
 	}
 
@@ -330,7 +341,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 		if (this.availableDecks.remove(deck)) {
 			super.setChanged();
-			super.notifyObservers(new PlayerEvent("remove", "availableDecks", deck));
+			super.notifyObservers(new PlayerEvent(this, "remove", "availableDecks", deck));
 			return true;
 		} else {
 			return false;
@@ -347,7 +358,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 		if (this.hand.remove(card)) {
 			super.setChanged();
-			super.notifyObservers(new PlayerEvent("remove", "hand", card));
+			super.notifyObservers(new PlayerEvent(this, "remove", "hand", card));
 			return true;
 		} else {
 			return false;
@@ -364,7 +375,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 		if (this.graveyard.remove(card)) {
 			super.setChanged();
-			super.notifyObservers(new PlayerEvent("remove", "graveyard", card));
+			super.notifyObservers(new PlayerEvent(this, "remove", "graveyard", card));
 			return true;
 		} else {
 			return false;
@@ -381,7 +392,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 		if (this.exile.remove(card)) {
 			super.setChanged();
-			super.notifyObservers(new PlayerEvent("remove", "exile", card));
+			super.notifyObservers(new PlayerEvent(this, "remove", "exile", card));
 			return true;
 		} else {
 			return false;
@@ -397,7 +408,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 		if (!this.hand.isEmpty()) {
 			super.setChanged();
-			super.notifyObservers(new PlayerEvent("clear", "hand", null));
+			super.notifyObservers(new PlayerEvent(this, "clear", "hand", null));
 		}
 	}
 
@@ -410,7 +421,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 		if (!this.graveyard.isEmpty()) {
 			super.setChanged();
-			super.notifyObservers(new PlayerEvent("clear", "graveyard", null));
+			super.notifyObservers(new PlayerEvent(this, "clear", "graveyard", null));
 		}
 	}
 
@@ -423,7 +434,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 		if (!this.exile.isEmpty()) {
 			super.setChanged();
-			super.notifyObservers(new PlayerEvent("clear", "exile", null));
+			super.notifyObservers(new PlayerEvent(this, "clear", "exile", null));
 		}
 	}
 	

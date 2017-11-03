@@ -1,4 +1,4 @@
-package asenka.mtgfree.view.tests;
+package asenka.mtgfree.view.tests.player1;
 
 import java.io.IOException;
 import java.net.Authenticator;
@@ -11,7 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class TestUIApplication extends Application {
+public class TestUIApplicationPlayer1 extends Application {
 
 	private Stage primaryStage;
 
@@ -21,7 +21,7 @@ public class TestUIApplication extends Application {
 	public void start(Stage primaryStage) {
 
 		this.primaryStage = primaryStage;
-		this.primaryStage.setTitle("Mtg Free [TEST GAME]");
+		this.primaryStage.setTitle("Mtg Free [TEST GAME] - Player 1");
 		
 		initRootLayout();
 
@@ -51,7 +51,7 @@ public class TestUIApplication extends Application {
 		try {
 			// Load root layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(TestUIApplication.class.getResource("TestGameApplication.fxml"));
+			loader.setLocation(TestUIApplicationPlayer1.class.getResource("TestGameApplicationPlayer1.fxml"));
 			rootLayout = (BorderPane) loader.load();
 
 			// Show the scene containing the root layout.

@@ -17,9 +17,9 @@ public class DeckEvent extends AbstractLocalEvent {
 	 * @see AbstractLocalEvent#property
 	 * @see AbstractLocalEvent#value
 	 */
-	public DeckEvent(String eventType, String property, Object value) {
+	public DeckEvent( String eventType, String property, Object value) {
 
-		super(eventType, property, value);
+		super(null, eventType, property, value);
 	}
 
 }

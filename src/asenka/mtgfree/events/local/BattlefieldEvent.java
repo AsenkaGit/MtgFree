@@ -1,5 +1,7 @@
 package asenka.mtgfree.events.local;
 
+import asenka.mtgfree.model.game.Player;
+
 /**
  * This kind of eventType is triggered when a Card is updated
  * 
@@ -17,8 +19,8 @@ public class BattlefieldEvent extends AbstractLocalEvent {
 	 * @see AbstractLocalEvent#property
 	 * @see AbstractLocalEvent#value
 	 */
-	public BattlefieldEvent(String eventType, String property, Object value) {
+	public BattlefieldEvent(Player player, String eventType, String property, Object value) {
 
-		super(eventType, property, value);
+		super(player, eventType, property, value);
 	}
 }

@@ -61,7 +61,7 @@ public class CardController extends Controller<Card> {
 	 */
 	public void setTapped(boolean tapped) {
 
-		this.data.setTapped(tapped);
+		this.data.setTapped(playerController.getData(), tapped);
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class CardController extends Controller<Card> {
 	 */
 	public void setVisible(boolean visible) {
 
-		this.data.setVisible(visible);
+		this.data.setVisible(playerController.getData(), visible);
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class CardController extends Controller<Card> {
 	 */
 	public void setRevealed(boolean revealed) {
 
-		this.data.setRevealed(revealed);
+		this.data.setRevealed(playerController.getData(), revealed);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class CardController extends Controller<Card> {
 	 */
 	public void setLocation(double x, double y) {
 
-		this.data.setLocation(x, y);
+		this.data.setLocation(playerController.getData(), x, y);
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class CardController extends Controller<Card> {
 		if (counter == null) {
 			throw new IllegalArgumentException("null counters are not allowed");
 		} else {
-			this.data.addCounter(counter);
+			this.data.addCounter(playerController.getData(), counter);
 		}
 	}
 
@@ -121,7 +121,7 @@ public class CardController extends Controller<Card> {
 		if (counter == null) {
 			throw new IllegalArgumentException("Try to remove a null counter");
 		} else {
-			this.data.removeCounter(counter);
+			this.data.removeCounter(playerController.getData(), counter);
 		}
 	}
 
@@ -130,7 +130,7 @@ public class CardController extends Controller<Card> {
 	 */
 	public void clearCounters() {
 
-		this.data.clearCounters();
+		this.data.clearCounters(playerController.getData());
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class CardController extends Controller<Card> {
 	public void addAssociatedCard(Card associatedCard) throws IllegalArgumentException {
 
 		if (associatedCard != null && this.data != associatedCard) {
-			this.data.addAssociatedCard(associatedCard);
+			this.data.addAssociatedCard(playerController.getData(), associatedCard);
 		} else {
 			throw new IllegalArgumentException("Unable to associate the card " + this.data + " with " + associatedCard);
 		}
@@ -157,7 +157,7 @@ public class CardController extends Controller<Card> {
 	public void removeAssociatedCard(Card associatedCard) throws IllegalArgumentException {
 
 		if (associatedCard != null && this.data != associatedCard) {
-			this.data.removeAssociatedCard(associatedCard);
+			this.data.removeAssociatedCard(playerController.getData(), associatedCard);
 		} else {
 			throw new IllegalArgumentException("Unable to remove from " + this.data + " the associated card  " + associatedCard);
 		}
@@ -168,7 +168,7 @@ public class CardController extends Controller<Card> {
 	 */
 	public void clearAssociatedCards() {
 
-		this.data.clearAssociatedCards();
+		this.data.clearAssociatedCards(playerController.getData());
 	}
 
 	/**
@@ -227,7 +227,7 @@ public class CardController extends Controller<Card> {
 		
 		final Library library = this.playerController.data.getLibrary();
 		
-		if(!library.changeCardIndex(this.data, 0)) {
+		if(!library.changeCardIndex(playerController.getData(), this.data, 0)) {
 			throw new RuntimeException(this.data + " is not in the player's library");
 		}
 	}
@@ -241,7 +241,7 @@ public class CardController extends Controller<Card> {
 		
 		final Library library = this.playerController.data.getLibrary();
 		
-		if(!library.changeCardIndex(this.data, library.size() - 1)) {
+		if(!library.changeCardIndex(playerController.getData(), this.data, library.size() - 1)) {
 			throw new RuntimeException(this.data + " is not in the player's library");
 		}
 	}

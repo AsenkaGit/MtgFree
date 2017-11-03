@@ -1,6 +1,7 @@
 package asenka.mtgfree.events.local;
 
-import org.apache.log4j.Logger;
+
+import asenka.mtgfree.model.game.Player;
 
 /**
  * Abstract class for all the events on the client side only.
@@ -19,11 +20,17 @@ public abstract class AbstractLocalEvent {
 	 * The updated property
 	 */
 	protected final String property;
+	
+	/**
+	 * The player at the origin of the event
+	 */
+	protected final Player player;
 
 	/**
 	 * The new value. On some events, it can be <code>null</code>.
 	 */
 	protected final Object value;
+
 
 	/**
 	 * Abstract constructor. Initializes the value and trace the eventType.
@@ -35,18 +42,25 @@ public abstract class AbstractLocalEvent {
 	 * @see AbstractLocalEvent#property
 	 * @see AbstractLocalEvent#value
 	 */
-	protected AbstractLocalEvent(String eventType, String property, Object value) {
+	protected AbstractLocalEvent(Player player, String eventType, String property, Object value) {
 
+		this.player = player;
 		this.eventType = eventType;
 		this.property = property;
 		this.value = value;
-
-		Logger.getLogger(this.getClass()).trace(this);
 	}
 
 	/**
+	 * @return the player at the origin of the event
+	 */
+	public Player getPlayer() {
+		
+		return this.player;
+	}
+	
+	/**
 	 * @return the type of event
-	 * @see AbstractEvent#eventType
+	 * @see AbstractLocalEvent#eventType
 	 */
 	public String getEventType() {
 

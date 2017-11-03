@@ -9,6 +9,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -40,10 +41,16 @@ public class TestCard extends MtgFreeTest {
 	}
 
 	private boolean observerCalled;
+	
+	private Player player;
 
-	public TestCard() {
+	@Before
+	@Override
+	public void setUp() {
 
+		super.setUp();
 		this.observerCalled = false;
+		this.player = new Player("card test");
 	}
 
 	@Test
@@ -62,13 +69,13 @@ public class TestCard extends MtgFreeTest {
 		Card card = new Card(dataUtility.getMtgCard("black lotus"));
 		new TestCardObserver(card);
 
-		card.addCounter(new Counter("+1/+1", Color.GREEN));
+		card.addCounter(this.player, new Counter("+1/+1", Color.GREEN));
 		assertEquals(new Counter("+1/+1", Color.GREEN), card.getCounters().iterator().next());
 
-		card.setLocation(250, 100);
+		card.setLocation(this.player, 250, 100);
 		assertEquals(new Point2D.Double(250, 100), card.getLocation());
 
-		card.addAssociatedCard(new Card(dataUtility.getMtgCard("Inferno Jet")));
+		card.addAssociatedCard(this.player, new Card(dataUtility.getMtgCard("Inferno Jet")));
 		assertEquals(1, card.getAssociatedCards().size());
 
 		assertTrue(observerCalled);

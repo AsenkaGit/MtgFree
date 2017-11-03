@@ -3,7 +3,6 @@ package asenka.mtgfree.events.network;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import asenka.mtgfree.events.local.AbstractEvent;
 import asenka.mtgfree.model.game.Player;
 
 /**
@@ -17,7 +16,7 @@ public class NetworkEvent implements Serializable {
 	/**
 	 * The generated ID for serialization
 	 */
-	private static final long serialVersionUID = -6878254723594306988L;
+	private static final long serialVersionUID = -2684793400906614579L;
 
 	/**
 	 * The type of event. Usually it is the controller's method name that triggered the network event

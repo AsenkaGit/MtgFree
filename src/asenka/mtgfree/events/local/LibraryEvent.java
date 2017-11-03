@@ -1,5 +1,7 @@
 package asenka.mtgfree.events.local;
 
+import asenka.mtgfree.model.game.Player;
+
 /**
  * This kind of eventType is triggered when a Library is updated
  * 
@@ -17,8 +19,8 @@ public class LibraryEvent extends AbstractLocalEvent {
 	 * @see AbstractLocalEvent#property
 	 * @see AbstractLocalEvent#value
 	 */
-	public LibraryEvent(String eventType, String property, Object value) {
-		super(eventType, property, value);
+	public LibraryEvent(Player player, String eventType, String property, Object value) {
+		super(player, eventType, property, value);
 	}
 
 }

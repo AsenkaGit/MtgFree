@@ -47,6 +47,8 @@ public class TestLibrary extends MtgFreeTest {
 	private List<Card> cards;
 
 	private Library library;
+	
+	private Player player;
 
 	@Override
 	@Before
@@ -140,6 +142,8 @@ public class TestLibrary extends MtgFreeTest {
 		cards.add(new Card(bruteStrength));
 		
 		library = new Library(cards);
+		player = new Player("test library");
+		player.setLibrary(this.library);
 	}
 
 	@Test
@@ -148,7 +152,7 @@ public class TestLibrary extends MtgFreeTest {
 		new TestLibraryObserver(library);
 		assertEquals(60, library.getInitialSize());
 		assertEquals(60, library.getCards().size());
-		assertEquals(this.cards.get(0), library.draw());
+		assertEquals(this.cards.get(0), library.draw(player));
 		assertEquals(59, library.getCards().size());
 
 		Predicate<Card> filterInstant = (card -> card.getPrimaryCardData().getType().contains("Instant"));
@@ -163,23 +167,23 @@ public class TestLibrary extends MtgFreeTest {
 		assertEquals(4, this.cards.stream().filter(filterEnchantment).count());
 		assertEquals(8, this.cards.stream().filter(filterInstantOrEnchantment).count());
 
-		List<Card> draws = library.draw(7);
+		List<Card> draws = library.draw(player, 7);
 		assertEquals(7, draws.size());
 		assertEquals(52, library.getCards().size());
 
-		library.addToBottom(draws.get(0));
+		library.addToBottom(player, draws.get(0));
 		assertEquals(53, library.getCards().size());
 		assertEquals(draws.get(0), library.get(52));
 		draws.remove(0);
 		assertEquals(6, draws.size());
 
-		library.addFromTop(draws.get(0), 100);
+		library.addFromTop(player, draws.get(0), 100);
 		assertEquals(54, library.getCards().size());
 		assertEquals(draws.get(0), library.get(53));
 		draws.remove(0);
 		assertEquals(5, draws.size());
 
-		library.addFromTop(draws.get(0), 10);
+		library.addFromTop(player, draws.get(0), 10);
 		assertEquals(55, library.getCards().size());
 		assertEquals(draws.get(0), library.get(10));
 		draws.remove(0);
@@ -196,7 +200,7 @@ public class TestLibrary extends MtgFreeTest {
 		System.out.println("------------------------------------------");
 
 		displayLibrary(library);
-		library.shuffle();
+		library.shuffle(player);
 
 		System.out.println("------------------------------------------");
 		System.out.println(" After:");
@@ -207,11 +211,11 @@ public class TestLibrary extends MtgFreeTest {
 	@Test
 	public void testChangeCardIndex() {
 		
-		library.shuffle();
+		library.shuffle(player);
 		
 		final Card card = library.get(59);
 		
-		library.changeCardIndex(card, 0);
+		library.changeCardIndex(player, card, 0);
 		
 		assertSame(card, library.get(0));
 		assertNotSame(card, library.get(59));

@@ -27,6 +27,11 @@ import asenka.mtgfree.model.game.Player;
 public class PlayerController extends Controller<Player> {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2172603147829383956L;
+
+	/**
 	 * Build the controller for a player.
 	 * 
 	 * @param player the player controlled
@@ -46,11 +51,11 @@ public class PlayerController extends Controller<Player> {
 	public void draw() throws Exception {
 
 		try {
-			Card card = this.data.getLibrary().draw();
+			Card card = this.data.getLibrary().draw(this.data);
 			this.data.addCardToHand(card);
 
 			if (playerManaged) {
-				notifyNetworkObserver(new NetworkEvent("draw", this.data));
+				notifyNetworkObserver(new NetworkEvent("draw", this.data, new Integer(1)));
 			}
 
 		} catch (NoSuchElementException ex) {
@@ -66,7 +71,7 @@ public class PlayerController extends Controller<Player> {
 	 */
 	public void draw(int x) {
 
-		List<Card> cards = this.data.getLibrary().draw(x);
+		List<Card> cards = this.data.getLibrary().draw(this.data, x);
 		cards.forEach(card -> this.data.addCardToHand(card));
 
 		if (playerManaged) {
@@ -91,9 +96,9 @@ public class PlayerController extends Controller<Player> {
 			throw new IllegalArgumentException("You cannot play a card from the opponent battlefield");
 		} else {
 			checkOriginAndRemove(origin, card);
-			card.setLocation(x, y);
-			card.setVisible(visible);
-			this.data.getBattlefield().add(card);
+			card.setLocation(this.data, x, y);
+			card.setVisible(this.data, visible);
+			this.data.getBattlefield().add(this.data, card);
 
 			if (playerManaged) {
 				notifyNetworkObserver(new NetworkEvent("play", this.data, new Serializable[] { card, origin }));
@@ -116,7 +121,7 @@ public class PlayerController extends Controller<Player> {
 			throw new IllegalArgumentException("You cannot exile a card that belong to your opponent");
 		} else {
 			checkOriginAndRemove(origin, card);
-			card.setVisible(visible);
+			card.setVisible(this.data, visible);
 			this.data.addCardToExile(card);
 
 			if (playerManaged) {
@@ -139,7 +144,7 @@ public class PlayerController extends Controller<Player> {
 			throw new IllegalArgumentException("You cannot destroy a card that belong to your opponent");
 		} else {
 			checkOriginAndRemove(origin, card);
-			card.setVisible(true);
+			card.setVisible(this.data, true);
 			this.data.addCardToGraveyard(card);
 
 			if (playerManaged) {
@@ -162,8 +167,8 @@ public class PlayerController extends Controller<Player> {
 			throw new IllegalArgumentException("You cannot put in your hand a card on the opponent's battlefield");
 		} else {
 			checkOriginAndRemove(origin, card);
-			card.setRevealed(false);
-			card.setVisible(true);
+			card.setRevealed(this.data, false);
+			card.setVisible(this.data, true);
 			this.data.addCardToHand(card);
 
 			if (playerManaged) {
@@ -186,9 +191,9 @@ public class PlayerController extends Controller<Player> {
 			throw new IllegalArgumentException("You cannot send back to your library a card on the opponent's battlefield");
 		} else {
 			checkOriginAndRemove(origin, card);
-			card.setRevealed(false);
-			card.setVisible(true);
-			this.data.getLibrary().addOnTop(card);
+			card.setRevealed(this.data, false);
+			card.setVisible(this.data, true);
+			this.data.getLibrary().addOnTop(this.data, card);
 
 			if (playerManaged) {
 				notifyNetworkObserver(new NetworkEvent("backToTopOfLibrary", this.data, new Serializable[] { card, origin }));
@@ -210,9 +215,9 @@ public class PlayerController extends Controller<Player> {
 			throw new IllegalArgumentException("You cannot send back to your library a card on the opponent's battlefield");
 		} else {
 			checkOriginAndRemove(origin, card);
-			card.setRevealed(false);
-			card.setVisible(true);
-			this.data.getLibrary().addToBottom(card);
+			card.setRevealed(this.data, false);
+			card.setVisible(this.data, true);
+			this.data.getLibrary().addToBottom(this.data, card);
 
 			if (playerManaged) {
 				notifyNetworkObserver(new NetworkEvent("backToBottomOfLibrary", this.data, new Serializable[] { card, origin }));
@@ -228,7 +233,7 @@ public class PlayerController extends Controller<Player> {
 	 */
 	public void setTapped(boolean tapped, Card card) {
 
-		card.setTapped(tapped);
+		card.setTapped(this.data, tapped);
 
 		if (playerManaged) {
 			notifyNetworkObserver(new NetworkEvent("setTapped", this.data, card));
@@ -243,7 +248,7 @@ public class PlayerController extends Controller<Player> {
 	 */
 	public void setTapped(boolean tapped, List<Card> cards) {
 
-		cards.forEach(card -> card.setTapped(tapped));
+		cards.forEach(card -> card.setTapped(this.data, tapped));
 
 		if (playerManaged) {
 			notifyNetworkObserver(new NetworkEvent("setTapped", this.data, cards.toArray()));
@@ -258,7 +263,7 @@ public class PlayerController extends Controller<Player> {
 	 */
 	public void setVisible(boolean visible, Card card) {
 
-		card.setVisible(visible);
+		card.setVisible(this.data, visible);
 
 		if (playerManaged) {
 			notifyNetworkObserver(new NetworkEvent("setVisible", this.data, card));
@@ -273,7 +278,7 @@ public class PlayerController extends Controller<Player> {
 	 */
 	public void setVisible(boolean visible, List<Card> cards) {
 
-		cards.forEach(card -> card.setVisible(visible));
+		cards.forEach(card -> card.setVisible(this.data, visible));
 
 		if (playerManaged) {
 			notifyNetworkObserver(new NetworkEvent("setVisible", this.data, cards.toArray()));
@@ -288,7 +293,7 @@ public class PlayerController extends Controller<Player> {
 	 */
 	public void setRevealed(boolean revealed, Card card) {
 
-		card.setRevealed(revealed);
+		card.setRevealed(this.data, revealed);
 
 		if (playerManaged) {
 			notifyNetworkObserver(new NetworkEvent("setRevealed", this.data, card));
@@ -303,7 +308,7 @@ public class PlayerController extends Controller<Player> {
 	 */
 	public void setRevealed(boolean revealed, List<Card> cards) {
 
-		cards.forEach(card -> card.setRevealed(revealed));
+		cards.forEach(card -> card.setRevealed(this.data, revealed));
 
 		if (playerManaged) {
 			notifyNetworkObserver(new NetworkEvent("setRevealed", this.data, cards.toArray()));
@@ -319,7 +324,7 @@ public class PlayerController extends Controller<Player> {
 	 */
 	public void setLocation(double x, double y, Card card) {
 
-		card.setLocation(x, y);
+		card.setLocation(this.data, x, y);
 
 		if (playerManaged) {
 			notifyNetworkObserver(new NetworkEvent("setLocation", this.data, card));
@@ -334,7 +339,7 @@ public class PlayerController extends Controller<Player> {
 	 */
 	public void addCounter(Counter counter, Card card) {
 
-		card.addCounter(counter);
+		card.addCounter(this.data, counter);
 
 		if (playerManaged) {
 			notifyNetworkObserver(new NetworkEvent("addCounter", this.data, new Serializable[] { card, counter }));
@@ -349,7 +354,7 @@ public class PlayerController extends Controller<Player> {
 	 */
 	public void removeCounter(Counter counter, Card card) {
 
-		card.removeCounter(counter);
+		card.removeCounter(this.data, counter);
 
 		if (playerManaged) {
 			notifyNetworkObserver(new NetworkEvent("removeCounter", this.data, new Serializable[] { card, counter }));
@@ -361,7 +366,7 @@ public class PlayerController extends Controller<Player> {
 	 */
 	public void shuffleLibrary() {
 
-		this.data.getLibrary().shuffle();
+		this.data.getLibrary().shuffle(this.data);
 
 		if (playerManaged) {
 			notifyNetworkObserver(new NetworkEvent("shuffleLibrary", this.data, this.data.getLibrary()));
@@ -376,7 +381,7 @@ public class PlayerController extends Controller<Player> {
 	 */
 	public void addCardToBattlefield(Card card) {
 
-		this.data.getBattlefield().add(card);
+		this.data.getBattlefield().add(this.data, card);
 
 		if (playerManaged) {
 			notifyNetworkObserver(new NetworkEvent("addCardToBattlefield", this.data, card));
@@ -391,7 +396,7 @@ public class PlayerController extends Controller<Player> {
 	 */
 	public void removeCardFromBattlefield(Card card) throws Exception {
 
-		this.data.getBattlefield().remove(card);
+		this.data.getBattlefield().remove(this.data, card);
 
 		if (playerManaged) {
 			notifyNetworkObserver(new NetworkEvent("removeCardFromBattlefield", this.data, card));
@@ -481,12 +486,12 @@ public class PlayerController extends Controller<Player> {
 
 		switch (origin) {
 			case BATTLEFIELD:
-				if (!this.data.getBattlefield().remove(card)) {
+				if (!this.data.getBattlefield().remove(this.data, card)) {
 					throw new RuntimeException("The " + card + " is not on the battlefield");
 				}
 				break;
 			case LIBRARY:
-				if (!this.data.getLibrary().remove(card)) {
+				if (!this.data.getLibrary().remove(this.data, card)) {
 					throw new RuntimeException("The " + card + " is not in the library");
 				}
 				break;

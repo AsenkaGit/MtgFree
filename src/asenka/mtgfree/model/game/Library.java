@@ -127,11 +127,11 @@ public class Library extends Observable implements Serializable {
 	 * @param card the card to add
 	 * @see LibraryEvent
 	 */
-	public void addOnTop(final Card card) {
+	public void addOnTop(Player player, final Card card) {
 
 		this.cards.addFirst(card);
 		super.setChanged();
-		super.notifyObservers(new LibraryEvent("addOnTop", "cards", card));
+		super.notifyObservers(new LibraryEvent(player, "addOnTop", "cards", card));
 	}
 
 	/**
@@ -141,11 +141,11 @@ public class Library extends Observable implements Serializable {
 	 * @param card the card to add
 	 * @see LibraryEvent
 	 */
-	public void addToBottom(final Card card) {
+	public void addToBottom(Player player, final Card card) {
 
 		this.cards.addLast(card);
 		super.setChanged();
-		super.notifyObservers(new LibraryEvent("addToBottom", "cards", card));
+		super.notifyObservers(new LibraryEvent(player, "addToBottom", "cards", card));
 	}
 
 	/**
@@ -157,14 +157,14 @@ public class Library extends Observable implements Serializable {
 	 *        {@link Library#addToBottom(Card)}
 	 * @see LibraryEvent
 	 */
-	public void addFromTop(final Card card, int x) {
+	public void addFromTop(Player player, final Card card, int x) {
 
 		if (x >= this.cards.size()) {
-			this.addToBottom(card);
+			this.addToBottom(player, card);
 		} else {
 			this.cards.add(x, card);
 			super.setChanged();
-			super.notifyObservers(new LibraryEvent("addFromTop(" + x + ")", "cards", card));
+			super.notifyObservers(new LibraryEvent(player, "addFromTop(" + x + ")", "cards", card));
 		}
 	}
 
@@ -175,13 +175,13 @@ public class Library extends Observable implements Serializable {
 	 * @return a Card
 	 * @see LibraryEvent
 	 */
-	public Card draw() {
+	public Card draw(Player player) {
 
 		Card card = this.cards.removeFirst();
 
 		if (card != null) {
 			super.setChanged();
-			super.notifyObservers(new LibraryEvent("draw", "cards", new Integer(1)));
+			super.notifyObservers(new LibraryEvent(player, "draw", "cards", new Integer(1)));
 		}
 		return card;
 	}
@@ -193,7 +193,7 @@ public class Library extends Observable implements Serializable {
 	 * @return the list of card removed from the library
 	 * @see LibraryEvent
 	 */
-	public List<Card> draw(int x) {
+	public List<Card> draw(Player player, int x) {
 
 		// if xFirst is superior at the current number of cards in the library, the parameter value is reduced
 		if (x > this.cards.size()) {
@@ -209,7 +209,7 @@ public class Library extends Observable implements Serializable {
 
 		if (!xFirstCards.isEmpty()) {
 			super.setChanged();
-			super.notifyObservers(new LibraryEvent("draw", "cards", new Integer(x)));
+			super.notifyObservers(new LibraryEvent(player, "draw", "cards", new Integer(x)));
 		}
 		return xFirstCards;
 	}
@@ -221,11 +221,11 @@ public class Library extends Observable implements Serializable {
 	 * @return
 	 * @see LibraryEvent
 	 */
-	public boolean remove(Card card) {
+	public boolean remove(Player player, Card card) {
 
 		if (this.cards.remove(card)) {
 			super.setChanged();
-			super.notifyObservers(new LibraryEvent("remove", "cards", card));
+			super.notifyObservers(new LibraryEvent(player, "remove", "cards", card));
 			return true;
 		} else {
 			return false;
@@ -238,11 +238,11 @@ public class Library extends Observable implements Serializable {
 	 * @see Collections#shuffle(List)
 	 * @see LibraryEvent
 	 */
-	public void shuffle() {
+	public void shuffle(Player player) {
 
 		Collections.shuffle(this.cards);
 		super.setChanged();
-		super.notifyObservers(new LibraryEvent("shuffle", "cards", null));
+		super.notifyObservers(new LibraryEvent(player, "shuffle", "cards", null));
 	}
 
 	/**
@@ -252,12 +252,12 @@ public class Library extends Observable implements Serializable {
 	 * @param newIndex the new index of the card in the library
 	 * @return <code>true</code> if the card's index has been updated, if <code>false</code> the card was not in the library
 	 */
-	public boolean changeCardIndex(Card card, int newIndex) {
+	public boolean changeCardIndex(Player player, Card card, int newIndex) {
 
 		if (this.cards.remove(card)) {
 			this.cards.add(newIndex, card);
 			super.setChanged();
-			super.notifyObservers(new LibraryEvent("changeCardIndex(" + newIndex + ")", "cards", card));
+			super.notifyObservers(new LibraryEvent(player, "changeCardIndex(" + newIndex + ")", "cards", card));
 			return true;
 		} else {
 			return false;
@@ -269,12 +269,12 @@ public class Library extends Observable implements Serializable {
 	 * 
 	 * @see LibraryEvent
 	 */
-	public void clear() {
+	public void clear(Player player) {
 
 		if (!this.cards.isEmpty()) {
 			this.cards.clear();
 			super.setChanged();
-			super.notifyObservers(new LibraryEvent("clear", "cards", null));
+			super.notifyObservers(new LibraryEvent(player, "clear", "cards", null));
 		}
 	}
 
