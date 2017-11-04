@@ -40,7 +40,7 @@ public class TestCard extends MtgFreeTest {
 	}
 
 	private boolean observerCalled;
-	
+
 	private Player player;
 
 	@Before
@@ -67,9 +67,28 @@ public class TestCard extends MtgFreeTest {
 
 		Card card = new Card(dataUtility.getMtgCard("black lotus"));
 		new TestCardObserver(card);
+		card.addObserver((observable, object) -> {
+
+			LocalEvent event = (LocalEvent) object;
+
+			switch (event.getEventType()) {
+				case ADD_COUNTER:
+					assertEquals(new Counter("+1/+1", Color.GREEN), event.getFirstParam());
+					break;
+				case MOVE:
+					assertEquals(new Point2D.Double(250, 100), (event.getFirstParam()));
+					break;
+				case ADD_ASSOCIATED_CARD:
+					assertTrue(card.getAssociatedCards().contains((event.getFirstParam())));
+					break;
+				default:
+					fail("Unexpected event " + event);
+
+			}
+		});
 
 		card.addCounter(this.player, new Counter("+1/+1", Color.GREEN));
-		assertEquals(new Counter("+1/+1", Color.GREEN), card.getCounters().iterator().next());
+		assertEquals(new Counter("+1/+1", Color.GREEN), card.getCounters().get(0));
 
 		card.setLocation(this.player, 250, 100);
 		assertEquals(new Point2D.Double(250, 100), card.getLocation());
