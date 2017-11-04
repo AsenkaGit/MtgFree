@@ -16,7 +16,7 @@ public class DeckController extends Controller<Deck> {
 
 	/**
 	 * Build a deck controller. This constructor assumes that the deck controller is always 
-	 * used by a human player (see {@link Controller#playerManaged}).
+	 * used by a human player (see {@link Controller#humanManaged}).
 	 * 
 	 * @param data
 	 */

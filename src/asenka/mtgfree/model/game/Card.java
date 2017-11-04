@@ -7,13 +7,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 
-import asenka.mtgfree.events.local.CardEvent;
+import asenka.mtgfree.events.EventType;
+import asenka.mtgfree.events.LocalEvent;
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 
 /**
- * <p>A representation of a card during a MTG game. It stores the data of a card (MtgCard) and data about the state of
- * the card during the game:</p>
+ * <p>
+ * A representation of a card during a MTG game. It stores the data of a card (MtgCard) and data about the state of the card
+ * during the game:
+ * </p>
  * <ul>
  * <li>Is the card tapped ?</li>
  * <li>Is the card visible ?</li>
@@ -22,7 +25,9 @@ import asenka.mtgfree.model.data.utilities.MtgDataUtility;
  * <li>What is the layout of the card ?</li>
  * <li>Is there any counters on the card ?</li>
  * </ul>
- * <p>The class extends {@link Observable} to notify the observers when a value is updated.</p>
+ * <p>
+ * The class extends {@link Observable} to notify the observers when a value is updated.
+ * </p>
  * 
  * @author asenka
  * @see MtgCard
@@ -33,10 +38,11 @@ public class Card extends Observable implements Serializable {
 	/**
 	 * The generated id for serialization
 	 */
-	private static final long serialVersionUID = -6450719588687307909L;
+	private static final long serialVersionUID = -5521469150652565434L;
 
 	/**
-	 * The counter used to generated card battle id
+	 * The counter used to generated card battle id (default value is 1). It can be changed with the 
+	 * static method {@link Card#setBattleIdCounter(long)}
 	 */
 	private static long battleIdCounter = 1;
 
@@ -91,6 +97,7 @@ public class Card extends Observable implements Serializable {
 
 	/**
 	 * Constructor of game Card
+	 * 
 	 * @param cardData the MtgCard containing all the data related to the card played
 	 */
 	public Card(MtgCard cardData) {
@@ -152,8 +159,9 @@ public class Card extends Observable implements Serializable {
 	}
 
 	/**
-	 * Set if the card is tapped or not. The method creates a CardEvent to notify the observers.
+	 * Set if the card is tapped or not. The method creates a LocalEvent to notify the observers.
 	 * 
+	 * @param player the player performing the action. Used to create the event
 	 * @param tapped
 	 */
 	public void setTapped(Player player, boolean tapped) {
@@ -161,7 +169,7 @@ public class Card extends Observable implements Serializable {
 		if (this.tapped != tapped) {
 			this.tapped = tapped;
 			super.setChanged();
-			super.notifyObservers(new CardEvent(player, "set", "tapped", new Boolean(tapped)));
+			super.notifyObservers(new LocalEvent(player, (tapped ? EventType.TAP : EventType.UNTAP), new Boolean(tapped)));
 		}
 	}
 
@@ -177,8 +185,9 @@ public class Card extends Observable implements Serializable {
 
 	/**
 	 * Set to <code>true</code> if the card is visible on the battlefield. By default the value is <code>true</code>. The method
-	 * creates a CardEvent to notify the observers.
+	 * creates a LocalEvent to notify the observers.
 	 * 
+	 * @param player the player performing the action. Used to create the event
 	 * @param visible true/false
 	 */
 	public void setVisible(Player player, boolean visible) {
@@ -186,7 +195,7 @@ public class Card extends Observable implements Serializable {
 		if (this.visible != visible) {
 			this.visible = visible;
 			super.setChanged();
-			super.notifyObservers(new CardEvent(player, "set", "visible", new Boolean(visible)));
+			super.notifyObservers(new LocalEvent(player, (visible ? EventType.SHOW : EventType.HIDE), new Boolean(visible)));
 		}
 	}
 
@@ -202,8 +211,9 @@ public class Card extends Observable implements Serializable {
 
 	/**
 	 * Set to <code>true</code> if the card should be revealed to other player(s) when it is in the player's hand. By default the
-	 * value is <code>false</code>. The method creates a CardEvent to notify the observers.
+	 * value is <code>false</code>. The method creates a LocalEvent to notify the observers.
 	 * 
+	 * @param player the player performing the action. Used to create the event
 	 * @param revealed true/false
 	 */
 	public void setRevealed(Player player, boolean revealed) {
@@ -211,7 +221,7 @@ public class Card extends Observable implements Serializable {
 		if (this.revealed != revealed) {
 			this.revealed = revealed;
 			super.setChanged();
-			super.notifyObservers(new CardEvent(player, "set", "revealed", new Boolean(revealed)));
+			super.notifyObservers(new LocalEvent(player, (revealed ? EventType.DO_REVEAL : EventType.UNDO_REVEAL), new Boolean(revealed)));
 		}
 	}
 
@@ -220,15 +230,16 @@ public class Card extends Observable implements Serializable {
 	 */
 	public Point2D.Double getLocation() {
 
-		return location;
+		return this.location;
 	}
 
 	/**
-	 * Set the location of the card. The method creates a CardEvent to notify the observers.
+	 * Set the location of the card. The method creates a LocalEvent to notify the observers.
 	 * 
+	 * @param player the player performing the action. Used to create the event
 	 * @param x the double coordinate for horizontal position
 	 * @param y the double coordinate for vertical position
-	 * @see CardEvent
+	 * @see LocalEvent
 	 */
 	public void setLocation(Player player, final double x, final double y) {
 
@@ -236,7 +247,7 @@ public class Card extends Observable implements Serializable {
 		if (x != this.location.getX() || y != this.location.getY()) {
 			this.location.setLocation(x, y);
 			super.setChanged();
-			super.notifyObservers(new CardEvent(player, "set", "location", this.location));
+			super.notifyObservers(new LocalEvent(player, EventType.MOVE, this.location));
 		}
 
 	}
@@ -246,50 +257,59 @@ public class Card extends Observable implements Serializable {
 	 */
 	public List<Card> getAssociatedCards() {
 
-		return associatedCards;
+		return this.associatedCards;
 	}
 
 	/**
 	 * Associates a card with another (like when a card enchants another, or when an artifact equips a creature). The method
-	 * creates a CardEvent to notify the observers.
+	 * creates a LocalEvent to notify the observers.
 	 * 
-	 * @param card the associated card to add
-	 * @see CardEvent
+	 * @param player the player performing the action. Used to create the event
+	 * @param associatedCard the associated card to add
+	 * @see LocalEvent
 	 */
-	public void addAssociatedCard(Player player, Card card) {
+	public void addAssociatedCard(Player player, Card associatedCard) {
 
-		if (card != null) {
-			this.associatedCards.add(card);
+		if (associatedCard != null || associatedCard == this) {
+			this.associatedCards.add(associatedCard);
 			super.setChanged();
-			super.notifyObservers(new CardEvent(player, "add", "associatedCards", card));
+			super.notifyObservers(new LocalEvent(player, EventType.ADD_ASSOCIATED_CARD, associatedCard));
+		} else {
+			throw new IllegalArgumentException("Associate the card " + this + " with " + associatedCard + " is not correct.");
 		}
 	}
 
 	/**
-	 * Removes an associated card. The method creates a CardEvent to notify the observers.
+	 * Removes an associated card. The method creates a LocalEvent to notify the observers.
 	 * 
-	 * @param card the associated card to remove
-	 * @see CardEvent
+	 * @param player the player performing the action. Used to create the event
+	 * @param associatedCard the associated card to remove
+	 * @return <code>true</code> if <code>associatedCard</code> was associated to the current card and has been properly removed
+	 * @see LocalEvent
 	 */
-	public void removeAssociatedCard(Player player, Card card) {
+	public boolean removeAssociatedCard(Player player, Card associatedCard) {
 
-		if (this.associatedCards.remove(card)) {
+		if (this.associatedCards.remove(associatedCard)) {
 			super.setChanged();
-			super.notifyObservers(new CardEvent(player, "remove", "associatedCards", card));
+			super.notifyObservers(new LocalEvent(player, EventType.REMOVE_ASSOCIATED_CARD, associatedCard));
+			return true;
+		} else {
+			return false;
 		}
 	}
 
 	/**
-	 * Removes all the cards associated to this card. The method creates a CardEvent to notify the observers.
+	 * Removes all the cards associated to this card. The method creates a LocalEvent to notify the observers.
 	 * 
-	 * @see CardEvent
+	 * @param player the player performing the action. Used to create the event
+	 * @see LocalEvent
 	 */
 	public void clearAssociatedCards(Player player) {
 
 		if (!this.associatedCards.isEmpty()) {
 			this.associatedCards.clear();
 			super.setChanged();
-			super.notifyObservers(new CardEvent(player, "clear", "associatedCards", null));
+			super.notifyObservers(new LocalEvent(player, EventType.CLEAR_ASSOCIATED_CARDS));
 		}
 	}
 
@@ -298,49 +318,54 @@ public class Card extends Observable implements Serializable {
 	 */
 	public List<Counter> getCounters() {
 
-		return counters;
+		return this.counters;
 	}
 
 	/**
-	 * Adds a counter on the card. The method creates a CardEvent to notify the observers.
+	 * Adds a counter on the card. The method creates a LocalEvent to notify the observers.
 	 * 
+	 * @param player the player performing the action. Used to create the event
 	 * @param counter the counter to add
-	 * @see CardEvent
+	 * @see LocalEvent
 	 */
 	public void addCounter(Player player, Counter counter) {
 
 		if (counter != null) {
 			this.counters.add(counter);
 			super.setChanged();
-			super.notifyObservers(new CardEvent(player, "add", "counter", counter));
+			super.notifyObservers(new LocalEvent(player, EventType.ADD_COUNTER, counter));
+		} else {
+			throw new IllegalArgumentException("Try to add a null counter to a card.");
 		}
 	}
 
 	/**
-	 * Removes a counter on the card. The method creates a CardEvent to notify the observers.
+	 * Removes a counter on the card. The method creates a LocalEvent to notify the observers.
 	 * 
+	 * @param player the player performing the action. Used to create the event
 	 * @param counter the counter to remove
-	 * @see CardEvent
+	 * @see LocalEvent
 	 */
 	public void removeCounter(Player player, Counter counter) {
 
 		if (this.counters.remove(counter)) {
 			super.setChanged();
-			super.notifyObservers(new CardEvent(player, "remove", "counter", counter));
+			super.notifyObservers(new LocalEvent(player, EventType.REMOVE_COUNTER, counter));
 		}
 	}
 
 	/**
-	 * Removes all the counters on the card. The method creates a CardEvent to notify the observers.
+	 * Removes all the counters on the card. The method creates a LocalEvent to notify the observers.
 	 * 
-	 * @see CardEvent
+	 * @param player the player performing the action. Used to create the event
+	 * @see LocalEvent
 	 */
 	public void clearCounters(Player player) {
 
 		if (!this.counters.isEmpty()) {
 			this.counters.clear();
 			super.setChanged();
-			super.notifyObservers(new CardEvent(player, "clear", "counter", null));
+			super.notifyObservers(new LocalEvent(player, EventType.CLEAR_COUNTERS));
 		}
 	}
 
@@ -359,8 +384,9 @@ public class Card extends Observable implements Serializable {
 	@Override
 	public String toString() {
 
-		return "Card [" + battleId + ", " + (primaryCardData != null ? primaryCardData.getName() + ", " + primaryCardData.getLayout() : "[no card data]") + ", " + tapped + ", "
-				+ visible + ", " + revealed + ", " + location + "]";
+		return "Card [" + battleId + ", "
+				+ (primaryCardData != null ? primaryCardData.getName() + ", " + primaryCardData.getLayout() : "[no card data]") + ", "
+				+ tapped + ", " + visible + ", " + revealed + ", " + location + "]";
 	}
 
 	@Override

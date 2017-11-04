@@ -9,7 +9,9 @@ import java.util.Observable;
 import java.util.Set;
 
 import asenka.mtgfree.controlers.game.PlayerController;
-import asenka.mtgfree.events.network.NetworkEvent;
+import asenka.mtgfree.events.EventType;
+import asenka.mtgfree.events.LocalEvent;
+import asenka.mtgfree.events.NetworkEvent;
 
 /**
  * Game object storing the game table with the players on the table
@@ -79,7 +81,7 @@ public class GameTable extends Observable implements Serializable {
 	 */
 	public boolean isLocalPlayer(Player player) {
 
-		return localPlayer.equals(player);
+		return this.localPlayer.equals(player);
 	}
 
 	/**
@@ -87,7 +89,7 @@ public class GameTable extends Observable implements Serializable {
 	 */
 	public Player getLocalPlayer() {
 
-		return localPlayer;
+		return this.localPlayer;
 	}
 
 	/**
@@ -95,7 +97,7 @@ public class GameTable extends Observable implements Serializable {
 	 */
 	public PlayerController getLocalPlayerController() {
 
-		return localPlayerController;
+		return this.localPlayerController;
 	}
 
 	/**
@@ -103,33 +105,33 @@ public class GameTable extends Observable implements Serializable {
 	 */
 	public Set<Player> getOtherPlayers() {
 
-		return otherPlayers.keySet();
+		return this.otherPlayers.keySet();
 	}
 	
 	/**
 	 * Add a player on the game table
-	 * @param player the new player
+	 * @param newPlayer the new player
 	 */
-	public void addOtherPlayer(final Player player) {
+	public void addOtherPlayer(final Player newPlayer) {
 		
-		this.otherPlayers.put(player, new PlayerController(player, false));
+		this.otherPlayers.put(newPlayer, new PlayerController(newPlayer, false));
 		super.setChanged();
-		super.notifyObservers("addOtherPlayer");
+		super.notifyObservers(new LocalEvent(EventType.PLAYER_JOIN, newPlayer));
 	}
 	
 	/**
 	 * Removes the player from the map of other players
-	 * @param player the player to remove
-	 * @return <code>true</code> if the player was in the map of players, <code>false</code> if he wasn't
+	 * @param playerLeaving the player to remove
+	 * @return <code>true</code> if the player leaving the table was in the map of players, <code>false</code> if he wasn't
 	 */
-	public boolean removeOtherPlayer(final Player player) {
+	public boolean removeOtherPlayer(final Player playerLeaving) {
 		
-		PlayerController result = this.otherPlayers.remove(player);
+		PlayerController result = this.otherPlayers.remove(playerLeaving);
 		
-		// If 'player' was in the map of players...
+		// If 'playerLeaving' was in the map of players...
 		if(result != null) { 
 			super.setChanged();
-			super.notifyObservers("removeOtherPlayer");
+			super.notifyObservers(new LocalEvent(EventType.PLAYER_LEAVE, playerLeaving));
 			return true;
 		} else {
 			return false;
@@ -137,12 +139,12 @@ public class GameTable extends Observable implements Serializable {
 	}
 
 	/**
-	 * @param player the player
+	 * @param otherPlayer the player
 	 * @return the controller associated to the player
 	 */
-	public PlayerController getOtherPlayerController(Player player) {
+	public PlayerController getOtherPlayerController(Player otherPlayer) {
 
-		return otherPlayers.get(player);
+		return otherPlayers.get(otherPlayer);
 	}
 
 	/**
@@ -162,7 +164,7 @@ public class GameTable extends Observable implements Serializable {
 		this.logs.addLast(event.toString());
 
 		super.setChanged();
-		super.notifyObservers("addLog");
+		super.notifyObservers(new LocalEvent(EventType.UPDATE_GAME_LOGS, event));
 	}
 
 	/**

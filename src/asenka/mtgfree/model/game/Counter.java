@@ -4,14 +4,17 @@ import java.awt.Color;
 import java.io.Serializable;
 
 /**
+ * A simple class for the Counters you can add on a card during a MTG game.
+ * 
+ * They have a color and a text value.
  * 
  * @author asenka
- *
+ * @see Card
  */
 public class Counter implements Serializable {
 
 	/**
-	 * 
+	 * The generated ID for serialization
 	 */
 	private static final long serialVersionUID = -6713400592234603589L;
 
@@ -26,9 +29,9 @@ public class Counter implements Serializable {
 	private final Color color;
 
 	/**
-	 * 
-	 * @param value
-	 * @param color
+	 * Create a counter 
+	 * @param value the text to display on this counter
+	 * @param color the color of the counter
 	 */
 	public Counter(String value, Color color) {
 		super();
@@ -37,7 +40,7 @@ public class Counter implements Serializable {
 	}
 
 	/**
-	 * @return
+	 * @return the text to display for this counter
 	 */
 	public String getValue() {
 
@@ -45,7 +48,7 @@ public class Counter implements Serializable {
 	}
 
 	/**
-	 * @return
+	 * @return the color of the counter
 	 */
 	public Color getColor() {
 

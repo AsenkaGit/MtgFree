@@ -76,7 +76,7 @@ public class TestPlayerController extends MtgFreeTest {
 
 		Library library = null;
 		try {
-			library = testDeck.getLibrary();
+			library = testDeck.buildLibrary();
 		} catch (Exception e) {
 			fail("Unexpected exception :" + e.getMessage());
 		}

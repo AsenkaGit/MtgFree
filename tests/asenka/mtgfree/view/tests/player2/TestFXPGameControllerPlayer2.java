@@ -8,10 +8,6 @@ import java.util.Observer;
 import asenka.mtgfree.controlers.game.PlayerController;
 import asenka.mtgfree.communication.NetworkEventManager;
 import asenka.mtgfree.controlers.game.Controller.Origin;
-import asenka.mtgfree.events.local.BattlefieldEvent;
-import asenka.mtgfree.events.local.CardEvent;
-import asenka.mtgfree.events.local.LibraryEvent;
-import asenka.mtgfree.events.local.PlayerEvent;
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.model.game.Battlefield;
@@ -64,7 +60,7 @@ public class TestFXPGameControllerPlayer2 implements Observer {
 		testDeck.addCardToMain(dataUtility.getMtgCard("Brute Strength"), 4);
 
 		try {
-			library = testDeck.getLibrary();
+			library = testDeck.buildLibrary();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -485,21 +481,21 @@ public class TestFXPGameControllerPlayer2 implements Observer {
 	@Override
 	public void update(Observable observedObject, Object event) {
 
-		if (event instanceof String) {
-
-			this.logsTextArea.setText(((GameTable) observedObject).getLogs());
-			this.logsTextArea.selectPositionCaret(this.logsTextArea.getLength());
-		}
-
-		if (event instanceof LibraryEvent) {
-			manageLibraryEvent((Library) observedObject, (LibraryEvent) event);
-		} else if (event instanceof PlayerEvent) {
-			managePlayerEvent((Player) observedObject, (PlayerEvent) event);
-		} else if (event instanceof BattlefieldEvent) {
-			manageBattlefieldEvent((Battlefield) observedObject, (BattlefieldEvent) event);
-		} else if (event instanceof CardEvent) {
-			manageCardEvent((Card) observedObject, (CardEvent) event);
-		}
+//		if (event instanceof String) {
+//
+//			this.logsTextArea.setText(((GameTable) observedObject).getLogs());
+//			this.logsTextArea.selectPositionCaret(this.logsTextArea.getLength());
+//		}
+//
+//		if (event instanceof LibraryEvent) {
+//			manageLibraryEvent((Library) observedObject, (LibraryEvent) event);
+//		} else if (event instanceof PlayerEvent) {
+//			managePlayerEvent((Player) observedObject, (PlayerEvent) event);
+//		} else if (event instanceof BattlefieldEvent) {
+//			manageBattlefieldEvent((Battlefield) observedObject, (BattlefieldEvent) event);
+//		} else if (event instanceof CardEvent) {
+//			manageCardEvent((Card) observedObject, (CardEvent) event);
+//		}
 	}
 
 	private void displaySelectedCard() {
@@ -521,53 +517,53 @@ public class TestFXPGameControllerPlayer2 implements Observer {
 
 	}
 
-	private void managePlayerEvent(Player observedObject, PlayerEvent event) {
-
-		switch (event.getEventType()) {
-			case "set": {
-				this.playerDataTextArea.setText(buildPlayerDataString(localPlayerController.getData()));
-			}
-			case "add":
-			case "remove": {
-				switch (event.getProperty()) {
-					case "hand":
-						this.handTableView.setItems(FXCollections.observableList(this.localPlayerController.getData().getHand()));
-						break;
-					case "exile":
-						this.exileTextArea.setText(buildStringFromCardsCollection(localPlayerController.getData().getExile()));
-						break;
-					case "graveyard":
-						this.graveyardTextArea.setText(buildStringFromCardsCollection(localPlayerController.getData().getGraveyard()));
-						break;
-				}
-			}
-		}
-	}
-
-	private void manageBattlefieldEvent(Battlefield observedObject, BattlefieldEvent event) {
-
-		if (gameTable.isLocalPlayer(event.getPlayer())) {
-			this.battlefieldTableView
-				.setItems(FXCollections.observableList(this.localPlayerController.getData().getBattlefield().getCards()));
-		} else {
-			this.opponentBattlefieldTableView.setItems(FXCollections.observableList(event.getPlayer().getBattlefield().getCards()));
-		}
-	}
-
-	private void manageLibraryEvent(Library library, LibraryEvent event) {
-
-		this.libraryTextArea.setText(buildStringFromCardsCollection(localPlayerController.getData().getLibrary().getCards()));
-	}
-
-	private void manageCardEvent(Card observedObject, CardEvent event) {
-
-		int index = this.battlefieldTableView.getSelectionModel().getSelectedIndex();
-		this.battlefieldTableView.getItems().set(index, observedObject);
-		this.battlefieldTableView.requestFocus();
-		this.battlefieldTableView.getSelectionModel().select(index);
-		this.battlefieldTableView.getFocusModel().focus(index);
-
-	}
+//	private void managePlayerEvent(Player observedObject, PlayerEvent event) {
+//
+//		switch (event.getEventType()) {
+//			case "set": {
+//				this.playerDataTextArea.setText(buildPlayerDataString(localPlayerController.getData()));
+//			}
+//			case "add":
+//			case "remove": {
+//				switch (event.getProperty()) {
+//					case "hand":
+//						this.handTableView.setItems(FXCollections.observableList(this.localPlayerController.getData().getHand()));
+//						break;
+//					case "exile":
+//						this.exileTextArea.setText(buildStringFromCardsCollection(localPlayerController.getData().getExile()));
+//						break;
+//					case "graveyard":
+//						this.graveyardTextArea.setText(buildStringFromCardsCollection(localPlayerController.getData().getGraveyard()));
+//						break;
+//				}
+//			}
+//		}
+//	}
+//
+//	private void manageBattlefieldEvent(Battlefield observedObject, BattlefieldEvent event) {
+//
+//		if (gameTable.isLocalPlayer(event.getPlayer())) {
+//			this.battlefieldTableView
+//				.setItems(FXCollections.observableList(this.localPlayerController.getData().getBattlefield().getCards()));
+//		} else {
+//			this.opponentBattlefieldTableView.setItems(FXCollections.observableList(event.getPlayer().getBattlefield().getCards()));
+//		}
+//	}
+//
+//	private void manageLibraryEvent(Library library, LibraryEvent event) {
+//
+//		this.libraryTextArea.setText(buildStringFromCardsCollection(localPlayerController.getData().getLibrary().getCards()));
+//	}
+//
+//	private void manageCardEvent(Card observedObject, CardEvent event) {
+//
+//		int index = this.battlefieldTableView.getSelectionModel().getSelectedIndex();
+//		this.battlefieldTableView.getItems().set(index, observedObject);
+//		this.battlefieldTableView.requestFocus();
+//		this.battlefieldTableView.getSelectionModel().select(index);
+//		this.battlefieldTableView.getFocusModel().focus(index);
+//
+//	}
 
 	private static final String buildStringFromCardsCollection(Collection<Card> cards) {
 

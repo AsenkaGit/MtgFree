@@ -89,7 +89,7 @@ public class TestCardController extends MtgFreeTest {
 		player.addAvailableDeck(testDeck);
 		player.setSelectedDeck(testDeck);
 		try {
-			player.setLibrary(testDeck.getLibrary());
+			player.setLibrary(testDeck.buildLibrary());
 		} catch (Exception e) {
 			fail("Unexpected exception :" + e.getMessage());
 		}

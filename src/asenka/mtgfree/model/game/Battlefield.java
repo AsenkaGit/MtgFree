@@ -6,7 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 
-import asenka.mtgfree.events.local.BattlefieldEvent;
+import asenka.mtgfree.events.EventType;
+import asenka.mtgfree.events.LocalEvent;
 
 /**
  * Model class of the battlefield. It is basically a synchronized list of Card.
@@ -29,8 +30,7 @@ public class Battlefield extends Observable implements Serializable {
 	private List<Card> cards;
 
 	/**
-	 * Create a battlefield without any cards. It initializes the list of cards
-	 * with {@link Collections#synchronizedList(List)} 
+	 * Create a battlefield without any cards. It initializes the list of cards with {@link Collections#synchronizedList(List)}
 	 */
 	public Battlefield() {
 
@@ -70,31 +70,33 @@ public class Battlefield extends Observable implements Serializable {
 	/**
 	 * Adds a card on the battlefield and notify the observers
 	 * 
+	 * @param player the player performing the action. Used to create the event
 	 * @param card the card to add (if <code>null</code> nothing happens)
-	 * @see BattlefieldEvent
+	 * @see LocalEvent
 	 */
 	public void add(Player player, Card card) {
 
 		if (card != null) {
 			this.cards.add(card);
 			super.setChanged();
-			super.notifyObservers(new BattlefieldEvent(player, "add", "cards", card));
+			super.notifyObservers(new LocalEvent(player, EventType.ADD_TO_BATTLEFIELD, card));
 		}
 	}
 
 	/**
 	 * Removes a card from the battlefield and notify the observers
 	 * 
+	 * @param player the player performing the action. Used to create the event
 	 * @param card the card to remove
 	 * @return <code>true</code> if the card has been successfully removed, <code>false</code> if the card wasn't on the
 	 *         battlefield
-	 * @see BattlefieldEvent
+	 * @see LocalEvent
 	 */
 	public boolean remove(Player player, Card card) {
 
 		if (this.cards.remove(card)) {
 			super.setChanged();
-			super.notifyObservers(new BattlefieldEvent(player, "remove", "cards", card));
+			super.notifyObservers(new LocalEvent(player, EventType.REMOVE_FROM_BATTLEFIELD, card));
 			return true;
 		} else {
 			return false;
@@ -104,12 +106,13 @@ public class Battlefield extends Observable implements Serializable {
 	/**
 	 * Removes all the cards on the battlefield
 	 * 
-	 * @see BattlefieldEvent
+	 * @param player the player performing the action. Used to create the event
+	 * @see LocalEvent
 	 */
 	public void clear(Player player) {
 
 		this.cards.clear();
 		super.setChanged();
-		super.notifyObservers(new BattlefieldEvent(player, "clear", "cards", null));
+		super.notifyObservers(new LocalEvent(player, EventType.CLEAR_BATTLEFIELD));
 	}
 }

@@ -11,8 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import asenka.mtgfree.events.local.AbstractLocalEvent;
-import asenka.mtgfree.events.local.DeckEvent;
+import asenka.mtgfree.events.LocalEvent;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.tests.MtgFreeTest;
 
@@ -78,7 +77,7 @@ public class TestDeck extends MtgFreeTest {
 	@Test
 	public void testGetLibrary() throws Exception {
 
-		Library library = this.deck.getLibrary();
+		Library library = this.deck.buildLibrary();
 		assertEquals(60, library.getCards().size());
 	}
 
@@ -106,9 +105,7 @@ public class TestDeck extends MtgFreeTest {
 		public void update(Observable observedDeck, Object event) {
 
 			assertTrue(observedDeck instanceof Serializable);
-			assertTrue(event instanceof AbstractLocalEvent);
-			assertEquals(DeckEvent.class, event.getClass());
-			assertTrue(((DeckEvent) event).getValue() instanceof Serializable);
+			assertTrue(event instanceof LocalEvent);
 
 			if (!observerCalled) {
 				observerCalled = true;

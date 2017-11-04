@@ -12,7 +12,8 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Map.Entry;
 
-import asenka.mtgfree.events.local.DeckEvent;
+import asenka.mtgfree.events.EventType;
+import asenka.mtgfree.events.LocalEvent;
 import asenka.mtgfree.model.data.MtgCard;
 
 /**
@@ -33,9 +34,9 @@ import asenka.mtgfree.model.data.MtgCard;
 public class Deck extends Observable implements Comparable<Deck>, Serializable {
 
 	/**
-	 * The generated ID from serializable
+	 * The generated ID for the serialization
 	 */
-	private static final long serialVersionUID = 8902051166224902061L;
+	private static final long serialVersionUID = 5762956834196881542L;
 
 	/**
 	 * The minimum amount of cards in the main zone of the deck
@@ -78,10 +79,11 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 	 */
 	public Deck(String name, String decription) {
 
+		this.description = decription;
+		this.name = name;
 		this.main = new HashMap<MtgCard, Integer>(MINIMUM_MAIN_SIZE);
 		this.sideboard = new HashMap<MtgCard, Integer>(0);
-		this.description = decription != null ? decription : "";
-		this.name = name != null ? name : "[No Name]";
+
 	}
 
 	/**
@@ -112,14 +114,14 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 	 * Set the name of the deck
 	 * 
 	 * @param name the name to set
-	 * @see DeckEvent
+	 * @see LocalEvent
 	 */
 	public void setName(String name) {
 
 		if (!this.name.equals(name)) {
 			this.name = name;
 			super.setChanged();
-			super.notifyObservers(new DeckEvent("set", "name", name));
+			super.notifyObservers(new LocalEvent(EventType.SET_DECK_NAME, name));
 		}
 	}
 
@@ -135,14 +137,14 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 	 * Set the description of the deck
 	 * 
 	 * @param description the description to set
-	 * @see DeckEvent
+	 * @see LocalEvent
 	 */
 	public void setDescription(String description) {
 
 		if (!this.description.equals(description)) {
 			this.description = description;
 			super.setChanged();
-			super.notifyObservers(new DeckEvent("set", "description", description));
+			super.notifyObservers(new LocalEvent(EventType.SET_DECK_DESCRIPTION, description));
 		}
 	}
 
@@ -151,7 +153,7 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 	 */
 	public Map<MtgCard, Integer> getMain() {
 
-		return main;
+		return this.main;
 	}
 
 	/**
@@ -159,7 +161,7 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 	 */
 	public Map<MtgCard, Integer> getSideboard() {
 
-		return sideboard;
+		return this.sideboard;
 	}
 
 	/**
@@ -169,19 +171,21 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 	 * @throws Exception if the cards number in the main zone are inferior to the minimum main size
 	 * @see Library
 	 */
-	public Library getLibrary() throws Exception {
+	public Library buildLibrary() throws Exception {
 
 		if (numberOfCards(this.main) >= MINIMUM_MAIN_SIZE) {
 
 			List<Card> libraryCards = new ArrayList<Card>(this.main.size());
 			Iterator<Entry<MtgCard, Integer>> it = this.main.entrySet().iterator();
 
+			// For each couple of key/value in the map...
 			while (it.hasNext()) {
 
 				Entry<MtgCard, Integer> entry = it.next();
 				MtgCard mtgCard = entry.getKey();
 				int number = entry.getValue().intValue();
 
+				// Add the card in the library x times (where x is the integer value associated to the mtgCard in the map)
 				do {
 					libraryCards.add(new Card(mtgCard));
 				} while (--number > 0);
@@ -199,7 +203,7 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 	 * 
 	 * @param mtgCard the card data
 	 * @param number the number of instance of the card to add in the deck
-	 * @see DeckEvent
+	 * @see LocalEvent
 	 */
 	public void addCardToMain(final MtgCard mtgCard, int number) {
 
@@ -210,7 +214,7 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 			this.main.put(mtgCard, new Integer(number));
 		}
 		super.setChanged();
-		super.notifyObservers(new DeckEvent("add(" + number + ")", "main", mtgCard));
+		super.notifyObservers(new LocalEvent(EventType.ADD_CARD_TO_MAIN, mtgCard, new Integer(number)));
 	}
 
 	/**
@@ -219,7 +223,7 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 	 * @param mtgCard the card data
 	 * @param number the number of instance of the card to add in the deck
 	 * @throws Exception if the size of the sideboard will exceed the maximum value after performing this method
-	 * @see DeckEvent
+	 * @see LocalEvent
 	 */
 	public void addCardToSideboard(final MtgCard mtgCard, int number) throws Exception {
 
@@ -232,7 +236,7 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 				this.sideboard.put(mtgCard, new Integer(number));
 			}
 			super.setChanged();
-			super.notifyObservers(new DeckEvent("add(" + number + ")", "sideboard", mtgCard));
+			super.notifyObservers(new LocalEvent(EventType.ADD_CARD_TO_SIDEBOARD, mtgCard, new Integer(number)));
 		} else {
 			throw new Exception("The number of cards in the sideboard cannot exceed " + MAXIMUM_SIDEBOARD_SIZE + ". The current size is "
 					+ numberOfCards(sideboard));
@@ -243,7 +247,7 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 	 * Removes 1 instance of the card in the main zone of the deck
 	 * 
 	 * @param mtgCard the card to remove from the deck
-	 * @see DeckEvent
+	 * @see LocalEvent
 	 */
 	public void removeCardFromMain(final MtgCard mtgCard) {
 
@@ -257,7 +261,7 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 				this.main.remove(mtgCard);
 			}
 			super.setChanged();
-			super.notifyObservers(new DeckEvent("remove(1)", "main", mtgCard));
+			super.notifyObservers(new LocalEvent(EventType.REMOVE_CARD_FROM_MAIN, mtgCard));
 		}
 	}
 
@@ -265,7 +269,7 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 	 * Removes 1 instance of the card in the main zone of the deck
 	 * 
 	 * @param mtgCard the card to remove from the deck
-	 * @see DeckEvent
+	 * @see LocalEvent
 	 */
 	public void removeCardFromSideboard(final MtgCard mtgCard) {
 
@@ -279,7 +283,7 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 				this.sideboard.remove(mtgCard);
 			}
 			super.setChanged();
-			super.notifyObservers(new DeckEvent("remove(1)", "sideboard", mtgCard));
+			super.notifyObservers(new LocalEvent(EventType.REMOVE_CARD_FROM_SIDEBOARD, mtgCard));
 		}
 	}
 
@@ -337,21 +341,21 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 	@Override
 	public int compareTo(Deck otherDeck) {
 
-		// Uses the default collator to sort the deck by the name
+		// Uses the default collator to sort the decks by their name
 		return Collator.getInstance(Locale.getDefault()).compare(this.name, otherDeck.name);
 	}
 
 	/**
-	 * Calculate the number of cards in a map<MtgCard, Integer>
+	 * Calculate the number of cards in a map like this: <code> Map&lt;MtgCard, Integer&gt;</code>
 	 * 
 	 * @param map a map with integer values
 	 * @return the sum of all the integer values in the map
 	 */
-	private static int numberOfCards(Map<MtgCard, Integer> map) {
+	private static final int numberOfCards(Map<MtgCard, Integer> map) {
 
 		Collection<Integer> values = map.values();
 		int result = 0;
-
+		
 		for (Integer number : values) {
 			result += number.intValue();
 		}

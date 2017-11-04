@@ -42,7 +42,7 @@ public abstract class Controller<Type extends Observable> implements Serializabl
 	 * controller used by the player to manipulate the local data. If <code>false</code>, it means it is a controller used by the
 	 * network manager to update the opponent data during a game
 	 */
-	protected final boolean playerManaged;
+	protected final boolean humanManaged;
 
 	/**
 	 * Protected controller.
@@ -52,7 +52,7 @@ public abstract class Controller<Type extends Observable> implements Serializabl
 	protected Controller(Type data, boolean playerManaged) {
 
 		this.data = data;
-		this.playerManaged = playerManaged;
+		this.humanManaged = playerManaged;
 	}
 
 	/**
@@ -65,11 +65,11 @@ public abstract class Controller<Type extends Observable> implements Serializabl
 
 	/**
 	 * @return <code>true</code> if the controller is managed by a human player
-	 * @see Controller#playerManaged
+	 * @see Controller#humanManaged
 	 */
 	public boolean isPlayerManaged() {
 
-		return this.playerManaged;
+		return this.humanManaged;
 	}
 
 	/**

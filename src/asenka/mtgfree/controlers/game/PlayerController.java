@@ -1,6 +1,5 @@
 package asenka.mtgfree.controlers.game;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Observer;
@@ -8,7 +7,8 @@ import java.util.Observer;
 import org.apache.log4j.Logger;
 
 import asenka.mtgfree.communication.NetworkEventManager;
-import asenka.mtgfree.events.network.NetworkEvent;
+import asenka.mtgfree.events.EventType;
+import asenka.mtgfree.events.NetworkEvent;
 import asenka.mtgfree.model.game.Battlefield;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.Counter;
@@ -27,7 +27,8 @@ import asenka.mtgfree.model.game.Player;
 public class PlayerController extends Controller<Player> {
 
 	/**
-	 * 
+	 * The generated ID for serialization. The controller may be serialized when the game table data are
+	 * synchronized between the players at the beginning of a game.
 	 */
 	private static final long serialVersionUID = 2172603147829383956L;
 
@@ -35,12 +36,12 @@ public class PlayerController extends Controller<Player> {
 	 * Build the controller for a player.
 	 * 
 	 * @param player the player controlled
-	 * @param playerManaged <code>true</code> if the player controller is used by a human player, <code>false</code> if it is used
+	 * @param humanManaged <code>true</code> if the player controller is used by a human player, <code>false</code> if it is used
 	 *        by the program
 	 */
-	public PlayerController(Player player, boolean playerManaged) {
+	public PlayerController(Player player, boolean humanManaged) {
 
-		super(player, playerManaged);
+		super(player, humanManaged);
 	}
 
 	/**
@@ -54,8 +55,8 @@ public class PlayerController extends Controller<Player> {
 			Card card = this.data.getLibrary().draw(this.data);
 			this.data.addCardToHand(card);
 
-			if (playerManaged) {
-				notifyNetworkObserver(new NetworkEvent("draw", this.data, new Integer(1)));
+			if (this.humanManaged) {
+				notifyNetworkObserver(new NetworkEvent(this.data, EventType.DRAW));
 			}
 
 		} catch (NoSuchElementException ex) {
@@ -74,8 +75,8 @@ public class PlayerController extends Controller<Player> {
 		List<Card> cards = this.data.getLibrary().draw(this.data, x);
 		cards.forEach(card -> this.data.addCardToHand(card));
 
-		if (playerManaged) {
-			notifyNetworkObserver(new NetworkEvent("draw", this.data, new Integer(x)));
+		if (this.humanManaged) {
+			notifyNetworkObserver(new NetworkEvent(this.data, EventType.DRAW_X, new Integer(x)));
 		}
 	}
 
@@ -100,8 +101,8 @@ public class PlayerController extends Controller<Player> {
 			card.setVisible(this.data, visible);
 			this.data.getBattlefield().add(this.data, card);
 
-			if (playerManaged) {
-				notifyNetworkObserver(new NetworkEvent("play", this.data, new Serializable[] { card, origin }));
+			if (this.humanManaged) {
+				notifyNetworkObserver(new NetworkEvent(this.data, EventType.PLAY, card, origin));
 			}
 		}
 	}
@@ -124,8 +125,8 @@ public class PlayerController extends Controller<Player> {
 			card.setVisible(this.data, visible);
 			this.data.addCardToExile(card);
 
-			if (playerManaged) {
-				notifyNetworkObserver(new NetworkEvent("exile", this.data, new Serializable[] { card, origin }));
+			if (this.humanManaged) {
+				notifyNetworkObserver(new NetworkEvent(this.data, EventType.EXILE, card, origin));
 			}
 		}
 	}
@@ -147,8 +148,8 @@ public class PlayerController extends Controller<Player> {
 			card.setVisible(this.data, true);
 			this.data.addCardToGraveyard(card);
 
-			if (playerManaged) {
-				notifyNetworkObserver(new NetworkEvent("destroy", this.data, new Serializable[] { card, origin }));
+			if (this.humanManaged) {
+				notifyNetworkObserver(new NetworkEvent(this.data, EventType.DESTROY, card, origin));
 			}
 		}
 	}
@@ -171,8 +172,8 @@ public class PlayerController extends Controller<Player> {
 			card.setVisible(this.data, true);
 			this.data.addCardToHand(card);
 
-			if (playerManaged) {
-				notifyNetworkObserver(new NetworkEvent("backToHand", this.data, new Serializable[] { card, origin }));
+			if (this.humanManaged) {
+				notifyNetworkObserver(new NetworkEvent(this.data, EventType.BACK_TO_HAND, card, origin));
 			}
 		}
 	}
@@ -195,8 +196,8 @@ public class PlayerController extends Controller<Player> {
 			card.setVisible(this.data, true);
 			this.data.getLibrary().addOnTop(this.data, card);
 
-			if (playerManaged) {
-				notifyNetworkObserver(new NetworkEvent("backToTopOfLibrary", this.data, new Serializable[] { card, origin }));
+			if (this.humanManaged) {
+				notifyNetworkObserver(new NetworkEvent(this.data, EventType.BACK_TO_TOP_LIBRARY, card, origin));
 			}
 		}
 	}
@@ -219,8 +220,8 @@ public class PlayerController extends Controller<Player> {
 			card.setVisible(this.data, true);
 			this.data.getLibrary().addToBottom(this.data, card);
 
-			if (playerManaged) {
-				notifyNetworkObserver(new NetworkEvent("backToBottomOfLibrary", this.data, new Serializable[] { card, origin }));
+			if (this.humanManaged) {
+				notifyNetworkObserver(new NetworkEvent(this.data, EventType.BACK_TO_BOTTOM_LIBRARY, card, origin));
 			}
 		}
 	}
@@ -235,8 +236,8 @@ public class PlayerController extends Controller<Player> {
 
 		card.setTapped(this.data, tapped);
 
-		if (playerManaged) {
-			notifyNetworkObserver(new NetworkEvent("setTapped", this.data, card));
+		if (this.humanManaged) {
+			notifyNetworkObserver(new NetworkEvent(this.data, (tapped ? EventType.TAP : EventType.UNTAP), card));
 		}
 	}
 
@@ -250,8 +251,8 @@ public class PlayerController extends Controller<Player> {
 
 		cards.forEach(card -> card.setTapped(this.data, tapped));
 
-		if (playerManaged) {
-			notifyNetworkObserver(new NetworkEvent("setTapped", this.data, cards.toArray()));
+		if (this.humanManaged) {
+			notifyNetworkObserver(new NetworkEvent(this.data, (tapped ? EventType.TAP : EventType.UNTAP), cards.toArray()));
 		}
 	}
 
@@ -265,8 +266,8 @@ public class PlayerController extends Controller<Player> {
 
 		card.setVisible(this.data, visible);
 
-		if (playerManaged) {
-			notifyNetworkObserver(new NetworkEvent("setVisible", this.data, card));
+		if (this.humanManaged) {
+			notifyNetworkObserver(new NetworkEvent(this.data, (visible ? EventType.SHOW : EventType.HIDE), card));
 		}
 	}
 
@@ -280,8 +281,8 @@ public class PlayerController extends Controller<Player> {
 
 		cards.forEach(card -> card.setVisible(this.data, visible));
 
-		if (playerManaged) {
-			notifyNetworkObserver(new NetworkEvent("setVisible", this.data, cards.toArray()));
+		if (this.humanManaged) {
+			notifyNetworkObserver(new NetworkEvent(this.data, (visible ? EventType.SHOW : EventType.HIDE), cards.toArray()));
 		}
 	}
 
@@ -295,13 +296,13 @@ public class PlayerController extends Controller<Player> {
 
 		card.setRevealed(this.data, revealed);
 
-		if (playerManaged) {
-			notifyNetworkObserver(new NetworkEvent("setRevealed", this.data, card));
+		if (this.humanManaged) {
+			notifyNetworkObserver(new NetworkEvent(this.data, (revealed ? EventType.DO_REVEAL : EventType.UNDO_REVEAL), card));
 		}
 	}
 
 	/**
-	 * Set the visiblity of a card
+	 * Set if a card is revealed from the player's hand or not
 	 * 
 	 * @param revealed true/false
 	 * @param cards the card to update
@@ -310,8 +311,8 @@ public class PlayerController extends Controller<Player> {
 
 		cards.forEach(card -> card.setRevealed(this.data, revealed));
 
-		if (playerManaged) {
-			notifyNetworkObserver(new NetworkEvent("setRevealed", this.data, cards.toArray()));
+		if (this.humanManaged) {
+			notifyNetworkObserver(new NetworkEvent(this.data, (revealed ? EventType.DO_REVEAL : EventType.UNDO_REVEAL), cards.toArray()));
 		}
 	}
 
@@ -326,8 +327,8 @@ public class PlayerController extends Controller<Player> {
 
 		card.setLocation(this.data, x, y);
 
-		if (playerManaged) {
-			notifyNetworkObserver(new NetworkEvent("setLocation", this.data, card));
+		if (this.humanManaged) {
+			notifyNetworkObserver(new NetworkEvent(this.data, EventType.MOVE, card));
 		}
 	}
 
@@ -341,8 +342,8 @@ public class PlayerController extends Controller<Player> {
 
 		card.addCounter(this.data, counter);
 
-		if (playerManaged) {
-			notifyNetworkObserver(new NetworkEvent("addCounter", this.data, new Serializable[] { card, counter }));
+		if (this.humanManaged) {
+			notifyNetworkObserver(new NetworkEvent(this.data, EventType.ADD_COUNTER, card, counter));
 		}
 	}
 
@@ -356,8 +357,8 @@ public class PlayerController extends Controller<Player> {
 
 		card.removeCounter(this.data, counter);
 
-		if (playerManaged) {
-			notifyNetworkObserver(new NetworkEvent("removeCounter", this.data, new Serializable[] { card, counter }));
+		if (this.humanManaged) {
+			notifyNetworkObserver(new NetworkEvent(this.data, EventType.REMOVE_COUNTER, card, counter));
 		}
 	}
 
@@ -368,8 +369,8 @@ public class PlayerController extends Controller<Player> {
 
 		this.data.getLibrary().shuffle(this.data);
 
-		if (playerManaged) {
-			notifyNetworkObserver(new NetworkEvent("shuffleLibrary", this.data, this.data.getLibrary()));
+		if (this.humanManaged) {
+			notifyNetworkObserver(new NetworkEvent(this.data, EventType.SHUFFLE));
 		}
 	}
 
@@ -383,8 +384,8 @@ public class PlayerController extends Controller<Player> {
 
 		this.data.getBattlefield().add(this.data, card);
 
-		if (playerManaged) {
-			notifyNetworkObserver(new NetworkEvent("addCardToBattlefield", this.data, card));
+		if (this.humanManaged) {
+			notifyNetworkObserver(new NetworkEvent(this.data, EventType.ADD_TO_BATTLEFIELD, card));
 		}
 	}
 
@@ -398,8 +399,8 @@ public class PlayerController extends Controller<Player> {
 
 		this.data.getBattlefield().remove(this.data, card);
 
-		if (playerManaged) {
-			notifyNetworkObserver(new NetworkEvent("removeCardFromBattlefield", this.data, card));
+		if (this.humanManaged) {
+			notifyNetworkObserver(new NetworkEvent(this.data, EventType.REMOVE_FROM_BATTLEFIELD, card));
 		}
 	}
 
@@ -411,8 +412,8 @@ public class PlayerController extends Controller<Player> {
 
 		this.data.setLifeCounters(lifeCounters);
 
-		if (playerManaged) {
-			notifyNetworkObserver(new NetworkEvent("setLifeCounters", this.data));
+		if (this.humanManaged) {
+			notifyNetworkObserver(new NetworkEvent(this.data, EventType.SET_PLAYER_LIFE));
 		}
 	}
 
@@ -424,8 +425,8 @@ public class PlayerController extends Controller<Player> {
 
 		this.data.setPoisonCounters(poisonCounters);
 
-		if (playerManaged) {
-			notifyNetworkObserver(new NetworkEvent("setPoisonCounters", this.data));
+		if (this.humanManaged) {
+			notifyNetworkObserver(new NetworkEvent(this.data, EventType.SET_PLAYER_POISON));
 		}
 	}
 

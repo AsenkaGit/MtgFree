@@ -1,7 +1,6 @@
 package asenka.mtgfree.model.game;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.Serializable;
 import java.util.Observable;
@@ -12,8 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import asenka.mtgfree.events.local.AbstractLocalEvent;
-import asenka.mtgfree.events.local.PlayerEvent;
+import asenka.mtgfree.events.LocalEvent;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.tests.MtgFreeTest;
 
@@ -69,7 +67,7 @@ public class TestPlayer extends MtgFreeTest {
 
 		playerTest.addAvailableDeck(deck);
 		playerTest.setSelectedDeck(deck);
-		playerTest.setLibrary(deck.getLibrary());
+		playerTest.setLibrary(deck.buildLibrary());
 
 		// playerTest.draw(7);
 		//
@@ -96,8 +94,7 @@ public class TestPlayer extends MtgFreeTest {
 		public void update(Observable observedCard, Object event) {
 
 			assertTrue(observedCard instanceof Serializable);
-			assertTrue(event instanceof AbstractLocalEvent);
-			assertEquals(PlayerEvent.class, event.getClass());
+			assertTrue(event instanceof LocalEvent);
 
 			if (!observerCalled) {
 				observerCalled = true;

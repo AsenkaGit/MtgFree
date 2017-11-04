@@ -9,7 +9,8 @@ import org.apache.log4j.Logger;
 import asenka.mtgfree.communication.activemq.ActiveMQManager;
 import asenka.mtgfree.controlers.game.Controller.Origin;
 import asenka.mtgfree.controlers.game.PlayerController;
-import asenka.mtgfree.events.network.NetworkEvent;
+import asenka.mtgfree.events.EventType;
+import asenka.mtgfree.events.NetworkEvent;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.GameTable;
 import asenka.mtgfree.model.game.Library;
@@ -97,7 +98,7 @@ public class NetworkEventManager {
 			this.brokerManager = new ActiveMQManager(tableName);
 			this.brokerManager.listen();
 
-			send(new NetworkEvent("join", player));
+			send(new NetworkEvent(EventType.REQUEST_JOIN, player));
 
 		} catch (Exception e) {
 			Logger.getLogger(this.getClass()).error(e.getMessage(), e);
@@ -124,42 +125,44 @@ public class NetworkEventManager {
 	 */
 	public void manageEvent(NetworkEvent event) {
 
-		String eventType = event.getEventType();
+		EventType eventType = event.getEventType();
 		Player player = event.getPlayer();
 
 		Logger.getLogger(this.getClass()).info(">>> RECEIVED: " + event);
 
 		try {
 
-			if ("join".equals(eventType)) {
+			if (eventType == EventType.REQUEST_JOIN) {
 				managePlayerJoin(event);
-				
+
 			} else if (this.gameTable != null) {
 				this.gameTable.addLog(event);
-				
+
 				if (!this.gameTable.isLocalPlayer(player)) {
 
 					final PlayerController otherPlayerController = this.gameTable.getOtherPlayerController(player);
 
 					switch (eventType) {
-						case "draw":
+						case DRAW:
 							otherPlayerController.draw((Integer) event.getData()[0]);
 							break;
-						case "shuffleLibrary":
+						case SHUFFLE:
 							otherPlayerController.getData().setLibrary((Library) event.getData()[0]);
 							break;
-						case "play":
+						case PLAY:
 							Card card = (Card) event.getData()[0];
 							Origin origin = (Origin) event.getData()[1];
 							otherPlayerController.play(card, origin, card.isVisible(), card.getLocation().getX(), card.getLocation().getY());
 							break;
+						default: // TODO Finish implementing events management
+							throw new RuntimeException(eventType + " is not managed yet by this implementation");
 					}
 				}
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			Logger.getLogger(this.getClass()).error(ex.getMessage(), ex);
-		}	
+		}
 	}
 
 	/**
@@ -175,18 +178,17 @@ public class NetworkEventManager {
 			throw new RuntimeException("Try to close a broker connection that is not initialized yet");
 		}
 	}
-	
-	
+
 	public GameTable getGameTable() {
-		
-		if(this.gameTable != null) {
-			
+
+		if (this.gameTable != null) {
+
 			return this.gameTable;
 		} else {
-			
+
 			int timeout = 0;
-			
-			while(this.gameTable == null || timeout == 10) {
+
+			while (this.gameTable == null || timeout == 10) {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
@@ -195,8 +197,8 @@ public class NetworkEventManager {
 					timeout++;
 				}
 			}
-			
-			if(this.gameTable == null && timeout == 10) {
+
+			if (this.gameTable == null && timeout == 10) {
 				throw new RuntimeException("Unable to get the Game table from table creator");
 			} else {
 				return this.gameTable;
@@ -211,18 +213,18 @@ public class NetworkEventManager {
 	 */
 	private void managePlayerJoin(NetworkEvent event) throws Exception {
 
-		if ("join".equals(event.getEventType())) {
+		if (event.getEventType() == EventType.REQUEST_JOIN) {
 
 			// Get the event data
 			Player player = event.getPlayer();
 			GameTable receivedGameTable = event.getData().length > 0 ? ((GameTable) (event.getData()[0])) : null;
 
 			if (!this.localPlayer.equals(player) && receivedGameTable == null) {
-				
+
 				// FIRST CASE : the table creator receive a join request
-				
+
 				this.gameTable.addOtherPlayer(player);
-				
+
 				// Build a mirror game table to send to the new player
 				GameTable newPlayerGameTable = new GameTable(this.gameTable.getTableName(), player);
 
@@ -230,14 +232,13 @@ public class NetworkEventManager {
 				newPlayerGameTable.addOtherPlayer(localPlayer);
 
 				// Send the game table to the broker in another join event
-				send(new NetworkEvent("join", player, newPlayerGameTable));
+				send(new NetworkEvent(this.localPlayer, EventType.SYNCHRONIZE_GAMETABLE_DATA, newPlayerGameTable));
 
-				
 			} else if (this.gameTable == null && receivedGameTable != null) {
 
 				// SECOND CASE : the player taht made the request to join the table
 				// receives the game table from the creator
-				
+
 				this.gameTable = receivedGameTable;
 			}
 		} else {

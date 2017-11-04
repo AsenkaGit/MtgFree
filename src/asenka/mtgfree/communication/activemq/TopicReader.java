@@ -11,7 +11,7 @@ import javax.management.RuntimeErrorException;
 import org.apache.log4j.Logger;
 
 import asenka.mtgfree.communication.NetworkEventManager;
-import asenka.mtgfree.events.network.NetworkEvent;
+import asenka.mtgfree.events.NetworkEvent;
 
 /**
  * The class able to read the data from the ActiveMQ broker. It is run in a specific thread created in the constructor

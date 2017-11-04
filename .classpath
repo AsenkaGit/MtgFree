@@ -14,6 +14,7 @@
 			<attribute name="javadoc_location" value="http://activemq.apache.org/maven/5.15.2/apidocs/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/usr/share/java/openjfx/jre/lib/ext/jfxrt.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

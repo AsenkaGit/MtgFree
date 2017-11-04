@@ -1,4 +1,4 @@
-package asenka.mtgfree.events.network;
+package asenka.mtgfree.events;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -21,7 +21,7 @@ public class NetworkEvent implements Serializable {
 	/**
 	 * The type of event. Usually it is the controller's method name that triggered the network event
 	 */
-	private String eventType;
+	private EventType eventType;
 
 	/**
 	 * The player performing the eventType
@@ -36,22 +36,22 @@ public class NetworkEvent implements Serializable {
 	/**
 	 * Build a network eventType without any data
 	 * 
-	 * @param eventType the type of event, for network event use the method name
-	 * @param player the player performing the action
+	 * @param eventType the type of event
+	 * @param player the player at the origin of the event
 	 */
-	public NetworkEvent(String eventType, Player player) {
+	public NetworkEvent(EventType eventType, Player player) {
 
-		this(eventType, player, new Serializable[] {});
+		this(player, eventType,  new Serializable[] {});
 	}
 
 	/**
 	 * Build a network eventType with a client eventType
 	 * 
-	 * @param eventType the type of event, for network event use the method name
-	 * @param player the player performing the action
+	 * @param eventType the type of event
+	 * @param player the player at the origin of the event
 	 * @param data the param of the event
 	 */
-	public NetworkEvent(String eventType, Player player, Serializable... data) {
+	public NetworkEvent(Player player, EventType eventType, Serializable... data) {
 
 		this.eventType = eventType;
 		this.player = player;
@@ -62,7 +62,7 @@ public class NetworkEvent implements Serializable {
 	 * @return the type of event
 	 * @see NetworkEvent#eventType
 	 */
-	public String getEventType() {
+	public EventType getEventType() {
 
 		return this.eventType;
 	}
@@ -73,6 +73,19 @@ public class NetworkEvent implements Serializable {
 	public Serializable[] getData() {
 
 		return this.data;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Serializable getFirstData() {
+		
+		if(this.data.length > 0) {
+			return this.data[0];
+		} else {
+			return null;
+		}
 	}
 
 	/**

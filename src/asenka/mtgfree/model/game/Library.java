@@ -10,7 +10,8 @@ import java.util.Observable;
 
 import org.apache.log4j.Logger;
 
-import asenka.mtgfree.events.local.LibraryEvent;
+import asenka.mtgfree.events.EventType;
+import asenka.mtgfree.events.LocalEvent;
 
 /**
  * <p>
@@ -113,7 +114,7 @@ public class Library extends Observable implements Serializable {
 	 * 
 	 * @param index the index
 	 * @return a card from the library at a specific location
-	 * @see LibraryEvent
+	 * @see LocalEvent
 	 */
 	public Card get(final int index) {
 
@@ -121,41 +122,41 @@ public class Library extends Observable implements Serializable {
 	}
 
 	/**
-	 * Add a card on the top of the library. The method creates a LibraryEvent to notify the observers of the update on the
+	 * Add a card on the top of the library. The method creates a LocalEvent to notify the observers of the update on the
 	 * library.
 	 * 
 	 * @param card the card to add
-	 * @see LibraryEvent
+	 * @see LocalEvent
 	 */
 	public void addOnTop(Player player, final Card card) {
 
 		this.cards.addFirst(card);
 		super.setChanged();
-		super.notifyObservers(new LibraryEvent(player, "addOnTop", "cards", card));
+		super.notifyObservers(new LocalEvent(player, EventType.ADD_TO_LIBRARY_TOP, card));
 	}
 
 	/**
-	 * Add a card at the bottom of the library. The method creates a LibraryEvent to notify the observers of the update on the
+	 * Add a card at the bottom of the library. The method creates a LocalEvent to notify the observers of the update on the
 	 * library.
 	 * 
 	 * @param card the card to add
-	 * @see LibraryEvent
+	 * @see LocalEvent
 	 */
 	public void addToBottom(Player player, final Card card) {
 
 		this.cards.addLast(card);
 		super.setChanged();
-		super.notifyObservers(new LibraryEvent(player, "addToBottom", "cards", card));
+		super.notifyObservers(new LocalEvent(player, EventType.ADD_TO_LIBRARY_BOTTOM, card));
 	}
 
 	/**
-	 * Add a card under the x first cards of the library. The method creates a LibraryEvent to notify the observers of the update
+	 * Add a card under the x first cards of the library. The method creates a LocalEvent to notify the observers of the update
 	 * on the library.
 	 * 
 	 * @param card the cards to add
 	 * @param x the number of cards. If <code>x >= cards.size()</code>,the card is inserted at the bottom of the library :
 	 *        {@link Library#addToBottom(Card)}
-	 * @see LibraryEvent
+	 * @see LocalEvent
 	 */
 	public void addFromTop(Player player, final Card card, int x) {
 
@@ -164,16 +165,16 @@ public class Library extends Observable implements Serializable {
 		} else {
 			this.cards.add(x, card);
 			super.setChanged();
-			super.notifyObservers(new LibraryEvent(player, "addFromTop(" + x + ")", "cards", card));
+			super.notifyObservers(new LocalEvent(player, EventType.ADD_TO_LIBRARY_FROM_TOP, card, new Integer(x)));
 		}
 	}
 
 	/**
-	 * Returns and removes the first card on the library. The method creates a LibraryEvent to notify the observers of the update
+	 * Returns and removes the first card on the library. The method creates a LocalEvent to notify the observers of the update
 	 * on the library.
 	 * 
 	 * @return a Card
-	 * @see LibraryEvent
+	 * @see LocalEvent
 	 */
 	public Card draw(Player player) {
 
@@ -181,7 +182,7 @@ public class Library extends Observable implements Serializable {
 
 		if (card != null) {
 			super.setChanged();
-			super.notifyObservers(new LibraryEvent(player, "draw", "cards", new Integer(1)));
+			super.notifyObservers(new LocalEvent(player, EventType.DRAW, card));
 		}
 		return card;
 	}
@@ -191,7 +192,7 @@ public class Library extends Observable implements Serializable {
 	 * 
 	 * @param x the number of cards to draw
 	 * @return the list of card removed from the library
-	 * @see LibraryEvent
+	 * @see LocalEvent
 	 */
 	public List<Card> draw(Player player, int x) {
 
@@ -209,23 +210,23 @@ public class Library extends Observable implements Serializable {
 
 		if (!xFirstCards.isEmpty()) {
 			super.setChanged();
-			super.notifyObservers(new LibraryEvent(player, "draw", "cards", new Integer(x)));
+			super.notifyObservers(new LocalEvent(player, EventType.DRAW_X, xFirstCards));
 		}
 		return xFirstCards;
 	}
 
 	/**
-	 * Remove a card from the library. The method creates a LibraryEvent to notify the observers of the update on the library.
+	 * Remove a card from the library. The method creates a LocalEvent to notify the observers of the update on the library.
 	 * 
 	 * @param card the card to remove
 	 * @return
-	 * @see LibraryEvent
+	 * @see LocalEvent
 	 */
 	public boolean remove(Player player, Card card) {
 
 		if (this.cards.remove(card)) {
 			super.setChanged();
-			super.notifyObservers(new LibraryEvent(player, "remove", "cards", card));
+			super.notifyObservers(new LocalEvent(player, EventType.REMOVE_FROM_LIBRARY, card));
 			return true;
 		} else {
 			return false;
@@ -233,16 +234,16 @@ public class Library extends Observable implements Serializable {
 	}
 
 	/**
-	 * Shuffle the cards in the library. The method creates a LibraryEvent to notify the observers of the update on the library.
+	 * Shuffle the cards in the library. The method creates a LocalEvent to notify the observers of the update on the library.
 	 * 
 	 * @see Collections#shuffle(List)
-	 * @see LibraryEvent
+	 * @see LocalEvent
 	 */
 	public void shuffle(Player player) {
 
 		Collections.shuffle(this.cards);
 		super.setChanged();
-		super.notifyObservers(new LibraryEvent(player, "shuffle", "cards", null));
+		super.notifyObservers(new LocalEvent(player, EventType.SHUFFLE));
 	}
 
 	/**
@@ -257,7 +258,7 @@ public class Library extends Observable implements Serializable {
 		if (this.cards.remove(card)) {
 			this.cards.add(newIndex, card);
 			super.setChanged();
-			super.notifyObservers(new LibraryEvent(player, "changeCardIndex(" + newIndex + ")", "cards", card));
+			super.notifyObservers(new LocalEvent(player, EventType.CHANGE_CARD_INDEX, card, new Integer(newIndex)));
 			return true;
 		} else {
 			return false;
@@ -265,16 +266,16 @@ public class Library extends Observable implements Serializable {
 	}
 
 	/**
-	 * Clear the library. The method creates a LibraryEvent to notify the observers of the update on the library.
+	 * Clear the library. The method creates a LocalEvent to notify the observers of the update on the library.
 	 * 
-	 * @see LibraryEvent
+	 * @see LocalEvent
 	 */
 	public void clear(Player player) {
 
 		if (!this.cards.isEmpty()) {
 			this.cards.clear();
 			super.setChanged();
-			super.notifyObservers(new LibraryEvent(player, "clear", "cards", null));
+			super.notifyObservers(new LocalEvent(player, EventType.CLEAR_LIBRARY));
 		}
 	}
 

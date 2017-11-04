@@ -3,7 +3,7 @@ package asenka.mtgfree.communication.activemq;
 import org.apache.activemq.Closeable;
 
 import asenka.mtgfree.communication.NetworkEventManager;
-import asenka.mtgfree.events.network.NetworkEvent;
+import asenka.mtgfree.events.NetworkEvent;
 
 /**
  * Object used by the NetworkEventManager to used the ActiveMQ broker to send and receive messages
@@ -33,7 +33,7 @@ public class ActiveMQManager implements Closeable {
 	public ActiveMQManager(String gameName) {
 		
 		// TODO Use a preference file to load the broker url
-		String brokerUrl = "tcp://localhost:61616"; // Adapt this value to your ActiveMQ URL
+		String brokerUrl = "tcp://192.168.1.20:61616"; // Adapt this value to your ActiveMQ URL
 		
 		this.writer = new TopicWriter(brokerUrl, "MTGFREE:Topic:" + gameName);
 		this.reader = new TopicReader(brokerUrl, "MTGFREE:Topic:" + gameName);
