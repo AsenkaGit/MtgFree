@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 
-import asenka.mtgfree.communication.NetworkEventManager;
+import asenka.mtgfree.communication.GameManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -30,7 +30,7 @@ public class TestUIApplicationPlayer2 extends Application {
 	@Override
 	public void stop() throws Exception {
 		super.stop();
-		NetworkEventManager.getInstance().endGame();
+		GameManager.getInstance().endGame();
 	}
 
 	/**

@@ -6,7 +6,7 @@ import java.util.Observer;
 
 import org.apache.log4j.Logger;
 
-import asenka.mtgfree.communication.NetworkEventManager;
+import asenka.mtgfree.communication.GameManager;
 import asenka.mtgfree.events.EventType;
 import asenka.mtgfree.events.NetworkEvent;
 import asenka.mtgfree.model.game.Battlefield;
@@ -524,7 +524,7 @@ public class PlayerController extends Controller<Player> {
 	private void notifyNetworkObserver(NetworkEvent event) {
 
 		try {
-			NetworkEventManager.getInstance().send(event);
+			GameManager.getInstance().send(event);
 		} catch (Exception e) {
 			Logger.getLogger(this.getClass()).error(e);
 			throw new RuntimeException("Network issue", e);

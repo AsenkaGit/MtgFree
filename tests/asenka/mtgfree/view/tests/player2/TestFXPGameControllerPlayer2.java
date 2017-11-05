@@ -6,7 +6,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import asenka.mtgfree.controlers.game.PlayerController;
-import asenka.mtgfree.communication.NetworkEventManager;
+import asenka.mtgfree.communication.GameManager;
 import asenka.mtgfree.controlers.game.Controller.Origin;
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
@@ -232,7 +232,7 @@ public class TestFXPGameControllerPlayer2 implements Observer {
 	@FXML
 	private void initialize() {
 
-		NetworkEventManager gameManager = NetworkEventManager.createInstance(player);
+		GameManager gameManager = GameManager.initialize(player);
 
 		gameManager.joinGame("JavaFXUITestTable", player);
 

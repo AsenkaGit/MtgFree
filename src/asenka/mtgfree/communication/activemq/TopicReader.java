@@ -10,7 +10,7 @@ import javax.management.RuntimeErrorException;
 
 import org.apache.log4j.Logger;
 
-import asenka.mtgfree.communication.NetworkEventManager;
+import asenka.mtgfree.communication.GameManager;
 import asenka.mtgfree.events.NetworkEvent;
 
 /**
@@ -75,7 +75,7 @@ final class TopicReader extends AbstractActiveMQCommunicator {
 						// to deal with those data
 						ObjectMessage objectMessage = (ObjectMessage) message;
 						Serializable data = objectMessage.getObject();
-						NetworkEventManager.getInstance().manageEvent((NetworkEvent) data);
+						GameManager.getInstance().manageEvent((NetworkEvent) data);
 
 					} catch (JMSException e) {
 						Logger.getLogger(this.getClass()).error("Problem to read data from broker.", e);

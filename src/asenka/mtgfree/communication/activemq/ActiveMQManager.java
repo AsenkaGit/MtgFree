@@ -2,7 +2,7 @@ package asenka.mtgfree.communication.activemq;
 
 import org.apache.activemq.Closeable;
 
-import asenka.mtgfree.communication.NetworkEventManager;
+import asenka.mtgfree.communication.GameManager;
 import asenka.mtgfree.events.NetworkEvent;
 
 /**
@@ -11,7 +11,7 @@ import asenka.mtgfree.events.NetworkEvent;
  * @author asenka
  * @see TopicWriter
  * @see TopicReader
- * @see NetworkEventManager
+ * @see GameManager
  */
 public class ActiveMQManager implements Closeable {
 	

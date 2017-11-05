@@ -6,7 +6,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import asenka.mtgfree.controlers.game.PlayerController;
-import asenka.mtgfree.communication.NetworkEventManager;
+import asenka.mtgfree.communication.GameManager;
 import asenka.mtgfree.controlers.game.Controller.Origin;
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
@@ -236,7 +236,7 @@ public class TestFXPGameControllerPlayer1 implements Observer {
 		localPlayerController = gameTable.getLocalPlayerController();
 		localPlayerController.addObserver(this);
 		
-		NetworkEventManager.createInstance(player).createGame(gameTable);
+		GameManager.initialize(player).createGame(gameTable);
 
 
 		selectedCard = null;

@@ -30,7 +30,7 @@ public class GameTable extends Observable implements Serializable {
 	/**
 	 * The name of this table
 	 */
-	private final String tableName;
+	private final String name;
 
 	/**
 	 * the player on this client side
@@ -60,7 +60,7 @@ public class GameTable extends Observable implements Serializable {
 	 */
 	public GameTable(String tableName, Player localPlayer) {
 
-		this.tableName = tableName;
+		this.name = tableName;
 		this.localPlayer = localPlayer;
 		this.localPlayerController = new PlayerController(localPlayer, true);
 		this.otherPlayers = new HashMap<Player, PlayerController>();
@@ -68,11 +68,11 @@ public class GameTable extends Observable implements Serializable {
 	}
 
 	/**
-	 * @return the tableName
+	 * @return the name of this game table
 	 */
-	public String getTableName() {
+	public String getName() {
 	
-		return this.tableName;
+		return this.name;
 	}
 
 	/**
