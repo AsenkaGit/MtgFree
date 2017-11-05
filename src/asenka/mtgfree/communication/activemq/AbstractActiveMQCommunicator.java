@@ -6,7 +6,6 @@ import javax.jms.Topic;
 import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
 import javax.jms.TopicSession;
-
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.Closeable;
 
@@ -73,4 +72,5 @@ abstract class AbstractActiveMQCommunicator implements Closeable {
 		this.factory = new ActiveMQConnectionFactory(this.brokerUrl);
 		((ActiveMQConnectionFactory) factory).setTrustedPackages(Arrays.asList(TRUSTED_PACKAGES));
 	}
+
 }

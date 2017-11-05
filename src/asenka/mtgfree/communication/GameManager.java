@@ -20,8 +20,8 @@ import asenka.mtgfree.model.game.Library;
 import asenka.mtgfree.model.game.Player;
 
 /**
- * A singleton class running on each client when to manage the game. It is this object that make possible
- * the communication of events with the other players.
+ * A singleton class running on each client when to manage the game. It is this object that make possible the communication of
+ * events with the other players.
  * 
  * @author asenka
  * @see GameTable
@@ -51,16 +51,20 @@ public class GameManager {
 	private ActiveMQManager brokerManager;
 
 	/**
-	 * Private constructor
-	 * @param localPlayer 
+	 * Private constructor. The only required data to create a GameManager is the local player. By default, the local game table
+	 * is <code>null</code>.
+	 * 
+	 * @param localPlayer the local player
 	 */
 	private GameManager(Player localPlayer) {
 
 		this.localPlayer = localPlayer;
+		this.localGameTable = null;
 	}
 
 	/**
 	 * Use this method first to initialize the game manager
+	 * 
 	 * @param localPlayer
 	 * @return the unique instance of game manager
 	 * @throws IllegalStateException if the game manager has been already initialized
@@ -108,8 +112,9 @@ public class GameManager {
 	}
 
 	/**
-	 * If you are not the player who created the game table, you have to call this method to join
-	 * the existing game table (assuming you know the table name)
+	 * If you are not the player who created the game table, you have to call this method to join the existing game table
+	 * (assuming you know the table name)
+	 * 
 	 * @param tableName the name of the game table you want to join
 	 * @param joiningPlayer the player who wants to join the table
 	 * @see NetworkEvent
@@ -127,6 +132,24 @@ public class GameManager {
 			Logger.getLogger(this.getClass()).error(e.getMessage(), e);
 			throw new RuntimeException(e);
 		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public List<String> getAvailableTables() {
+		
+		List<String> availableTables = new ArrayList<String>();
+		
+		this.brokerManager.getGameTopics().forEach(topic -> {
+			try {
+				availableTables.add(topic.getTopicName());
+			} catch (Exception e) {
+				Logger.getLogger(this.getClass()).error(e);
+			}
+		});
+		return availableTables;
 	}
 
 	/**
@@ -175,7 +198,7 @@ public class GameManager {
 						// Send the game table to the broker in another join event
 						send(new NetworkEvent(this.localPlayer, EventType.SYNCHRONIZE_GAMETABLE_DATA, otherPlayerGameTable));
 
-					} else {
+					} else { // For normal type of events (DRAW, PLAY, etc.)
 
 						final PlayerController otherPlayerController = this.localGameTable.getOtherPlayerController(otherPlayer);
 						boolean flag = false; // boolean value used for events related to boolean state of a card (e.g. tapped)
@@ -215,7 +238,7 @@ public class GameManager {
 								flag = true;
 							case UNTAP:
 								if (data.length > 1) {
-									otherPlayerController.setTapped(flag, GameManager.<Card>convertDataArrayToList(data));
+									otherPlayerController.setTapped(flag, GameManager.<Card> convertDataArrayToList(data));
 								} else {
 									otherPlayerController.setTapped(flag, (Card) data[0]);
 								}
@@ -224,7 +247,7 @@ public class GameManager {
 								flag = true;
 							case HIDE:
 								if (data.length > 1) {
-									otherPlayerController.setVisible(flag, GameManager.<Card>convertDataArrayToList(data));
+									otherPlayerController.setVisible(flag, GameManager.<Card> convertDataArrayToList(data));
 								} else {
 									otherPlayerController.setVisible(flag, (Card) data[0]);
 								}
@@ -233,7 +256,7 @@ public class GameManager {
 								flag = true;
 							case UNDO_REVEAL:
 								if (data.length > 1) {
-									otherPlayerController.setRevealed(flag, GameManager.<Card>convertDataArrayToList(data));
+									otherPlayerController.setRevealed(flag, GameManager.<Card> convertDataArrayToList(data));
 								} else {
 									otherPlayerController.setRevealed(flag, (Card) data[0]);
 								}
@@ -315,9 +338,10 @@ public class GameManager {
 	}
 
 	/**
-	 * Convert an array of serializable data to a list of serializable data 
+	 * Convert an array of serializable data to a list of serializable data
+	 * 
 	 * @param <T> The requested type to convert the data. It should be a subclass of {@link Serializable}
-	 * @param data the data array 
+	 * @param data the data array
 	 * @return a list of the desired type as soon as it is a subclass of serializable
 	 */
 	@SuppressWarnings("unchecked")
