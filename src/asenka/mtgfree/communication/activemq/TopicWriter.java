@@ -61,17 +61,12 @@ final class TopicWriter extends AbstractActiveMQCommunicator {
 	 * Publish the data to the broker topic
 	 * 
 	 * @param data serializable object
-	 * @throws Exception
+	 * @throws JMSException if a problem occurs while publishing data to the broker
 	 */
-	void publish(final Serializable data) throws Exception {
+	void publish(final Serializable data) throws JMSException {
 
-		try {
-			this.message.setObject(data);
-			this.publisher.publish(this.message);
-		} catch (JMSException e) {
-			this.close();
-			throw new Exception(e);
-		}
+		this.message.setObject(data);
+		this.publisher.publish(this.message);
 	}
 
 	/**

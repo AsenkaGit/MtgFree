@@ -270,6 +270,7 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 	 * 
 	 * @param mtgCard the card to remove from the deck
 	 * @see LocalEvent
+	 * @see EventType#REMOVE_CARD_FROM_SIDEBOARD
 	 */
 	public void removeCardFromSideboard(final MtgCard mtgCard) {
 

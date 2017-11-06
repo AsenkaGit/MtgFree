@@ -4,12 +4,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.jms.JMSException;
-import javax.management.RuntimeErrorException;
 
 import org.apache.activemq.ActiveMQConnection;
-import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.Closeable;
 import org.apache.activemq.command.ActiveMQTopic;
+import org.apache.log4j.Logger;
 
 import asenka.mtgfree.communication.GameManager;
 import asenka.mtgfree.events.NetworkEvent;
@@ -23,6 +22,11 @@ import asenka.mtgfree.events.NetworkEvent;
  * @see GameManager
  */
 public class ActiveMQManager implements Closeable {
+	
+	/**
+	 * 
+	 */
+	public static final String TABLE_NAME_PREFIX = "MTGFREE:Topic:";
 	
 	/**
 	 * The writer used to publish message in the ActiveMQ broker
@@ -47,18 +51,19 @@ public class ActiveMQManager implements Closeable {
 	public ActiveMQManager(String gameName) {
 		
 		// TODO Use a preference file to load the broker url
-		this.brokerUrl = "tcp://192.168.1.20:61616"; // Adapt this value to your ActiveMQ URL
+//		this.brokerUrl = "tcp://192.168.1.20:61616"; // Adapt this value to your ActiveMQ URL
+		this.brokerUrl = "tcp://localhost:61616"; // Adapt this value to your ActiveMQ URL
 		
-		this.writer = new TopicWriter(brokerUrl, "MTGFREE:Topic:" + gameName);
-		this.reader = new TopicReader(brokerUrl, "MTGFREE:Topic:" + gameName);
+		this.writer = new TopicWriter(brokerUrl, TABLE_NAME_PREFIX + gameName);
+		this.reader = new TopicReader(brokerUrl, TABLE_NAME_PREFIX + gameName);
 	}
 
 	/**
 	 * Send a message to the broker
 	 * @param data the network event to send to the broker
-	 * @throws Exception
+	 * @throws JMSException if a problem occurs while publishing data to the broker
 	 */
-	public void send(NetworkEvent data) throws Exception {
+	public void send(NetworkEvent data) throws JMSException {
 
 		this.writer.publish(data);
 	}
@@ -72,56 +77,54 @@ public class ActiveMQManager implements Closeable {
 	}
 	
 	/**
-	 * @return the game topics in the broker
-	 */
-	public Set<ActiveMQTopic> getGameTopics() {
-		
-		Set<ActiveMQTopic> topics = getAvailableTopics(this.brokerUrl);
-
-		Set<ActiveMQTopic> filteredTopics = topics.stream().filter(topic -> {
-				try {
-					return topic.getTopicName().startsWith("MTGFREE:");
-				} catch (JMSException e) {
-					return false;
-				}
-			}).collect(Collectors.toSet());
-		return filteredTopics;
-	}
-
-	/**
 	 * Close the reader and writer JMS objects
 	 */
 	@Override
 	public void close() {
-	
+		
 		this.reader.close();
 		this.writer.close();
 	}
 	
 	/**
-	 * @return the set of topics in the broker at the specified URL
-	 * @see ActiveMQTopic
+	 * Returns the topics used for each game table where the players exchange data (not the technical topics
+	 * automatically created by ActiveMQ)
+	 * @return the topics from the broker where the name start with the game table prefix
+	 * @see ActiveMQManager#TABLE_NAME_PREFIX
 	 */
-	private static Set<ActiveMQTopic> getAvailableTopics(String brokerUrl) {
+	public Set<ActiveMQTopic> getGameTopics() {
 		
-		ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(brokerUrl);
-		ActiveMQConnection connection = null;
-		Set<ActiveMQTopic> topics = null;
-		
-		try {
-			connection = (ActiveMQConnection) factory.createConnection();
-			topics = connection.getDestinationSource().getTopics();
-			
-		} catch(JMSException ex) {
-			throw new RuntimeException(ex);
-		} finally {
-			try {
-				if(connection != null) {
-					connection.close();
+		Set<ActiveMQTopic> topics = getAvailableTopics();
+	
+		// Filter the topics to get only the topics related to a game table
+		Set<ActiveMQTopic> filteredTopics = topics.stream().filter(topic -> {
+				try {
+					return topic.getTopicName().startsWith(TABLE_NAME_PREFIX);
+				} catch (JMSException e) {
+					Logger.getLogger(this.getClass()).error("Error when filtering the topics from broker : ", e);
+					return false;
 				}
-			} catch (JMSException e) {
-				throw new RuntimeErrorException(new Error(e));
-			}
+			}).collect(Collectors.toSet());
+		
+		return filteredTopics;
+	}
+
+	/**
+	 * Find the current topics on the broker
+	 * @return a set of topics currently available from the current connection with the broker. <code>null</code> if the connection is not ready yet
+	 */
+	private Set<ActiveMQTopic> getAvailableTopics() {
+		
+		Set<ActiveMQTopic> topics = null;
+		ActiveMQConnection currentConnection = (ActiveMQConnection) this.writer.connection;
+		
+		if(currentConnection != null) {
+			
+			try {
+				topics = currentConnection.getDestinationSource().getTopics();
+			} catch(JMSException ex) {
+				throw new RuntimeException(ex);
+			} 
 		}
 		return topics;
 	}

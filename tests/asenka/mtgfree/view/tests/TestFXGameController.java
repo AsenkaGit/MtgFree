@@ -1,5 +1,8 @@
-package asenka.mtgfree.view.tests.player1;
+package asenka.mtgfree.view.tests;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Observable;
@@ -8,6 +11,8 @@ import java.util.Observer;
 import asenka.mtgfree.controlers.game.PlayerController;
 import asenka.mtgfree.communication.GameManager;
 import asenka.mtgfree.controlers.game.Controller.Origin;
+import asenka.mtgfree.events.EventType;
+import asenka.mtgfree.events.LocalEvent;
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.model.game.Battlefield;
@@ -18,6 +23,7 @@ import asenka.mtgfree.model.game.Library;
 import asenka.mtgfree.model.game.Player;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -28,7 +34,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class TestFXPGameControllerPlayer1 implements Observer {
+public class TestFXGameController implements Observer {
 
 	private static MtgDataUtility dataUtility;
 
@@ -37,8 +43,6 @@ public class TestFXPGameControllerPlayer1 implements Observer {
 	private static Library library;
 
 	private static Battlefield battlefield;
-
-	private static Player player;
 
 	static {
 
@@ -65,12 +69,6 @@ public class TestFXPGameControllerPlayer1 implements Observer {
 		}
 
 		battlefield = new Battlefield();
-
-		player = new Player("Jean Lassalle", battlefield);
-		player.addAvailableDeck(testDeck);
-		player.setSelectedDeck(testDeck);
-		player.setLibrary(library);
-
 	}
 
 	@FXML
@@ -222,6 +220,8 @@ public class TestFXPGameControllerPlayer1 implements Observer {
 
 	private GameTable gameTable;
 
+	private Player localPlayer;
+
 	private PlayerController localPlayerController;
 
 	private Card selectedCard;
@@ -230,21 +230,64 @@ public class TestFXPGameControllerPlayer1 implements Observer {
 
 	@FXML
 	private void initialize() {
-
-		gameTable = new GameTable("JavaFXUITestTable", player);
-		gameTable.addObserver(this);
-		localPlayerController = gameTable.getLocalPlayerController();
-		localPlayerController.addObserver(this);
 		
-		GameManager.initialize(player).createGame(gameTable);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		boolean createTable = true;
+		
+		try {
+			System.out.println("Create (C) or Join (J) ?");
+			String input = reader.readLine();
 
+			createTable = "c".equals(input.toLowerCase());
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			System.exit(-1);
+		}
 
+		if(createTable) {
+			
+			localPlayer = new Player("Jean Lassalle", battlefield);
+			localPlayer.addAvailableDeck(testDeck);
+			localPlayer.setSelectedDeck(testDeck);
+			localPlayer.setLibrary(library);
+			
+			gameTable = new GameTable("JavaFXUITestTable", localPlayer);
+			gameTable.addObserver(this);
+			localPlayerController = gameTable.getLocalPlayerController();
+			localPlayerController.addObserver(this);
+			
+			try {
+				GameManager.initialize(localPlayer).createGame(gameTable);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			
+			localPlayer = new Player("Mister Join !", battlefield);
+			localPlayer.addAvailableDeck(testDeck);
+			localPlayer.setSelectedDeck(testDeck);
+			localPlayer.setLibrary(library);
+			
+			GameManager gameManager = GameManager.initialize(localPlayer);
+
+			try {
+				gameManager.joinGame("JavaFXUITestTable", localPlayer);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			gameTable = gameManager.getGameTable();
+			gameTable.addObserver(this);
+			localPlayerController = gameTable.getLocalPlayerController();
+			localPlayerController.addObserver(this);
+		}
+		
 		selectedCard = null;
 		selectedCardOrigin = null;
 
 		this.selectedCardDataTextArea.setWrapText(true);
 		this.libraryTextArea.setText(buildStringFromCardsCollection(library.getCards()));
-		this.playerDataTextArea.setText(buildPlayerDataString(player));
+		this.playerDataTextArea.setText(buildPlayerDataString(localPlayer));
 
 		this.btBattleIDTableColumn
 			.setCellValueFactory(cellData -> new SimpleStringProperty(Long.toString(cellData.getValue().getBattleId())));
@@ -388,25 +431,25 @@ public class TestFXPGameControllerPlayer1 implements Observer {
 	@FXML
 	private void lifeUp() {
 
-		localPlayerController.setLifeCounters(player.getLifeCounters() + 1);
+		localPlayerController.setLifeCounters(localPlayer.getLifeCounters() + 1);
 	}
 
 	@FXML
 	private void lifeDown() {
 
-		localPlayerController.setLifeCounters(player.getLifeCounters() - 1);
+		localPlayerController.setLifeCounters(localPlayer.getLifeCounters() - 1);
 	}
 
 	@FXML
 	private void poisonUp() {
 
-		localPlayerController.setPoisonCounters(player.getPoisonCounters() + 1);
+		localPlayerController.setPoisonCounters(localPlayer.getPoisonCounters() + 1);
 	}
 
 	@FXML
 	private void poisonDown() {
 
-		localPlayerController.setPoisonCounters(player.getPoisonCounters() - 1);
+		localPlayerController.setPoisonCounters(localPlayer.getPoisonCounters() - 1);
 	}
 
 	@FXML
@@ -475,27 +518,72 @@ public class TestFXPGameControllerPlayer1 implements Observer {
 
 	@Override
 	public void update(Observable observedObject, Object event) {
+		
+		final LocalEvent localEvent = (LocalEvent) event;
+		final EventType eventType = localEvent.getEventType();
+		final Player player = localEvent.getPlayer();
+//		final Object[] params = localEvent.getParams();
 
-//		if (event instanceof String) {
-//
-//			this.logsTextArea.setText(((GameTable) observedObject).getLogs());
-//			this.logsTextArea.selectPositionCaret(this.logsTextArea.getLength());
-//			
-//			if("addOtherPlayer".equals(event)) {
-//				Player opponent = gameTable.getOtherPlayers().iterator().next();
-//				gameTable.getOtherPlayerController(opponent).addObserver(this);
-//			}
-//		}
-//
-//		if (event instanceof LibraryEvent) {
-//			manageLibraryEvent((Library) observedObject, (LibraryEvent) event);
-//		} else if (event instanceof PlayerEvent) {
-//			managePlayerEvent((Player) observedObject, (PlayerEvent) event);
-//		} else if (event instanceof BattlefieldEvent) {
-//			manageBattlefieldEvent((Battlefield) observedObject, (BattlefieldEvent) event);
-//		} else if (event instanceof CardEvent) {
-//			manageCardEvent((Card) observedObject, (CardEvent) event);
-//		}
+		switch (eventType) {
+			case UPDATE_GAME_LOGS:
+				this.logsTextArea.setText(this.gameTable.getLogs());
+				break;
+			case PLAYER_JOIN:
+				break;
+			case DRAW:break;
+			case DRAW_X:break;
+			case ADD_TO_HAND:
+				this.handTableView.setItems(FXCollections.observableList(this.localPlayer.getHand()));
+				break;
+			case SHUFFLE:
+				if(this.gameTable.isLocalPlayer(player)) {
+					this.libraryTextArea.setText(buildStringFromCardsCollection(this.localPlayer.getLibrary().getCards()));
+				}
+				break;
+			case PLAY: break;
+			case ADD_TO_BATTLEFIELD:
+				if(this.gameTable.isLocalPlayer(player)) {
+					this.battlefieldTableView.setItems(FXCollections.observableList(this.localPlayer.getBattlefield().getCards()));
+				} else {
+					this.opponentBattlefieldTableView.setItems(FXCollections.observableList(player.getBattlefield().getCards()));
+				}
+			case REMOVE_FROM_HAND: 
+				this.handTableView.setItems(FXCollections.observableList(this.localPlayer.getHand()));
+				break;
+			case REMOVE_FROM_BATTLEFIELD: 
+				if(this.gameTable.isLocalPlayer(player)) {
+					this.battlefieldTableView.setItems(FXCollections.observableList(this.localPlayer.getBattlefield().getCards()));
+				} else {
+					this.opponentBattlefieldTableView.setItems(FXCollections.observableList(player.getBattlefield().getCards()));
+				}
+				break;
+			case REMOVE_FROM_LIBRARY: 
+				if(this.gameTable.isLocalPlayer(player)) {
+					this.libraryTextArea.setText(buildStringFromCardsCollection(this.localPlayer.getLibrary().getCards()));
+				}
+				break;
+			case REMOVE_FROM_GRAVEYARD: break;
+			case REMOVE_FROM_EXILE: break;
+			case DESTROY: break;
+			
+			case MOVE: break;
+		
+			case TAP:
+			case UNTAP:
+
+				break;
+			case SHOW:
+			case HIDE:
+				
+				break;
+			case DO_REVEAL:
+			case UNDO_REVEAL:
+				
+				break;
+			default: // TODO Finish implementing events management
+				throw new RuntimeException(eventType + " is not managed yet by this implementation");
+		}
+
 	}
 
 	private void displaySelectedCard() {

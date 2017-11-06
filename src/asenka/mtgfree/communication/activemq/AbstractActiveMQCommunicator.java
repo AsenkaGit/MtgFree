@@ -23,7 +23,7 @@ abstract class AbstractActiveMQCommunicator implements Closeable {
 	 * 
 	 * @see ActiveMQConnectionFactory#setTrustedPackages(java.util.List)
 	 */
-	private static final String[] TRUSTED_PACKAGES = new String[] { "asenka.mtgfree.events.network", "asenka.mtgfree.model.game",
+	private static final String[] TRUSTED_PACKAGES = new String[] { "asenka.mtgfree.events", "asenka.mtgfree.model.game",
 			"asenka.mtgfree.model.data", "asenka.mtgfree.controlers.game", "java.util", "java.awt.geom", "java.lang" };
 
 	/**

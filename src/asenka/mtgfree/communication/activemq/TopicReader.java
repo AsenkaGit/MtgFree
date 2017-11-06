@@ -101,7 +101,8 @@ final class TopicReader extends AbstractActiveMQCommunicator {
 	}
 
 	/**
-	 * Start to read the message in the broker
+	 * Start the listening thread that read continuously the messages from the broker until
+	 * {@link TopicReader#close()} is called.
 	 */
 	void listen() {
 
@@ -117,7 +118,7 @@ final class TopicReader extends AbstractActiveMQCommunicator {
 
 		try {
 			this.stopListening = true;
-
+			
 			if (connection != null) {
 				connection.close();
 			}

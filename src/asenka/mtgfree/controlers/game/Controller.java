@@ -14,7 +14,7 @@ import java.util.Observer;
 public abstract class Controller<Type extends Observable> implements Serializable {
 
 	/**
-	 * 
+	 * generated ID for serialization.
 	 */
 	private static final long serialVersionUID = -1250928326307690607L;
 

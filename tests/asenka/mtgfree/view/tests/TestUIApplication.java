@@ -1,4 +1,4 @@
-package asenka.mtgfree.view.tests.player1;
+package asenka.mtgfree.view.tests;
 
 import java.io.IOException;
 import java.net.Authenticator;
@@ -11,7 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class TestUIApplicationPlayer1 extends Application {
+public class TestUIApplication extends Application {
 
 	private Stage primaryStage;
 
@@ -51,7 +51,7 @@ public class TestUIApplicationPlayer1 extends Application {
 		try {
 			// Load root layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(TestUIApplicationPlayer1.class.getResource("TestGameApplicationPlayer1.fxml"));
+			loader.setLocation(TestUIApplication.class.getResource("TestGameApplication.fxml"));
 			rootLayout = (BorderPane) loader.load();
 
 			// Show the scene containing the root layout.
@@ -65,21 +65,21 @@ public class TestUIApplicationPlayer1 extends Application {
 
 	public static void main(String[] args) {
 
-//		// Uses a proxy for Internet connection
-//		final String authUser = "AESN1\bourrero";
-//		final String authPassword = "Welcome2018";
-//		Authenticator.setDefault(new Authenticator() {
-//
-//			@Override
-//			public PasswordAuthentication getPasswordAuthentication() {
-//
-//				return new PasswordAuthentication(authUser, authPassword.toCharArray());
-//			}
-//		});
-//		System.setProperty("http.proxyHost", "140.9.9.249");
-//		System.setProperty("http.proxyPort", "8080");
-//		System.setProperty("http.proxyUser", authUser);
-//		System.setProperty("http.proxyPassword", authPassword);
+		// Uses a proxy for Internet connection
+		final String authUser = "AESN1\bourrero";
+		final String authPassword = "Welcome2018";
+		Authenticator.setDefault(new Authenticator() {
+
+			@Override
+			public PasswordAuthentication getPasswordAuthentication() {
+
+				return new PasswordAuthentication(authUser, authPassword.toCharArray());
+			}
+		});
+		System.setProperty("http.proxyHost", "140.9.9.249");
+		System.setProperty("http.proxyPort", "8080");
+		System.setProperty("http.proxyUser", authUser);
+		System.setProperty("http.proxyPassword", authPassword);
 
 		// Launch the JavaFX application
 		launch(args);

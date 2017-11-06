@@ -35,17 +35,17 @@ public class GameTable extends Observable implements Serializable {
 	/**
 	 * the player on this client side
 	 */
-	private final Player localPlayer;
+	private Player localPlayer;
 
 	/**
 	 * The local player controller
 	 */
-	private final PlayerController localPlayerController;
+	private PlayerController localPlayerController;
 
 	/**
 	 * A map associating the other players on the table to their controller
 	 */
-	private final Map<Player, PlayerController> otherPlayers;
+	private Map<Player, PlayerController> otherPlayers;
 
 	/**
 	 * All the events occurring during a game
@@ -81,7 +81,11 @@ public class GameTable extends Observable implements Serializable {
 	 */
 	public boolean isLocalPlayer(Player player) {
 
-		return this.localPlayer.equals(player);
+		if(player == null) {
+			throw new IllegalArgumentException("null value is not allowed for this method.");
+		} else {
+			return this.localPlayer.equals(player);
+		}
 	}
 
 	/**
@@ -91,6 +95,15 @@ public class GameTable extends Observable implements Serializable {
 
 		return this.localPlayer;
 	}
+	
+	/**
+	 * Set the local player. 
+	 * @param player the player that should be the local player
+	 */
+	public void setLocalPlayer(Player player) {
+		
+		this.localPlayer = player;
+	}
 
 	/**
 	 * @return the local Player Controller
@@ -98,6 +111,16 @@ public class GameTable extends Observable implements Serializable {
 	public PlayerController getLocalPlayerController() {
 
 		return this.localPlayerController;
+	}
+	
+	/**
+	 * Update the player controller and the local player
+	 * @param playerController
+	 */
+	public void setLocalPlayerController(PlayerController playerController) {
+		
+		this.localPlayerController = playerController;
+		this.setLocalPlayer(playerController.getData());
 	}
 
 	/**

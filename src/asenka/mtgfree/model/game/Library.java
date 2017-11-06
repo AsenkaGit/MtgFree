@@ -41,7 +41,7 @@ public class Library extends Observable implements Serializable {
 	/**
 	 * The linked list of cards in the library.
 	 */
-	private final LinkedList<Card> cards;
+	private LinkedList<Card> cards;
 
 	/**
 	 * @param cards
@@ -87,6 +87,15 @@ public class Library extends Observable implements Serializable {
 	public List<Card> getCards() {
 
 		return Collections.unmodifiableList(cards);
+	}
+
+	/**
+	 * Update the cards in the library with the cards from another library
+	 * @param cards a list of cards  
+	 */
+	void setCards(List<Card> cards) {
+		
+		this.cards = new LinkedList<Card>(cards);
 	}
 
 	/**
@@ -278,7 +287,7 @@ public class Library extends Observable implements Serializable {
 			super.notifyObservers(new LocalEvent(player, EventType.CLEAR_LIBRARY));
 		}
 	}
-
+	
 	@Override
 	public String toString() {
 

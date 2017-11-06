@@ -1,17 +1,17 @@
 package asenka.mtgfree.communication;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.junit.After;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import asenka.mtgfree.controlers.game.PlayerController;
+import asenka.mtgfree.communication.activemq.ActiveMQManager;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
-import asenka.mtgfree.model.game.Battlefield;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.Deck;
 import asenka.mtgfree.model.game.GameTable;
@@ -61,6 +61,8 @@ public class TestGameManager extends MtgFreeTest {
 	
 	private Player player1;
 	
+	private String gameTableName;
+	
 	@Before
 	@Override
 	public void setUp() {
@@ -78,11 +80,20 @@ public class TestGameManager extends MtgFreeTest {
 		this.player1.addAvailableDeck(testDeck);
 		this.player1.setSelectedDeck(testDeck);
 		this.player1.setLibrary(library);
-
-		GameTable gameTable = new GameTable("TestGameManager", this.player1);
-		this.gameManager = GameManager.initialize(this.player1);
-		this.gameManager.createGame(gameTable);
 		
+		this.gameTableName = "TestGameManager2";
+
+		GameTable gameTable = new GameTable(this.gameTableName, this.player1);
+		this.gameManager = GameManager.initialize(this.player1);
+		boolean connectionWithBrokerSucced;
+		try {
+			this.gameManager.createGame(gameTable);
+			connectionWithBrokerSucced = true;
+		} catch (Exception e) {
+			fail("Unable to create a game : " + e.getMessage());
+			connectionWithBrokerSucced = false;
+		}
+		Assume.assumeTrue(connectionWithBrokerSucced);
 	}
 	
 	@After
@@ -94,8 +105,12 @@ public class TestGameManager extends MtgFreeTest {
 	@Test
 	public void testGetAvailableTables() throws InterruptedException {
 		
-		Thread.sleep(10000);
-		System.out.println(this.gameManager.getAvailableTables());		
+		List<String> tableNames = this.gameManager.getAvailableTables();
+		assertFalse(tableNames.isEmpty());
+		System.out.println(tableNames);
+		
+		tableNames.forEach(tableName -> assertFalse(tableName.contains(ActiveMQManager.TABLE_NAME_PREFIX)));
+		assertEquals(1, tableNames.size());
+		assertEquals(this.gameTableName, tableNames.get(0));
 	}
-	
 }

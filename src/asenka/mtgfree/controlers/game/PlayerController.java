@@ -370,7 +370,7 @@ public class PlayerController extends Controller<Player> {
 		this.data.getLibrary().shuffle(this.data);
 
 		if (this.humanManaged) {
-			notifyNetworkObserver(new NetworkEvent(this.data, EventType.SHUFFLE));
+			notifyNetworkObserver(new NetworkEvent(this.data, EventType.SHUFFLE, this.data.getLibrary()));
 		}
 	}
 

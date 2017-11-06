@@ -98,16 +98,16 @@ public class GameManager {
 	 * When the game start you should call this method to start the dialog with the other player(s)
 	 * 
 	 * @param gameTable a game table with at least the local player data ready
+	 * @throws Exception
 	 */
-	public void createGame(GameTable gameTable) {
+	public void createGame(GameTable gameTable) throws Exception {
 
 		try {
 			this.localGameTable = gameTable;
 			this.brokerManager = new ActiveMQManager(gameTable.getName());
 			this.brokerManager.listen();
 		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(e.getMessage(), e);
-			throw new RuntimeException(e);
+			throw new Exception(e);
 		}
 	}
 
@@ -117,34 +117,30 @@ public class GameManager {
 	 * 
 	 * @param tableName the name of the game table you want to join
 	 * @param joiningPlayer the player who wants to join the table
+	 * @throws Exception
 	 * @see NetworkEvent
 	 * @see EventType#REQUEST_JOIN
 	 */
-	public void joinGame(String tableName, Player joiningPlayer) {
+	public void joinGame(String tableName, Player joiningPlayer) throws Exception {
 
-		try {
-			this.brokerManager = new ActiveMQManager(tableName);
-			this.brokerManager.listen();
+		this.brokerManager = new ActiveMQManager(tableName);
+		this.brokerManager.listen();
 
-			send(new NetworkEvent(EventType.REQUEST_JOIN, joiningPlayer));
-
-		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error(e.getMessage(), e);
-			throw new RuntimeException(e);
-		}
+		send(new NetworkEvent(EventType.REQUEST_JOIN, joiningPlayer));
 	}
-	
+
 	/**
 	 * 
 	 * @return
 	 */
 	public List<String> getAvailableTables() {
-		
+
 		List<String> availableTables = new ArrayList<String>();
-		
+
+		// This part get all the topics from the broker,
 		this.brokerManager.getGameTopics().forEach(topic -> {
 			try {
-				availableTables.add(topic.getTopicName());
+				availableTables.add(topic.getTopicName().replace(ActiveMQManager.TABLE_NAME_PREFIX, ""));
 			} catch (Exception e) {
 				Logger.getLogger(this.getClass()).error(e);
 			}
@@ -178,11 +174,12 @@ public class GameManager {
 		final Serializable[] data = event.getData();
 
 		try {
-			// If the player receiving the event is not the one at the origin of the event...
-			if (!this.localGameTable.isLocalPlayer(otherPlayer)) {
 
-				// If the game table is ready
-				if (this.localGameTable != null) {
+			// If the game table is ready
+			if (this.localGameTable != null) {
+
+				// If the player receiving the event is not the one at the origin of the event...
+				if (!this.localGameTable.isLocalPlayer(otherPlayer)) {
 
 					// If the table creator receives a join request from another player, it builds and send a
 					// mirrored game table
@@ -233,6 +230,7 @@ public class GameManager {
 								Card card = (Card) data[0];
 								Point2D.Double location = card.getLocation();
 								otherPlayerController.setLocation(location.getX(), location.getY(), card);
+								break;
 							}
 							case TAP:
 								flag = true;
@@ -261,25 +259,26 @@ public class GameManager {
 									otherPlayerController.setRevealed(flag, (Card) data[0]);
 								}
 								break;
+							case PLAYER_LEAVE: break;
+							case PLAYER_JOIN: break;
+							case ADD_TO_BATTLEFIELD: break;
+							case ADD_TO_HAND: break;
 							default: // TODO Finish implementing events management
 								throw new RuntimeException(eventType + " is not managed yet by this implementation");
-
 						}
 					}
-				} else if (eventType == EventType.SYNCHRONIZE_GAMETABLE_DATA) {
-
-					// If the game table is not ready and if the event is a data synchronization from
-					// table creator, then we can initialize the game table for the joining player.
-					this.localGameTable = (GameTable) data[0];
-				} else {
-					throw new RuntimeException(this.localPlayer + " is unable to manage the event " + event);
 				}
-			}
-
-			// If the local game table is ready, the game table logs are updated
-			if (this.localGameTable != null) {
-
 				this.localGameTable.addLog(event);
+				
+			} else if (eventType == EventType.SYNCHRONIZE_GAMETABLE_DATA) {
+
+				// If the game table is not ready and if the event is a data synchronization from
+				// table creator, then we can initialize the game table for the joining player.
+				this.localGameTable = (GameTable) data[0];
+				this.localGameTable.setLocalPlayerController(new PlayerController(this.localPlayer, true));
+				
+				send(new NetworkEvent(EventType.PLAYER_JOIN, this.localPlayer));
+				
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -288,16 +287,25 @@ public class GameManager {
 	}
 
 	/**
-	 * Close the connection with the broker
+	 * Send a Leave signal to the broker to inform the other players
+	 * and close the connection with the broker
 	 * 
-	 * @throws RuntimeException if you try to call this method before the beginning of the game
+	 * @throws RuntimeException if you try to call this method before the beginning of the game o
 	 */
 	public void endGame() {
 
-		if (this.brokerManager != null) {
-			this.brokerManager.close();
-		} else {
-			throw new RuntimeException("Try to close a broker connection that is not initialized yet");
+		try {
+			send(new NetworkEvent(EventType.PLAYER_LEAVE, this.localPlayer));
+		} catch (Exception e) {
+			Logger.getLogger(this.getClass()).error("Unable to send the exit game table signal to broker", e);
+			throw new RuntimeException(e);
+		} finally {
+			
+			if (this.brokerManager != null) {
+				this.brokerManager.close();
+			} else {
+				throw new RuntimeException("Try to close a broker connection that is not initialized yet");
+			}
 		}
 	}
 
@@ -320,10 +328,12 @@ public class GameManager {
 			// to have a game table
 			int timeout = 0;
 
-			while (this.localGameTable == null || timeout++ == 10) {
+			while (this.localGameTable == null && timeout < 10) {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
+				} finally {
+					timeout++;
 				}
 			}
 

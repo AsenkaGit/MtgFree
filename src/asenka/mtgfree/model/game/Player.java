@@ -196,13 +196,19 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	}
 
 	/**
-	 * Set the current library of the player
+	 * Set the current library of the player. if the player has already a library, the
+	 * library reference remains the same to keep the observers but the cards are
+	 * updated
 	 * 
-	 * @param library
+	 * @param library 
 	 */
 	public void setLibrary(Library library) {
 
-		this.library = library;
+		if(this.library == null) {
+			this.library = library;
+		} else {
+			this.library.setCards(library.getCards());
+		}
 		super.setChanged();
 		super.notifyObservers(new LocalEvent(EventType.SET_PLAYER_LIBRARY, library));
 	}
@@ -289,6 +295,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	 * 
 	 * @param card the card to exile
 	 * @see LocalEvent
+	 * @see EventType#ADD_TO_HAND
 	 */
 	public void addCardToHand(Card card) {
 
