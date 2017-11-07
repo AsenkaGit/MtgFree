@@ -520,8 +520,22 @@ public class TestFXGameController implements Observer {
 		
 		final LocalEvent localEvent = (LocalEvent) event;
 		final LocalEvent.Type eventType = localEvent.getType();
-		final Player player = localEvent.getPlayer();
-//		final Object[] params = localEvent.getParams();
+		final Player sourcePlayer = localEvent.getPlayer();
+		final Object[] parameters = localEvent.getParameters();
+		
+		switch(eventType) {
+			
+			case NEW_GAMETABLE_LOG:
+				this.logsTextArea.setText(this.gameTable.getStringLogs());
+				break;
+			case ADD_CARD_TO_HAND:
+			case REMOVE_CARD_FROM_HAND:
+				this.handTableView.setItems(FXCollections.observableList(this.localPlayer.getHand()));
+				break;
+				
+				
+			
+		}
 
 //		switch (eventType) {
 //			case UPDATE_GAME_LOGS:

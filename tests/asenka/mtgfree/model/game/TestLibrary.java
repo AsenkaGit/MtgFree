@@ -151,7 +151,7 @@ public class TestLibrary extends MtgFreeTest {
 		new TestLibraryObserver(library);
 		assertEquals(60, library.getInitialSize());
 		assertEquals(60, library.getCards().size());
-		assertEquals(this.cards.get(0), library.draw(player));
+		assertEquals(this.cards.get(0), library.removeFirst(player));
 		assertEquals(59, library.getCards().size());
 
 		Predicate<Card> filterInstant = (card -> card.getPrimaryCardData().getType().contains("Instant"));
@@ -166,7 +166,7 @@ public class TestLibrary extends MtgFreeTest {
 		assertEquals(4, this.cards.stream().filter(filterEnchantment).count());
 		assertEquals(8, this.cards.stream().filter(filterInstantOrEnchantment).count());
 
-		List<Card> draws = library.draw(player, 7);
+		List<Card> draws = library.removeFirst(player, 7);
 		assertEquals(7, draws.size());
 		assertEquals(52, library.getCards().size());
 

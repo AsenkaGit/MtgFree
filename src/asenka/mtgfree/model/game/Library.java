@@ -200,7 +200,7 @@ public class Library extends Observable implements Serializable {
 	 * @return a Card
 	 * @see LocalEvent
 	 */
-	public Card draw(Player player) {
+	public Card removeFirst(Player player) {
 
 		Card card = this.cards.removeFirst();
 
@@ -219,7 +219,7 @@ public class Library extends Observable implements Serializable {
 	 * @return the list of card removed from the library
 	 * @see LocalEvent
 	 */
-	public List<Card> draw(Player player, int x) {
+	public List<Card> removeFirst(Player player, int x) {
 
 		// if xFirst is superior at the current number of cards in the library, the parameter value is reduced
 		if (x > this.cards.size()) {

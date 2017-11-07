@@ -46,7 +46,7 @@ public abstract class AbstractEvent implements Serializable {
 	 */
 	public Player getPlayer() {
 
-		return player;
+		return this.player;
 	}
 
 	/**
@@ -54,7 +54,7 @@ public abstract class AbstractEvent implements Serializable {
 	 */
 	public Serializable[] getParameters() {
 
-		return parameters;
+		return this.parameters;
 	}
 
 	/**

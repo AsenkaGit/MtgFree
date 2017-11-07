@@ -1,6 +1,5 @@
 package asenka.mtgfree.model.game;
 
-
 /**
  * <p>
  * This origin indicates the origin of a card about to be played. For example, when you want to play a card on the battlefield

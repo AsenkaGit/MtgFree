@@ -54,7 +54,7 @@ public class PlayerController extends Controller<Player> {
 	public void draw() throws Exception {
 
 		try {
-			Card card = this.controlledData.getLibrary().draw(this.controlledData);
+			Card card = this.controlledData.getLibrary().removeFirst(this.controlledData);
 			this.controlledData.addCardToHand(card);
 
 			if (this.createNetworkEvents) {
@@ -75,11 +75,11 @@ public class PlayerController extends Controller<Player> {
 	 */
 	public void draw(int x) {
 
-		List<Card> cards = this.controlledData.getLibrary().draw(this.controlledData, x);
+		List<Card> cards = this.controlledData.getLibrary().removeFirst(this.controlledData, x);
 		cards.forEach(card -> this.controlledData.addCardToHand(card));
 
 		if (this.createNetworkEvents) {
-			notifyOtherPlayers(new NetworkEvent(DRAW_X, this.controlledData, new Integer(x)));
+			notifyOtherPlayers(new NetworkEvent(DRAW_X, this.controlledData, x));
 		}
 	}
 
