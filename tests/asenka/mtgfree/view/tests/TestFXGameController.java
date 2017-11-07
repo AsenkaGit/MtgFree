@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.apache.log4j.Logger;
+
 import asenka.mtgfree.communication.GameManager;
 import asenka.mtgfree.controllers.game.PlayerController;
 import asenka.mtgfree.events.LocalEvent;
@@ -229,10 +231,10 @@ public class TestFXGameController implements Observer {
 
 	@FXML
 	private void initialize() {
-		
+
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		boolean createTable = true;
-		
+
 		try {
 			System.out.println("Create (C) or Join (J) ?");
 			String input = reader.readLine();
@@ -243,30 +245,30 @@ public class TestFXGameController implements Observer {
 			System.exit(-1);
 		}
 
-		if(createTable) {
-			
+		if (createTable) {
+
 			localPlayer = new Player("Jean Lassalle", battlefield);
 			localPlayer.addAvailableDeck(testDeck);
 			localPlayer.setSelectedDeck(testDeck);
 			localPlayer.setLibrary(library);
-			
+
 			gameTable = new GameTable("JavaFXUITestTable", localPlayer);
 			gameTable.addObserver(this);
 			localPlayerController = gameTable.getLocalPlayerController();
 			localPlayerController.addObserver(this);
-			
+
 			try {
 				GameManager.initialize(localPlayer).createGame(gameTable);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
-			
+
 			localPlayer = new Player("Mister Join !", battlefield);
 			localPlayer.addAvailableDeck(testDeck);
 			localPlayer.setSelectedDeck(testDeck);
 			localPlayer.setLibrary(library);
-			
+
 			GameManager gameManager = GameManager.initialize(localPlayer);
 
 			try {
@@ -280,7 +282,7 @@ public class TestFXGameController implements Observer {
 			localPlayerController = gameTable.getLocalPlayerController();
 			localPlayerController.addObserver(this);
 		}
-		
+
 		selectedCard = null;
 		selectedCardOrigin = null;
 
@@ -289,56 +291,56 @@ public class TestFXGameController implements Observer {
 		this.playerDataTextArea.setText(buildPlayerDataString(localPlayer));
 
 		this.btBattleIDTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(Long.toString(cellData.getValue().getBattleId())));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(Long.toString(cellData.getValue().getBattleId())));
 		this.hdBattleIDTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(Long.toString(cellData.getValue().getBattleId())));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(Long.toString(cellData.getValue().getBattleId())));
 		this.opponentBtBattleIDTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(Long.toString(cellData.getValue().getBattleId())));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(Long.toString(cellData.getValue().getBattleId())));
 
 		this.btNameTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getName()));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getName()));
 		this.hdNameTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getName()));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getName()));
 		this.opponentBtNameTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getName()));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getName()));
 
 		this.btCostTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getManaCost()));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getManaCost()));
 		this.hdCostTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getManaCost()));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getManaCost()));
 		this.opponentBtCostTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getManaCost()));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getManaCost()));
 
 		this.btTypeTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getType()));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getType()));
 		this.hdTypeTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getType()));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getType()));
 		this.opponentBtTypeTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getType()));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getType()));
 
 		this.btPowerTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getPower()));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getPower()));
 		this.hdPowerTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getPower()));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getPower()));
 		this.opponentBtPowerTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getPower()));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getPower()));
 
 		this.btToughnessTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getToughness()));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getToughness()));
 		this.hdToughnessTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getToughness()));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getToughness()));
 		this.opponentBtToughnessTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getToughness()));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrimaryCardData().getToughness()));
 
 		this.btTappedTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(Boolean.toString(cellData.getValue().isTapped())));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(Boolean.toString(cellData.getValue().isTapped())));
 		this.btVisibleTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(Boolean.toString(cellData.getValue().isVisible())));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(Boolean.toString(cellData.getValue().isVisible())));
 		this.opponentBtVisibleTableColumn
-			.setCellValueFactory(cellData -> new SimpleStringProperty(Boolean.toString(cellData.getValue().isVisible())));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(Boolean.toString(cellData.getValue().isVisible())));
 
 		this.hdColorTableColumn.setCellValueFactory(
-			cellData -> new SimpleStringProperty(Arrays.toString(cellData.getValue().getPrimaryCardData().getColorIdentity())));
+				cellData -> new SimpleStringProperty(Arrays.toString(cellData.getValue().getPrimaryCardData().getColorIdentity())));
 
 		battlefieldTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 
@@ -354,9 +356,9 @@ public class TestFXGameController implements Observer {
 					selectedCardOrigin = Origin.BATTLEFIELD;
 					int multiverseid = selectedCard.getPrimaryCardData().getMultiverseid();
 
-					new Thread(() -> this.selectedCardImageView
-						.setImage(new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + multiverseid + "&type=card")))
-							.start();
+					new Thread(() -> this.selectedCardImageView.setImage(
+							new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + multiverseid + "&type=card")))
+									.start();
 				}
 				displaySelectedCard();
 			});
@@ -376,9 +378,9 @@ public class TestFXGameController implements Observer {
 					selectedCardOrigin = Origin.OPPONENT_BATTLEFIELD;
 					int multiverseid = selectedCard.getPrimaryCardData().getMultiverseid();
 
-					new Thread(() -> this.selectedCardImageView
-						.setImage(new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + multiverseid + "&type=card")))
-							.start();
+					new Thread(() -> this.selectedCardImageView.setImage(
+							new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + multiverseid + "&type=card")))
+									.start();
 				}
 				displaySelectedCard();
 			});
@@ -397,9 +399,9 @@ public class TestFXGameController implements Observer {
 					selectedCardOrigin = Origin.HAND;
 					final int multiverseid = selectedCard.getPrimaryCardData().getMultiverseid();
 
-					new Thread(() -> this.selectedCardImageView
-						.setImage(new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + multiverseid + "&type=card")))
-							.start();
+					new Thread(() -> this.selectedCardImageView.setImage(
+							new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + multiverseid + "&type=card")))
+									.start();
 				}
 				displaySelectedCard();
 
@@ -517,14 +519,14 @@ public class TestFXGameController implements Observer {
 
 	@Override
 	public void update(Observable observedObject, Object event) {
-		
+
 		final LocalEvent localEvent = (LocalEvent) event;
 		final LocalEvent.Type eventType = localEvent.getType();
 		final Player sourcePlayer = localEvent.getPlayer();
-		final Object[] parameters = localEvent.getParameters();
-		
-		switch(eventType) {
-			
+//		final Serializable[] parameters = localEvent.getParameters();
+
+		switch (eventType) {
+
 			case NEW_GAMETABLE_LOG:
 				this.logsTextArea.setText(this.gameTable.getStringLogs());
 				break;
@@ -532,70 +534,32 @@ public class TestFXGameController implements Observer {
 			case REMOVE_CARD_FROM_HAND:
 				this.handTableView.setItems(FXCollections.observableList(this.localPlayer.getHand()));
 				break;
-				
-				
-			
+			case ADD_CARD_TO_LIBRARY:
+			case REMOVE_CARD_FROM_LIBRARY:
+			case SHUFFLE_LIBRARY:
+				if (this.gameTable.isLocalPlayer(sourcePlayer)) {
+					this.libraryTextArea.setText(buildStringFromCardsCollection(this.localPlayer.getLibrary().getCards()));
+				}
+				break;
+			case ADD_CARD_TO_BATTLEFIELD:
+			case REMOVE_CARD_FROM_BATTLEFIELD:
+				if (this.gameTable.isLocalPlayer(sourcePlayer)) {
+					this.battlefieldTableView.setItems(FXCollections.observableList(this.localPlayer.getBattlefield().getCards()));
+				} else {
+					this.opponentBattlefieldTableView.setItems(FXCollections.observableList(sourcePlayer.getBattlefield().getCards()));
+				}
+				break;
+			case ADD_CARD_TO_GRAVEYARD:
+			case REMOVE_CARD_FROM_GRAVEYARD:
+				this.graveyardTextArea.setText(buildStringFromCardsCollection(this.localPlayer.getGraveyard()));
+				break;
+			case ADD_CARD_TO_EXILE:
+			case REMOVE_CARD_FROM_EXILE:
+				this.exileTextArea.setText(buildStringFromCardsCollection(this.localPlayer.getExile()));
+				break;
+			default: 
+				Logger.getLogger(this.getClass()).info("Event not managed: " + localEvent);
 		}
-
-//		switch (eventType) {
-//			case UPDATE_GAME_LOGS:
-//				this.logsTextArea.setText(this.gameTable.getStringLogs());
-//				break;
-//			case PLAYER_JOIN:
-//				break;
-//			case DRAW:break;
-//			case DRAW_X:break;
-//			case ADD_TO_HAND:
-//				this.handTableView.setItems(FXCollections.observableList(this.localPlayer.getHand()));
-//				break;
-//			case SHUFFLE:
-//				if(this.gameTable.isLocalPlayer(player)) {
-//					this.libraryTextArea.setText(buildStringFromCardsCollection(this.localPlayer.getLibrary().getCards()));
-//				}
-//				break;
-//			case PLAY: break;
-//			case ADD_TO_BATTLEFIELD:
-//				if(this.gameTable.isLocalPlayer(player)) {
-//					this.battlefieldTableView.setItems(FXCollections.observableList(this.localPlayer.getBattlefield().getCards()));
-//				} else {
-//					this.opponentBattlefieldTableView.setItems(FXCollections.observableList(player.getBattlefield().getCards()));
-//				}
-//			case REMOVE_FROM_HAND: 
-//				this.handTableView.setItems(FXCollections.observableList(this.localPlayer.getHand()));
-//				break;
-//			case REMOVE_FROM_BATTLEFIELD: 
-//				if(this.gameTable.isLocalPlayer(player)) {
-//					this.battlefieldTableView.setItems(FXCollections.observableList(this.localPlayer.getBattlefield().getCards()));
-//				} else {
-//					this.opponentBattlefieldTableView.setItems(FXCollections.observableList(player.getBattlefield().getCards()));
-//				}
-//				break;
-//			case REMOVE_FROM_LIBRARY: 
-//				if(this.gameTable.isLocalPlayer(player)) {
-//					this.libraryTextArea.setText(buildStringFromCardsCollection(this.localPlayer.getLibrary().getCards()));
-//				}
-//				break;
-//			case REMOVE_FROM_GRAVEYARD: break;
-//			case REMOVE_FROM_EXILE: break;
-//			case DESTROY: break;
-//			
-//			case MOVE: break;
-//		
-//			case TAP:
-//			case UNTAP:
-//
-//				break;
-//			case SHOW:
-//			case HIDE:
-//				
-//				break;
-//			case DO_REVEAL:
-//			case UNDO_REVEAL:
-//				
-//				break;
-//			default: // TODO Finish implementing events management
-//				throw new RuntimeException(eventType + " is not managed yet by this implementation");
-//		}
 	}
 
 	private void displaySelectedCard() {
@@ -617,53 +581,53 @@ public class TestFXGameController implements Observer {
 
 	}
 
-//	private void managePlayerEvent(Player observedObject, PlayerEvent event) {
-//
-//		switch (event.getEventType()) {
-//			case "set": {
-//				this.playerDataTextArea.setText(buildPlayerDataString(localPlayerController.getData()));
-//			}
-//			case "add":
-//			case "remove": {
-//				switch (event.getProperty()) {
-//					case "hand":
-//						this.handTableView.setItems(FXCollections.observableList(this.localPlayerController.getData().getHand()));
-//						break;
-//					case "exile":
-//						this.exileTextArea.setText(buildStringFromCardsCollection(localPlayerController.getData().getExile()));
-//						break;
-//					case "graveyard":
-//						this.graveyardTextArea.setText(buildStringFromCardsCollection(localPlayerController.getData().getGraveyard()));
-//						break;
-//				}
-//			}
-//		}
-//	}
-//
-//	private void manageBattlefieldEvent(Battlefield observedObject, BattlefieldEvent event) {
-//
-//		if (gameTable.isLocalPlayer(event.getPlayer())) {
-//			this.battlefieldTableView
-//				.setItems(FXCollections.observableList(this.localPlayerController.getData().getBattlefield().getCards()));
-//		} else {
-//			this.opponentBattlefieldTableView.setItems(FXCollections.observableList(event.getPlayer().getBattlefield().getCards()));
-//		}
-//	}
-//
-//	private void manageLibraryEvent(Library library, LibraryEvent event) {
-//
-//		this.libraryTextArea.setText(buildStringFromCardsCollection(localPlayerController.getData().getLibrary().getCards()));
-//	}
-//
-//	private void manageCardEvent(Card observedObject, CardEvent event) {
-//
-//		int index = this.battlefieldTableView.getSelectionModel().getSelectedIndex();
-//		this.battlefieldTableView.getItems().set(index, observedObject);
-//		this.battlefieldTableView.requestFocus();
-//		this.battlefieldTableView.getSelectionModel().select(index);
-//		this.battlefieldTableView.getFocusModel().focus(index);
-//
-//	}
+	// private void managePlayerEvent(Player observedObject, PlayerEvent event) {
+	//
+	// switch (event.getEventType()) {
+	// case "set": {
+	// this.playerDataTextArea.setText(buildPlayerDataString(localPlayerController.getData()));
+	// }
+	// case "add":
+	// case "remove": {
+	// switch (event.getProperty()) {
+	// case "hand":
+	// this.handTableView.setItems(FXCollections.observableList(this.localPlayerController.getData().getHand()));
+	// break;
+	// case "exile":
+	// this.exileTextArea.setText(buildStringFromCardsCollection(localPlayerController.getData().getExile()));
+	// break;
+	// case "graveyard":
+	// this.graveyardTextArea.setText(buildStringFromCardsCollection(localPlayerController.getData().getGraveyard()));
+	// break;
+	// }
+	// }
+	// }
+	// }
+	//
+	// private void manageBattlefieldEvent(Battlefield observedObject, BattlefieldEvent event) {
+	//
+	// if (gameTable.isLocalPlayer(event.getPlayer())) {
+	// this.battlefieldTableView
+	// .setItems(FXCollections.observableList(this.localPlayerController.getData().getBattlefield().getCards()));
+	// } else {
+	// this.opponentBattlefieldTableView.setItems(FXCollections.observableList(event.getPlayer().getBattlefield().getCards()));
+	// }
+	// }
+	//
+	// private void manageLibraryEvent(Library library, LibraryEvent event) {
+	//
+	// this.libraryTextArea.setText(buildStringFromCardsCollection(localPlayerController.getData().getLibrary().getCards()));
+	// }
+	//
+	// private void manageCardEvent(Card observedObject, CardEvent event) {
+	//
+	// int index = this.battlefieldTableView.getSelectionModel().getSelectedIndex();
+	// this.battlefieldTableView.getItems().set(index, observedObject);
+	// this.battlefieldTableView.requestFocus();
+	// this.battlefieldTableView.getSelectionModel().select(index);
+	// this.battlefieldTableView.getFocusModel().focus(index);
+	//
+	// }
 
 	private static final String buildStringFromCardsCollection(Collection<Card> cards) {
 

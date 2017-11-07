@@ -209,10 +209,7 @@ public class GameManager {
 								otherPlayerController.draw((Integer) parameters[0]);
 								break;
 							case SHUFFLE_LIBRARY:
-								// When receiving a SHUFFLE event from another player, we don't want to call shuffle because
-								// they order we will get will be different on the different clients, we need to update the whole
-								// library
-								otherPlayerController.getData().setLibrary((Library) parameters[0]);
+								otherPlayerController.getData().getLibrary().setCards(convertDataArrayToList(parameters));
 								break;
 							case PLAY: {
 								Card card = (Card) parameters[0];

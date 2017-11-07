@@ -107,7 +107,7 @@ public class Library extends Observable implements Serializable {
 	 * 
 	 * @param cards a list of cards
 	 */
-	void setCards(List<Card> cards) {
+	public void setCards(List<Card> cards) {
 
 		this.cards = new LinkedList<Card>(cards);
 	}

@@ -40,7 +40,7 @@ public class TestUIApplication extends Application {
 	 */
 	public Stage getPrimaryStage() {
 
-		return primaryStage;
+		return this.primaryStage;
 	}
 
 	/**
@@ -52,12 +52,12 @@ public class TestUIApplication extends Application {
 			// Load root layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(TestUIApplication.class.getResource("TestGameApplication.fxml"));
-			rootLayout = (BorderPane) loader.load();
+			this.rootLayout = (BorderPane) loader.load();
 
 			// Show the scene containing the root layout.
-			Scene scene = new Scene(rootLayout);
-			primaryStage.setScene(scene);
-			primaryStage.show();
+			Scene scene = new Scene(this.rootLayout);
+			this.primaryStage.setScene(scene);
+			this.primaryStage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -65,21 +65,21 @@ public class TestUIApplication extends Application {
 
 	public static void main(String[] args) {
 
-		// Uses a proxy for Internet connection
-		final String authUser = "AESN1\bourrero";
-		final String authPassword = "Welcome2018";
-		Authenticator.setDefault(new Authenticator() {
-
-			@Override
-			public PasswordAuthentication getPasswordAuthentication() {
-
-				return new PasswordAuthentication(authUser, authPassword.toCharArray());
-			}
-		});
-		System.setProperty("http.proxyHost", "140.9.9.249");
-		System.setProperty("http.proxyPort", "8080");
-		System.setProperty("http.proxyUser", authUser);
-		System.setProperty("http.proxyPassword", authPassword);
+//		// Uses a proxy for Internet connection
+//		final String authUser = "AESN1\bourrero";
+//		final String authPassword = "Welcome2018";
+//		Authenticator.setDefault(new Authenticator() {
+//
+//			@Override
+//			public PasswordAuthentication getPasswordAuthentication() {
+//
+//				return new PasswordAuthentication(authUser, authPassword.toCharArray());
+//			}
+//		});
+//		System.setProperty("http.proxyHost", "140.9.9.249");
+//		System.setProperty("http.proxyPort", "8080");
+//		System.setProperty("http.proxyUser", authUser);
+//		System.setProperty("http.proxyPassword", authPassword);
 
 		// Launch the JavaFX application
 		launch(args);

@@ -1,7 +1,5 @@
 package asenka.mtgfree.communication.activemq;
 
-import java.util.Arrays;
-
 import javax.jms.Topic;
 import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
@@ -10,7 +8,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.Closeable;
 
 /**
- * Abstract class that mutualized the connection, session and topic data.
+ * Abstract class that gather the connection, session and topic data.
  * 
  * @author asenka
  * @see TopicReader
@@ -18,13 +16,14 @@ import org.apache.activemq.Closeable;
  */
 abstract class AbstractActiveMQCommunicator implements Closeable {
 
-	/**
-	 * The authorized packages. ActiveMQ requires to defines the authorized packages when using serialized object in messages.
-	 * 
-	 * @see ActiveMQConnectionFactory#setTrustedPackages(java.util.List)
-	 */
-	private static final String[] TRUSTED_PACKAGES = new String[] { "asenka.mtgfree.events", "asenka.mtgfree.model.game",
-			"asenka.mtgfree.model.data", "asenka.mtgfree.controlers.game", "java.util", "java.awt.geom", "java.lang" };
+//	/**
+//	 * The authorized packages. ActiveMQ requires to defines the authorized packages when using serialized object in messages.
+//	 * 
+//	 * @see ActiveMQConnectionFactory#setTrustedPackages(java.util.List)
+//	 */
+//	// TODO Update the list of trusted package for serialization
+//	private static final String[] TRUSTED_PACKAGES = new String[] { "asenka.mtgfree.events", "asenka.mtgfree.model.game",
+//			"asenka.mtgfree.model.data", "asenka.mtgfree.controllers.game", "java.util", "java.awt.geom", "java.lang" };
 
 	/**
 	 * The connection with the broker
@@ -70,7 +69,8 @@ abstract class AbstractActiveMQCommunicator implements Closeable {
 		// Creates the connection factory and set the trusted package to make sure we can send object message containing
 		// NetworkEvent data (ActiveMQ security)
 		this.factory = new ActiveMQConnectionFactory(this.brokerUrl);
-		((ActiveMQConnectionFactory) factory).setTrustedPackages(Arrays.asList(TRUSTED_PACKAGES));
+//		((ActiveMQConnectionFactory) factory).setTrustedPackages(Arrays.asList(TRUSTED_PACKAGES));
+		((ActiveMQConnectionFactory) factory).setTrustAllPackages(true); // TODO used a list of trusted package
 	}
 
 }
