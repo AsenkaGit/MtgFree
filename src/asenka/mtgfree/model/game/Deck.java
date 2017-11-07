@@ -12,9 +12,10 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Map.Entry;
 
-import asenka.mtgfree.events.EventType;
 import asenka.mtgfree.events.LocalEvent;
 import asenka.mtgfree.model.data.MtgCard;
+
+import static asenka.mtgfree.events.LocalEvent.Type.*;
 
 /**
  * The class represent a deck. The deck is devised in two zones :
@@ -114,15 +115,10 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 	 * Set the name of the deck
 	 * 
 	 * @param name the name to set
-	 * @see LocalEvent
 	 */
 	public void setName(String name) {
 
-		if (!this.name.equals(name)) {
-			this.name = name;
-			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.SET_DECK_NAME, name));
-		}
+		this.name = name;
 	}
 
 	/**
@@ -137,15 +133,11 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 	 * Set the description of the deck
 	 * 
 	 * @param description the description to set
-	 * @see LocalEvent
 	 */
 	public void setDescription(String description) {
 
-		if (!this.description.equals(description)) {
-			this.description = description;
-			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.SET_DECK_DESCRIPTION, description));
-		}
+		this.description = description;
+
 	}
 
 	/**
@@ -168,10 +160,10 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 	 * Build a new library from this deck
 	 * 
 	 * @return a new Library built with the cards from the main zone
-	 * @throws Exception if the cards number in the main zone are inferior to the minimum main size
+	 * @throws RuntimeException if the cards number in the main zone are inferior to the minimum main size
 	 * @see Library
 	 */
-	public Library buildLibrary() throws Exception {
+	public Library buildLibrary() throws RuntimeException {
 
 		if (numberOfCards(this.main) >= MINIMUM_MAIN_SIZE) {
 
@@ -193,8 +185,8 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 			return new Library(libraryCards);
 
 		} else {
-			throw new Exception("The library can not be initialized, it does not contains enough cards: " + numberOfCards(this.main) + " ("
-					+ MINIMUM_MAIN_SIZE + " are expected)");
+			throw new RuntimeException("The library can not be initialized, it does not contains enough cards: " + numberOfCards(this.main)
+					+ " (" + MINIMUM_MAIN_SIZE + " are expected)");
 		}
 	}
 
@@ -214,7 +206,7 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 			this.main.put(mtgCard, new Integer(number));
 		}
 		super.setChanged();
-		super.notifyObservers(new LocalEvent(EventType.ADD_CARD_TO_MAIN, mtgCard, new Integer(number)));
+		super.notifyObservers(new LocalEvent(ADD_CARD_TO_DECK_MAIN, mtgCard, new Integer(number)));
 	}
 
 	/**
@@ -236,7 +228,7 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 				this.sideboard.put(mtgCard, new Integer(number));
 			}
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.ADD_CARD_TO_SIDEBOARD, mtgCard, new Integer(number)));
+			super.notifyObservers(new LocalEvent(ADD_CARD_TO_DECK_SIDEBOARD, mtgCard, new Integer(number)));
 		} else {
 			throw new Exception("The number of cards in the sideboard cannot exceed " + MAXIMUM_SIDEBOARD_SIZE + ". The current size is "
 					+ numberOfCards(sideboard));
@@ -261,7 +253,7 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 				this.main.remove(mtgCard);
 			}
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.REMOVE_CARD_FROM_MAIN, mtgCard));
+			super.notifyObservers(new LocalEvent(REMOVE_CARD_FROM_DECK_MAIN, mtgCard));
 		}
 	}
 
@@ -284,7 +276,7 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 				this.sideboard.remove(mtgCard);
 			}
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.REMOVE_CARD_FROM_SIDEBOARD, mtgCard));
+			super.notifyObservers(new LocalEvent(REMOVE_CARD_FROM_DECK_SIDEBOARD, mtgCard));
 		}
 	}
 
@@ -356,7 +348,7 @@ public class Deck extends Observable implements Comparable<Deck>, Serializable {
 
 		Collection<Integer> values = map.values();
 		int result = 0;
-		
+
 		for (Integer number : values) {
 			result += number.intValue();
 		}

@@ -176,13 +176,13 @@ public class TestLibrary extends MtgFreeTest {
 		draws.remove(0);
 		assertEquals(6, draws.size());
 
-		library.addFromTop(player, draws.get(0), 100);
+		library.addAt(player, draws.get(0), 100);
 		assertEquals(54, library.getCards().size());
 		assertEquals(draws.get(0), library.get(53));
 		draws.remove(0);
 		assertEquals(5, draws.size());
 
-		library.addFromTop(player, draws.get(0), 10);
+		library.addAt(player, draws.get(0), 10);
 		assertEquals(55, library.getCards().size());
 		assertEquals(draws.get(0), library.get(10));
 		draws.remove(0);
@@ -207,19 +207,19 @@ public class TestLibrary extends MtgFreeTest {
 		displayLibrary(library);
 	}
 	
-	@Test
-	public void testChangeCardIndex() {
-		
-		library.shuffle(player);
-		
-		final Card card = library.get(59);
-		
-		library.changeCardIndex(player, card, 0);
-		
-		assertSame(card, library.get(0));
-		assertNotSame(card, library.get(59));
-		assertNotEquals(card, library.get(59));
-	}
+//	@Test
+//	public void testChangeCardIndex() {
+//		
+//		library.shuffle(player);
+//		
+//		final Card card = library.get(59);
+//		
+//		library.changeCardIndex(player, card, 0);
+//		
+//		assertSame(card, library.get(0));
+//		assertNotSame(card, library.get(59));
+//		assertNotEquals(card, library.get(59));
+//	}
 
 	public static final void displayLibrary(Library library) {
 

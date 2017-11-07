@@ -71,15 +71,15 @@ public class TestCard extends MtgFreeTest {
 
 			LocalEvent event = (LocalEvent) object;
 
-			switch (event.getEventType()) {
-				case ADD_COUNTER:
-					assertEquals(new Counter("+1/+1", Color.GREEN), event.getFirstParam());
+			switch (event.getType()) {
+				case CARD_ADD_COUNTER:
+					assertEquals(new Counter("+1/+1", Color.GREEN), event.getFirstParameter());
 					break;
-				case MOVE:
-					assertEquals(new Point2D.Double(250, 100), (event.getFirstParam()));
+				case CARD_MOVE:
+					assertEquals(new Point2D.Double(250, 100), (event.getFirstParameter()));
 					break;
-				case ADD_ASSOCIATED_CARD:
-					assertTrue(card.getAssociatedCards().contains((event.getFirstParam())));
+				case CARD_ADD_ASSOCIATED_CARD:
+					assertTrue(card.getAssociatedCards().contains((event.getFirstParameter())));
 					break;
 				default:
 					fail("Unexpected event " + event);

@@ -11,12 +11,13 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import asenka.mtgfree.controlers.game.PlayerController;
-import asenka.mtgfree.controlers.game.Controller.Origin;
+
+import asenka.mtgfree.controllers.game.PlayerController;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.model.game.Battlefield;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.Deck;
+import asenka.mtgfree.model.game.Origin;
 import asenka.mtgfree.model.game.Library;
 import asenka.mtgfree.model.game.Player;
 import asenka.mtgfree.tests.MtgFreeTest;

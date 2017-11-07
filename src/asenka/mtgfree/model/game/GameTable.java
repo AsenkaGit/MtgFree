@@ -8,10 +8,11 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Set;
 
-import asenka.mtgfree.controlers.game.PlayerController;
-import asenka.mtgfree.events.EventType;
+import asenka.mtgfree.controllers.game.PlayerController;
+import asenka.mtgfree.events.AbstractEvent;
 import asenka.mtgfree.events.LocalEvent;
-import asenka.mtgfree.events.NetworkEvent;
+
+import static asenka.mtgfree.events.LocalEvent.Type.*;
 
 /**
  * Game object storing the game table with the players on the table
@@ -48,9 +49,9 @@ public class GameTable extends Observable implements Serializable {
 	private Map<Player, PlayerController> otherPlayers;
 
 	/**
-	 * All the events occurring during a game
+	 * List of events logged on this game table
 	 */
-	private Deque<String> logs;
+	private Deque<AbstractEvent> logs;
 
 	/**
 	 * Build a game table with two players
@@ -64,7 +65,7 @@ public class GameTable extends Observable implements Serializable {
 		this.localPlayer = localPlayer;
 		this.localPlayerController = new PlayerController(localPlayer, true);
 		this.otherPlayers = new HashMap<Player, PlayerController>();
-		this.logs = new LinkedList<String>();
+		this.logs = new LinkedList<AbstractEvent>();
 	}
 
 	/**
@@ -138,8 +139,6 @@ public class GameTable extends Observable implements Serializable {
 	public void addOtherPlayer(final Player newPlayer) {
 		
 		this.otherPlayers.put(newPlayer, new PlayerController(newPlayer, false));
-		super.setChanged();
-		super.notifyObservers(new LocalEvent(EventType.PLAYER_JOIN, newPlayer));
 	}
 	
 	/**
@@ -149,16 +148,7 @@ public class GameTable extends Observable implements Serializable {
 	 */
 	public boolean removeOtherPlayer(final Player playerLeaving) {
 		
-		PlayerController result = this.otherPlayers.remove(playerLeaving);
-		
-		// If 'playerLeaving' was in the map of players...
-		if(result != null) { 
-			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.PLAYER_LEAVE, playerLeaving));
-			return true;
-		} else {
-			return false;
-		}
+		return this.otherPlayers.remove(playerLeaving) != null;
 	}
 
 	/**
@@ -179,28 +169,29 @@ public class GameTable extends Observable implements Serializable {
 	}
 
 	/**
-	 * 
-	 * @param event
+	 * Add a log to this game table
+	 * @param event an event
 	 */
-	public void addLog(NetworkEvent event) {
+	public void addLog(AbstractEvent event) {
 
-		this.logs.addLast(event.toString());
+		// TODO revoir cette implementation non terminée
+		this.logs.addLast(event);
 
 		super.setChanged();
-		super.notifyObservers(new LocalEvent(EventType.UPDATE_GAME_LOGS, event));
+		super.notifyObservers(new LocalEvent(NEW_GAMETABLE_LOG, event));
 	}
 
 	/**
 	 * 
 	 * @return
 	 */
-	public String getLogs() {
+	public String getStringLogs() {
 
 		// TODO mettre en forme les logs
 		
 		String strLogs = "";
-		for (String log : this.logs) {
-			strLogs += log + "\n";
+		for (AbstractEvent log : this.logs) {
+			strLogs += log.toString() + "\n";
 		}
 		return strLogs;
 	}

@@ -11,8 +11,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import asenka.mtgfree.controlers.game.CardController;
-import asenka.mtgfree.controlers.game.PlayerController;
+import asenka.mtgfree.controllers.game.CardController;
+import asenka.mtgfree.controllers.game.PlayerController;
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.model.game.Battlefield;
@@ -187,30 +187,30 @@ public class TestCardController extends MtgFreeTest {
 		assertEquals("Dark sheep", cardController.getPlayerController().getData().getName());
 	}
 
-	@Test
-	public void testMoveCardInLibrary() {
-
-		assertTrue(playerController.getData().getLibrary().contains(card));
-
-		cardController.moveToTopOfLibrary();
-
-		assertSame(card, playerController.getData().getLibrary().get(0));
-
-		try {
-			playerController.draw();
-		} catch (Exception e) {
-			fail(e.getMessage());
-		}
-
-		assertTrue(playerController.getData().getHand().contains(card));
-		assertEquals(1, playerController.getData().getHand().size());
-
-		try {
-			cardController.moveToTopOfLibrary();
-			fail("The card shouldn't be in the library anymore. Then this method shoult triggers an exception");
-		} catch (RuntimeException ex) {
-		}
-	}
+//	@Test
+//	public void testMoveCardInLibrary() {
+//
+//		assertTrue(playerController.getData().getLibrary().contains(card));
+//
+//		cardController.moveToTopOfLibrary();
+//
+//		assertSame(card, playerController.getData().getLibrary().get(0));
+//
+//		try {
+//			playerController.draw();
+//		} catch (Exception e) {
+//			fail(e.getMessage());
+//		}
+//
+//		assertTrue(playerController.getData().getHand().contains(card));
+//		assertEquals(1, playerController.getData().getHand().size());
+//
+//		try {
+//			cardController.moveToTopOfLibrary();
+//			fail("The card shouldn't be in the library anymore. Then this method shoult triggers an exception");
+//		} catch (RuntimeException ex) {
+//		}
+//	}
 
 	@AfterClass
 	public static void afterClass() {

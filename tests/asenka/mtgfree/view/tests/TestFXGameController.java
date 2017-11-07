@@ -8,10 +8,8 @@ import java.util.Collection;
 import java.util.Observable;
 import java.util.Observer;
 
-import asenka.mtgfree.controlers.game.PlayerController;
 import asenka.mtgfree.communication.GameManager;
-import asenka.mtgfree.controlers.game.Controller.Origin;
-import asenka.mtgfree.events.EventType;
+import asenka.mtgfree.controllers.game.PlayerController;
 import asenka.mtgfree.events.LocalEvent;
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
@@ -20,6 +18,7 @@ import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.Deck;
 import asenka.mtgfree.model.game.GameTable;
 import asenka.mtgfree.model.game.Library;
+import asenka.mtgfree.model.game.Origin;
 import asenka.mtgfree.model.game.Player;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -520,70 +519,69 @@ public class TestFXGameController implements Observer {
 	public void update(Observable observedObject, Object event) {
 		
 		final LocalEvent localEvent = (LocalEvent) event;
-		final EventType eventType = localEvent.getEventType();
+		final LocalEvent.Type eventType = localEvent.getType();
 		final Player player = localEvent.getPlayer();
 //		final Object[] params = localEvent.getParams();
 
-		switch (eventType) {
-			case UPDATE_GAME_LOGS:
-				this.logsTextArea.setText(this.gameTable.getLogs());
-				break;
-			case PLAYER_JOIN:
-				break;
-			case DRAW:break;
-			case DRAW_X:break;
-			case ADD_TO_HAND:
-				this.handTableView.setItems(FXCollections.observableList(this.localPlayer.getHand()));
-				break;
-			case SHUFFLE:
-				if(this.gameTable.isLocalPlayer(player)) {
-					this.libraryTextArea.setText(buildStringFromCardsCollection(this.localPlayer.getLibrary().getCards()));
-				}
-				break;
-			case PLAY: break;
-			case ADD_TO_BATTLEFIELD:
-				if(this.gameTable.isLocalPlayer(player)) {
-					this.battlefieldTableView.setItems(FXCollections.observableList(this.localPlayer.getBattlefield().getCards()));
-				} else {
-					this.opponentBattlefieldTableView.setItems(FXCollections.observableList(player.getBattlefield().getCards()));
-				}
-			case REMOVE_FROM_HAND: 
-				this.handTableView.setItems(FXCollections.observableList(this.localPlayer.getHand()));
-				break;
-			case REMOVE_FROM_BATTLEFIELD: 
-				if(this.gameTable.isLocalPlayer(player)) {
-					this.battlefieldTableView.setItems(FXCollections.observableList(this.localPlayer.getBattlefield().getCards()));
-				} else {
-					this.opponentBattlefieldTableView.setItems(FXCollections.observableList(player.getBattlefield().getCards()));
-				}
-				break;
-			case REMOVE_FROM_LIBRARY: 
-				if(this.gameTable.isLocalPlayer(player)) {
-					this.libraryTextArea.setText(buildStringFromCardsCollection(this.localPlayer.getLibrary().getCards()));
-				}
-				break;
-			case REMOVE_FROM_GRAVEYARD: break;
-			case REMOVE_FROM_EXILE: break;
-			case DESTROY: break;
-			
-			case MOVE: break;
-		
-			case TAP:
-			case UNTAP:
-
-				break;
-			case SHOW:
-			case HIDE:
-				
-				break;
-			case DO_REVEAL:
-			case UNDO_REVEAL:
-				
-				break;
-			default: // TODO Finish implementing events management
-				throw new RuntimeException(eventType + " is not managed yet by this implementation");
-		}
-
+//		switch (eventType) {
+//			case UPDATE_GAME_LOGS:
+//				this.logsTextArea.setText(this.gameTable.getStringLogs());
+//				break;
+//			case PLAYER_JOIN:
+//				break;
+//			case DRAW:break;
+//			case DRAW_X:break;
+//			case ADD_TO_HAND:
+//				this.handTableView.setItems(FXCollections.observableList(this.localPlayer.getHand()));
+//				break;
+//			case SHUFFLE:
+//				if(this.gameTable.isLocalPlayer(player)) {
+//					this.libraryTextArea.setText(buildStringFromCardsCollection(this.localPlayer.getLibrary().getCards()));
+//				}
+//				break;
+//			case PLAY: break;
+//			case ADD_TO_BATTLEFIELD:
+//				if(this.gameTable.isLocalPlayer(player)) {
+//					this.battlefieldTableView.setItems(FXCollections.observableList(this.localPlayer.getBattlefield().getCards()));
+//				} else {
+//					this.opponentBattlefieldTableView.setItems(FXCollections.observableList(player.getBattlefield().getCards()));
+//				}
+//			case REMOVE_FROM_HAND: 
+//				this.handTableView.setItems(FXCollections.observableList(this.localPlayer.getHand()));
+//				break;
+//			case REMOVE_FROM_BATTLEFIELD: 
+//				if(this.gameTable.isLocalPlayer(player)) {
+//					this.battlefieldTableView.setItems(FXCollections.observableList(this.localPlayer.getBattlefield().getCards()));
+//				} else {
+//					this.opponentBattlefieldTableView.setItems(FXCollections.observableList(player.getBattlefield().getCards()));
+//				}
+//				break;
+//			case REMOVE_FROM_LIBRARY: 
+//				if(this.gameTable.isLocalPlayer(player)) {
+//					this.libraryTextArea.setText(buildStringFromCardsCollection(this.localPlayer.getLibrary().getCards()));
+//				}
+//				break;
+//			case REMOVE_FROM_GRAVEYARD: break;
+//			case REMOVE_FROM_EXILE: break;
+//			case DESTROY: break;
+//			
+//			case MOVE: break;
+//		
+//			case TAP:
+//			case UNTAP:
+//
+//				break;
+//			case SHOW:
+//			case HIDE:
+//				
+//				break;
+//			case DO_REVEAL:
+//			case UNDO_REVEAL:
+//				
+//				break;
+//			default: // TODO Finish implementing events management
+//				throw new RuntimeException(eventType + " is not managed yet by this implementation");
+//		}
 	}
 
 	private void displaySelectedCard() {

@@ -1,4 +1,4 @@
-package asenka.mtgfree.controlers.game;
+package asenka.mtgfree.controllers.game;
 
 import javax.management.RuntimeErrorException;
 
@@ -21,7 +21,7 @@ public class DeckController extends Controller<Deck> {
 
 	/**
 	 * Build a deck controller. This constructor assumes that the deck controller is always 
-	 * used by a human player (see {@link Controller#humanManaged}).
+	 * used by a human player (see {@link Controller#createNetworkEvents}).
 	 * 
 	 * @param data
 	 */
@@ -36,7 +36,7 @@ public class DeckController extends Controller<Deck> {
 	 */
 	public void setName(String name) {
 
-		this.data.setName(name);
+		this.controlledData.setName(name);
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class DeckController extends Controller<Deck> {
 	 */
 	public void setDescription(String description) {
 
-		this.data.setDescription(description);
+		this.controlledData.setDescription(description);
 	}
 
 	/**
@@ -76,9 +76,9 @@ public class DeckController extends Controller<Deck> {
 	public void addCard(MtgCard mtgCard, int number, boolean sideboard) throws Exception {
 
 		if (sideboard) {
-			this.data.addCardToSideboard(mtgCard, number);
+			this.controlledData.addCardToSideboard(mtgCard, number);
 		} else {
-			this.data.addCardToMain(mtgCard, number);
+			this.controlledData.addCardToMain(mtgCard, number);
 		}
 	}
 
@@ -99,9 +99,9 @@ public class DeckController extends Controller<Deck> {
 	public void removeCard(MtgCard mtgCard, boolean sideboard) {
 
 		if (sideboard) {
-			this.data.removeCardFromSideboard(mtgCard);
+			this.controlledData.removeCardFromSideboard(mtgCard);
 		} else {
-			this.data.removeCardFromMain(mtgCard);
+			this.controlledData.removeCardFromMain(mtgCard);
 		}
 	}
 }

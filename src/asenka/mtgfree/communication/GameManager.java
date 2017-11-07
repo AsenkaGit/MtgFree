@@ -10,14 +10,15 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import asenka.mtgfree.communication.activemq.ActiveMQManager;
-import asenka.mtgfree.controlers.game.Controller.Origin;
-import asenka.mtgfree.controlers.game.PlayerController;
-import asenka.mtgfree.events.EventType;
+import asenka.mtgfree.controllers.game.PlayerController;
 import asenka.mtgfree.events.NetworkEvent;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.GameTable;
 import asenka.mtgfree.model.game.Library;
+import asenka.mtgfree.model.game.Origin;
 import asenka.mtgfree.model.game.Player;
+
+import static asenka.mtgfree.events.NetworkEvent.Type.*;
 
 /**
  * A singleton class running on each client when to manage the game. It is this object that make possible the communication of
@@ -126,7 +127,7 @@ public class GameManager {
 		this.brokerManager = new ActiveMQManager(tableName);
 		this.brokerManager.listen();
 
-		send(new NetworkEvent(EventType.REQUEST_JOIN, joiningPlayer));
+		send(new NetworkEvent(REQUEST_GAMETABLE_DATA, joiningPlayer));
 	}
 
 	/**
@@ -169,9 +170,9 @@ public class GameManager {
 
 		Logger.getLogger(this.getClass()).trace(">>> RECEIVED: " + event);
 
-		final EventType eventType = event.getEventType();
+		final NetworkEvent.Type eventType = event.getType();
 		final Player otherPlayer = event.getPlayer();
-		final Serializable[] data = event.getData();
+		final Serializable[] parameters = event.getParameters();
 
 		try {
 
@@ -183,7 +184,7 @@ public class GameManager {
 
 					// If the table creator receives a join request from another player, it builds and send a
 					// mirrored game table
-					if (eventType == EventType.REQUEST_JOIN) {
+					if (eventType == REQUEST_GAMETABLE_DATA) {
 
 						// Build a mirror game table to send to the new player
 						GameTable otherPlayerGameTable = new GameTable(this.localGameTable.getName(), otherPlayer);
@@ -193,7 +194,7 @@ public class GameManager {
 						otherPlayerGameTable.addOtherPlayer(this.localPlayer);
 
 						// Send the game table to the broker in another join event
-						send(new NetworkEvent(this.localPlayer, EventType.SYNCHRONIZE_GAMETABLE_DATA, otherPlayerGameTable));
+						send(new NetworkEvent(SEND_GAMETABLE_DATA, this.localPlayer, otherPlayerGameTable));
 
 					} else { // For normal type of events (DRAW, PLAY, etc.)
 
@@ -205,102 +206,102 @@ public class GameManager {
 								otherPlayerController.draw();
 								break;
 							case DRAW_X:
-								otherPlayerController.draw((Integer) data[0]);
+								otherPlayerController.draw((Integer) parameters[0]);
 								break;
-							case SHUFFLE:
+							case SHUFFLE_LIBRARY:
 								// When receiving a SHUFFLE event from another player, we don't want to call shuffle because
 								// they order we will get will be different on the different clients, we need to update the whole
 								// library
-								otherPlayerController.getData().setLibrary((Library) data[0]);
+								otherPlayerController.getData().setLibrary((Library) parameters[0]);
 								break;
 							case PLAY: {
-								Card card = (Card) data[0];
-								Origin origin = (Origin) data[1];
+								Card card = (Card) parameters[0];
+								Origin origin = (Origin) parameters[1];
 								Point2D.Double location = card.getLocation();
 								otherPlayerController.play(card, origin, card.isVisible(), location.getX(), location.getY());
 								break;
 							}
 							case DESTROY: {
-								Card card = (Card) data[0];
-								Origin origin = (Origin) data[1];
+								Card card = (Card) parameters[0];
+								Origin origin = (Origin) parameters[1];
 								otherPlayerController.destroy(card, origin);
 								break;
 							}
-							case MOVE: {
-								Card card = (Card) data[0];
+							case CARD_MOVE: {
+								Card card = (Card) parameters[0];
 								Point2D.Double location = card.getLocation();
 								otherPlayerController.setLocation(location.getX(), location.getY(), card);
 								break;
 							}
-							case TAP:
+							case CARD_TAP:
 								flag = true;
-							case UNTAP:
-								if (data.length > 1) {
-									otherPlayerController.setTapped(flag, GameManager.<Card> convertDataArrayToList(data));
+							case CARD_UNTAP:
+								if (parameters.length > 1) {
+									otherPlayerController.setTapped(flag, GameManager.<Card> convertDataArrayToList(parameters));
 								} else {
-									otherPlayerController.setTapped(flag, (Card) data[0]);
+									otherPlayerController.setTapped(flag, (Card) parameters[0]);
 								}
 								break;
-							case SHOW:
+							case CARD_SHOW:
 								flag = true;
-							case HIDE:
-								if (data.length > 1) {
-									otherPlayerController.setVisible(flag, GameManager.<Card> convertDataArrayToList(data));
+							case CARD_HIDE:
+								if (parameters.length > 1) {
+									otherPlayerController.setVisible(flag, GameManager.<Card> convertDataArrayToList(parameters));
 								} else {
-									otherPlayerController.setVisible(flag, (Card) data[0]);
+									otherPlayerController.setVisible(flag, (Card) parameters[0]);
 								}
 								break;
-							case DO_REVEAL:
+							case CARD_DO_REVEAL:
 								flag = true;
-							case UNDO_REVEAL:
-								if (data.length > 1) {
-									otherPlayerController.setRevealed(flag, GameManager.<Card> convertDataArrayToList(data));
+							case CARD_UNDO_REVEAL:
+								if (parameters.length > 1) {
+									otherPlayerController.setRevealed(flag, GameManager.<Card> convertDataArrayToList(parameters));
 								} else {
-									otherPlayerController.setRevealed(flag, (Card) data[0]);
+									otherPlayerController.setRevealed(flag, (Card) parameters[0]);
 								}
 								break;
-							case PLAYER_LEAVE: break;
-							case PLAYER_JOIN: break;
-							case ADD_TO_BATTLEFIELD: break;
-							case ADD_TO_HAND: break;
+							case PLAYER_LEAVE:
+								// TODO 
+								break;
+							case PLAYER_JOIN:
+								// TODO 
+								break;
 							default: // TODO Finish implementing events management
 								throw new RuntimeException(eventType + " is not managed yet by this implementation");
 						}
 					}
 				}
 				this.localGameTable.addLog(event);
-				
-			} else if (eventType == EventType.SYNCHRONIZE_GAMETABLE_DATA) {
+
+			} else if (eventType == SEND_GAMETABLE_DATA) {
 
 				// If the game table is not ready and if the event is a data synchronization from
 				// table creator, then we can initialize the game table for the joining player.
-				this.localGameTable = (GameTable) data[0];
+				this.localGameTable = (GameTable) parameters[0];
 				this.localGameTable.setLocalPlayerController(new PlayerController(this.localPlayer, true));
-				
-				send(new NetworkEvent(EventType.PLAYER_JOIN, this.localPlayer));
-				
+
+				send(new NetworkEvent(PLAYER_JOIN, this.localPlayer));
+
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			Logger.getLogger(this.getClass()).error(ex.getMessage(), ex);
 		}
 	}
 
 	/**
-	 * Send a Leave signal to the broker to inform the other players
-	 * and close the connection with the broker
+	 * Send a Leave signal to the broker to inform the other players and close the connection with the broker
 	 * 
 	 * @throws RuntimeException if you try to call this method before the beginning of the game o
 	 */
 	public void endGame() {
 
 		try {
-			send(new NetworkEvent(EventType.PLAYER_LEAVE, this.localPlayer));
+			send(new NetworkEvent(PLAYER_LEAVE, this.localPlayer));
 		} catch (Exception e) {
 			Logger.getLogger(this.getClass()).error("Unable to send the exit game table signal to broker", e);
 			throw new RuntimeException(e);
 		} finally {
-			
+
 			if (this.brokerManager != null) {
 				this.brokerManager.close();
 			} else {

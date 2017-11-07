@@ -10,8 +10,8 @@ import java.util.Locale;
 import java.util.Observable;
 import java.util.Set;
 
-import asenka.mtgfree.events.EventType;
 import asenka.mtgfree.events.LocalEvent;
+import static asenka.mtgfree.events.LocalEvent.Type.*;
 
 /**
  * A player
@@ -81,7 +81,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	private Library library;
 
 	/**
-	 * The battlefield reference 
+	 * The battlefield reference
 	 */
 	private final Battlefield battlefield;
 
@@ -94,7 +94,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 		this(name, new Battlefield());
 	}
-	
+
 	/**
 	 * Build a player with a specified battlefield
 	 * 
@@ -128,13 +128,14 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	 * Set the name of the player
 	 * 
 	 * @param name the player's name
+	 * @see LocalEvent
 	 */
 	public void setName(String name) {
 
 		if (!this.name.equals(name)) {
 			this.name = name;
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.SET_PLAYER_NAME, name));
+			super.notifyObservers(new LocalEvent(PLAYER_SET_SELECTED_DECK, name));
 		}
 	}
 
@@ -153,12 +154,12 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	 * @see LocalEvent
 	 */
 	public void setLifeCounters(int lifeCounters) {
-		
+
 		if (this.lifeCounters != lifeCounters) {
 
 			this.lifeCounters = lifeCounters;
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.SET_PLAYER_LIFE, new Integer(lifeCounters)));
+			super.notifyObservers(new LocalEvent(PLAYER_UPDATE_LIFE, new Integer(lifeCounters)));
 		}
 	}
 
@@ -167,14 +168,13 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	 */
 	public int getPoisonCounters() {
 
-		return poisonCounters;
+		return this.poisonCounters;
 	}
 
 	/**
 	 * Set the poison counters on the player
 	 * 
 	 * @param poisonCounters the number of poison counters
-	 * @return 
 	 * @see LocalEvent
 	 */
 	public void setPoisonCounters(int poisonCounters) {
@@ -183,7 +183,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 			this.poisonCounters = poisonCounters;
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.SET_PLAYER_POISON, new Integer(poisonCounters)));
+			super.notifyObservers(new LocalEvent(PLAYER_UPDATE_POISON, new Integer(poisonCounters)));
 		}
 	}
 
@@ -192,25 +192,22 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	 */
 	public Library getLibrary() {
 
-		return library;
+		return this.library;
 	}
 
 	/**
-	 * Set the current library of the player. if the player has already a library, the
-	 * library reference remains the same to keep the observers but the cards are
-	 * updated
+	 * Set the current library of the player. if the player has already a library, the library reference remains the same to keep
+	 * the observers but the cards are updated
 	 * 
-	 * @param library 
+	 * @param library
 	 */
 	public void setLibrary(Library library) {
 
-		if(this.library == null) {
+		if (this.library == null) {
 			this.library = library;
 		} else {
 			this.library.setCards(library.getCards());
 		}
-		super.setChanged();
-		super.notifyObservers(new LocalEvent(EventType.SET_PLAYER_LIBRARY, library));
 	}
 
 	/**
@@ -218,27 +215,32 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	 */
 	public Deck getSelectedDeck() {
 
-		return selectedDeck;
+		return this.selectedDeck;
 	}
 
 	/**
-	 * Set the selected deck used by the player to play
+	 * Set the selected deck used by the player to play. The player's library is automatically updated
 	 * 
 	 * @param selectedDeck the deck to use
+	 * @throws RuntimeException if the library cannot be built from the new selected deck
 	 * @see LocalEvent
 	 */
-	public void setSelectedDeck(Deck selectedDeck) {
+	public void setSelectedDeck(Deck selectedDeck) throws RuntimeException {
 
 		this.selectedDeck = selectedDeck;
-		super.setChanged();
-		super.notifyObservers(new LocalEvent(EventType.SET_PLAYER_SELECTED_DECK, selectedDeck));
+
+		if (this.selectedDeck != null && !this.selectedDeck.equals(selectedDeck)) {
+			this.setLibrary(selectedDeck.buildLibrary());
+			super.setChanged();
+			super.notifyObservers(new LocalEvent(PLAYER_SET_SELECTED_DECK, selectedDeck));
+		}
 	}
 
 	/**
 	 * @return the battlefield and all the cards on it
 	 */
 	public Battlefield getBattlefield() {
-	
+
 		return this.battlefield;
 	}
 
@@ -286,7 +288,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 			this.availableDecks.add(deck);
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.ADD_AVAILABLE_DECK, deck));
+			super.notifyObservers(new LocalEvent(PLAYER_ADD_DECK, deck));
 		}
 	}
 
@@ -295,7 +297,6 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	 * 
 	 * @param card the card to exile
 	 * @see LocalEvent
-	 * @see EventType#ADD_TO_HAND
 	 */
 	public void addCardToHand(Card card) {
 
@@ -303,7 +304,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 			this.hand.add(card);
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.ADD_TO_HAND, card));
+			super.notifyObservers(new LocalEvent(ADD_CARD_TO_HAND, card));
 		}
 	}
 
@@ -319,7 +320,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 			this.graveyard.add(card);
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.ADD_TO_GRAVEYARD, card));
+			super.notifyObservers(new LocalEvent(ADD_CARD_TO_GRAVEYARD, card));
 		}
 	}
 
@@ -335,7 +336,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 			this.exile.add(card);
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.ADD_TO_EXILE, card));
+			super.notifyObservers(new LocalEvent(ADD_CARD_TO_EXILE, card));
 		}
 	}
 
@@ -343,13 +344,14 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	 * Removes a card from the hand area of the player
 	 * 
 	 * @param deck the deck to remove
+	 * @return <code>true</code> if the deck was in the player list of available decks
 	 * @see LocalEvent
 	 */
 	public boolean removeAvailableDeck(Deck deck) {
 
 		if (this.availableDecks.remove(deck)) {
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.REMOVE_AVAILABLE_DECK, deck));
+			super.notifyObservers(new LocalEvent(PLAYER_REMOVE_DECK, deck));
 			return true;
 		} else {
 			return false;
@@ -360,13 +362,14 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	 * Removes a card from the hand area of the player
 	 * 
 	 * @param card the card to remove
+	 * @return <code>true</code> if the card was in the player's hand
 	 * @see LocalEvent
 	 */
 	public boolean removeCardFromHand(Card card) {
 
 		if (this.hand.remove(card)) {
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.REMOVE_FROM_HAND, card));
+			super.notifyObservers(new LocalEvent(REMOVE_CARD_FROM_HAND, card));
 			return true;
 		} else {
 			return false;
@@ -377,13 +380,14 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	 * Removes a card from the graveyard area of the player
 	 * 
 	 * @param card the card to remove
+	 * @return <code>true</code> if the card was in the graveyard
 	 * @see LocalEvent
 	 */
 	public boolean removeCardFromGraveyard(Card card) {
 
 		if (this.graveyard.remove(card)) {
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.REMOVE_FROM_GRAVEYARD, card));
+			super.notifyObservers(new LocalEvent(REMOVE_CARD_FROM_GRAVEYARD, card));
 			return true;
 		} else {
 			return false;
@@ -394,13 +398,14 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	 * Removes a card from the exile area of the player
 	 * 
 	 * @param card the card to remove
+	 * @return <code>true</code> if the card was in the exile area
 	 * @see LocalEvent
 	 */
 	public boolean removeCardFromExile(Card card) {
 
 		if (this.exile.remove(card)) {
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.REMOVE_FROM_GRAVEYARD, card));
+			super.notifyObservers(new LocalEvent(REMOVE_CARD_FROM_EXILE, card));
 			return true;
 		} else {
 			return false;
@@ -416,7 +421,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 		if (!this.hand.isEmpty()) {
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.CLEAR_HAND));
+			super.notifyObservers(new LocalEvent(CLEAR_HAND));
 		}
 	}
 
@@ -429,7 +434,7 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 
 		if (!this.graveyard.isEmpty()) {
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.CLEAR_GRAVEYARD));
+			super.notifyObservers(new LocalEvent(CLEAR_GRAVEYARD));
 		}
 	}
 
@@ -437,25 +442,20 @@ public class Player extends Observable implements Serializable, Comparable<Playe
 	 * Clear the cards in the exile area of the player
 	 * 
 	 * @see LocalEvent
-	 * @see EventType#CLEAR_EXILE
 	 */
 	public void clearExile() {
 
 		if (!this.exile.isEmpty()) {
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(EventType.CLEAR_EXILE));
+			super.notifyObservers(new LocalEvent(CLEAR_EXILE));
 		}
 	}
-	
-	
 
 	@Override
 	public String toString() {
 
 		return "Player [" + name + ", " + lifeCounters + ", " + poisonCounters + "]";
 	}
-	
-	
 
 	@Override
 	public int hashCode() {

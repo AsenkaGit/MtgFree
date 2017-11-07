@@ -1,4 +1,4 @@
-package asenka.mtgfree.controlers.game;
+package asenka.mtgfree.controllers.game;
 
 import java.io.Serializable;
 import java.util.Observable;
@@ -18,41 +18,30 @@ public abstract class Controller<Type extends Observable> implements Serializabl
 	 */
 	private static final long serialVersionUID = -1250928326307690607L;
 
-	/**
-	 * <p>
-	 * This origin indicates the origin of a card about to be played. For example, when you want to play a card on the battlefield
-	 * from your hand, then the origin would be HAND. When you want to exile a card from your library, then the origin would be
-	 * LIBRARY.
-	 * </p>
-	 * <p>
-	 * It is important to have this information to be able to remove the card from its original collection.
-	 * </p>
-	 */
-	public enum Origin {
-		BATTLEFIELD, HAND, LIBRARY, EXILE, GRAVEYARD, OPPONENT_BATTLEFIELD
-	}
+
 
 	/**
 	 * The controlled data. It could be of any sub type of {@link Observable}
 	 */
-	protected final Type data;
+	protected final Type controlledData;
 
 	/**
-	 * This boolean indicates if the controller is used by the player. If <code>true</code>, then it means it is a normal
-	 * controller used by the player to manipulate the local data. If <code>false</code>, it means it is a controller used by the
-	 * network manager to update the opponent data during a game
+	 * This flag indicates whether or not the controller notify the actions performed to the network. If <code>true</code>, when
+	 * an action is performed, then a NetworkEvent will be send to the other player. If <code>false</code>, then the action will
+	 * remains local.
+	 * @see NetworkEvent
 	 */
-	protected final boolean humanManaged;
+	protected final boolean createNetworkEvents;
 
 	/**
-	 * Protected controller.
 	 * 
-	 * @param data the controlled data
+	 * @param data the data controlled by this controller
+	 * @param createNetworkEvent
 	 */
-	protected Controller(Type data, boolean playerManaged) {
+	protected Controller(Type data, boolean createNetworkEvent) {
 
-		this.data = data;
-		this.humanManaged = playerManaged;
+		this.controlledData = data;
+		this.createNetworkEvents = createNetworkEvent;
 	}
 
 	/**
@@ -60,16 +49,16 @@ public abstract class Controller<Type extends Observable> implements Serializabl
 	 */
 	public Type getData() {
 
-		return this.data;
+		return this.controlledData;
 	}
 
 	/**
 	 * @return <code>true</code> if the controller is managed by a human player
-	 * @see Controller#humanManaged
+	 * @see Controller#createNetworkEvents
 	 */
 	public boolean isPlayerManaged() {
 
-		return this.humanManaged;
+		return this.createNetworkEvents;
 	}
 
 	/**
@@ -79,7 +68,7 @@ public abstract class Controller<Type extends Observable> implements Serializabl
 	 */
 	public void addObserver(Observer observer) {
 
-		this.data.addObserver(observer);
+		this.controlledData.addObserver(observer);
 	}
 
 	/**
@@ -89,7 +78,7 @@ public abstract class Controller<Type extends Observable> implements Serializabl
 	 */
 	public void deleteObserver(Observer observer) {
 
-		this.data.deleteObserver(observer);
+		this.controlledData.deleteObserver(observer);
 	}
 
 	/**
@@ -97,13 +86,13 @@ public abstract class Controller<Type extends Observable> implements Serializabl
 	 */
 	public void deleteObservers() {
 
-		this.data.deleteObservers();
+		this.controlledData.deleteObservers();
 	}
 
 	@Override
 	public String toString() {
 
-		return this.getClass().getSimpleName() + " [ data = " + data + "]";
+		return this.getClass().getSimpleName() + " [ data = " + controlledData + "]";
 	}
 
 	@Override
@@ -111,7 +100,7 @@ public abstract class Controller<Type extends Observable> implements Serializabl
 
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((data == null) ? 0 : data.hashCode());
+		result = prime * result + ((controlledData == null) ? 0 : controlledData.hashCode());
 		return result;
 	}
 
@@ -125,10 +114,10 @@ public abstract class Controller<Type extends Observable> implements Serializabl
 		if (getClass() != obj.getClass())
 			return false;
 		Controller<?> other = (Controller<?>) obj;
-		if (data == null) {
-			if (other.data != null)
+		if (controlledData == null) {
+			if (other.controlledData != null)
 				return false;
-		} else if (!data.equals(other.data))
+		} else if (!controlledData.equals(other.controlledData))
 			return false;
 		return true;
 	}

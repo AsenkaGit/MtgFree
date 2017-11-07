@@ -6,15 +6,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 
-import asenka.mtgfree.events.EventType;
 import asenka.mtgfree.events.LocalEvent;
 
+import static asenka.mtgfree.events.LocalEvent.Type.*;
+
 /**
- * Model class of the battlefield. It is basically a synchronized list of Card.
+ * Model class of the battlefield. It is basically a list of Card.
  * 
  * @author asenka
  * @see Card
- * @see Collections#synchronizedList(Set)
  * @see Observable
  */
 public class Battlefield extends Observable implements Serializable {
@@ -35,7 +35,7 @@ public class Battlefield extends Observable implements Serializable {
 	public Battlefield() {
 
 		// Use a synchronized list because several players may perform actions on the battlefield at the same time
-		this.cards = Collections.synchronizedList(new ArrayList<Card>());
+		this.cards = new ArrayList<Card>();
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class Battlefield extends Observable implements Serializable {
 		if (card != null) {
 			this.cards.add(card);
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(player, EventType.ADD_TO_BATTLEFIELD, card));
+			super.notifyObservers(new LocalEvent(ADD_CARD_TO_BATTLEFIELD, player, card));
 		}
 	}
 
@@ -96,7 +96,7 @@ public class Battlefield extends Observable implements Serializable {
 
 		if (this.cards.remove(card)) {
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(player, EventType.REMOVE_FROM_BATTLEFIELD, card));
+			super.notifyObservers(new LocalEvent(REMOVE_CARD_FROM_BATTLEFIELD, player, card));
 			return true;
 		} else {
 			return false;
@@ -113,6 +113,6 @@ public class Battlefield extends Observable implements Serializable {
 
 		this.cards.clear();
 		super.setChanged();
-		super.notifyObservers(new LocalEvent(player, EventType.CLEAR_BATTLEFIELD));
+		super.notifyObservers(new LocalEvent(CLEAR_BATTLEFIELD, player));
 	}
 }

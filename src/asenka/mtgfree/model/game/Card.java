@@ -7,10 +7,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 
-import asenka.mtgfree.events.EventType;
-import asenka.mtgfree.events.LocalEvent;
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
+import asenka.mtgfree.events.LocalEvent;
+
+import static asenka.mtgfree.events.LocalEvent.Type.*;
 
 /**
  * <p>
@@ -32,6 +33,7 @@ import asenka.mtgfree.model.data.utilities.MtgDataUtility;
  * @author asenka
  * @see MtgCard
  * @see Observable
+ * @see Serializable
  */
 public class Card extends Observable implements Serializable {
 
@@ -41,8 +43,8 @@ public class Card extends Observable implements Serializable {
 	private static final long serialVersionUID = -5521469150652565434L;
 
 	/**
-	 * The counter used to generated card battle id (default value is 1). It can be changed with the 
-	 * static method {@link Card#setBattleIdCounter(long)}
+	 * The counter used to generated card battle id (default value is 1). It can be changed with the static method
+	 * {@link Card#setBattleIdCounter(long)}
 	 */
 	private static long battleIdCounter = 1;
 
@@ -102,7 +104,6 @@ public class Card extends Observable implements Serializable {
 	 */
 	public Card(MtgCard cardData) {
 
-		super();
 		this.battleId = Card.battleIdCounter++;
 		this.primaryCardData = cardData;
 		this.visible = true;
@@ -123,11 +124,11 @@ public class Card extends Observable implements Serializable {
 	}
 
 	/**
-	 * @return the battleId
+	 * @return the battleId of the card. Each card on the battlefield must have a unique battle ID.
 	 */
 	public long getBattleId() {
 
-		return battleId;
+		return this.battleId;
 	}
 
 	/**
@@ -137,7 +138,7 @@ public class Card extends Observable implements Serializable {
 	 */
 	public MtgCard getPrimaryCardData() {
 
-		return primaryCardData;
+		return this.primaryCardData;
 	}
 
 	/**
@@ -147,40 +148,41 @@ public class Card extends Observable implements Serializable {
 	 */
 	public MtgCard getSecondaryCardData() {
 
-		return secondaryCardData;
+		return this.secondaryCardData;
 	}
 
 	/**
-	 * @return <code>true</code> if the card is tapped
+	 * @return <code>true</code> if the card is tapped, <code>false</code> otherwise
 	 */
 	public boolean isTapped() {
 
-		return tapped;
+		return this.tapped;
 	}
 
 	/**
 	 * Set if the card is tapped or not. The method creates a LocalEvent to notify the observers.
 	 * 
 	 * @param player the player performing the action. Used to create the event
-	 * @param tapped
+	 * @param tapped true/false
+	 * @see LocalEvent
 	 */
 	public void setTapped(Player player, boolean tapped) {
 
 		if (this.tapped != tapped) {
 			this.tapped = tapped;
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(player, (tapped ? EventType.TAP : EventType.UNTAP), new Boolean(tapped)));
+			super.notifyObservers(new LocalEvent((tapped ? CARD_TAP : CARD_UNTAP), player));
 		}
 	}
 
 	/**
 	 * Check if the card is visible. If not it, means that you should only be able to see the back of the card.
 	 * 
-	 * @return
+	 * @return <code>true</code> if the card is visible, <code>false</code> if the card hidden
 	 */
 	public boolean isVisible() {
 
-		return visible;
+		return this.visible;
 	}
 
 	/**
@@ -189,13 +191,14 @@ public class Card extends Observable implements Serializable {
 	 * 
 	 * @param player the player performing the action. Used to create the event
 	 * @param visible true/false
+	 * @see LocalEvent
 	 */
 	public void setVisible(Player player, boolean visible) {
 
 		if (this.visible != visible) {
 			this.visible = visible;
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(player, (visible ? EventType.SHOW : EventType.HIDE), new Boolean(visible)));
+			super.notifyObservers(new LocalEvent((visible ? CARD_SHOW : CARD_HIDE), player));
 		}
 	}
 
@@ -206,7 +209,7 @@ public class Card extends Observable implements Serializable {
 	 */
 	public boolean isRevealed() {
 
-		return revealed;
+		return this.revealed;
 	}
 
 	/**
@@ -215,13 +218,14 @@ public class Card extends Observable implements Serializable {
 	 * 
 	 * @param player the player performing the action. Used to create the event
 	 * @param revealed true/false
+	 * @see LocalEvent
 	 */
 	public void setRevealed(Player player, boolean revealed) {
 
 		if (this.revealed != revealed) {
 			this.revealed = revealed;
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(player, (revealed ? EventType.DO_REVEAL : EventType.UNDO_REVEAL), new Boolean(revealed)));
+			super.notifyObservers(new LocalEvent((revealed ? CARD_DO_REVEAL : CARD_UNDO_REVEAL), player));
 		}
 	}
 
@@ -247,7 +251,7 @@ public class Card extends Observable implements Serializable {
 		if (x != this.location.getX() || y != this.location.getY()) {
 			this.location.setLocation(x, y);
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(player, EventType.MOVE, this.location));
+			super.notifyObservers(new LocalEvent(CARD_MOVE, player, new Point2D.Double(x, y)));
 		}
 
 	}
@@ -266,14 +270,15 @@ public class Card extends Observable implements Serializable {
 	 * 
 	 * @param player the player performing the action. Used to create the event
 	 * @param associatedCard the associated card to add
+	 * @throws IllegalArgumentException if <code>associatedCard</code> is <code>null</code> or is the same of the current card
 	 * @see LocalEvent
 	 */
 	public void addAssociatedCard(Player player, Card associatedCard) {
 
-		if (associatedCard != null || associatedCard == this) {
+		if (associatedCard != null && associatedCard != this) {
 			this.associatedCards.add(associatedCard);
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(player, EventType.ADD_ASSOCIATED_CARD, associatedCard));
+			super.notifyObservers(new LocalEvent(CARD_ADD_ASSOCIATED_CARD, player, associatedCard));
 		} else {
 			throw new IllegalArgumentException("Associate the card " + this + " with " + associatedCard + " is not correct.");
 		}
@@ -291,7 +296,7 @@ public class Card extends Observable implements Serializable {
 
 		if (this.associatedCards.remove(associatedCard)) {
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(player, EventType.REMOVE_ASSOCIATED_CARD, associatedCard));
+			super.notifyObservers(new LocalEvent(CARD_REMOVE_ASSOCIATED_CARD, player, associatedCard));
 			return true;
 		} else {
 			return false;
@@ -309,7 +314,7 @@ public class Card extends Observable implements Serializable {
 		if (!this.associatedCards.isEmpty()) {
 			this.associatedCards.clear();
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(player, EventType.CLEAR_ASSOCIATED_CARDS));
+			super.notifyObservers(new LocalEvent(CARD_CLEAR_ASSOCIATED_CARDS, player));
 		}
 	}
 
@@ -326,6 +331,7 @@ public class Card extends Observable implements Serializable {
 	 * 
 	 * @param player the player performing the action. Used to create the event
 	 * @param counter the counter to add
+	 * @throws IllegalArgumentException if <code>counter</code> is <code>null</code>
 	 * @see LocalEvent
 	 */
 	public void addCounter(Player player, Counter counter) {
@@ -333,7 +339,7 @@ public class Card extends Observable implements Serializable {
 		if (counter != null) {
 			this.counters.add(counter);
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(player, EventType.ADD_COUNTER, counter));
+			super.notifyObservers(new LocalEvent(CARD_ADD_COUNTER, player, counter));
 		} else {
 			throw new IllegalArgumentException("Try to add a null counter to a card.");
 		}
@@ -346,11 +352,14 @@ public class Card extends Observable implements Serializable {
 	 * @param counter the counter to remove
 	 * @see LocalEvent
 	 */
-	public void removeCounter(Player player, Counter counter) {
+	public boolean removeCounter(Player player, Counter counter) {
 
 		if (this.counters.remove(counter)) {
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(player, EventType.REMOVE_COUNTER, counter));
+			super.notifyObservers(new LocalEvent(CARD_REMOVE_COUNTER, player, counter));
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -365,7 +374,7 @@ public class Card extends Observable implements Serializable {
 		if (!this.counters.isEmpty()) {
 			this.counters.clear();
 			super.setChanged();
-			super.notifyObservers(new LocalEvent(player, EventType.CLEAR_COUNTERS));
+			super.notifyObservers(new LocalEvent(CARD_CLEAR_COUNTERS, player));
 		}
 	}
 

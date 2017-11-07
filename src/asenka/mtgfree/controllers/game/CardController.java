@@ -1,11 +1,10 @@
-package asenka.mtgfree.controlers.game;
+package asenka.mtgfree.controllers.game;
 
 import java.util.Observer;
 
-import asenka.mtgfree.controlers.game.Controller.Origin;
+import asenka.mtgfree.model.game.Origin;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.Counter;
-import asenka.mtgfree.model.game.Library;
 
 /**
  * The controller of a card.
@@ -14,9 +13,11 @@ import asenka.mtgfree.model.game.Library;
  * @author asenka
  * @deprecated uses the PlayerController instead
  */
+@SuppressWarnings("serial")
 @Deprecated
 public class CardController extends Controller<Card> {
 
+	
 	/**
 	 * The player's controller. Having this controller helps you to perform operations that needs data outside the card scope.
 	 * Such as send back the card to player hand, destroy the card, etc...
@@ -61,7 +62,7 @@ public class CardController extends Controller<Card> {
 	 */
 	public void setTapped(boolean tapped) {
 
-		this.data.setTapped(playerController.getData(), tapped);
+		this.controlledData.setTapped(playerController.getData(), tapped);
 	}
 
 	/**
@@ -71,7 +72,7 @@ public class CardController extends Controller<Card> {
 	 */
 	public void setVisible(boolean visible) {
 
-		this.data.setVisible(playerController.getData(), visible);
+		this.controlledData.setVisible(playerController.getData(), visible);
 	}
 
 	/**
@@ -81,7 +82,7 @@ public class CardController extends Controller<Card> {
 	 */
 	public void setRevealed(boolean revealed) {
 
-		this.data.setRevealed(playerController.getData(), revealed);
+		this.controlledData.setRevealed(playerController.getData(), revealed);
 	}
 
 	/**
@@ -92,7 +93,7 @@ public class CardController extends Controller<Card> {
 	 */
 	public void setLocation(double x, double y) {
 
-		this.data.setLocation(playerController.getData(), x, y);
+		this.controlledData.setLocation(playerController.getData(), x, y);
 	}
 
 	/**
@@ -106,7 +107,7 @@ public class CardController extends Controller<Card> {
 		if (counter == null) {
 			throw new IllegalArgumentException("null counters are not allowed");
 		} else {
-			this.data.addCounter(playerController.getData(), counter);
+			this.controlledData.addCounter(playerController.getData(), counter);
 		}
 	}
 
@@ -121,7 +122,7 @@ public class CardController extends Controller<Card> {
 		if (counter == null) {
 			throw new IllegalArgumentException("Try to remove a null counter");
 		} else {
-			this.data.removeCounter(playerController.getData(), counter);
+			this.controlledData.removeCounter(playerController.getData(), counter);
 		}
 	}
 
@@ -130,7 +131,7 @@ public class CardController extends Controller<Card> {
 	 */
 	public void clearCounters() {
 
-		this.data.clearCounters(playerController.getData());
+		this.controlledData.clearCounters(playerController.getData());
 	}
 
 	/**
@@ -141,10 +142,10 @@ public class CardController extends Controller<Card> {
 	 */
 	public void addAssociatedCard(Card associatedCard) throws IllegalArgumentException {
 
-		if (associatedCard != null && this.data != associatedCard) {
-			this.data.addAssociatedCard(playerController.getData(), associatedCard);
+		if (associatedCard != null && this.controlledData != associatedCard) {
+			this.controlledData.addAssociatedCard(playerController.getData(), associatedCard);
 		} else {
-			throw new IllegalArgumentException("Unable to associate the card " + this.data + " with " + associatedCard);
+			throw new IllegalArgumentException("Unable to associate the card " + this.controlledData + " with " + associatedCard);
 		}
 	}
 
@@ -156,10 +157,10 @@ public class CardController extends Controller<Card> {
 	 */
 	public void removeAssociatedCard(Card associatedCard) throws IllegalArgumentException {
 
-		if (associatedCard != null && this.data != associatedCard) {
-			this.data.removeAssociatedCard(playerController.getData(), associatedCard);
+		if (associatedCard != null && this.controlledData != associatedCard) {
+			this.controlledData.removeAssociatedCard(playerController.getData(), associatedCard);
 		} else {
-			throw new IllegalArgumentException("Unable to remove from " + this.data + " the associated card  " + associatedCard);
+			throw new IllegalArgumentException("Unable to remove from " + this.controlledData + " the associated card  " + associatedCard);
 		}
 	}
 
@@ -168,7 +169,7 @@ public class CardController extends Controller<Card> {
 	 */
 	public void clearAssociatedCards() {
 
-		this.data.clearAssociatedCards(playerController.getData());
+		this.controlledData.clearAssociatedCards(playerController.getData());
 	}
 
 	/**
@@ -179,7 +180,7 @@ public class CardController extends Controller<Card> {
 	 */
 	public void destroy(Origin origin) {
 
-		this.playerController.destroy(this.data, origin);
+		this.playerController.destroy(this.controlledData, origin);
 	}
 
 	/**
@@ -191,7 +192,7 @@ public class CardController extends Controller<Card> {
 	 */
 	public void exile(Origin origin, boolean visible) {
 
-		this.playerController.exile(this.data, origin, visible);
+		this.playerController.exile(this.controlledData, origin, visible);
 	}
 
 	/**
@@ -205,7 +206,7 @@ public class CardController extends Controller<Card> {
 	 */
 	public void play(Origin origin, boolean visible, double x, double y) {
 
-		this.playerController.play(this.data, origin, visible, x, y);
+		this.playerController.play(this.controlledData, origin, visible, x, y);
 	}
 
 	/**
@@ -215,36 +216,36 @@ public class CardController extends Controller<Card> {
 	 */
 	public void backToHand(Origin origin) {
 
-		this.playerController.backToHand(this.data, origin);
+		this.playerController.backToHand(this.controlledData, origin);
 	}
 	
-	/**
-	 * Move the controlled card to the top of the library. The controlled card has to be in
-	 * the player library.
-	 * @throws RuntimeException if the controlled is not in the player library
-	 */
-	public void moveToTopOfLibrary() {
-		
-		final Library library = this.playerController.data.getLibrary();
-		
-		if(!library.changeCardIndex(playerController.getData(), this.data, 0)) {
-			throw new RuntimeException(this.data + " is not in the player's library");
-		}
-	}
-	
-	/**
-	 * Move the controlled card to the bottom of the library. The controlled card has to be in
-	 * the player library.
-	 * @throws RuntimeException if the controlled is not in the player library
-	 */
-	public void moveToBottompOfLibrary() {
-		
-		final Library library = this.playerController.data.getLibrary();
-		
-		if(!library.changeCardIndex(playerController.getData(), this.data, library.size() - 1)) {
-			throw new RuntimeException(this.data + " is not in the player's library");
-		}
-	}
+//	/**
+//	 * Move the controlled card to the top of the library. The controlled card has to be in
+//	 * the player library.
+//	 * @throws RuntimeException if the controlled is not in the player library
+//	 */
+//	public void moveToTopOfLibrary() {
+//		
+//		final Library library = this.playerController.controlledData.getLibrary();
+//		
+//		if(!library.changeCardIndex(playerController.getData(), this.controlledData, 0)) {
+//			throw new RuntimeException(this.controlledData + " is not in the player's library");
+//		}
+//	}
+//	
+//	/**
+//	 * Move the controlled card to the bottom of the library. The controlled card has to be in
+//	 * the player library.
+//	 * @throws RuntimeException if the controlled is not in the player library
+//	 */
+//	public void moveToBottompOfLibrary() {
+//		
+//		final Library library = this.playerController.controlledData.getLibrary();
+//		
+//		if(!library.changeCardIndex(playerController.getData(), this.controlledData, library.size() - 1)) {
+//			throw new RuntimeException(this.controlledData + " is not in the player's library");
+//		}
+//	}
 
 	@Override
 	public void addObserver(Observer observer) {
