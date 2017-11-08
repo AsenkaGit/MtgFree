@@ -5,13 +5,17 @@ import java.io.Serializable;
 import java.lang.IllegalStateException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Observer;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import asenka.mtgfree.communication.activemq.ActiveMQManager;
 import asenka.mtgfree.controllers.game.PlayerController;
 import asenka.mtgfree.events.NetworkEvent;
+import asenka.mtgfree.model.game.AbstractGameObject;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.GameTable;
 import asenka.mtgfree.model.game.Library;
@@ -52,6 +56,11 @@ public class GameManager {
 	private ActiveMQManager brokerManager;
 
 	/**
+	 * 
+	 */
+	private Set<Observer> opponentObservers;
+
+	/**
 	 * Private constructor. The only required data to create a GameManager is the local player. By default, the local game table
 	 * is <code>null</code>.
 	 * 
@@ -61,6 +70,26 @@ public class GameManager {
 
 		this.localPlayer = localPlayer;
 		this.localGameTable = null;
+	}
+
+	/**
+	 * @return the opponentObservers
+	 */
+	public Set<Observer> getOpponentObservers() {
+
+		return opponentObservers;
+	}
+
+	/**
+	 * 
+	 * @param opponentObserver
+	 */
+	public void addOpponentObserver(Observer opponentObserver) {
+
+		if (this.opponentObservers == null) {
+			this.opponentObservers = new HashSet<Observer>();
+		}
+		this.opponentObservers.add(opponentObserver);
 	}
 
 	/**
@@ -158,7 +187,7 @@ public class GameManager {
 	public void send(NetworkEvent event) throws Exception {
 
 		this.brokerManager.send(event);
-		Logger.getLogger(this.getClass()).trace(">>>> SENT: " + event);
+		Logger.getLogger(this.getClass()).info(">>>> SENT: " + event);
 	}
 
 	/**
@@ -168,7 +197,7 @@ public class GameManager {
 	 */
 	public void manageEvent(NetworkEvent event) {
 
-		Logger.getLogger(this.getClass()).trace(">>> RECEIVED: " + event);
+		Logger.getLogger(this.getClass()).info(">>> RECEIVED: " + event);
 
 		final NetworkEvent.Type eventType = event.getType();
 		final Player otherPlayer = event.getPlayer();
@@ -189,11 +218,17 @@ public class GameManager {
 						// Build a mirror game table to send to the new player
 						GameTable otherPlayerGameTable = new GameTable(this.localGameTable.getName(), otherPlayer);
 
-						// Add the 'other' player on the local game table and on the game table to send to the otherPlayer
+						// Add the 'otherPlayer' on the local game table and on the game table to send to the otherPlayer
 						this.localGameTable.addOtherPlayer(otherPlayer);
 						otherPlayerGameTable.addOtherPlayer(this.localPlayer);
+						
+						// The opponent must have the local observers 
+						if(this.opponentObservers != null) {
+							this.opponentObservers.forEach(
+									observer -> this.localGameTable.getOtherPlayerController(otherPlayer).addObserver(observer));
+						}
 
-						// Send the game table to the broker in another join event
+						// Send the game table to the broker
 						send(new NetworkEvent(SEND_GAMETABLE_DATA, this.localPlayer, otherPlayerGameTable));
 
 					} else { // For normal type of events (DRAW, PLAY, etc.)
@@ -209,7 +244,8 @@ public class GameManager {
 								otherPlayerController.draw((Integer) parameters[0]);
 								break;
 							case SHUFFLE_LIBRARY:
-								otherPlayerController.getData().getLibrary().setCards(convertDataArrayToList(parameters));
+								Library reorderedLibrary = (Library) event.getFirstParameter();
+								otherPlayerController.getData().getLibrary().setCards(reorderedLibrary.getCards());
 								break;
 							case PLAY: {
 								Card card = (Card) parameters[0];
@@ -224,6 +260,13 @@ public class GameManager {
 								otherPlayerController.destroy(card, origin);
 								break;
 							}
+							case EXILE: {
+								Card card = (Card) parameters[0];
+								Origin origin = (Origin) parameters[1];
+								Boolean visible = (Boolean) parameters[2];
+								otherPlayerController.exile(card, origin, visible.booleanValue());
+								break;
+							}
 							case CARD_MOVE: {
 								Card card = (Card) parameters[0];
 								Point2D.Double location = card.getLocation();
@@ -234,7 +277,7 @@ public class GameManager {
 								flag = true;
 							case CARD_UNTAP:
 								if (parameters.length > 1) {
-									otherPlayerController.setTapped(flag, GameManager.<Card> convertDataArrayToList(parameters));
+									otherPlayerController.setTapped(flag, GameManager.<Card>convertDataArrayToList(parameters));
 								} else {
 									otherPlayerController.setTapped(flag, (Card) parameters[0]);
 								}
@@ -348,12 +391,12 @@ public class GameManager {
 	/**
 	 * Convert an array of serializable data to a list of serializable data
 	 * 
-	 * @param <T> The requested type to convert the data. It should be a subclass of {@link Serializable}
+	 * @param <T> The requested type to convert the data. It should be a subclass of {@link AbstractGameObject}
 	 * @param data the data array
 	 * @return a list of the desired type as soon as it is a subclass of serializable
 	 */
 	@SuppressWarnings("unchecked")
-	private static <T extends Serializable> List<T> convertDataArrayToList(Serializable[] data) {
+	private static <T extends AbstractGameObject> List<T> convertDataArrayToList(Serializable[] data) {
 
 		List<T> list = new ArrayList<T>(data.length);
 		Arrays.stream(data).forEach(serializedData -> list.add((T) serializedData));

@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Observable;
 
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
@@ -35,12 +34,12 @@ import static asenka.mtgfree.events.LocalEvent.Type.*;
  * @see Observable
  * @see Serializable
  */
-public class Card extends Observable implements Serializable {
+public class Card extends AbstractGameObject {
 
 	/**
 	 * The generated id for serialization
 	 */
-	private static final long serialVersionUID = -5521469150652565434L;
+	private static final long serialVersionUID = -4701911979800197419L;
 
 	/**
 	 * The counter used to generated card battle id (default value is 1). It can be changed with the static method

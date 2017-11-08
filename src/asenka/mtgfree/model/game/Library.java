@@ -1,12 +1,10 @@
 package asenka.mtgfree.model.game;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Observable;
 
 import org.apache.log4j.Logger;
 
@@ -27,12 +25,12 @@ import static asenka.mtgfree.events.LocalEvent.Type.*;
  * @see Observable
  * @see LinkedList
  */
-public class Library extends Observable implements Serializable {
+public class Library extends AbstractGameObject {
 
 	/**
 	 * The generated id for serialization
 	 */
-	private static final long serialVersionUID = -3520577402050132447L;
+	private static final long serialVersionUID = 3841596534929597985L;
 
 	/**
 	 * Constant used to indicate the top of the library
@@ -215,8 +213,8 @@ public class Library extends Observable implements Serializable {
 	 * Removes and returns the x first cards from the library
 	 * 
 	 * @param player the player performing the action. Used to create the event
-	 * @param x the number of cards to draw
-	 * @return the list of card removed from the library
+	 * @param x the number of cards to remvoes from the library and return as a list
+	 * @return the list of cards removed from the library
 	 * @see LocalEvent
 	 */
 	public List<Card> removeFirst(Player player, int x) {

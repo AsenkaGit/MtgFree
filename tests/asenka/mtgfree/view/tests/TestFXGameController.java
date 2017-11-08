@@ -256,9 +256,13 @@ public class TestFXGameController implements Observer {
 			gameTable.addObserver(this);
 			localPlayerController = gameTable.getLocalPlayerController();
 			localPlayerController.addObserver(this);
+			
+			
 
 			try {
-				GameManager.initialize(localPlayer).createGame(gameTable);
+				GameManager manager = GameManager.initialize(localPlayer);
+				manager.createGame(gameTable);
+				manager.addOpponentObserver(this);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -281,6 +285,10 @@ public class TestFXGameController implements Observer {
 			gameTable.addObserver(this);
 			localPlayerController = gameTable.getLocalPlayerController();
 			localPlayerController.addObserver(this);
+			gameTable.getOtherPlayerControllers().forEach(controller -> controller.addObserver(this));
+			
+			
+			
 		}
 
 		selectedCard = null;

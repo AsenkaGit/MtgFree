@@ -1,10 +1,8 @@
 package asenka.mtgfree.model.game;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Observable;
 
 import asenka.mtgfree.events.LocalEvent;
 
@@ -17,12 +15,13 @@ import static asenka.mtgfree.events.LocalEvent.Type.*;
  * @see Card
  * @see Observable
  */
-public class Battlefield extends Observable implements Serializable {
+public class Battlefield extends AbstractGameObject {
 
 	/**
 	 * The generated id for serialization
 	 */
-	private static final long serialVersionUID = 247576395066971120L;
+	private static final long serialVersionUID = 1007612506971394720L;
+
 
 	/**
 	 * The synchronized list of cards on the battlefield

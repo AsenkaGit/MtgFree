@@ -1,6 +1,5 @@
 package asenka.mtgfree.model.game;
 
-import java.io.Serializable;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,7 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Observable;
 import java.util.Map.Entry;
 
 import asenka.mtgfree.events.LocalEvent;
@@ -32,12 +30,12 @@ import static asenka.mtgfree.events.LocalEvent.Type.*;
  * @see Map
  * @see Library
  */
-public class Deck extends Observable implements Comparable<Deck>, Serializable {
+public class Deck extends AbstractGameObject implements Comparable<Deck> {
 
 	/**
 	 * The generated ID for the serialization
 	 */
-	private static final long serialVersionUID = 5762956834196881542L;
+	private static final long serialVersionUID = -4671429640596049230L;
 
 	/**
 	 * The minimum amount of cards in the main zone of the deck

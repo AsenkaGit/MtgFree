@@ -135,7 +135,7 @@ public class PlayerController extends Controller<Player> {
 			this.controlledData.addCardToExile(card);
 
 			if (this.createNetworkEvents) {
-				notifyOtherPlayers(new NetworkEvent(EXILE, this.controlledData, card, origin));
+				notifyOtherPlayers(new NetworkEvent(EXILE, this.controlledData, card, origin, visible));
 			}
 		}
 	}
@@ -461,7 +461,7 @@ public class PlayerController extends Controller<Player> {
 		library.shuffle(this.controlledData);
 
 		if (this.createNetworkEvents) {
-			notifyOtherPlayers(new NetworkEvent(SHUFFLE_LIBRARY, this.controlledData, library.getCards().toArray()));
+			notifyOtherPlayers(new NetworkEvent(SHUFFLE_LIBRARY, this.controlledData, library));
 		}
 	}
 

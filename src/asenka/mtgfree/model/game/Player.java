@@ -1,13 +1,11 @@
 package asenka.mtgfree.model.game;
 
-import java.io.Serializable;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Observable;
 import java.util.Set;
 
 import asenka.mtgfree.events.LocalEvent;
@@ -18,12 +16,12 @@ import static asenka.mtgfree.events.LocalEvent.Type.*;
  * 
  * @author asenka
  */
-public class Player extends Observable implements Serializable, Comparable<Player> {
+public class Player extends AbstractGameObject implements Comparable<Player> {
 
 	/**
 	 * The generated ID for serialization
 	 */
-	private static final long serialVersionUID = -6984024632036631899L;
+	private static final long serialVersionUID = -8547754100855888457L;
 
 	/**
 	 * The initial value of the player life points

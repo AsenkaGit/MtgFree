@@ -1,11 +1,11 @@
 package asenka.mtgfree.model.game;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Observable;
 import java.util.Set;
 
 import asenka.mtgfree.controllers.game.PlayerController;
@@ -21,12 +21,12 @@ import static asenka.mtgfree.events.LocalEvent.Type.*;
  * @see Player
  * @see PlayerController
  */
-public class GameTable extends Observable implements Serializable {
+public class GameTable extends AbstractGameObject {
 	
 	/**
 	 * The generated id for serialization
 	 */
-	private static final long serialVersionUID = -3191823675635881810L;
+	private static final long serialVersionUID = -2427880626586409302L;
 
 	/**
 	 * The name of this table
@@ -138,7 +138,10 @@ public class GameTable extends Observable implements Serializable {
 	 */
 	public void addOtherPlayer(final Player newPlayer) {
 		
-		this.otherPlayers.put(newPlayer, new PlayerController(newPlayer, false));
+		PlayerController otherPlayerController = new PlayerController(newPlayer, false);
+		this.otherPlayers.put(newPlayer, otherPlayerController);
+		
+		setOtherPlayerObservers(otherPlayerController);
 	}
 	
 	/**
@@ -158,6 +161,14 @@ public class GameTable extends Observable implements Serializable {
 	public PlayerController getOtherPlayerController(Player otherPlayer) {
 
 		return otherPlayers.get(otherPlayer);
+	}
+	
+	/**
+	 * @return the list of controllers for the other players on the table
+	 */
+	public List<PlayerController> getOtherPlayerControllers() {
+		
+		return new ArrayList<PlayerController>(this.otherPlayers.values());
 	}
 
 	/**
@@ -188,11 +199,17 @@ public class GameTable extends Observable implements Serializable {
 	public String getStringLogs() {
 
 		// TODO mettre en forme les logs
-		
+
 		String strLogs = "";
 		for (AbstractEvent log : this.logs) {
-			strLogs += log.toString() + "\n";
+			strLogs += log.toString().replace("NetworkEvent", "") + "\n";
 		}
 		return strLogs;
+	}
+
+	private void setOtherPlayerObservers(PlayerController otherPlayerController) {
+	
+		// TODO Auto-generated method stub
+		
 	}
 }
