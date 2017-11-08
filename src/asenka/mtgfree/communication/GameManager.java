@@ -56,7 +56,8 @@ public class GameManager {
 	private ActiveMQManager brokerManager;
 
 	/**
-	 * 
+	 * The set of observers where the opponent game data will be displayed. The game manager needs to know what are the observers
+	 * used for the opponent to assign them when the opponent model objects arrive
 	 */
 	private Set<Observer> opponentObservers;
 
@@ -70,26 +71,16 @@ public class GameManager {
 
 		this.localPlayer = localPlayer;
 		this.localGameTable = null;
+		this.opponentObservers = new HashSet<Observer>();
 	}
 
 	/**
-	 * @return the opponentObservers
+	 * @return the set of observers (the views for example) used to display the opponent game object (like the opponent
+	 * battlefield or the opponent graveyard)
 	 */
 	public Set<Observer> getOpponentObservers() {
 
 		return opponentObservers;
-	}
-
-	/**
-	 * 
-	 * @param opponentObserver
-	 */
-	public void addOpponentObserver(Observer opponentObserver) {
-
-		if (this.opponentObservers == null) {
-			this.opponentObservers = new HashSet<Observer>();
-		}
-		this.opponentObservers.add(opponentObserver);
 	}
 
 	/**
@@ -221,12 +212,10 @@ public class GameManager {
 						// Add the 'otherPlayer' on the local game table and on the game table to send to the otherPlayer
 						this.localGameTable.addOtherPlayer(otherPlayer);
 						otherPlayerGameTable.addOtherPlayer(this.localPlayer);
-						
-						// The opponent must have the local observers 
-						if(this.opponentObservers != null) {
-							this.opponentObservers.forEach(
-									observer -> this.localGameTable.getOtherPlayerController(otherPlayer).addObserver(observer));
-						}
+
+						// Add the observers (views) where the opponent game objects will be displayed
+						this.opponentObservers
+								.forEach(observer -> this.localGameTable.getOtherPlayerController(otherPlayer).addObserver(observer));
 
 						// Send the game table to the broker
 						send(new NetworkEvent(SEND_GAMETABLE_DATA, this.localPlayer, otherPlayerGameTable));
@@ -277,7 +266,7 @@ public class GameManager {
 								flag = true;
 							case CARD_UNTAP:
 								if (parameters.length > 1) {
-									otherPlayerController.setTapped(flag, GameManager.<Card>convertDataArrayToList(parameters));
+									otherPlayerController.setTapped(flag, GameManager.<Card> convertDataArrayToList(parameters));
 								} else {
 									otherPlayerController.setTapped(flag, (Card) parameters[0]);
 								}
@@ -301,11 +290,34 @@ public class GameManager {
 								}
 								break;
 							case PLAYER_LEAVE:
-								// TODO 
+								// TODO
 								break;
 							case PLAYER_JOIN:
-								// TODO 
+								// TODO
 								break;
+							case BACK_TO_LIBRARY: {
+								Card card = (Card) parameters[0];
+								Origin origin = (Origin) parameters[1];
+								int index = ((Integer) parameters[2]).intValue();
+
+								switch (index) {
+									case Library.TOP:
+										otherPlayerController.backToTopOfLibrary(card, origin);
+										break;
+									case Library.BOTTOM:
+										otherPlayerController.backToBottomOfLibrary(card, origin);
+										break;
+									default:
+										throw new RuntimeException("Unmanaged library index");
+								}
+								break;
+							}
+							case BACK_TO_HAND: {
+								Card card = (Card) parameters[0];
+								Origin origin = (Origin) parameters[1];
+								otherPlayerController.backToHand(card, origin);
+								break;
+							}
 							default: // TODO Finish implementing events management
 								throw new RuntimeException(eventType + " is not managed yet by this implementation");
 						}
@@ -320,8 +332,12 @@ public class GameManager {
 				this.localGameTable = (GameTable) parameters[0];
 				this.localGameTable.setLocalPlayerController(new PlayerController(this.localPlayer, true));
 
-				send(new NetworkEvent(PLAYER_JOIN, this.localPlayer));
+				// Add the observers (views) on the opponent game object
+				final PlayerController otherPlayerController = this.localGameTable.getOtherPlayerController(otherPlayer);
+				this.opponentObservers.forEach(observer -> otherPlayerController.addObserver(observer));
 
+				// Notify to other player that he is now ready to join the game
+				send(new NetworkEvent(PLAYER_JOIN, this.localPlayer));
 			}
 		} catch (Exception ex) {
 			Logger.getLogger(this.getClass()).error(ex.getMessage(), ex);

@@ -21,7 +21,7 @@ public class TestUIApplication extends Application {
 	public void start(Stage primaryStage) {
 
 		this.primaryStage = primaryStage;
-		this.primaryStage.setTitle("Mtg Free [TEST GAME] - Player 1");
+		this.primaryStage.setTitle("Mtg Free [TEST GAME]");
 		
 		initRootLayout();
 

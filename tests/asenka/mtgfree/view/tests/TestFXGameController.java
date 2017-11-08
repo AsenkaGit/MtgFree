@@ -256,13 +256,12 @@ public class TestFXGameController implements Observer {
 			gameTable.addObserver(this);
 			localPlayerController = gameTable.getLocalPlayerController();
 			localPlayerController.addObserver(this);
-			
-			
 
+			
+			GameManager manager = GameManager.initialize(localPlayer);
+			manager.getOpponentObservers().add(this);
 			try {
-				GameManager manager = GameManager.initialize(localPlayer);
 				manager.createGame(gameTable);
-				manager.addOpponentObserver(this);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -274,7 +273,7 @@ public class TestFXGameController implements Observer {
 			localPlayer.setLibrary(library);
 
 			GameManager gameManager = GameManager.initialize(localPlayer);
-
+			gameManager.getOpponentObservers().add(this);
 			try {
 				gameManager.joinGame("JavaFXUITestTable", localPlayer);
 			} catch (Exception e) {
@@ -285,10 +284,6 @@ public class TestFXGameController implements Observer {
 			gameTable.addObserver(this);
 			localPlayerController = gameTable.getLocalPlayerController();
 			localPlayerController.addObserver(this);
-			gameTable.getOtherPlayerControllers().forEach(controller -> controller.addObserver(this));
-			
-			
-			
 		}
 
 		selectedCard = null;
@@ -344,13 +339,15 @@ public class TestFXGameController implements Observer {
 				.setCellValueFactory(cellData -> new SimpleStringProperty(Boolean.toString(cellData.getValue().isTapped())));
 		this.btVisibleTableColumn
 				.setCellValueFactory(cellData -> new SimpleStringProperty(Boolean.toString(cellData.getValue().isVisible())));
+		this.opponentBtTappedTableColumn
+				.setCellValueFactory(cellData -> new SimpleStringProperty(Boolean.toString(cellData.getValue().isTapped())));
 		this.opponentBtVisibleTableColumn
 				.setCellValueFactory(cellData -> new SimpleStringProperty(Boolean.toString(cellData.getValue().isVisible())));
 
 		this.hdColorTableColumn.setCellValueFactory(
 				cellData -> new SimpleStringProperty(Arrays.toString(cellData.getValue().getPrimaryCardData().getColorIdentity())));
 
-		battlefieldTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+		this.battlefieldTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 
 			Platform.runLater(() -> {
 
@@ -372,7 +369,7 @@ public class TestFXGameController implements Observer {
 			});
 		});
 
-		opponentBattlefieldTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+		this.opponentBattlefieldTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 
 			Platform.runLater(() -> {
 
@@ -394,7 +391,7 @@ public class TestFXGameController implements Observer {
 			});
 		});
 
-		handTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+		this.handTableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 
 			Platform.runLater(() -> {
 
@@ -531,7 +528,7 @@ public class TestFXGameController implements Observer {
 		final LocalEvent localEvent = (LocalEvent) event;
 		final LocalEvent.Type eventType = localEvent.getType();
 		final Player sourcePlayer = localEvent.getPlayer();
-//		final Serializable[] parameters = localEvent.getParameters();
+		// final Serializable[] parameters = localEvent.getParameters();
 
 		switch (eventType) {
 
@@ -565,7 +562,7 @@ public class TestFXGameController implements Observer {
 			case REMOVE_CARD_FROM_EXILE:
 				this.exileTextArea.setText(buildStringFromCardsCollection(this.localPlayer.getExile()));
 				break;
-			default: 
+			default:
 				Logger.getLogger(this.getClass()).info("Event not managed: " + localEvent);
 		}
 	}
