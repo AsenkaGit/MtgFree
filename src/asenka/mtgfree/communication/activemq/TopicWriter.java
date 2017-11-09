@@ -31,9 +31,9 @@ final class TopicWriter extends AbstractActiveMQCommunicator {
 	 * 
 	 * @param brokerUrl the broker URL
 	 * @param topicId the ID of the topic
-	 * @throws RuntimeException if the connection with the broker cannot be initialized properly
+	 * @throws Exception if the connection with the broker cannot be initialized properly
 	 */
-	TopicWriter(String brokerUrl, String topicId) throws RuntimeException {
+	TopicWriter(String brokerUrl, String topicId) throws Exception {
 
 		super(brokerUrl, topicId);
 
@@ -52,7 +52,7 @@ final class TopicWriter extends AbstractActiveMQCommunicator {
 
 		} catch (JMSException e) {
 			this.close();
-			throw new RuntimeException(e);
+			throw new Exception(e);
 		}
 
 	}

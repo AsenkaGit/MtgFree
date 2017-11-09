@@ -14,7 +14,6 @@ import asenka.mtgfree.communication.activemq.ActiveMQManager;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.Deck;
-import asenka.mtgfree.model.game.GameTable;
 import asenka.mtgfree.model.game.Library;
 import asenka.mtgfree.model.game.Player;
 import asenka.mtgfree.tests.MtgFreeTest;
@@ -82,18 +81,21 @@ public class TestGameManager extends MtgFreeTest {
 		this.player1.setLibrary(library);
 		
 		this.gameTableName = "TestGameManager2";
-
-		GameTable gameTable = new GameTable(this.gameTableName, this.player1);
-		this.gameManager = GameManager.initialize(this.player1);
+		
+		// Create the game manager
+		
+		this.gameManager = GameManager.initialize(this.gameTableName, this.player1);
 		boolean connectionWithBrokerSucced;
 		try {
-			this.gameManager.createGame(gameTable);
+			this.gameManager.createGame();
 			connectionWithBrokerSucced = true;
 		} catch (Exception e) {
 			fail("Unable to create a game : " + e.getMessage());
 			connectionWithBrokerSucced = false;
 		}
+		// Do not start the test if the connection with the broker failed
 		Assume.assumeTrue(connectionWithBrokerSucced);
+
 	}
 	
 	@After
@@ -110,7 +112,6 @@ public class TestGameManager extends MtgFreeTest {
 		System.out.println(tableNames);
 		
 		tableNames.forEach(tableName -> assertFalse(tableName.contains(ActiveMQManager.TABLE_NAME_PREFIX)));
-		assertEquals(1, tableNames.size());
-		assertEquals(this.gameTableName, tableNames.get(0));
+		assertTrue(tableNames.contains(this.gameTableName));
 	}
 }

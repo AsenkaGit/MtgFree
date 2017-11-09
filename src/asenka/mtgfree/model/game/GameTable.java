@@ -1,12 +1,7 @@
 package asenka.mtgfree.model.game;
 
-import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import asenka.mtgfree.controllers.game.PlayerController;
 import asenka.mtgfree.events.AbstractEvent;
@@ -22,7 +17,7 @@ import static asenka.mtgfree.events.LocalEvent.Type.*;
  * @see PlayerController
  */
 public class GameTable extends AbstractGameObject {
-	
+
 	/**
 	 * The generated id for serialization
 	 */
@@ -39,14 +34,9 @@ public class GameTable extends AbstractGameObject {
 	private Player localPlayer;
 
 	/**
-	 * The local player controller
+	 * The opponent player
 	 */
-	private PlayerController localPlayerController;
-
-	/**
-	 * A map associating the other players on the table to their controller
-	 */
-	private Map<Player, PlayerController> otherPlayers;
+	private Player opponentPlayer;
 
 	/**
 	 * List of events logged on this game table
@@ -63,8 +53,6 @@ public class GameTable extends AbstractGameObject {
 
 		this.name = tableName;
 		this.localPlayer = localPlayer;
-		this.localPlayerController = new PlayerController(localPlayer, true);
-		this.otherPlayers = new HashMap<Player, PlayerController>();
 		this.logs = new LinkedList<AbstractEvent>();
 	}
 
@@ -72,7 +60,7 @@ public class GameTable extends AbstractGameObject {
 	 * @return the name of this game table
 	 */
 	public String getName() {
-	
+
 		return this.name;
 	}
 
@@ -82,7 +70,7 @@ public class GameTable extends AbstractGameObject {
 	 */
 	public boolean isLocalPlayer(Player player) {
 
-		if(player == null) {
+		if (player == null) {
 			throw new IllegalArgumentException("null value is not allowed for this method.");
 		} else {
 			return this.localPlayer.equals(player);
@@ -96,79 +84,33 @@ public class GameTable extends AbstractGameObject {
 
 		return this.localPlayer;
 	}
-	
+
 	/**
-	 * Set the local player. 
+	 * Set the local player.
+	 * 
 	 * @param player the player that should be the local player
 	 */
 	public void setLocalPlayer(Player player) {
-		
+
 		this.localPlayer = player;
 	}
 
-	/**
-	 * @return the local Player Controller
-	 */
-	public PlayerController getLocalPlayerController() {
-
-		return this.localPlayerController;
-	}
-	
-	/**
-	 * Update the player controller and the local player
-	 * @param playerController
-	 */
-	public void setLocalPlayerController(PlayerController playerController) {
-		
-		this.localPlayerController = playerController;
-		this.setLocalPlayer(playerController.getData());
-	}
 
 	/**
 	 * @return a set with the other player on the table
 	 */
-	public Set<Player> getOtherPlayers() {
+	public Player getOpponentPlayer() {
 
-		return this.otherPlayers.keySet();
+		return this.opponentPlayer;
 	}
 	
 	/**
-	 * Add a player on the game table
-	 * @param newPlayer the new player
+	 * 
+	 * @param player
 	 */
-	public void addOtherPlayer(final Player newPlayer) {
+	public void setOpponentPlayer(Player player) {
 		
-		PlayerController otherPlayerController = new PlayerController(newPlayer, false);
-		this.otherPlayers.put(newPlayer, otherPlayerController);
-		
-		setOtherPlayerObservers(otherPlayerController);
-	}
-	
-	/**
-	 * Removes the player from the map of other players
-	 * @param playerLeaving the player to remove
-	 * @return <code>true</code> if the player leaving the table was in the map of players, <code>false</code> if he wasn't
-	 */
-	public boolean removeOtherPlayer(final Player playerLeaving) {
-		
-		return this.otherPlayers.remove(playerLeaving) != null;
-	}
-
-	/**
-	 * @param otherPlayer the player
-	 * @return the controller associated to the player
-	 */
-	public PlayerController getOtherPlayerController(Player otherPlayer) {
-
-		return otherPlayers.get(otherPlayer);
-	}
-	
-	/**
-	 * @return the list of controllers for the other players on the table
-	 */
-	public List<PlayerController> getOtherPlayerControllers() {
-		
-		return new ArrayList<PlayerController>(this.otherPlayers.values());
+		this.opponentPlayer = player;
 	}
 
 	/**
@@ -176,11 +118,15 @@ public class GameTable extends AbstractGameObject {
 	 */
 	public int numberOfPlayers() {
 
-		return (this.otherPlayers.size() + 1);
+		int numberOfPlayer = 0;
+		if (this.localPlayer != null) numberOfPlayer++;
+		if (this.opponentPlayer != null) numberOfPlayer++;
+		return numberOfPlayer;
 	}
 
 	/**
 	 * Add a log to this game table
+	 * 
 	 * @param event an event
 	 */
 	public void addLog(AbstractEvent event) {
@@ -205,11 +151,5 @@ public class GameTable extends AbstractGameObject {
 			strLogs += log.toString().replace("NetworkEvent", "") + "\n";
 		}
 		return strLogs;
-	}
-
-	private void setOtherPlayerObservers(PlayerController otherPlayerController) {
-	
-		// TODO Auto-generated method stub
-		
 	}
 }

@@ -229,7 +229,7 @@ public class TestCardController extends MtgFreeTest {
 		private TestObserver(CardController controller) {
 
 			this.controller = controller;
-			this.controller.addObserver(this);
+			this.controller.getData().addObserver(this);
 			this.notificationCounter = 0;
 		}
 

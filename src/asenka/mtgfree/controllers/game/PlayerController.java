@@ -2,11 +2,9 @@ package asenka.mtgfree.controllers.game;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Observer;
 
 import asenka.mtgfree.communication.GameManager;
 import asenka.mtgfree.events.NetworkEvent;
-import asenka.mtgfree.model.game.Battlefield;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.Counter;
 import asenka.mtgfree.model.game.Library;
@@ -27,21 +25,15 @@ import static asenka.mtgfree.events.NetworkEvent.Type.*;
 public class PlayerController extends Controller<Player> {
 
 	/**
-	 * The generated ID for serialization. The controller may be serialized when the game table data are synchronized between the
-	 * players at the beginning of a game.
-	 */
-	private static final long serialVersionUID = 2172603147829383956L;
-
-	/**
 	 * Build the controller for a player.
 	 * 
 	 * @param player the player controlled
-	 * @param humanManaged <code>true</code> if the player controller is used by a human player, <code>false</code> if it is used
-	 *        by the program
+	 * @param createNetworkEvent use <code>true</code> if you want that this controller create NetworkEvent to notify the other
+	 *        player that the local player performed an action
 	 */
-	public PlayerController(Player player, boolean humanManaged) {
+	public PlayerController(Player player, boolean createNetworkEvent) {
 
-		super(player, humanManaged);
+		super(player, createNetworkEvent);
 	}
 
 	/**
@@ -466,6 +458,23 @@ public class PlayerController extends Controller<Player> {
 	}
 
 	/**
+	 * Clear all the data of the controlled player
+	 * 
+	 * @see LocalEvent
+	 * @see NetworkEvent
+	 */
+	public void clearGameData() {
+
+		this.controlledData.clearExile();
+		this.controlledData.clearGraveyard();
+		this.controlledData.clearHand();
+
+		if (this.createNetworkEvents) {
+			notifyOtherPlayers(new NetworkEvent(CLEAR_GAME_DATA, this.controlledData));
+		}
+	}
+
+	/**
 	 * Set the number of life counters on the controlled player
 	 * 
 	 * @param lifeCounters the number of life counters
@@ -495,55 +504,6 @@ public class PlayerController extends Controller<Player> {
 		if (this.createNetworkEvents) {
 			notifyOtherPlayers(new NetworkEvent(PLAYER_UPDATE_POISON, this.controlledData, new Integer(poisonCounters)));
 		}
-	}
-
-	/**
-	 * PlayerController overrides the Controller method to add the observer to the library and the battlefield
-	 * 
-	 * @param observer the observer to add on the controlled player
-	 */
-	@Override
-	public void addObserver(Observer observer) {
-
-		super.addObserver(observer);
-
-		Library library = this.controlledData.getLibrary();
-		Battlefield battlefield = this.controlledData.getBattlefield();
-
-		library.addObserver(observer);
-		battlefield.addObserver(observer);
-	}
-
-	/**
-	 * PlayerController overrides the Controller method to remove the observer from the library and the battlefield
-	 * 
-	 * @param observer the observer to remove from the controlled player
-	 */
-	@Override
-	public void deleteObserver(Observer observer) {
-
-		super.deleteObserver(observer);
-
-		Library library = this.controlledData.getLibrary();
-		Battlefield battlefield = this.controlledData.getBattlefield();
-
-		library.deleteObserver(observer);
-		battlefield.deleteObserver(observer);
-	}
-
-	/**
-	 * PlayerController overrides the Controller method to clear the observers from the library and the battlefield
-	 */
-	@Override
-	public void deleteObservers() {
-
-		super.deleteObservers();
-
-		Library library = this.controlledData.getLibrary();
-		Battlefield battlefield = this.controlledData.getBattlefield();
-
-		library.deleteObservers();
-		battlefield.deleteObservers();
 	}
 
 	/**
@@ -586,7 +546,9 @@ public class PlayerController extends Controller<Player> {
 				}
 				break;
 			case OPPONENT_BATTLEFIELD:
-				throw new IllegalArgumentException("You cannot remove a card from the opponent battlefield");
+			case OPPONENT_EXILE:
+			case OPPONENT_GRAVEYARD:
+				throw new IllegalArgumentException("You cannot remove a card from the opponent.");
 		}
 	}
 

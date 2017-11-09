@@ -11,7 +11,6 @@ import java.util.Observer;
 import org.apache.log4j.Logger;
 
 import asenka.mtgfree.communication.GameManager;
-import asenka.mtgfree.controllers.game.PlayerController;
 import asenka.mtgfree.events.LocalEvent;
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
@@ -219,11 +218,11 @@ public class TestFXGameController implements Observer {
 	@FXML
 	private Button poisonDownPlayerButton;
 
-	private GameTable gameTable;
+	private GameManager gameManager;
+	
+	private String tableName;
 
 	private Player localPlayer;
-
-	private PlayerController localPlayerController;
 
 	private Card selectedCard;
 
@@ -244,46 +243,54 @@ public class TestFXGameController implements Observer {
 			e1.printStackTrace();
 			System.exit(-1);
 		}
+		
+		this.tableName = "JavaFX_Test_Table";
 
 		if (createTable) {
 
-			localPlayer = new Player("Jean Lassalle", battlefield);
+			localPlayer = new Player("Bob", battlefield);
 			localPlayer.addAvailableDeck(testDeck);
 			localPlayer.setSelectedDeck(testDeck);
 			localPlayer.setLibrary(library);
-
-			gameTable = new GameTable("JavaFXUITestTable", localPlayer);
-			gameTable.addObserver(this);
-			localPlayerController = gameTable.getLocalPlayerController();
-			localPlayerController.addObserver(this);
-
 			
-			GameManager manager = GameManager.initialize(localPlayer);
-			manager.getOpponentObservers().add(this);
+			this.gameManager = GameManager.initialize(this.tableName, this.localPlayer);
+			this.gameManager.getOpponentObservers().add(this);
+			
+			// Set the views
+			Player localPlayer = this.gameManager.getLocalPlayerController().getData();
+			localPlayer.addObserver(this);
+			localPlayer.getBattlefield().addObserver(this);
+			localPlayer.getLibrary().addObserver(this);
+			this.gameManager.getLocalGameTable().addObserver(this);
+			
 			try {
-				manager.createGame(gameTable);
+				this.gameManager.createGame();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else {
 
-			localPlayer = new Player("Mister Join !", battlefield);
+		} else {
+			
+			localPlayer = new Player("Laura", battlefield);
 			localPlayer.addAvailableDeck(testDeck);
 			localPlayer.setSelectedDeck(testDeck);
 			localPlayer.setLibrary(library);
-
-			GameManager gameManager = GameManager.initialize(localPlayer);
-			gameManager.getOpponentObservers().add(this);
+			
+			this.gameManager = GameManager.initialize(this.tableName, this.localPlayer);
+			this.gameManager.getOpponentObservers().add(this);
+			
+			// Set the views
+			Player localPlayer = this.gameManager.getLocalPlayerController().getData();
+			localPlayer.addObserver(this);
+			localPlayer.getBattlefield().addObserver(this);
+			localPlayer.getLibrary().addObserver(this);
+			this.gameManager.getLocalGameTable().addObserver(this);
+			
 			try {
-				gameManager.joinGame("JavaFXUITestTable", localPlayer);
+				this.gameManager.joinGame();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
-			gameTable = gameManager.getGameTable();
-			gameTable.addObserver(this);
-			localPlayerController = gameTable.getLocalPlayerController();
-			localPlayerController.addObserver(this);
 		}
 
 		selectedCard = null;
@@ -418,7 +425,7 @@ public class TestFXGameController implements Observer {
 	private void draw() {
 
 		try {
-			localPlayerController.draw();
+			this.gameManager.getLocalPlayerController().draw();
 		} catch (Exception e) {
 
 			Alert alert = new Alert(AlertType.INFORMATION);
@@ -431,38 +438,38 @@ public class TestFXGameController implements Observer {
 	@FXML
 	private void shuffleLibrary() {
 
-		localPlayerController.shuffleLibrary();
+		this.gameManager.getLocalPlayerController().shuffleLibrary();
 	}
 
 	@FXML
 	private void lifeUp() {
 
-		localPlayerController.setLifeCounters(localPlayer.getLifeCounters() + 1);
+		this.gameManager.getLocalPlayerController().setLifeCounters(localPlayer.getLifeCounters() + 1);
 	}
 
 	@FXML
 	private void lifeDown() {
 
-		localPlayerController.setLifeCounters(localPlayer.getLifeCounters() - 1);
+		this.gameManager.getLocalPlayerController().setLifeCounters(localPlayer.getLifeCounters() - 1);
 	}
 
 	@FXML
 	private void poisonUp() {
 
-		localPlayerController.setPoisonCounters(localPlayer.getPoisonCounters() + 1);
+		this.gameManager.getLocalPlayerController().setPoisonCounters(localPlayer.getPoisonCounters() + 1);
 	}
 
 	@FXML
 	private void poisonDown() {
 
-		localPlayerController.setPoisonCounters(localPlayer.getPoisonCounters() - 1);
+		this.gameManager.getLocalPlayerController().setPoisonCounters(localPlayer.getPoisonCounters() - 1);
 	}
 
 	@FXML
 	private void play() {
 
 		if (selectedCard != null && selectedCardOrigin != null) {
-			localPlayerController.play(selectedCard, selectedCardOrigin, true, 0, 0);
+			this.gameManager.getLocalPlayerController().play(selectedCard, selectedCardOrigin, true, 0, 0);
 		}
 	}
 
@@ -470,7 +477,7 @@ public class TestFXGameController implements Observer {
 	private void destroy() {
 
 		if (selectedCard != null && selectedCardOrigin != null) {
-			localPlayerController.destroy(selectedCard, selectedCardOrigin);
+			this.gameManager.getLocalPlayerController().destroy(selectedCard, selectedCardOrigin);
 		}
 	}
 
@@ -478,7 +485,7 @@ public class TestFXGameController implements Observer {
 	private void exile() {
 
 		if (selectedCard != null && selectedCardOrigin != null) {
-			localPlayerController.exile(selectedCard, selectedCardOrigin, true);
+			this.gameManager.getLocalPlayerController().exile(selectedCard, selectedCardOrigin, true);
 		}
 	}
 
@@ -486,7 +493,7 @@ public class TestFXGameController implements Observer {
 	private void backToHand() {
 
 		if (selectedCard != null && selectedCardOrigin != null) {
-			localPlayerController.backToHand(selectedCard, selectedCardOrigin);
+			this.gameManager.getLocalPlayerController().backToHand(selectedCard, selectedCardOrigin);
 		}
 	}
 
@@ -494,7 +501,7 @@ public class TestFXGameController implements Observer {
 	private void libraryTop() {
 
 		if (selectedCard != null && selectedCardOrigin != null) {
-			localPlayerController.backToTopOfLibrary(selectedCard, selectedCardOrigin);
+			this.gameManager.getLocalPlayerController().backToTopOfLibrary(selectedCard, selectedCardOrigin);
 		}
 	}
 
@@ -502,7 +509,7 @@ public class TestFXGameController implements Observer {
 	private void libraryDown() {
 
 		if (selectedCard != null && selectedCardOrigin != null) {
-			localPlayerController.backToBottomOfLibrary(selectedCard, selectedCardOrigin);
+			this.gameManager.getLocalPlayerController().backToBottomOfLibrary(selectedCard, selectedCardOrigin);
 		}
 	}
 
@@ -510,7 +517,7 @@ public class TestFXGameController implements Observer {
 	private void toggleTapped() {
 
 		if (selectedCard != null) {
-			localPlayerController.setTapped(!selectedCard.isTapped(), selectedCard);
+			this.gameManager.getLocalPlayerController().setTapped(!selectedCard.isTapped(), selectedCard);
 		}
 	}
 
@@ -518,7 +525,7 @@ public class TestFXGameController implements Observer {
 	private void toggleVisible() {
 
 		if (selectedCard != null) {
-			localPlayerController.setVisible(!selectedCard.isVisible(), selectedCard);
+			this.gameManager.getLocalPlayerController().setVisible(!selectedCard.isVisible(), selectedCard);
 		}
 	}
 
@@ -529,11 +536,13 @@ public class TestFXGameController implements Observer {
 		final LocalEvent.Type eventType = localEvent.getType();
 		final Player sourcePlayer = localEvent.getPlayer();
 		// final Serializable[] parameters = localEvent.getParameters();
+		
+		final GameTable localGameTable =  this.gameManager.getLocalGameTable();
 
 		switch (eventType) {
 
 			case NEW_GAMETABLE_LOG:
-				this.logsTextArea.setText(this.gameTable.getStringLogs());
+				this.logsTextArea.setText(localGameTable.getStringLogs());
 				break;
 			case ADD_CARD_TO_HAND:
 			case REMOVE_CARD_FROM_HAND:
@@ -542,13 +551,13 @@ public class TestFXGameController implements Observer {
 			case ADD_CARD_TO_LIBRARY:
 			case REMOVE_CARD_FROM_LIBRARY:
 			case SHUFFLE_LIBRARY:
-				if (this.gameTable.isLocalPlayer(sourcePlayer)) {
+				if (localGameTable.isLocalPlayer(sourcePlayer)) {
 					this.libraryTextArea.setText(buildStringFromCardsCollection(this.localPlayer.getLibrary().getCards()));
 				}
 				break;
 			case ADD_CARD_TO_BATTLEFIELD:
 			case REMOVE_CARD_FROM_BATTLEFIELD:
-				if (this.gameTable.isLocalPlayer(sourcePlayer)) {
+				if (localGameTable.isLocalPlayer(sourcePlayer)) {
 					this.battlefieldTableView.setItems(FXCollections.observableList(this.localPlayer.getBattlefield().getCards()));
 				} else {
 					this.opponentBattlefieldTableView.setItems(FXCollections.observableList(sourcePlayer.getBattlefield().getCards()));
@@ -562,8 +571,15 @@ public class TestFXGameController implements Observer {
 			case REMOVE_CARD_FROM_EXILE:
 				this.exileTextArea.setText(buildStringFromCardsCollection(this.localPlayer.getExile()));
 				break;
+			case CLEAR_BATTLEFIELD:
+				if (localGameTable.isLocalPlayer(sourcePlayer)) {
+					this.battlefieldTableView.setItems(FXCollections.emptyObservableList());
+				} else {
+					this.opponentBattlefieldTableView.setItems(FXCollections.emptyObservableList());
+				}
 			default:
 				Logger.getLogger(this.getClass()).info("Event not managed: " + localEvent);
+				throw new RuntimeException("Unmanaged event :" + eventType);
 		}
 	}
 

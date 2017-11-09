@@ -1,7 +1,5 @@
 package asenka.mtgfree.controllers.game;
 
-import java.util.Observer;
-
 import asenka.mtgfree.model.game.Origin;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.Counter;
@@ -13,7 +11,6 @@ import asenka.mtgfree.model.game.Counter;
  * @author asenka
  * @deprecated uses the PlayerController instead
  */
-@SuppressWarnings("serial")
 @Deprecated
 public class CardController extends Controller<Card> {
 
@@ -246,26 +243,4 @@ public class CardController extends Controller<Card> {
 //			throw new RuntimeException(this.controlledData + " is not in the player's library");
 //		}
 //	}
-
-	@Override
-	public void addObserver(Observer observer) {
-
-		super.addObserver(observer);
-		this.playerController.addObserver(observer);
-	}
-
-	@Override
-	public void deleteObserver(Observer observer) {
-
-		super.deleteObserver(observer);
-		this.playerController.deleteObserver(observer);
-	}
-
-	@Override
-	public void deleteObservers() {
-
-		super.deleteObservers();
-		this.playerController.deleteObservers();
-	}
-
 }

@@ -77,7 +77,7 @@ final class TopicReader extends AbstractActiveMQCommunicator {
 						Serializable data = objectMessage.getObject();
 						GameManager.getInstance().manageEvent((NetworkEvent) data);
 
-					} catch (JMSException e) {
+					} catch (Exception e) {
 						Logger.getLogger(this.getClass()).error("Problem to read data from broker.", e);
 					}
 				});

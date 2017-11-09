@@ -214,7 +214,10 @@ public class TestPlayerController extends MtgFreeTest {
 		private TestObserver(PlayerController controller) {
 
 			this.controller = controller;
-			this.controller.addObserver(this);
+			Player player = this.controller.getData();
+			player.addObserver(this);
+			player.getLibrary().addObserver(this);
+			player.getBattlefield().addObserver(this);
 			this.notificationCounter = 0;
 		}
 

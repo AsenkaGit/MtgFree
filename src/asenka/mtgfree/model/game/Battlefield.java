@@ -22,7 +22,6 @@ public class Battlefield extends AbstractGameObject {
 	 */
 	private static final long serialVersionUID = 1007612506971394720L;
 
-
 	/**
 	 * The synchronized list of cards on the battlefield
 	 */

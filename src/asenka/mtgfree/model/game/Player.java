@@ -494,4 +494,6 @@ public class Player extends AbstractGameObject implements Comparable<Player> {
 		// Uses the default collator to sort the players by their names
 		return Collator.getInstance(Locale.getDefault()).compare(this.name, otherPlayer.name);
 	}
+	
+	
 }

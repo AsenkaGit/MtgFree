@@ -49,6 +49,8 @@ public class NetworkEvent extends AbstractEvent {
 		CARD_REMOVE_ASSOCIATED_CARD,
 		CARD_CLEAR_ASSOCIATED_CARDS,
 		SHUFFLE_LIBRARY,
+		CLEAR_GAME_DATA,
+		GAME_TABLE_FULL
 	}
 
 	/**

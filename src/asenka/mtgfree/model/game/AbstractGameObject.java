@@ -12,8 +12,7 @@ import java.util.Vector;
 import javax.management.RuntimeErrorException;
 
 /**
- * The a
- * 
+ * All the object observable during a MTG game extends this class
  * 
  * @author asenka
  * @see Observable
@@ -27,16 +26,21 @@ public abstract class AbstractGameObject extends Observable implements Serializa
 	private static final long serialVersionUID = -1652738694744426771L;
 	
 	/**
+	 * The name of the private <code>"obs"</code> field of the Observable class
+	 */
+	private static final String OBS_FIELD_NAME = "obs";
+	
+	/**
 	 * The private field from Observable : <code>obs</code>. It contains the observers of the game object.
 	 * @see Observable#obs 
 	 */
-	private static Field OBSERVERS_FIELD;
+	private static Field obsField;
 	
 	static {
 		
 		try {
-			OBSERVERS_FIELD = Observable.class.getDeclaredField("obs");
-			OBSERVERS_FIELD.setAccessible(true);
+			obsField = Observable.class.getDeclaredField(OBS_FIELD_NAME);
+			obsField.setAccessible(true);
 		} catch (NoSuchFieldException | SecurityException e) {
 			throw new RuntimeErrorException(new Error(e));
 		}
@@ -50,11 +54,10 @@ public abstract class AbstractGameObject extends Observable implements Serializa
 		
 		try {
 			@SuppressWarnings("unchecked")
-			Vector<Observer> obs = (Vector<Observer>) OBSERVERS_FIELD.get(this);
+			Vector<Observer> obs = (Vector<Observer>) obsField.get(this);
 			return Collections.unmodifiableList(new ArrayList<Observer>(obs));
 		} catch (SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			throw new RuntimeErrorException(new Error(e));
 		}
 	}
-	
 }

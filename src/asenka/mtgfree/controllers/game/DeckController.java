@@ -15,11 +15,6 @@ import asenka.mtgfree.model.game.Deck;
 public class DeckController extends Controller<Deck> {
 
 	/**
-	 * The superclass Controller&lt;T&gt; implements Serializable. The serialization may not be useful here
-	 */
-	private static final long serialVersionUID = 8232303159047672715L;
-
-	/**
 	 * Build a deck controller. This constructor assumes that the deck controller is always 
 	 * used by a human player (see {@link Controller#createNetworkEvents}).
 	 * 
