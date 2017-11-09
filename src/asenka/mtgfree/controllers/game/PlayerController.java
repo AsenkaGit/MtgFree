@@ -2,6 +2,8 @@ package asenka.mtgfree.controllers.game;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 import asenka.mtgfree.communication.GameManager;
 import asenka.mtgfree.events.NetworkEvent;
@@ -34,6 +36,38 @@ public class PlayerController extends Controller<Player> {
 	public PlayerController(Player player, boolean createNetworkEvent) {
 
 		super(player, createNetworkEvent);
+	}
+
+	/**
+	 * 
+	 * @param battleId
+	 * @return
+	 */
+	public Card findCardByBattleId(final long battleId) {
+		
+		final Predicate<Card> battleIdFilter = (card -> card.getBattleId() == battleId);
+		Optional<Card> result = this.controlledData.getLibrary().getCards().stream().filter(battleIdFilter).findFirst();
+		
+		if(!result.isPresent()) {
+			result = this.controlledData.getBattlefield().getCards().stream().filter(battleIdFilter).findFirst();
+			
+			if(!result.isPresent()) {
+				result = this.controlledData.getHand().stream().filter(battleIdFilter).findFirst();
+				
+				if(!result.isPresent()) {
+					result = this.controlledData.getGraveyard().stream().filter(battleIdFilter).findFirst();
+					
+					if(!result.isPresent()) {
+						result = this.controlledData.getExile().stream().filter(battleIdFilter).findFirst();
+					}
+				}
+			}
+		}
+		if(result.isPresent()) {
+			return result.get();
+		} else {
+			throw new RuntimeException("The card with the battle ID : " + battleId + " cannot be found in the data of " + this.controlledData);
+		}
 	}
 
 	/**
@@ -265,14 +299,14 @@ public class PlayerController extends Controller<Player> {
 	 * @see NetworkEvent
 	 */
 	public void setTapped(boolean tapped, Card card) {
-
+		
 		card.setTapped(this.controlledData, tapped);
 
 		if (this.createNetworkEvents) {
 			notifyOtherPlayers(new NetworkEvent((tapped ? CARD_TAP : CARD_UNTAP), this.controlledData, card));
 		}
 	}
-
+	
 	/**
 	 * Tap or untap a list of cards
 	 * 

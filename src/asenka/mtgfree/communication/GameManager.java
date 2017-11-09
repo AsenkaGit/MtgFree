@@ -179,11 +179,10 @@ public final class GameManager {
 
 	/**
 	 * If you are not the player who created the game table, you have to call this method to join the existing game table
-	 * (assuming you know the table name)
+	 * (assuming you know the table name). The method sends a {@link NetworkEvent.Type#REQUEST_GAMETABLE_DATA}
 	 * 
-	 * @throws Exception
-	 * @see NetworkEvent
-	 * @see EventType#REQUEST_JOIN
+	 * @throws Exception if the connection with the broker cannot be initialized properly
+	 * @see NetworkEvent 
 	 */
 	public void joinGame() throws Exception {
 
@@ -227,23 +226,11 @@ public final class GameManager {
 
 			switch (eventType) {
 				case REQUEST_GAMETABLE_DATA:
-					this.localGameTable.setOpponentPlayer(otherPlayer);
-					this.opponentPlayerController = new PlayerController(otherPlayer, false);
-					this.opponentObservers.forEach(observer -> {
-						otherPlayer.addObserver(observer);
-						otherPlayer.getLibrary().addObserver(observer);
-						otherPlayer.getBattlefield().addObserver(observer);
-					});
+					addOpponent(otherPlayer);
 					send(new NetworkEvent(SEND_GAMETABLE_DATA, this.localGameTable.getLocalPlayer()));
 					break;
 				case SEND_GAMETABLE_DATA:
-					this.localGameTable.setOpponentPlayer(otherPlayer);
-					this.opponentPlayerController = new PlayerController(otherPlayer, false);
-					this.opponentObservers.forEach(observer -> {
-						otherPlayer.addObserver(observer);
-						otherPlayer.getLibrary().addObserver(observer);
-						otherPlayer.getBattlefield().addObserver(observer);
-					});
+					addOpponent(otherPlayer);
 					send(new NetworkEvent(PLAYER_JOIN, this.localGameTable.getLocalPlayer()));
 					break;
 				case PLAYER_JOIN:
@@ -294,7 +281,8 @@ public final class GameManager {
 					if (parameters.length > 1) {
 						this.opponentPlayerController.setTapped(flag, GameManager.<Card> convertDataArrayToList(parameters));
 					} else {
-						this.opponentPlayerController.setTapped(flag, (Card) parameters[0]);
+						Card card = this.opponentPlayerController.findCardByBattleId(((Card) parameters[0]).getBattleId());
+						this.opponentPlayerController.setTapped(flag, card);
 					}
 					break;
 				case CARD_SHOW:
@@ -303,7 +291,8 @@ public final class GameManager {
 					if (parameters.length > 1) {
 						this.opponentPlayerController.setVisible(flag, GameManager.<Card> convertDataArrayToList(parameters));
 					} else {
-						this.opponentPlayerController.setVisible(flag, (Card) parameters[0]);
+						Card card = this.opponentPlayerController.findCardByBattleId(((Card) parameters[0]).getBattleId());
+						this.opponentPlayerController.setVisible(flag, card);
 					}
 					break;
 				case CARD_DO_REVEAL:
@@ -312,7 +301,8 @@ public final class GameManager {
 					if (parameters.length > 1) {
 						this.opponentPlayerController.setRevealed(flag, GameManager.<Card> convertDataArrayToList(parameters));
 					} else {
-						this.opponentPlayerController.setRevealed(flag, (Card) parameters[0]);
+						Card card = this.opponentPlayerController.findCardByBattleId(((Card) parameters[0]).getBattleId());
+						this.opponentPlayerController.setRevealed(flag, card);
 					}
 					break;
 				case BACK_TO_LIBRARY: {
@@ -328,7 +318,7 @@ public final class GameManager {
 							this.opponentPlayerController.backToBottomOfLibrary(card, origin);
 							break;
 						default:
-							throw new RuntimeException("Unmanaged library index");
+							throw new RuntimeException("Unmanaged library index : " + index);
 					}
 					break;
 				}
@@ -414,5 +404,23 @@ public final class GameManager {
 		Arrays.stream(data).forEach(serializedData -> list.add((T) serializedData));
 
 		return list;
+	}
+
+	/**
+	 * Update the local game table by setting the opponent data and
+	 * setting properly the controller and view to make the opponent player controller
+	 * working like the local player controller
+	 * 
+	 * @param otherPlayer the opponent of local player on this game table
+	 */
+	private void addOpponent(Player otherPlayer) {
+		
+		this.localGameTable.setOpponentPlayer(otherPlayer);
+		this.opponentPlayerController = new PlayerController(otherPlayer, false);
+		this.opponentObservers.forEach(observer -> {
+			otherPlayer.addObserver(observer);
+			otherPlayer.getLibrary().addObserver(observer);
+			otherPlayer.getBattlefield().addObserver(observer);
+		});
 	}
 }

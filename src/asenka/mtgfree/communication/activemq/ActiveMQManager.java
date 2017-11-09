@@ -56,8 +56,8 @@ public class ActiveMQManager implements Closeable {
 		// this.brokerUrl = "tcp://192.168.1.20:61616"; // Adapt this value to your ActiveMQ URL
 		this.brokerUrl = "tcp://localhost:61616"; // Adapt this value to your ActiveMQ URL
 
-		this.writer = new TopicWriter(brokerUrl, TABLE_NAME_PREFIX + tableName);
-		this.reader = new TopicReader(brokerUrl, TABLE_NAME_PREFIX + tableName);
+		this.writer = new TopicWriter(this.brokerUrl, TABLE_NAME_PREFIX + tableName);
+		this.reader = new TopicReader(this.brokerUrl, TABLE_NAME_PREFIX + tableName);
 	}
 
 	/**
