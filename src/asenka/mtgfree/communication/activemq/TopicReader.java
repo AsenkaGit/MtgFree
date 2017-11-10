@@ -44,12 +44,13 @@ final class TopicReader extends AbstractActiveMQCommunicator {
 	 * 
 	 * @param brokerUrl the broker URL
 	 * @param topicId the name of the topic to subscribe on
+	 * @param gameManager the manager used to manage the network event
 	 */
-	protected TopicReader(String brokerUrl, String topicId) {
+	TopicReader(String brokerUrl, String topicId, final GameManager gameManager) {
 
 		// Initialize the borker params and the connection factory
 		super(brokerUrl, topicId);
-
+		
 		// Prepare the listening thread but it is not started in the constructor
 		this.listeningThread = new Thread(() -> {
 
@@ -75,7 +76,7 @@ final class TopicReader extends AbstractActiveMQCommunicator {
 						// to deal with those data
 						ObjectMessage objectMessage = (ObjectMessage) message;
 						Serializable data = objectMessage.getObject();
-						GameManager.getInstance().manageEvent((NetworkEvent) data);
+						gameManager.manageEvent((NetworkEvent) data);
 
 					} catch (Exception e) {
 						Logger.getLogger(this.getClass()).error("Problem to read data from broker.", e);

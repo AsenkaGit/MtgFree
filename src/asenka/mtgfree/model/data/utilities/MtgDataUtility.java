@@ -73,7 +73,7 @@ public class MtgDataUtility {
 	 * @see Collator
 	 */
 	private static final Comparator<Object> SEARCH_CARD_BY_NAME_COMPARATOR = (Object card, Object name) -> Collator
-		.getInstance(Locale.ENGLISH).compare(((MtgCard) card).getName().toLowerCase(), ((String) name).toLowerCase());
+			.getInstance(Locale.ENGLISH).compare(((MtgCard) card).getName().toLowerCase(), ((String) name).toLowerCase());
 
 	/**
 	 * The unique instance of this class on a JVM. You cannot create more than 1 instance of this object.

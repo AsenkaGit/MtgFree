@@ -436,17 +436,22 @@ public class TestFXGameController implements Observer {
 		});
 	}
 
+	private void displayAlert(Exception e) {
+
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Info !");
+		alert.setHeaderText("Something is wrong...");
+		alert.setContentText(e.getMessage());
+		alert.showAndWait();
+	}
+
 	@FXML
 	private void draw() {
 
 		try {
 			this.gameManager.getLocalPlayerController().draw();
 		} catch (Exception e) {
-
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setTitle("Info !");
-			alert.setHeaderText(e.getMessage());
-			alert.showAndWait();
+			displayAlert(e);
 		}
 	}
 
@@ -483,16 +488,24 @@ public class TestFXGameController implements Observer {
 	@FXML
 	private void play() {
 
-		if (selectedCard != null && selectedCardOrigin != null) {
-			this.gameManager.getLocalPlayerController().play(selectedCard, selectedCardOrigin, true, 0, 0);
+		try {
+			if (selectedCard != null && selectedCardOrigin != null) {
+				this.gameManager.getLocalPlayerController().play(selectedCard, selectedCardOrigin, true, 0, 0);
+			}
+		} catch (Exception e) {
+			displayAlert(e);
 		}
 	}
 
 	@FXML
 	private void destroy() {
 
-		if (selectedCard != null && selectedCardOrigin != null) {
-			this.gameManager.getLocalPlayerController().destroy(selectedCard, selectedCardOrigin);
+		try {
+			if (selectedCard != null && selectedCardOrigin != null) {
+				this.gameManager.getLocalPlayerController().destroy(selectedCard, selectedCardOrigin);
+			}
+		} catch (Exception e) {
+			displayAlert(e);
 		}
 	}
 
@@ -507,40 +520,60 @@ public class TestFXGameController implements Observer {
 	@FXML
 	private void backToHand() {
 
-		if (selectedCard != null && selectedCardOrigin != null) {
-			this.gameManager.getLocalPlayerController().backToHand(selectedCard, selectedCardOrigin);
+		try {
+			if (selectedCard != null && selectedCardOrigin != null) {
+				this.gameManager.getLocalPlayerController().backToHand(selectedCard, selectedCardOrigin);
+			}
+		} catch (Exception e) {
+			displayAlert(e);
 		}
 	}
 
 	@FXML
 	private void libraryTop() {
 
-		if (selectedCard != null && selectedCardOrigin != null) {
-			this.gameManager.getLocalPlayerController().backToTopOfLibrary(selectedCard, selectedCardOrigin);
+		try {
+			if (selectedCard != null && selectedCardOrigin != null) {
+				this.gameManager.getLocalPlayerController().backToTopOfLibrary(selectedCard, selectedCardOrigin);
+			}
+		} catch (Exception e) {
+			displayAlert(e);
 		}
 	}
 
 	@FXML
 	private void libraryDown() {
 
-		if (selectedCard != null && selectedCardOrigin != null) {
-			this.gameManager.getLocalPlayerController().backToBottomOfLibrary(selectedCard, selectedCardOrigin);
+		try {
+			if (selectedCard != null && selectedCardOrigin != null) {
+				this.gameManager.getLocalPlayerController().backToBottomOfLibrary(selectedCard, selectedCardOrigin);
+			}
+		} catch (Exception e) {
+			displayAlert(e);
 		}
 	}
 
 	@FXML
 	private void toggleTapped() {
 
-		if (selectedCard != null) {
-			this.gameManager.getLocalPlayerController().setTapped(!selectedCard.isTapped(), selectedCard);
+		try {
+			if (selectedCard != null) {
+				this.gameManager.getLocalPlayerController().setTapped(!selectedCard.isTapped(), selectedCard);
+			}
+		} catch (Exception e) {
+			displayAlert(e);
 		}
 	}
 
 	@FXML
 	private void toggleVisible() {
 
-		if (selectedCard != null) {
-			this.gameManager.getLocalPlayerController().setVisible(!selectedCard.isVisible(), selectedCard);
+		try {
+			if (selectedCard != null) {
+				this.gameManager.getLocalPlayerController().setVisible(!selectedCard.isVisible(), selectedCard);
+			}
+		} catch (Exception e) {
+			displayAlert(e);
 		}
 	}
 
@@ -620,6 +653,14 @@ public class TestFXGameController implements Observer {
 			case CARD_HIDE:
 				manageCardEvent((Card) observedObject, player);
 				break;
+			case PLAYER_UPDATE_LIFE:
+			case PLAYER_UPDATE_POISON:
+				if (localGameTable.isLocalPlayer((Player) observedObject)) {
+					this.playerDataTextArea.setText(buildPlayerDataString((Player) observedObject));
+				} else {
+					this.opponentDataTextArea.setText(buildPlayerDataString((Player) observedObject));
+				}
+				break;
 			default:
 				Logger.getLogger(this.getClass()).info("Event not managed: " + localEvent);
 				throw new RuntimeException("Unmanaged event :" + eventType);
@@ -627,16 +668,20 @@ public class TestFXGameController implements Observer {
 	}
 
 	private void manageCardEvent(Card card, Player player) {
-		
+
 		if (this.gameManager.getLocalGameTable().isLocalPlayer(player)) {
-			
 			int index = this.cardsInLocalPlayerBattlefield.indexOf(card);
-			this.cardsInLocalPlayerBattlefield.set(index, card);
+
+			if (index >= 0) {
+				this.cardsInLocalPlayerBattlefield.set(index, card);
+			}
 		} else {
 			int index = this.cardsInOpponentPlayerBattlefield.indexOf(card);
-			this.cardsInOpponentPlayerBattlefield.set(index, card);
-		}
 
+			if (index >= 0) {
+				this.cardsInOpponentPlayerBattlefield.set(index, card);
+			}
+		}
 	}
 
 	private void displaySelectedCard() {
@@ -667,16 +712,6 @@ public class TestFXGameController implements Observer {
 		}
 		return result;
 	}
-
-	// private static final String buildLogsString(Collection<AbstractLocalEvent> events) {
-	//
-	// String result = "";
-	//
-	// for (AbstractLocalEvent event : events) {
-	// result += event.toString() + " \n";
-	// }
-	// return result;
-	// }
 
 	private static final String buildPlayerDataString(Player player) {
 

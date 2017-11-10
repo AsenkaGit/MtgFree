@@ -173,7 +173,7 @@ public final class GameManager {
 	 */
 	public void createGame() throws Exception {
 
-		this.brokerManager = new ActiveMQManager(this.localGameTable.getName());
+		this.brokerManager = new ActiveMQManager(this.localGameTable.getName(), this);
 		this.brokerManager.listen();
 	}
 
@@ -182,11 +182,11 @@ public final class GameManager {
 	 * (assuming you know the table name). The method sends a {@link NetworkEvent.Type#REQUEST_GAMETABLE_DATA}
 	 * 
 	 * @throws Exception if the connection with the broker cannot be initialized properly
-	 * @see NetworkEvent 
+	 * @see NetworkEvent
 	 */
 	public void joinGame() throws Exception {
 
-		this.brokerManager = new ActiveMQManager(this.localGameTable.getName());
+		this.brokerManager = new ActiveMQManager(this.localGameTable.getName(), this);
 		this.brokerManager.listen();
 
 		send(new NetworkEvent(REQUEST_GAMETABLE_DATA, this.localGameTable.getLocalPlayer()));
@@ -211,7 +211,7 @@ public final class GameManager {
 	 * @throws Exception if the event cannot be managed properly
 	 * @see NetworkEvent
 	 */
-	public synchronized void manageEvent(NetworkEvent event) throws Exception {
+	public void manageEvent(NetworkEvent event) throws Exception {
 
 		Logger.getLogger(this.getClass()).info(">>>> RECEIVED: " + event);
 
@@ -221,7 +221,7 @@ public final class GameManager {
 
 		// IF the player at the origin of the event is NOT the local player THEN...
 		if (!this.localGameTable.isLocalPlayer(otherPlayer)) {
-			
+
 			boolean flag = false; // boolean value used for events related to boolean state of a card (e.g. tapped)
 
 			switch (eventType) {
@@ -235,7 +235,7 @@ public final class GameManager {
 					break;
 				case PLAYER_JOIN:
 					// TODO
-					break;	
+					break;
 				case PLAYER_LEAVE:
 					this.opponentPlayerController.clearGameData();
 					break;
@@ -328,6 +328,12 @@ public final class GameManager {
 					this.opponentPlayerController.backToHand(card, origin);
 					break;
 				}
+				case PLAYER_UPDATE_LIFE:
+					this.opponentPlayerController.setLifeCounters((Integer) parameters[0]);
+					break;
+				case PLAYER_UPDATE_POISON:
+					this.opponentPlayerController.setPoisonCounters((Integer) parameters[0]);
+					break;	
 				default: // TODO Finish implementing events management
 					throw new RuntimeException(eventType + " is not managed yet by this implementation");
 			}
@@ -407,15 +413,15 @@ public final class GameManager {
 	}
 
 	/**
-	 * Update the local game table by setting the opponent data and
-	 * setting properly the controller and view to make the opponent player controller
-	 * working like the local player controller
+	 * Update the local game table by setting the opponent data and setting properly the controller and view to make the opponent
+	 * player controller working like the local player controller
 	 * 
 	 * @param otherPlayer the opponent of local player on this game table
 	 */
 	private void addOpponent(Player otherPlayer) {
-		
-		// TODO cette méthode est a revoir car elle ne fonctionne que dans le cas ou il n'y a qu'un seul observer... Ce qui ne sera pas le cas en dehors du test
+
+		// TODO cette méthode est a revoir car elle ne fonctionne que dans le cas ou il n'y a qu'un seul observer... Ce qui ne
+		// sera pas le cas en dehors du test
 		this.localGameTable.setOpponentPlayer(otherPlayer);
 		this.opponentPlayerController = new PlayerController(otherPlayer, false);
 		this.opponentObservers.forEach(observer -> {

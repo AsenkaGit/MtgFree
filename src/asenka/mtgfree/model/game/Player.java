@@ -217,8 +217,8 @@ public class Player extends AbstractGameObject implements Comparable<Player> {
 	public void setSelectedDeck(Deck selectedDeck) throws RuntimeException {
 
 		this.selectedDeck = selectedDeck;
-
-		if (this.selectedDeck != null && !this.selectedDeck.equals(selectedDeck)) {
+		
+		if (this.selectedDeck != null) {
 			this.setLibrary(selectedDeck.buildLibrary());
 			super.setChanged();
 			super.notifyObservers(new LocalEvent(PLAYER_SET_SELECTED_DECK, selectedDeck));

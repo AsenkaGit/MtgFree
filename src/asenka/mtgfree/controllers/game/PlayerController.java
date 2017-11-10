@@ -39,9 +39,11 @@ public class PlayerController extends Controller<Player> {
 	}
 
 	/**
+	 * Find a card inside all the player's cards lists (battlefield, library, exile, hand, etc...) with a battle ID
 	 * 
-	 * @param battleId
-	 * @return
+	 * @param battleId a long value for the battle ID
+	 * @throws RuntimeException if the card cannot be found
+	 * @return a card 
 	 */
 	public Card findCardByBattleId(final long battleId) {
 		
@@ -117,11 +119,11 @@ public class PlayerController extends Controller<Player> {
 	 * @param visible do you want to put the card on the battlefield visible or not
 	 * @param x where to add the card on the battlefield (horizontal coordinate)
 	 * @param y where to add the card on the battlefield (vertical coordinate)
-	 * @throws IllegalArgumentException if the origin is {@link Origin#BATTLEFIELD} or {@link Origin#OPPONENT_BATTLEFIELD}
+	 * @throws RuntimeException if the origin is {@link Origin#BATTLEFIELD} or {@link Origin#OPPONENT_BATTLEFIELD}
 	 * @see LocalEvent
 	 * @see NetworkEvent
 	 */
-	public void play(Card card, Origin origin, boolean visible, double x, double y) {
+	public void play(Card card, Origin origin, boolean visible, double x, double y) throws RuntimeException {
 
 		if (origin == Origin.BATTLEFIELD) {
 			throw new IllegalArgumentException("You cannot play a card that is already on the battlefield");
@@ -145,11 +147,11 @@ public class PlayerController extends Controller<Player> {
 	 * @param card the card to put on the exile area
 	 * @param origin where the card was played from (hand, library, battlefield, grave yard)
 	 * @param visible do you want to put the card on the exile area visible or not
-	 * @throws IllegalArgumentException if the origin is {@link Origin#EXILE} or {@link Origin#OPPONENT_BATTLEFIELD}
+	 * @throws RuntimeException if the origin is {@link Origin#EXILE} or {@link Origin#OPPONENT_BATTLEFIELD}
 	 * @see LocalEvent
 	 * @see NetworkEvent
 	 */
-	public void exile(Card card, Origin origin, boolean visible) {
+	public void exile(Card card, Origin origin, boolean visible) throws RuntimeException {
 
 		if (origin == Origin.EXILE) {
 			throw new IllegalArgumentException("You cannot exile a card that is already exiled");
@@ -173,13 +175,13 @@ public class PlayerController extends Controller<Player> {
 	 * <li>visible = <code>true</code></li>
 	 * </ul>
 	 * 
-	 * @throws IllegalArgumentException if the origin is {@link Origin#GRAVEYARD} or {@link Origin#OPPONENT_BATTLEFIELD}
+	 * @throws RuntimeException if the origin is {@link Origin#GRAVEYARD} or {@link Origin#OPPONENT_BATTLEFIELD}
 	 * @param card the card to put on the grave yard
 	 * @param origin where the card was played from (hand, library, battlefield, exile area)
 	 * @see LocalEvent
 	 * @see NetworkEvent
 	 */
-	public void destroy(Card card, Origin origin) {
+	public void destroy(Card card, Origin origin) throws RuntimeException {
 
 		if (origin == Origin.GRAVEYARD) {
 			throw new IllegalArgumentException("You cannot destroy a card that is already in the graveyard");
@@ -206,11 +208,11 @@ public class PlayerController extends Controller<Player> {
 	 * 
 	 * @param card the card to put on the hand
 	 * @param origin where the card was played from (grave yard, library, battlefield, exile area)
-	 * @throws IllegalArgumentException if the origin is {@link Origin#HAND} or {@link Origin#OPPONENT_BATTLEFIELD}
+	 * @throws RuntimeException if the origin is {@link Origin#HAND} or {@link Origin#OPPONENT_BATTLEFIELD}
 	 * @see LocalEvent
 	 * @see NetworkEvent
 	 */
-	public void backToHand(Card card, Origin origin) {
+	public void backToHand(Card card, Origin origin) throws RuntimeException {
 
 		if (origin == Origin.HAND) {
 			throw new IllegalArgumentException("You cannot send back to hand a card that is already in the player's hand");
@@ -237,11 +239,11 @@ public class PlayerController extends Controller<Player> {
 	 * 
 	 * @param card the card to send back to library
 	 * @param origin where the card was before
-	 * @throws IllegalArgumentException if the origin is {@link Origin#LIBRARY} or {@link Origin#OPPONENT_BATTLEFIELD}
+	 * @throws RuntimeException if the origin is {@link Origin#LIBRARY} or {@link Origin#OPPONENT_BATTLEFIELD}
 	 * @see LocalEvent
 	 * @see NetworkEvent
 	 */
-	public void backToTopOfLibrary(Card card, Origin origin) {
+	public void backToTopOfLibrary(Card card, Origin origin) throws RuntimeException {
 
 		if (origin == Origin.LIBRARY) {
 			throw new IllegalArgumentException("You cannot send back to library a card that is already in the player's library");
@@ -268,11 +270,11 @@ public class PlayerController extends Controller<Player> {
 	 * 
 	 * @param card the card to send back to library
 	 * @param origin where the card was before
-	 * @throws IllegalArgumentException if the origin is {@link Origin#LIBRARY} or {@link Origin#OPPONENT_BATTLEFIELD}
+	 * @throws RuntimeException if the origin is {@link Origin#LIBRARY} or {@link Origin#OPPONENT_BATTLEFIELD}
 	 * @see LocalEvent
 	 * @see NetworkEvent
 	 */
-	public void backToBottomOfLibrary(Card card, Origin origin) {
+	public void backToBottomOfLibrary(Card card, Origin origin) throws RuntimeException {
 
 		if (origin == Origin.LIBRARY) {
 			throw new IllegalArgumentException("You cannot send back to library a card that is already in the player's library");
@@ -613,35 +615,4 @@ public class PlayerController extends Controller<Player> {
 			throw new RuntimeException("Network issue", e);
 		}
 	}
-
-	// /**
-	// * Add any type of card to the battlefield without any checking. This method should be used only for token cards and copy of
-	// * existing cards on the battlefield.
-	// *
-	// * @param card the card to add
-	// */
-	// public void addCardToBattlefield(Card card) {
-	//
-	// this.controlledData.getBattlefield().add(this.controlledData, card);
-	//
-	// if (this.createNetworkEvents) {
-	// notifyNetworkObserver(new NetworkEvent(this.controlledData, ADD_TO_BATTLEFIELD, card));
-	// }
-	// }
-
-	// /**
-	// * Remove any type of card from the battlefield without any checking. This method should be used only for token cards and
-	// copy
-	// * of existing cards on the battlefield.
-	// *
-	// * @param card the card to remove
-	// */
-	// public void removeCardFromBattlefield(Card card) throws Exception {
-	//
-	// this.controlledData.getBattlefield().remove(this.controlledData, card);
-	//
-	// if (this.createNetworkEvents) {
-	// notifyNetworkObserver(new NetworkEvent(this.controlledData, REMOVE_FROM_BATTLEFIELD, card));
-	// }
-	// }
 }
