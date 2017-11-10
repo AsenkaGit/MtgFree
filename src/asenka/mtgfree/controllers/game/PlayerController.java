@@ -498,7 +498,17 @@ public class PlayerController extends Controller<Player> {
 	 * @see NetworkEvent
 	 */
 	public void clearGameData() {
+		
+		// Delete the observers of all the cards
+		this.controlledData.getLibrary().getCards().forEach(card -> card.deleteObservers());
+		this.controlledData.getHand().forEach(card -> card.deleteObservers());
+		this.controlledData.getBattlefield().getCards().forEach(card -> card.deleteObservers());
+		this.controlledData.getGraveyard().forEach(card -> card.deleteObservers());
+		this.controlledData.getExile().forEach(card -> card.deleteObservers());
 
+		// clear the cards from the player
+		this.controlledData.getLibrary().clear(this.controlledData);
+		this.controlledData.getBattlefield().clear(this.controlledData);
 		this.controlledData.clearExile();
 		this.controlledData.clearGraveyard();
 		this.controlledData.clearHand();

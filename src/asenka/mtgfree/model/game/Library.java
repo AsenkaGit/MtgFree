@@ -292,6 +292,7 @@ public class Library extends AbstractGameObject {
 	/**
 	 * Clear the library. The method creates a LocalEvent to notify the observers of the update on the library.
 	 * 
+	 * @param player the player performing the action. Used to create the event
 	 * @see LocalEvent
 	 */
 	public void clear(Player player) {

@@ -563,12 +563,16 @@ public class TestFXGameController implements Observer {
 				break;
 			case ADD_CARD_TO_HAND:
 				if (localGameTable.isLocalPlayer(player != null ? player : (Player) observedObject)) {
-					this.cardsInLocalPlayerHand.add((Card) parameters[0]);
+					Card card = (Card) parameters[0];
+					card.addObserver(this);
+					this.cardsInLocalPlayerHand.add(card);
 				}
 				break;
 			case REMOVE_CARD_FROM_HAND:
 				if (localGameTable.isLocalPlayer(player != null ? player : (Player) observedObject)) {
-					this.cardsInLocalPlayerHand.remove((Card) parameters[0]);
+					Card card = (Card) parameters[0];
+					card.deleteObserver(this);
+					this.cardsInLocalPlayerHand.remove(card);
 				}
 				break;
 			case ADD_CARD_TO_LIBRARY:
@@ -578,20 +582,26 @@ public class TestFXGameController implements Observer {
 					this.libraryTextArea.setText(buildStringFromCardsCollection(this.localPlayer.getLibrary().getCards()));
 				}
 				break;
-			case ADD_CARD_TO_BATTLEFIELD:
+			case ADD_CARD_TO_BATTLEFIELD: {
+				Card card = (Card) parameters[0];
+				card.addObserver(this);
 				if (localGameTable.isLocalPlayer(player)) {
-					this.cardsInLocalPlayerBattlefield.add((Card) parameters[0]);
+					this.cardsInLocalPlayerBattlefield.add(card);
 				} else {
-					this.cardsInOpponentPlayerBattlefield.add((Card) parameters[0]);
+					this.cardsInOpponentPlayerBattlefield.add(card);
 				}
 				break;
-			case REMOVE_CARD_FROM_BATTLEFIELD:
+			}
+			case REMOVE_CARD_FROM_BATTLEFIELD: {
+				Card card = (Card) parameters[0];
+				card.deleteObserver(this);
 				if (localGameTable.isLocalPlayer(player)) {
 					this.cardsInLocalPlayerBattlefield.remove((Card) parameters[0]);
 				} else {
 					this.cardsInOpponentPlayerBattlefield.remove((Card) parameters[0]);
 				}
 				break;
+			}
 			case ADD_CARD_TO_GRAVEYARD:
 			case REMOVE_CARD_FROM_GRAVEYARD:
 				this.graveyardTextArea.setText(buildStringFromCardsCollection(this.localPlayer.getGraveyard()));

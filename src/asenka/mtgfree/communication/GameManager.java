@@ -59,6 +59,7 @@ public final class GameManager {
 	 * The set of observers where the opponent game data will be displayed. The game manager needs to know what are the observers
 	 * used for the opponent to assign them when the opponent model objects arrive
 	 */
+	// TODO c'est un peu bof ca... Il faudrait voir comment mieux gérer les observers de l'adversaire
 	private Set<Observer> opponentObservers;
 
 	/**
@@ -129,7 +130,6 @@ public final class GameManager {
 	}
 
 	/**
-	 * 
 	 * @return the controller for the opponent player. This value is <code>null</code> until another player has join the table
 	 */
 	public PlayerController getOpponentPlayerController() {
@@ -211,7 +211,7 @@ public final class GameManager {
 	 * @throws Exception if the event cannot be managed properly
 	 * @see NetworkEvent
 	 */
-	public void manageEvent(NetworkEvent event) throws Exception {
+	public synchronized void manageEvent(NetworkEvent event) throws Exception {
 
 		Logger.getLogger(this.getClass()).info(">>>> RECEIVED: " + event);
 
@@ -415,6 +415,7 @@ public final class GameManager {
 	 */
 	private void addOpponent(Player otherPlayer) {
 		
+		// TODO cette méthode est a revoir car elle ne fonctionne que dans le cas ou il n'y a qu'un seul observer... Ce qui ne sera pas le cas en dehors du test
 		this.localGameTable.setOpponentPlayer(otherPlayer);
 		this.opponentPlayerController = new PlayerController(otherPlayer, false);
 		this.opponentObservers.forEach(observer -> {
