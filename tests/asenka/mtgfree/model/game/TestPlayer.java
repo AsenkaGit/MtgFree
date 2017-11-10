@@ -65,7 +65,6 @@ public class TestPlayer extends MtgFreeTest {
 		deck.addCardToMain(dataUtility.getMtgCard("Bloodlust Inciter"), 4);
 		deck.addCardToMain(dataUtility.getMtgCard("Brute Strength"), 4);
 
-		playerTest.addAvailableDeck(deck);
 		playerTest.setSelectedDeck(deck);
 		playerTest.setLibrary(deck.buildLibrary());
 

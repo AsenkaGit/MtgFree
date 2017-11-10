@@ -257,7 +257,6 @@ public class TestFXGameController implements Observer {
 		if (createTable) {
 
 			localPlayer = new Player("Bob", battlefield);
-			localPlayer.addAvailableDeck(testDeck);
 			localPlayer.setSelectedDeck(testDeck);
 			localPlayer.setLibrary(library);
 
@@ -281,7 +280,6 @@ public class TestFXGameController implements Observer {
 		} else {
 
 			localPlayer = new Player("Laura", battlefield);
-			localPlayer.addAvailableDeck(testDeck);
 			localPlayer.setSelectedDeck(testDeck);
 			localPlayer.setLibrary(library);
 

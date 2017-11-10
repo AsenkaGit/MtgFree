@@ -84,7 +84,6 @@ public class TestPlayerController extends MtgFreeTest {
 		Battlefield battlefield = new Battlefield();
 
 		Player player = new Player("Baboulinet", battlefield);
-		player.addAvailableDeck(testDeck);
 		player.setSelectedDeck(testDeck);
 		player.setLibrary(library);
 

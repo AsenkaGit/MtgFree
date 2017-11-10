@@ -86,7 +86,6 @@ public class TestCardController extends MtgFreeTest {
 		Battlefield battlefield = new Battlefield();
 
 		Player player = new Player("Dark sheep", battlefield);
-		player.addAvailableDeck(testDeck);
 		player.setSelectedDeck(testDeck);
 		try {
 			player.setLibrary(testDeck.buildLibrary());

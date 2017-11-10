@@ -3,11 +3,8 @@ package asenka.mtgfree.model.game;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
-
 import asenka.mtgfree.events.LocalEvent;
 import static asenka.mtgfree.events.LocalEvent.Type.*;
 
@@ -52,11 +49,6 @@ public class Player extends AbstractGameObject implements Comparable<Player> {
 	 * The player's selected deck
 	 */
 	private Deck selectedDeck;
-
-	/**
-	 * The player's available decks
-	 */
-	private Set<Deck> availableDecks;
 
 	/**
 	 * The player's hand
@@ -106,7 +98,6 @@ public class Player extends AbstractGameObject implements Comparable<Player> {
 		this.battlefield = battlefield;
 		this.lifeCounters = INITIAL_LIFE_COUNTERS;
 		this.poisonCounters = INITIAL_POISON_COUNTERS;
-		this.availableDecks = new HashSet<Deck>();
 		this.hand = new ArrayList<Card>();
 		this.graveyard = new ArrayList<Card>();
 		this.exile = new ArrayList<Card>();
@@ -219,7 +210,7 @@ public class Player extends AbstractGameObject implements Comparable<Player> {
 	/**
 	 * Set the selected deck used by the player to play. The player's library is automatically updated
 	 * 
-	 * @param selectedDeck the deck to use
+	 * @param selectedDeck the deck to use. This deck is transform into the player's library
 	 * @throws RuntimeException if the library cannot be built from the new selected deck
 	 * @see LocalEvent
 	 */
@@ -240,14 +231,6 @@ public class Player extends AbstractGameObject implements Comparable<Player> {
 	public Battlefield getBattlefield() {
 
 		return this.battlefield;
-	}
-
-	/**
-	 * @return the set of available decks of the player
-	 */
-	public Set<Deck> getAvailableDecks() {
-
-		return Collections.unmodifiableSet(this.availableDecks);
 	}
 
 	/**
@@ -272,22 +255,6 @@ public class Player extends AbstractGameObject implements Comparable<Player> {
 	public List<Card> getExile() {
 
 		return Collections.unmodifiableList(this.exile);
-	}
-
-	/**
-	 * Add a deck to the available decks of this player
-	 * 
-	 * @param deck the deck to add
-	 * @see LocalEvent
-	 */
-	public void addAvailableDeck(Deck deck) {
-
-		if (deck != null) {
-
-			this.availableDecks.add(deck);
-			super.setChanged();
-			super.notifyObservers(new LocalEvent(PLAYER_ADD_DECK, deck));
-		}
 	}
 
 	/**
@@ -335,24 +302,6 @@ public class Player extends AbstractGameObject implements Comparable<Player> {
 			this.exile.add(card);
 			super.setChanged();
 			super.notifyObservers(new LocalEvent(ADD_CARD_TO_EXILE, card));
-		}
-	}
-
-	/**
-	 * Removes a card from the hand area of the player
-	 * 
-	 * @param deck the deck to remove
-	 * @return <code>true</code> if the deck was in the player list of available decks
-	 * @see LocalEvent
-	 */
-	public boolean removeAvailableDeck(Deck deck) {
-
-		if (this.availableDecks.remove(deck)) {
-			super.setChanged();
-			super.notifyObservers(new LocalEvent(PLAYER_REMOVE_DECK, deck));
-			return true;
-		} else {
-			return false;
 		}
 	}
 
