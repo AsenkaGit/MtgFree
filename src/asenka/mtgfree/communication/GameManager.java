@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import asenka.mtgfree.communication.activemq.ActiveMQManager;
 import asenka.mtgfree.controllers.game.PlayerController;
 import asenka.mtgfree.events.NetworkEvent;
+import asenka.mtgfree.events.NetworkEvent.Type;
 import asenka.mtgfree.model.game.AbstractGameObject;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.GameTable;
@@ -226,9 +227,16 @@ public final class GameManager {
 
 			switch (eventType) {
 				case REQUEST_GAMETABLE_DATA:
-					addOpponent(otherPlayer);
-					send(new NetworkEvent(SEND_GAMETABLE_DATA, this.localGameTable.getLocalPlayer()));
+					
+					if(this.localGameTable.numberOfPlayers() < 2) {
+						addOpponent(otherPlayer);
+						send(new NetworkEvent(SEND_GAMETABLE_DATA, this.localGameTable.getLocalPlayer()));
+					} else {
+						send(new NetworkEvent(REJECT_JOINING_REQUEST, this.localGameTable.getLocalPlayer()));
+					}
 					break;
+				case REJECT_JOINING_REQUEST:
+					throw new RuntimeException("You cannot join the game table. ");
 				case SEND_GAMETABLE_DATA:
 					addOpponent(otherPlayer);
 					send(new NetworkEvent(PLAYER_JOIN, this.localGameTable.getLocalPlayer()));

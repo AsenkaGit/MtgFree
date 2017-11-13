@@ -23,6 +23,7 @@ public class NetworkEvent extends AbstractEvent {
 	 */
 	public enum Type {
 		REQUEST_GAMETABLE_DATA,
+		REJECT_JOINING_REQUEST,
 		SEND_GAMETABLE_DATA,
 		PLAYER_JOIN,
 		PLAYER_LEAVE,

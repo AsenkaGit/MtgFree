@@ -96,7 +96,7 @@ final class TopicReader extends AbstractActiveMQCommunicator {
 		});
 
 		// Add a name to the thread and an exception handler to make sure that all the exceptions are at least logged
-		this.listeningThread.setName("Thread ActiveMQ subscription [" + super.brokerUrl + ", " + super.topicId + "]");
+		this.listeningThread.setName("Read ActiveMQ Thread [" + super.brokerUrl + ", " + super.topicId + "]");
 		this.listeningThread.setUncaughtExceptionHandler(
 			(thread, exception) -> Logger.getLogger(this.getClass()).error("Error while listening the broker", exception));
 	}
@@ -120,14 +120,14 @@ final class TopicReader extends AbstractActiveMQCommunicator {
 		try {
 			this.stopListening = true;
 			
-			if (connection != null) {
-				connection.close();
+			if (super.connection != null) {
+				super.connection.close();
 			}
-			if (session != null) {
-				session.close();
+			if (super.session != null) {
+				super.session.close();
 			}
-			if (subscriber != null) {
-				subscriber.close();
+			if (this.subscriber != null) {
+				this.subscriber.close();
 			}
 		} catch (JMSException ex) {
 			throw new RuntimeErrorException(new Error(ex));

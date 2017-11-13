@@ -24,7 +24,7 @@ public class TestUIApplication extends Application {
 		this.primaryStage.setTitle("Mtg Free [TEST GAME]");
 		
 		initRootLayout();
-
+		
 	}
 	
 	@Override
