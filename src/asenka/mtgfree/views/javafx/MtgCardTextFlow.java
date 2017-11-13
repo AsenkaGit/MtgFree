@@ -6,24 +6,40 @@ import java.util.List;
 import java.util.Map;
 
 import asenka.mtgfree.model.data.MtgCard;
-import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class RichCardText extends Group {
-	
+/**
+ * Use this class to display the rules text of a magic card or its mana cost. It replaces the
+ * string representation of the mana cost with images.
+ * 
+ * @author asenka
+ * @see TextFlow
+ */
+public class MtgCardTextFlow extends TextFlow {
+
+	/**
+	 * The opening char of the text representation of the mtg symbols (e.g. "{2}", "{U}")
+	 */
 	private static final char OPENING_CHAR = '{';
+
+	/**
+	 * The closing char of the text representation of the mtg symbols (e.g. "{2}", "{U}")
+	 */
 	private static final char CLOSING_CHAR = '}';
-	
+
+	/**
+	 * Contains the image symbols (values) associated with their text representation (keys)
+	 */
 	private static Map<String, Image> mtgSymbols;
-	
+
 	static {
-		
+
 		mtgSymbols = new HashMap<String, Image>();
-		
-		for(int i = 0; i <= 16; i++) {
+
+		for (int i = 0; i <= 16; i++) {
 			mtgSymbols.put("{" + i + "}", new Image("file:./resources/images/mtg/icons/" + i + ".jpg"));
 		}
 		mtgSymbols.put("{G}", new Image("file:./resources/images/mtg/icons/g.jpg"));
@@ -33,59 +49,57 @@ public class RichCardText extends Group {
 		mtgSymbols.put("{W}", new Image("file:./resources/images/mtg/icons/w.jpg"));
 		mtgSymbols.put("{T}", new Image("file:./resources/images/mtg/icons/tap.jpg"));
 	}
-	
-	private MtgCard cardData;
-
-	private TextFlow textFlow;
-
-	
-	public RichCardText(MtgCard card) {
-		
-		this.textFlow = new TextFlow();
-		this.getChildren().add(textFlow);
-		this.setCardData(card);
-
-	}
-	
 
 	/**
+	 * Build a MtgCardTextFlow 
+	 * @param card the card data
+	 * @see MtgCard
+	 */
+	public MtgCardTextFlow(MtgCard card) {
+
+		super();
+		this.setCardData(card);
+	}
+
+	/**
+	 * Change the text to display with the data from <code>cardDate</code>
 	 * @param cardData the cardData to set
 	 */
 	public void setCardData(MtgCard cardData) {
 
-		this.cardData = cardData;
-		
-		for(String ruleElement : buildRulesTextList(this.cardData.getText())) {
-			
-			if(mtgSymbols.containsKey(ruleElement)) {
-				this.textFlow.getChildren().add(new ImageView(mtgSymbols.get(ruleElement)));
+		for (String ruleElement : buildRulesTextList(cardData.getText())) {
+
+			final Image symbol = mtgSymbols.get(ruleElement);
+
+			if (symbol != null) {
+				super.getChildren().add(new ImageView(symbol));
 			} else {
-				this.textFlow.getChildren().add(new Text(ruleElement));
+				super.getChildren().add(new Text(ruleElement));
 			}
 		}
-		
-		Text flavorText = new Text("\n" + this.cardData.getFlavor());
+		Text flavorText = new Text("\n\n" + cardData.getFlavor());
 		flavorText.setStyle("-fx-font-style: italic");
-		this.textFlow.getChildren().add(flavorText);
+		super.getChildren().add(flavorText);
 	}
-	
+
 	/**
-	 * 
-	 * @param rulesText
-	 * @return
-	 */
+	 * Use a mtg card rules text to build a list of string elements that separates the regular text of
+	 * the MTG symbols alias (<code>"{G}"</code> for green mana for example).
+	 * @param rulesText a string with the rules text from a mtg card
+	 * @return a list of strings
+	 */ 
 	private static List<String> buildRulesTextList(String rulesText) {
-		
+
 		List<String> rulesTextList = new ArrayList<String>();
 		StringBuffer buf = new StringBuffer();
 
-		for(char c : rulesText.toCharArray()) {	
+		for (char c : rulesText.toCharArray()) {
 
-			if(c == OPENING_CHAR && buf.length() > 0) {
+			if (c == OPENING_CHAR && buf.length() > 0) {
 				rulesTextList.add(buf.toString());
 				buf = new StringBuffer();
 				buf.append(c);
-				
+
 			} else if (c == CLOSING_CHAR) {
 				buf.append(c);
 				rulesTextList.add(buf.toString());
@@ -95,7 +109,7 @@ public class RichCardText extends Group {
 			}
 		}
 		rulesTextList.add(buf.toString());
-		
+
 		return rulesTextList;
 	}
 }

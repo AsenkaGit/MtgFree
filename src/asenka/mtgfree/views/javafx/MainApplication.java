@@ -13,8 +13,8 @@ public class MainApplication extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 
-//		RichCardText rct = new RichCardText(MtgDataUtility.getInstance().getMtgCard("Ezuri, Renegade Leader"));
-		RichCardText rct = new RichCardText(MtgDataUtility.getInstance().getMtgCard("glorybringer"));
+		MtgCardTextFlow rct = new MtgCardTextFlow(MtgDataUtility.getInstance().getMtgCard("Ezuri, Renegade Leader"));
+//		RichCardText rct = new RichCardText(MtgDataUtility.getInstance().getMtgCard("glorybringer"));
 
 		Scene scene = new Scene(rct);
 		primaryStage.setScene(scene);
