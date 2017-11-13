@@ -15,7 +15,6 @@ import org.apache.log4j.Logger;
 import asenka.mtgfree.communication.activemq.ActiveMQManager;
 import asenka.mtgfree.controllers.game.PlayerController;
 import asenka.mtgfree.events.NetworkEvent;
-import asenka.mtgfree.events.NetworkEvent.Type;
 import asenka.mtgfree.model.game.AbstractGameObject;
 import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.model.game.GameTable;
