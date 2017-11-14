@@ -13,7 +13,7 @@ public class MainApplication extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 
-		ScrollPane pane = new ScrollPane(new MtgSymbolsTextFlow("Tempting offer — Return a creature card from your graveyard to the battlefield. Each opponent may return a creature card from his or her graveyard to the battlefield. For each player who does, return a creature card from your graveyard to the battlefield."));
+		ScrollPane pane = new ScrollPane(new JFXMagicText("Tempting offer — Return a creature card from your graveyard to the battlefield. Each opponent may return a creature card from his or her graveyard to the battlefield. For each player who does, return a creature card from your graveyard to the battlefield."));
 		
 
 		Scene scene = new Scene(pane);

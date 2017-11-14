@@ -20,7 +20,7 @@ import javafx.scene.text.Text;
  * @author asenka
  * @see FlowPane
  */
-public class MtgSymbolsTextFlow extends FlowPane {
+public class JFXMagicText extends FlowPane {
 
 	/**
 	 * The opening char of the text representation of the mtg symbols (e.g. <code>"{2}", "{U}"</code>)
@@ -62,19 +62,19 @@ public class MtgSymbolsTextFlow extends FlowPane {
 	}
 
 	/**
-	 * Build an empty text flow
+	 * Build an empty magic text
 	 */
-	public MtgSymbolsTextFlow() {
+	public JFXMagicText() {
 
 		this("");
 	}
 
 	/**
-	 * Build a MtgSymbolsTextFlow
+	 * Build a JFXMagicText
 	 * 
 	 * @param textWithSymbols the card data
 	 */
-	public MtgSymbolsTextFlow(String textWithSymbols) {
+	public JFXMagicText(final String textWithSymbols) {
 
 		super();
 		this.setText(textWithSymbols);
@@ -85,7 +85,7 @@ public class MtgSymbolsTextFlow extends FlowPane {
 	 * 
 	 * @param textWithSymbols the text to display.
 	 */
-	public void setText(String textWithSymbols) {
+	public void setText(final String textWithSymbols) {
 
 		ObservableList<Node> children = super.getChildren();
 
