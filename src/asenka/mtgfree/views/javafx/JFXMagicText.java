@@ -36,6 +36,11 @@ public class JFXMagicText extends FlowPane {
 	 * The separator used to create the list of words in the text. It is a simple string with one character : <code>" "</code>
 	 */
 	private static final String SPACE_SEPARATOR = " ";
+	
+	/**
+	 * 
+	 */
+	private static final String LINE_SEPARATOR =  "\n";
 
 	/**
 	 * Contains the image symbols (values) associated with their text representation (keys)
@@ -116,6 +121,8 @@ public class JFXMagicText extends FlowPane {
 
 		List<String> rulesTextList = new ArrayList<String>();
 		StringBuffer buffer = new StringBuffer();
+
+		textWithSymbols= textWithSymbols.replaceAll("\n", " \n");
 
 		for (char c : textWithSymbols.toCharArray()) {
 
