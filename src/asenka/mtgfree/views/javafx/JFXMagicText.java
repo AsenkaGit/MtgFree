@@ -51,25 +51,25 @@ public class JFXMagicText extends VBox {
 	/**
 	 * Contains the image symbols (values) associated with their text representation (keys)
 	 */
-	private static Map<String, Image> mtgSymbols;
+	private static final Map<String, Image> MTG_SYMBOLS;
 
 	static {
 		// TODO Improves the symbols loading images. This is only a basic implementation (a preferences file would be better)
 
-		mtgSymbols = new HashMap<String, Image>();
+		MTG_SYMBOLS = new HashMap<String, Image>();
 
 		for (int i = 0; i <= 16; i++) {
-			mtgSymbols.put("{" + i + "}", new Image("file:./resources/images/mtg/icons/" + i + ".jpg"));
+			MTG_SYMBOLS.put("{" + i + "}", new Image("file:./resources/images/mtg/icons/" + i + ".jpg"));
 		}
-		mtgSymbols.put("{X}", new Image("file:./resources/images/mtg/icons/x.jpg"));
-		mtgSymbols.put("{Y}", new Image("file:./resources/images/mtg/icons/y.jpg"));
-		mtgSymbols.put("{Z}", new Image("file:./resources/images/mtg/icons/z.jpg"));
-		mtgSymbols.put("{G}", new Image("file:./resources/images/mtg/icons/g.jpg"));
-		mtgSymbols.put("{B}", new Image("file:./resources/images/mtg/icons/b.jpg"));
-		mtgSymbols.put("{U}", new Image("file:./resources/images/mtg/icons/u.jpg"));
-		mtgSymbols.put("{R}", new Image("file:./resources/images/mtg/icons/r.jpg"));
-		mtgSymbols.put("{W}", new Image("file:./resources/images/mtg/icons/w.jpg"));
-		mtgSymbols.put("{T}", new Image("file:./resources/images/mtg/icons/tap.jpg"));
+		MTG_SYMBOLS.put("{X}", new Image("file:./resources/images/mtg/icons/x.jpg"));
+		MTG_SYMBOLS.put("{Y}", new Image("file:./resources/images/mtg/icons/y.jpg"));
+		MTG_SYMBOLS.put("{Z}", new Image("file:./resources/images/mtg/icons/z.jpg"));
+		MTG_SYMBOLS.put("{G}", new Image("file:./resources/images/mtg/icons/g.jpg"));
+		MTG_SYMBOLS.put("{B}", new Image("file:./resources/images/mtg/icons/b.jpg"));
+		MTG_SYMBOLS.put("{U}", new Image("file:./resources/images/mtg/icons/u.jpg"));
+		MTG_SYMBOLS.put("{R}", new Image("file:./resources/images/mtg/icons/r.jpg"));
+		MTG_SYMBOLS.put("{W}", new Image("file:./resources/images/mtg/icons/w.jpg"));
+		MTG_SYMBOLS.put("{T}", new Image("file:./resources/images/mtg/icons/tap.jpg"));
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class JFXMagicText extends VBox {
 		// For each text element or magic symbol in the text
 		for (String textOrSymbol : splitTextAndSymbols(textWithSymbols)) {
 
-			final Image symbolImage = mtgSymbols.get(textOrSymbol);
+			final Image symbolImage = MTG_SYMBOLS.get(textOrSymbol);
 
 			if (symbolImage != null) {
 				currentFlowPane.getChildren().add(new ImageView(symbolImage));
