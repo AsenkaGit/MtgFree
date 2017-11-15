@@ -5,7 +5,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 
@@ -18,13 +17,11 @@ public class MainApplication extends Application {
 		ScrollPane pane = new ScrollPane(text);
 		pane.setHbarPolicy(ScrollBarPolicy.NEVER);
 		pane.setFitToWidth(true);
-		
+
 		Scene scene = new Scene(pane);
 		primaryStage.setScene(scene);
 		primaryStage.show();
     }
-
-	
 	
 	public static void main(String[] args) {
 
