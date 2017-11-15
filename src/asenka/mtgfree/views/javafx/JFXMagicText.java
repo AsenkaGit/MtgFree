@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 /**
@@ -18,9 +19,8 @@ import javafx.scene.text.Text;
  * cost with images.
  * 
  * @author asenka
- * @see FlowPane
  */
-public class JFXMagicText extends FlowPane {
+public class JFXMagicText extends VBox {
 
 	/**
 	 * The opening char of the text representation of the mtg symbols (e.g. <code>"{2}", "{U}"</code>)
@@ -36,6 +36,17 @@ public class JFXMagicText extends FlowPane {
 	 * The separator used to create the list of words in the text. It is a simple string with one character : <code>" "</code>
 	 */
 	private static final String SPACE_SEPARATOR = " ";
+
+	/**
+	 * The string with the line break used in the text. Usually it is <code>"\n"</code>
+	 */
+	private static final String LINE_BREAK = "\n";
+	
+	/**
+	 * An JavaFX Text component with an empty Text
+	 * @see Text
+	 */
+	private static final Text EMPTY_TEXT = new Text("");
 
 	/**
 	 * Contains the image symbols (values) associated with their text representation (keys)
@@ -74,7 +85,7 @@ public class JFXMagicText extends FlowPane {
 	 * 
 	 * @param textWithSymbols the card data
 	 */
-	public JFXMagicText(final String textWithSymbols) {
+	public JFXMagicText(String textWithSymbols) {
 
 		super();
 		this.setText(textWithSymbols);
@@ -85,23 +96,35 @@ public class JFXMagicText extends FlowPane {
 	 * 
 	 * @param textWithSymbols the text to display.
 	 */
-	public void setText(final String textWithSymbols) {
+	public void setText(String textWithSymbols) {
 
+		// The currentFlowPane variable is used to display a line. If the text does not contains line break, only one flow pane will be used
+		FlowPane currentFlowPane = new FlowPane();
+		
+		// Object used to add the flow pane(s) to the JFXMagicText
 		ObservableList<Node> children = super.getChildren();
 
+		// If the JFXMagicText contains at least one child, the list of children is cleared
 		if (children.size() > 0) {
 			children.clear();
 		}
+		
+		// For each text element or magic symbol in the text
 		for (String textOrSymbol : splitTextAndSymbols(textWithSymbols)) {
 
 			final Image symbolImage = mtgSymbols.get(textOrSymbol);
 
 			if (symbolImage != null) {
-				children.add(new ImageView(symbolImage));
+				currentFlowPane.getChildren().add(new ImageView(symbolImage));
+			} else if (LINE_BREAK.equals(textOrSymbol)) {
+				children.add(currentFlowPane.getChildren().isEmpty() ? new FlowPane(EMPTY_TEXT): currentFlowPane);
+				currentFlowPane = new FlowPane();
 			} else {
-				children.add(new Text(textOrSymbol + SPACE_SEPARATOR));
+				Text text = new Text(textOrSymbol + SPACE_SEPARATOR);
+				currentFlowPane.getChildren().add(text);
 			}
 		}
+		children.add(currentFlowPane);
 	}
 
 	/**
@@ -109,16 +132,21 @@ public class JFXMagicText extends FlowPane {
 	 * for green mana for example).
 	 * 
 	 * @param textWithSymbols a string that may contains symbols (e.g. <code>"{2}", "{U}"</code>)
-	 * @return a list where every words and mtg symbols are separated. The size of the list is equal to the number of symbols and the
-	 *         number of words in the original string
+	 * @return a list where every words and mtg symbols are separated. The size of the list is equal to the number of symbols and
+	 *         the number of words in the original string
 	 */
 	private static List<String> splitTextAndSymbols(String textWithSymbols) {
 
 		List<String> rulesTextList = new ArrayList<String>();
 		StringBuffer buffer = new StringBuffer();
 
-		for (char c : textWithSymbols.toCharArray()) {
+		// Prepare the string to easily detect the line breaks (add spaces around the line brakes)
+		// The line breaks are double to have more space between paragraphs when the text is displayed
+		String preparedString = textWithSymbols.replaceAll(LINE_BREAK, (SPACE_SEPARATOR + LINE_BREAK + SPACE_SEPARATOR + LINE_BREAK + SPACE_SEPARATOR));
 
+		// for each character in the prepared string
+		for (char c : preparedString.toCharArray()) {
+			
 			if (c == OPENING_CHAR && buffer.length() > 0) {
 				rulesTextList.addAll(Arrays.asList(buffer.toString().split(SPACE_SEPARATOR)));
 				buffer = new StringBuffer();
@@ -133,7 +161,6 @@ public class JFXMagicText extends FlowPane {
 			}
 		}
 		rulesTextList.addAll(Arrays.asList(buffer.toString().split(SPACE_SEPARATOR)));
-
 		return rulesTextList;
 	}
 }
