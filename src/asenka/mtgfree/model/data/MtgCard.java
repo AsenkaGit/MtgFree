@@ -31,7 +31,7 @@ public class MtgCard implements Serializable, Comparable<MtgCard> {
 	private static final long serialVersionUID = -1538874138546478924L;
 
 	/**
-	 * A default collator used in the compareTo method to sort the cards according to their names
+	 * A default collator used in the compareTo method to sort the cards according to their names. 
 	 */
 	private static final Collator COLLATOR = Collator.getInstance(Locale.ENGLISH);
 

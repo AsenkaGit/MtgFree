@@ -41,9 +41,10 @@ public class JFXMagicText extends VBox {
 	 * The string with the line break used in the text. Usually it is <code>"\n"</code>
 	 */
 	private static final String LINE_BREAK = "\n";
-	
+
 	/**
 	 * An JavaFX Text component with an empty Text
+	 * 
 	 * @see Text
 	 */
 	private static final Text EMPTY_TEXT = new Text("");
@@ -96,11 +97,17 @@ public class JFXMagicText extends VBox {
 	 * 
 	 * @param textWithSymbols the text to display.
 	 */
-	public void setText(String textWithSymbols) {
+	public void setText(String textWithSymbols) throws IllegalArgumentException {
 
-		// The currentFlowPane variable is used to display a line. If the text does not contains line break, only one flow pane will be used
+		// If the parameter is null, the text display is an empty string
+		if (textWithSymbols == null) {
+			textWithSymbols = "";
+		}
+
+		// The currentFlowPane variable is used to display a line. If the text does not contains line break, only one flow
+		// pane will be used
 		FlowPane currentFlowPane = new FlowPane();
-		
+
 		// Object used to add the flow pane(s) to the JFXMagicText
 		ObservableList<Node> children = super.getChildren();
 
@@ -108,7 +115,7 @@ public class JFXMagicText extends VBox {
 		if (children.size() > 0) {
 			children.clear();
 		}
-		
+
 		// For each text element or magic symbol in the text
 		for (String textOrSymbol : splitTextAndSymbols(textWithSymbols)) {
 
@@ -117,7 +124,7 @@ public class JFXMagicText extends VBox {
 			if (symbolImage != null) {
 				currentFlowPane.getChildren().add(new ImageView(symbolImage));
 			} else if (LINE_BREAK.equals(textOrSymbol)) {
-				children.add(currentFlowPane.getChildren().isEmpty() ? new FlowPane(EMPTY_TEXT): currentFlowPane);
+				children.add(currentFlowPane.getChildren().isEmpty() ? new FlowPane(EMPTY_TEXT) : currentFlowPane);
 				currentFlowPane = new FlowPane();
 			} else {
 				Text text = new Text(textOrSymbol + SPACE_SEPARATOR);
@@ -142,11 +149,12 @@ public class JFXMagicText extends VBox {
 
 		// Prepare the string to easily detect the line breaks (add spaces around the line brakes)
 		// The line breaks are double to have more space between paragraphs when the text is displayed
-		String preparedString = textWithSymbols.replaceAll(LINE_BREAK, (SPACE_SEPARATOR + LINE_BREAK + SPACE_SEPARATOR + LINE_BREAK + SPACE_SEPARATOR));
+		String preparedString = textWithSymbols.replaceAll(LINE_BREAK,
+			(SPACE_SEPARATOR + LINE_BREAK + SPACE_SEPARATOR + LINE_BREAK + SPACE_SEPARATOR));
 
 		// for each character in the prepared string
 		for (char c : preparedString.toCharArray()) {
-			
+
 			if (c == OPENING_CHAR && buffer.length() > 0) {
 				rulesTextList.addAll(Arrays.asList(buffer.toString().split(SPACE_SEPARATOR)));
 				buffer = new StringBuffer();
