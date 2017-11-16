@@ -38,7 +38,7 @@ public class JFXCardDataPane extends GridPane {
 	/**
 	 * The URL of the web site where the MTG card images can be loaded
 	 */
-	private static final String IMAGE_URL_WIZARD = "http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + MULTIVERSE_ID + "&type=card";
+	private static final String IMAGE_URL_WIZARD = "http://gatherer.wizards.com/Handlers/ImagesManager.ashx?multiverseid=" + MULTIVERSE_ID + "&type=card";
 	
 	/**
 	 * The side of the card to display. We need this to manage the double-faced cards
@@ -226,7 +226,7 @@ public class JFXCardDataPane extends GridPane {
 	/**
 	 * Load and returns an image based on the multiverse ID of the card
 	 * @param cardData the card data
-	 * @return an Image loaded from the web site http://gatherer.wizards.com/
+	 * @return an ImagesManager loaded from the web site http://gatherer.wizards.com/
 	 */
 	private Image loadImage(final MtgCard cardData) {
 		
@@ -238,7 +238,7 @@ public class JFXCardDataPane extends GridPane {
 		ExecutorService service = Executors.newSingleThreadExecutor();
 		Image result = null;
 		
-		// Create a task to run in a thread that returns an Image
+		// Create a task to run in a thread that returns an ImagesManager
 		Callable<Image> task = () -> {
 			return new Image(IMAGE_URL_WIZARD.replace(MULTIVERSE_ID, Integer.toString(cardData.getMultiverseid())));
 		};

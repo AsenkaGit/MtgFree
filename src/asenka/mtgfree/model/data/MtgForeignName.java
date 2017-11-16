@@ -34,7 +34,7 @@ public class MtgForeignName implements Serializable {
 
 	/**
 	 * The multiverse id of the translated card. Useful to get the translated image with the following URL:<br />
-	 * <code>http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=[MULTIVERSEID]&type=card</code>
+	 * <code>http://gatherer.wizards.com/Handlers/ImagesManager.ashx?multiverseid=[MULTIVERSEID]&type=card</code>
 	 */
 	private int multiverseid;
 

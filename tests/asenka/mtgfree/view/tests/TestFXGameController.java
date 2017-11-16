@@ -382,7 +382,7 @@ public class TestFXGameController implements Observer {
 					int multiverseid = selectedCard.getPrimaryCardData().getMultiverseid();
 
 					new Thread(() -> this.selectedCardImageView.setImage(
-							new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + multiverseid + "&type=card")))
+							new Image("http://gatherer.wizards.com/Handlers/ImagesManager.ashx?multiverseid=" + multiverseid + "&type=card")))
 									.start();
 				}
 				displaySelectedCard();
@@ -405,7 +405,7 @@ public class TestFXGameController implements Observer {
 					int multiverseid = selectedCard.getPrimaryCardData().getMultiverseid();
 
 					new Thread(() -> this.selectedCardImageView.setImage(
-							new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + multiverseid + "&type=card")))
+							new Image("http://gatherer.wizards.com/Handlers/ImagesManager.ashx?multiverseid=" + multiverseid + "&type=card")))
 									.start();
 				}
 				displaySelectedCard();
@@ -427,7 +427,7 @@ public class TestFXGameController implements Observer {
 					final int multiverseid = selectedCard.getPrimaryCardData().getMultiverseid();
 
 					new Thread(() -> this.selectedCardImageView.setImage(
-							new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + multiverseid + "&type=card")))
+							new Image("http://gatherer.wizards.com/Handlers/ImagesManager.ashx?multiverseid=" + multiverseid + "&type=card")))
 									.start();
 				}
 				displaySelectedCard();
