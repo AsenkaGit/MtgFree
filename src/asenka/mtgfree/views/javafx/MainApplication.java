@@ -19,8 +19,8 @@ public class MainApplication extends Application {
 		initProxy(true);
 		
 		JFXCard card = new JFXCard(new Card(MtgDataUtility.getInstance().getMtgCard("chalice of life")), null, CardImageSize.LARGE);
-		JFXCard card2 = new JFXCard(new Card(MtgDataUtility.getInstance().getMtgCard("chalice of life")), null, CardImageSize.MEDIUM);
-		JFXCard card3 = new JFXCard(new Card(MtgDataUtility.getInstance().getMtgCard("chalice of life")), null, CardImageSize.SMALL);
+		JFXCard card2 = new JFXCard(new Card(MtgDataUtility.getInstance().getMtgCard("glorybringer")), null, CardImageSize.MEDIUM);
+		JFXCard card3 = new JFXCard(new Card(MtgDataUtility.getInstance().getMtgCard("always watching")), null, CardImageSize.SMALL);
 		
 		Scene scene = new Scene(new FlowPane(card, card2, card3));
 		primaryStage.setScene(scene);

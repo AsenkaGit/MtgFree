@@ -107,7 +107,7 @@ public class JFXMagicText extends VBox {
 		// The currentFlowPane variable is used to display a line. If the text does not contains line break, only one flow
 		// pane will be used
 		FlowPane currentFlowPane = new FlowPane();
-
+		
 		// Object used to add the flow pane(s) to the JFXMagicText
 		ObservableList<Node> children = super.getChildren();
 
