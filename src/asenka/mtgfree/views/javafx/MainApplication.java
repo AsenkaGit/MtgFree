@@ -2,12 +2,12 @@ package asenka.mtgfree.views.javafx;
 
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
-import java.util.Observable;
-
-import asenka.mtgfree.model.data.utilities.MtgDataUtility;
-import asenka.mtgfree.model.game.Card;
+import asenka.mtgfree.views.javafx.utilities.ImagesManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
 public class MainApplication extends Application {
@@ -16,13 +16,10 @@ public class MainApplication extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		initProxy(true);
+		
+		Image image = ImagesManager.getImage(0);
 
-//		Card glorybringer = new Card(MtgDataUtility.getInstance().getMtgCard("glorybringer"));
-		Card chaliceOfLife = new Card(MtgDataUtility.getInstance().getMtgCard("chalice of life"));
-
-		final JFXCardDataPane pane = new JFXCardDataPane(chaliceOfLife);
-
-		Scene scene = new Scene(pane);
+		Scene scene = new Scene(new FlowPane(new ImageView(image)));
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
