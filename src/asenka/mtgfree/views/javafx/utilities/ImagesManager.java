@@ -3,11 +3,6 @@ package asenka.mtgfree.views.javafx.utilities;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import javax.imageio.ImageIO;
 
@@ -21,7 +16,7 @@ import javafx.scene.image.Image;
  * Abstract class with only static members and utility methods to easily get and store the card images.
  * 
  * @author asenka
- *
+ * @see Image
  */
 public abstract class ImagesManager {
 
@@ -52,8 +47,9 @@ public abstract class ImagesManager {
 	private static final String IMAGE_FORMAT = "png";
 
 	/**
-	 * Load and returns the image of a card. If the image is loaded from the WotC database, the file is stored locally to avoid unecessary 
-	 * network communication 
+	 * Load and returns the image of a card. If the image is loaded from the WotC database, the file is stored locally to avoid
+	 * unecessary network communication
+	 * 
 	 * @param cardData the data of the card
 	 * @return the image of the card or <code>null</code> if the image cannot be loaded or found.
 	 * @see MtgCard
@@ -64,47 +60,31 @@ public abstract class ImagesManager {
 	}
 
 	/**
-	 * Load and returns the image of a card. If the image is loaded from the WotC database, the file is stored locally to avoid unecessary 
-	 * network communication. 
+	 * Load and returns the image of a card. If the image is loaded from the WotC database, the file is stored locally to avoid
+	 * unecessary network communication.
+	 * 
 	 * @param multiverseId the multiverse ID of a card
 	 * @return the image of the card or <code>null</code> if the image cannot be loaded or found.
 	 */
 	public static Image getImage(int multiverseId) {
 
-		ExecutorService service = Executors.newSingleThreadExecutor();
-		Image result = null;
-		
-		// Create a task to run in a thread that returns an ImagesManager
-		Callable<Image> task = () -> {
-			
-			Image cardImage = getCacheImage(multiverseId);
+		Image cardImage = getCacheImage(multiverseId);
 
-			if (cardImage == null) {
-				cardImage = getDistantImage(multiverseId);
+		if (cardImage == null) {
+			cardImage = getDistantImage(multiverseId);
 
-				if (cardImage != null) {
-					saveImageInLocalCache(cardImage, multiverseId);
-				}
+			if (cardImage != null) {
+				saveImageInLocalCache(cardImage, multiverseId);
 			}
-			return cardImage;
-		};
-		
-		// Start the thread
-		Future<Image> future = service.submit(task);
-	
-		try {
-			// Wait until the image is available and store in result variable
-			result = future.get();
-		} catch (InterruptedException | ExecutionException e) {
-			throw new RuntimeException(e);
 		}
-		return result;
+		return cardImage;
 	}
 
 	/**
 	 * Load and returns a card image from the local folder if it exists.
+	 * 
 	 * @param multiverseId the multiverse ID of a card
-	 * @return an Image representing a Mtg card, <code>null</code> if the card cannot be loaded 
+	 * @return an Image representing a Mtg card, <code>null</code> if the card cannot be loaded
 	 */
 	private static Image getCacheImage(int multiverseId) {
 
@@ -114,6 +94,7 @@ public abstract class ImagesManager {
 
 	/**
 	 * Load and return an card image from the official wizard of the coast web site plateform
+	 * 
 	 * @param multiverseId the multiverse ID of a card
 	 * @return an Image representing a Mtg card, <code>null</code> if the card cannot be loaded
 	 * @see ImagesManager#IMAGE_URL_WIZARD

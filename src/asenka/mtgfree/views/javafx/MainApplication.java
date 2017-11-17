@@ -5,11 +5,9 @@ import java.net.PasswordAuthentication;
 
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import asenka.mtgfree.model.game.Card;
-import asenka.mtgfree.views.javafx.utilities.ImagesManager;
+import asenka.mtgfree.views.CardImageSize;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
@@ -20,10 +18,11 @@ public class MainApplication extends Application {
 
 		initProxy(true);
 		
-		JFXCardDataPane cardDataPane = new JFXCardDataPane();
-		cardDataPane.setDisplayedCard(new Card(MtgDataUtility.getInstance().getMtgCard("chalice of life")));
-
-		Scene scene = new Scene(cardDataPane);
+		JFXCard card = new JFXCard(new Card(MtgDataUtility.getInstance().getMtgCard("chalice of life")), null, CardImageSize.LARGE);
+		JFXCard card2 = new JFXCard(new Card(MtgDataUtility.getInstance().getMtgCard("chalice of life")), null, CardImageSize.MEDIUM);
+		JFXCard card3 = new JFXCard(new Card(MtgDataUtility.getInstance().getMtgCard("chalice of life")), null, CardImageSize.SMALL);
+		
+		Scene scene = new Scene(new FlowPane(card, card2, card3));
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

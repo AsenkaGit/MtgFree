@@ -12,26 +12,26 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
-
 /**
- * JavaFX component designed to display data about a card. 
+ * JavaFX component designed to display data about a card.
  * 
  * @author asenka
  */
 public class JFXCardDataPane extends GridPane {
 
 	/**
-	 * The value of double faced layout
-	 */
-	private static final String DOUBLE_FACED_LAYOUT = "double-faced";
-
-	/**
 	 * The side of the card to display. We need this to manage the double-faced cards
+	 * 
 	 * @see JFXCardDataPane#displayedCardSide
 	 */
 	private enum Side {
 		FRONT, BACK;
 	}
+
+	/**
+	 * The value of double faced layout
+	 */
+	private static final String DOUBLE_FACED_LAYOUT = "double-faced";
 
 	/**
 	 * The card displayed by this JavaFX component
@@ -92,12 +92,13 @@ public class JFXCardDataPane extends GridPane {
 	 * Build a JFXCardDataPane without a card to display
 	 */
 	public JFXCardDataPane() {
-		
+
 		this(null);
 	}
-	
+
 	/**
 	 * Build a JFXCardDataPane with a card
+	 * 
 	 * @param card the card to display
 	 */
 	public JFXCardDataPane(Card card) {
@@ -108,6 +109,7 @@ public class JFXCardDataPane extends GridPane {
 		super.setMinWidth(250d);
 		super.setMaxSize(300d, 500d);
 		super.setVgap(10d);
+		super.setHgap(10d);
 		super.setPadding(new Insets(5d, 5d, 5d, 5d));
 
 		// Initialize the JavaFX components used to display the card data
@@ -117,7 +119,7 @@ public class JFXCardDataPane extends GridPane {
 		this.cardText = new JFXMagicText();
 		this.cardManaCost = new JFXMagicText();
 		this.cardImageView = new ImageView();
-		this.switchCardFaceButton = new Button("Switch side");
+		this.switchCardFaceButton = new Button("Switch");
 
 		// Add the component on the grid
 		super.add(this.cardImageView, 0, 0);
@@ -131,6 +133,7 @@ public class JFXCardDataPane extends GridPane {
 		super.add(this.cardTypeText, 1, 4);
 		super.add(this.cardText, 0, 5);
 
+
 		// Set the constraints on some of the components
 		GridPane.setHalignment(this.cardImageView, HPos.CENTER);
 		GridPane.setColumnSpan(this.cardImageView, 2);
@@ -139,27 +142,17 @@ public class JFXCardDataPane extends GridPane {
 		GridPane.setHalignment(this.sideText, HPos.CENTER);
 
 		// Prepare the action to perform when the switch button is pressed
-		this.switchCardFaceButton.setOnAction(event -> {
-			final MtgCard cardData;
-			if (this.displayedCardSide == Side.FRONT) {
-				cardData = this.displayedCard.getSecondaryCardData();
-				this.setSide(Side.BACK);
-			} else {
-				cardData = this.displayedCard.getPrimaryCardData();
-				this.setSide(Side.FRONT);
-			}
-			displayCardData(cardData);
-		});
+		this.switchCardFaceButton.setOnAction(event -> switchSide());
 
 		// If possible, the card data are loaded and displayed
 		if (card != null) {
 			this.setDisplayedCard(card);
 		}
-
 	}
 
 	/**
 	 * Set the card to be displayed on this component
+	 * 
 	 * @param card the card to display
 	 */
 	public void setDisplayedCard(Card card) {
@@ -167,27 +160,27 @@ public class JFXCardDataPane extends GridPane {
 		this.displayedCard = card;
 		this.frontCardImage = ImagesManager.getImage(card.getPrimaryCardData());
 
-		// if the card has a double faced layout 
+		// If the card has a double faced layout
 		if (DOUBLE_FACED_LAYOUT.equals(card.getLayout())) {
 			this.switchCardFaceButton.setDisable(false);
 			this.backCardImage = ImagesManager.getImage(card.getSecondaryCardData());
 		} else {
 			this.switchCardFaceButton.setDisable(true);
 		}
-
 		setSide(Side.FRONT);
 		displayCardData(card.getPrimaryCardData());
 	}
 
 	/**
 	 * Use this method to update the displayCardSide value and the text of the sideText component
+	 * 
 	 * @param side the side to display
 	 */
 	private void setSide(Side side) {
-	
+
 		this.displayedCardSide = side;
 		this.sideText.setText(side.toString());
-	
+
 		if (side == Side.FRONT) {
 			this.cardImageView.setImage(this.frontCardImage);
 		} else {
@@ -196,7 +189,24 @@ public class JFXCardDataPane extends GridPane {
 	}
 
 	/**
+	 * Change the side of the display card. Only if the card has two sides.
+	 */
+	private void switchSide() {
+
+		final MtgCard cardData;
+		if (this.displayedCardSide == Side.FRONT) {
+			cardData = this.displayedCard.getSecondaryCardData();
+			this.setSide(Side.BACK);
+		} else {
+			cardData = this.displayedCard.getPrimaryCardData();
+			this.setSide(Side.FRONT);
+		}
+		displayCardData(cardData);
+	}
+
+	/**
 	 * Set the values displayed on the component about the card (name, cost, type, etc...)
+	 * 
 	 * @param cardData the data to display
 	 * @see MtgCard
 	 */
@@ -207,4 +217,5 @@ public class JFXCardDataPane extends GridPane {
 		this.cardTypeText.setText(cardData.getType());
 		this.cardManaCost.setText(cardData.getManaCost());
 	}
+
 }
