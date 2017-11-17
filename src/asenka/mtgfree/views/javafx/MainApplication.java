@@ -2,6 +2,9 @@ package asenka.mtgfree.views.javafx;
 
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
+
+import asenka.mtgfree.model.data.utilities.MtgDataUtility;
+import asenka.mtgfree.model.game.Card;
 import asenka.mtgfree.views.javafx.utilities.ImagesManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -17,9 +20,10 @@ public class MainApplication extends Application {
 
 		initProxy(true);
 		
-		Image image = ImagesManager.getImage(0);
+		JFXCardDataPane cardDataPane = new JFXCardDataPane();
+		cardDataPane.setDisplayedCard(new Card(MtgDataUtility.getInstance().getMtgCard("chalice of life")));
 
-		Scene scene = new Scene(new FlowPane(new ImageView(image)));
+		Scene scene = new Scene(cardDataPane);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

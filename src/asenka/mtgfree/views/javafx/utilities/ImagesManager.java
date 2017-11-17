@@ -3,6 +3,11 @@ package asenka.mtgfree.views.javafx.utilities;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.imageio.ImageIO;
 
@@ -13,6 +18,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 
 /**
+ * Abstract class with only static members and utility methods to easily get and store the card images.
  * 
  * @author asenka
  *
@@ -20,7 +26,7 @@ import javafx.scene.image.Image;
 public abstract class ImagesManager {
 
 	/**
-	 * 
+	 * The image of the back of a MTG card. Only one instance of this image is needed for the whole application
 	 */
 	public static final Image IMAGE_MTG_CARD_BACK = new Image("file:./resources/images/mtg/cards/back.png");
 
@@ -36,19 +42,21 @@ public abstract class ImagesManager {
 		+ "&type=card";
 
 	/**
-	 * 
+	 * The cache folder of the loaded image.
 	 */
 	private static final String IMAGE_CACHE_FOLDER = "./resources/images/mtg/cards/cache/";
 
 	/**
-	 * 
+	 * The image format of the card images. It should be PNG.
 	 */
 	private static final String IMAGE_FORMAT = "png";
 
 	/**
-	 *
-	 * @param cardData
-	 * @return
+	 * Load and returns the image of a card. If the image is loaded from the WotC database, the file is stored locally to avoid unecessary 
+	 * network communication 
+	 * @param cardData the data of the card
+	 * @return the image of the card or <code>null</code> if the image cannot be loaded or found.
+	 * @see MtgCard
 	 */
 	public static Image getImage(MtgCard cardData) {
 
@@ -56,22 +64,41 @@ public abstract class ImagesManager {
 	}
 
 	/**
-	 * 
-	 * @param multiverseId
-	 * @return
+	 * Load and returns the image of a card. If the image is loaded from the WotC database, the file is stored locally to avoid unecessary 
+	 * network communication. 
+	 * @param multiverseId the multiverse ID of a card
+	 * @return the image of the card or <code>null</code> if the image cannot be loaded or found.
 	 */
 	public static Image getImage(int multiverseId) {
 
-		Image cardImage = getCacheImage(multiverseId);
+		ExecutorService service = Executors.newSingleThreadExecutor();
+		Image result = null;
+		
+		// Create a task to run in a thread that returns an ImagesManager
+		Callable<Image> task = () -> {
+			
+			Image cardImage = getCacheImage(multiverseId);
 
-		if (cardImage == null) {
-			cardImage = getDistantImage(multiverseId);
+			if (cardImage == null) {
+				cardImage = getDistantImage(multiverseId);
 
-			if (cardImage != null) {
-				saveImageInLocalCache(cardImage, multiverseId);
+				if (cardImage != null) {
+					saveImageInLocalCache(cardImage, multiverseId);
+				}
 			}
+			return cardImage;
+		};
+		
+		// Start the thread
+		Future<Image> future = service.submit(task);
+	
+		try {
+			// Wait until the image is available and store in result variable
+			result = future.get();
+		} catch (InterruptedException | ExecutionException e) {
+			throw new RuntimeException(e);
 		}
-		return cardImage;
+		return result;
 	}
 
 	/**
@@ -123,16 +150,4 @@ public abstract class ImagesManager {
 			}
 		}).start();
 	}
-
-	// /**
-	// * Save a card image in the local cache folder. The method is run in a specific thread. The exceptions are only logged.
-	// * @param image the JavaFX image to save
-	// * @param cardData the card data related to the card image saved
-	// * @see SwingFXUtils
-	// * @see ImageIO
-	// */
-	// private static void saveImageInLocalCache(final Image image, final MtgCard cardData) {
-	//
-	// saveImageInLocalCache(image, cardData.getMultiverseid());
-	// }
 }

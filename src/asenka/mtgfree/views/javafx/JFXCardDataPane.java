@@ -1,13 +1,8 @@
 package asenka.mtgfree.views.javafx;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.game.Card;
+import asenka.mtgfree.views.javafx.utilities.ImagesManager;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -30,16 +25,6 @@ public class JFXCardDataPane extends GridPane {
 	 */
 	private static final String DOUBLE_FACED_LAYOUT = "double-faced";
 
-	/**
-	 * The string to replace by a real multiver ID of a card
-	 */
-	private static final String MULTIVERSE_ID = "[multiverseId]";
-	
-	/**
-	 * The URL of the web site where the MTG card images can be loaded
-	 */
-	private static final String IMAGE_URL_WIZARD = "http://gatherer.wizards.com/Handlers/ImagesManager.ashx?multiverseid=" + MULTIVERSE_ID + "&type=card";
-	
 	/**
 	 * The side of the card to display. We need this to manage the double-faced cards
 	 * @see JFXCardDataPane#displayedCardSide
@@ -180,12 +165,12 @@ public class JFXCardDataPane extends GridPane {
 	public void setDisplayedCard(Card card) {
 
 		this.displayedCard = card;
-		this.frontCardImage = loadImage(card.getPrimaryCardData());
+		this.frontCardImage = ImagesManager.getImage(card.getPrimaryCardData());
 
 		// if the card has a double faced layout 
 		if (DOUBLE_FACED_LAYOUT.equals(card.getLayout())) {
 			this.switchCardFaceButton.setDisable(false);
-			this.backCardImage = loadImage(card.getSecondaryCardData());
+			this.backCardImage = ImagesManager.getImage(card.getSecondaryCardData());
 		} else {
 			this.switchCardFaceButton.setDisable(true);
 		}
@@ -221,37 +206,5 @@ public class JFXCardDataPane extends GridPane {
 		this.cardText.setText(cardData.getText());
 		this.cardTypeText.setText(cardData.getType());
 		this.cardManaCost.setText(cardData.getManaCost());
-	}
-
-	/**
-	 * Load and returns an image based on the multiverse ID of the card
-	 * @param cardData the card data
-	 * @return an ImagesManager loaded from the web site http://gatherer.wizards.com/
-	 */
-	private Image loadImage(final MtgCard cardData) {
-		
-		// TODO this code should be place in a utility able to manage the data loading of all the image for the whole application
-	
-		// This method is based on the new type of Callable/Future concurrent object to have 
-		// a parallele thread able to return a value (Runnable is not able to to that)
-		
-		ExecutorService service = Executors.newSingleThreadExecutor();
-		Image result = null;
-		
-		// Create a task to run in a thread that returns an ImagesManager
-		Callable<Image> task = () -> {
-			return new Image(IMAGE_URL_WIZARD.replace(MULTIVERSE_ID, Integer.toString(cardData.getMultiverseid())));
-		};
-		
-		// Start the thread
-		Future<Image> future = service.submit(task);
-	
-		try {
-			// Wait until the image is available and store in result variable
-			result = future.get();
-		} catch (InterruptedException | ExecutionException e) {
-			throw new RuntimeException(e);
-		}
-		return result;
 	}
 }
