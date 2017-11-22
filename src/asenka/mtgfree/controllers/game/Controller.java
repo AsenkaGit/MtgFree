@@ -1,7 +1,7 @@
 package asenka.mtgfree.controllers.game;
 
-import java.util.Observable;
-import java.util.Observer;
+
+import asenka.mtgfree.model.game.AbstractGameObject;
 
 /**
  * A generic class for all the controllers.
@@ -10,7 +10,7 @@ import java.util.Observer;
  * @see Observer
  * @see Observable
  */
-public abstract class Controller<Type extends Observable> {
+public abstract class Controller<Type extends AbstractGameObject> {
 
 	/**
 	 * The controlled data. It could be of any sub type of {@link Observable}
