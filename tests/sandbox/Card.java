@@ -1,64 +1,69 @@
 package sandbox;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.model.game.Counter;
 
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.ReadOnlyListProperty;
+import javafx.beans.property.ReadOnlyListWrapper;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 
-public class Card {
+public class Card implements Serializable {
+
+	private static final long serialVersionUID = 265261525210299212L;
 
 	private static int battleIdCounter = 0;
 
-	private final IntegerProperty battleId;
+	private ReadOnlyIntegerWrapper battleId;
 
-	private final BooleanProperty tapped;
+	private BooleanProperty tapped;
 
-	private final BooleanProperty visible;
+	private BooleanProperty visible;
 
-	private final BooleanProperty selected;
+	private BooleanProperty selected;
 
-	private final ObjectProperty<MtgCard> primaryCardData;
+	private ReadOnlyObjectWrapper<MtgCard> primaryCardData;
 
-	private final ObjectProperty<MtgCard> secondaryCardData;
+	private ReadOnlyObjectWrapper<MtgCard> secondaryCardData;
 
-	private final ObjectProperty<Point2D> location;
+	private ObjectProperty<Point2D> location;
 
-	private final ListProperty<Counter> counters;
+	private ReadOnlyListWrapper<Counter> counters;
 
-	/**
-	 * 
-	 * @param primaryCardData
-	 */
 	public Card(MtgCard primaryCardData) {
 
-		this.battleId = new ReadOnlyIntegerWrapper(++battleIdCounter);
-		this.tapped = new SimpleBooleanProperty(false);
-		this.visible = new SimpleBooleanProperty(true);
-		this.selected = new SimpleBooleanProperty(false);
-		this.primaryCardData = new ReadOnlyObjectWrapper<MtgCard>(primaryCardData);
-		this.location = new SimpleObjectProperty<Point2D>(new Point2D(0d, 0d));
-		this.counters = new SimpleListProperty<Counter>(FXCollections.<Counter> observableArrayList());
+		this.battleId = new ReadOnlyIntegerWrapper(this, "battleId", ++battleIdCounter);
+		this.tapped = new SimpleBooleanProperty(this, "tapped", false);
+		this.visible = new SimpleBooleanProperty(this, "visible", true);
+		this.selected = new SimpleBooleanProperty(this, "selected", false);
+		this.primaryCardData = new ReadOnlyObjectWrapper<MtgCard>(this, "primaryCardData", primaryCardData);
+		this.location = new SimpleObjectProperty<Point2D>(this, "location", new Point2D(0d, 0d));
+		this.counters = new ReadOnlyListWrapper<Counter>(this, "counters", FXCollections.<Counter> observableArrayList());
 
 		// Initialize the secondary card data if necessary
 		MtgCard secondaryCardData = null;
-		String[] names = primaryCardData.getNames();
+		final String[] names = primaryCardData.getNames();
 
 		if (names != null && names.length > 1) {
 			secondaryCardData = MtgDataUtility.getInstance().getMtgCard(names[1]);
 		}
-		this.secondaryCardData = new ReadOnlyObjectWrapper<MtgCard>(secondaryCardData);
+		this.secondaryCardData = new ReadOnlyObjectWrapper<MtgCard>(this, "secondaryCardData", secondaryCardData);
 	}
 
 	public static void setBattleIdCounter(final int battleIdCounter) {
@@ -66,19 +71,14 @@ public class Card {
 		Card.battleIdCounter = battleIdCounter;
 	}
 
-	public final IntegerProperty battleIdProperty() {
+	public final ReadOnlyIntegerProperty battleIdProperty() {
 
-		return this.battleId;
+		return this.battleId.getReadOnlyProperty();
 	}
 
 	public final int getBattleId() {
 
 		return this.battleId.get();
-	}
-
-	public final void setBattleId(final int battleId) {
-
-		this.battleId.set(battleId);
 	}
 
 	public final BooleanProperty tappedProperty() {
@@ -126,9 +126,9 @@ public class Card {
 		this.selected.set(selected);
 	}
 
-	public final ObjectProperty<MtgCard> primaryCardDataProperty() {
+	public final ReadOnlyObjectProperty<MtgCard> primaryCardDataProperty() {
 
-		return this.primaryCardData;
+		return this.primaryCardData.getReadOnlyProperty();
 	}
 
 	public final MtgCard getPrimaryCardData() {
@@ -136,24 +136,14 @@ public class Card {
 		return this.primaryCardData.get();
 	}
 
-	public final void setPrimaryCardData(final MtgCard primaryCardData) {
+	public final ReadOnlyObjectProperty<MtgCard> secondaryCardDataProperty() {
 
-		this.primaryCardData.set(primaryCardData);
-	}
-
-	public final ObjectProperty<MtgCard> secondaryCardDataProperty() {
-
-		return this.secondaryCardData;
+		return this.secondaryCardData.getReadOnlyProperty();
 	}
 
 	public final MtgCard getSecondaryCardData() {
 
 		return this.secondaryCardData.get();
-	}
-
-	public final void setSecondaryCardData(final MtgCard secondaryCardData) {
-
-		this.secondaryCardData.set(secondaryCardData);
 	}
 
 	public final ObjectProperty<Point2D> locationProperty() {
@@ -171,9 +161,9 @@ public class Card {
 		this.location.set(location);
 	}
 
-	public final ListProperty<Counter> countersProperty() {
+	public final ReadOnlyListProperty<Counter> countersProperty() {
 
-		return this.counters;
+		return this.counters.getReadOnlyProperty();
 	}
 
 	public final ObservableList<Counter> getCounters() {
@@ -181,37 +171,82 @@ public class Card {
 		return this.counters.get();
 	}
 
-	public final void setCounters(final ObservableList<Counter> counters) {
+	private void writeObject(ObjectOutputStream out) throws IOException {
 
-		this.counters.set(counters);
+		out.writeInt(this.getBattleId());
+		out.writeBoolean(this.isTapped());
+		out.writeBoolean(this.isVisible());
+		out.writeBoolean(this.isSelected());
+		out.writeObject(this.getPrimaryCardData());
+		out.writeObject(this.getSecondaryCardData());
+		out.writeDouble(this.getLocation().getX());
+		out.writeDouble(this.getLocation().getY());
+		out.writeObject(new ArrayList<Counter>(this.counters));
 	}
 
-	// public IntegerProperty battleId() { return this.battleIdProperty; }
-	// public int getBattleId() { return this.battleIdProperty.get(); }
-	//
-	// public BooleanProperty tapped() { return this.tappedProperty; }
-	// public boolean getTapped() { return this.tappedProperty.get(); }
-	// public void setTapped(boolean tapped) { this.tappedProperty.set(tapped); }
-	//
-	// public BooleanProperty visible() { return this.visibleProperty; }
-	// public boolean isVisible() { return this.visibleProperty.get(); }
-	// public void setVisible(boolean visible) { this.visibleProperty.set(visible); }
-	//
-	// public BooleanProperty selected() { return this.selectedProperty; }
-	// public boolean isSelected() { return this.selectedProperty.get(); }
-	// public void setSelected(boolean selected) { this.selectedProperty.set(selected); }
-	//
-	// public ObjectProperty<MtgCard> primaryCardData() { return this.primaryCardDataProperty; }
-	// public MtgCard getPrimaryCardData() { return this.primaryCardDataProperty.get(); }
-	//
-	// public ObjectProperty<MtgCard> secondaryCardData() { return this.secondaryCardDataProperty; }
-	// public MtgCard getSecondaryCardData() { return this.secondaryCardDataProperty.get(); }
-	//
-	// public ObjectProperty<Point2D> location() { return this.locationProperty; }
-	// public Point2D getLocation() { return this.locationProperty.get(); }
-	// public void setLocation(Point2D newLocation) { this.locationProperty.set(newLocation); }
-	// public void setLocation(double x, double y) { this.locationProperty.set(new Point2D(x, y)); }
-	//
-	// public ListProperty<Counter> counters() { return this.countersProperty; }
-	// public ObservableList<Counter> getCounters() { return this.countersProperty.get(); }
+	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
+
+		this.battleId = new ReadOnlyIntegerWrapper(this, "battleId", in.readInt());
+		this.tapped = new SimpleBooleanProperty(this, "tapped", in.readBoolean());
+		this.visible = new SimpleBooleanProperty(this, "visible", in.readBoolean());
+		this.selected = new SimpleBooleanProperty(this, "selected", in.readBoolean());
+		this.primaryCardData = new ReadOnlyObjectWrapper<MtgCard>(this, "primaryCardData", (MtgCard) in.readObject());
+		this.secondaryCardData = new ReadOnlyObjectWrapper<MtgCard>(this, "secondaryCardData", (MtgCard) in.readObject());
+		final double x = in.readDouble();
+		final double y = in.readDouble();
+		this.location = new SimpleObjectProperty<Point2D>(this, "location", new Point2D(x, y));
+		@SuppressWarnings("unchecked")
+		final ObservableList<Counter> counters = FXCollections.<Counter> observableArrayList((ArrayList<Counter>) in.readObject());
+		this.counters = new ReadOnlyListWrapper<Counter>(this, "counters", counters);
+	}
+
+	@Override
+	public String toString() {
+
+		return "Card [" + this.getBattleId() + ", " + this.isTapped() + ", " + this.isVisible() + ", " + this.isSelected() + ", "
+			+ this.getLocation() + ", " + this.getPrimaryCardData().getName() + "]";
+	}
+
+	@Override
+	public int hashCode() {
+
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + battleId.get();
+		result = prime * result + ((location.get() == null) ? 0 : location.get().hashCode());
+		result = prime * result + ((primaryCardData.get() == null) ? 0 : primaryCardData.get().hashCode());
+		result = prime * result + ((secondaryCardData.get() == null) ? 0 : secondaryCardData.get().hashCode());
+		result = prime * result + ((counters.get() == null) ? 0 : counters.get().hashCode());
+		result = prime * result + (selected.get() ? 1231 : 1237);
+		result = prime * result + (tapped.get() ? 1231 : 1237);
+		result = prime * result + (visible.get() ? 1231 : 1237);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Card))
+			return false;
+		final Card other = (Card) obj;
+		if (this.battleId.isNotEqualTo(other.battleId).get())
+			return false;
+		if (this.tapped.isNotEqualTo(other.tapped).get())
+			return false;
+		if (this.visible.isNotEqualTo(other.visible).get())
+			return false;
+		if (this.selected.isNotEqualTo(other.selected).get())
+			return false;
+		if (this.primaryCardData.isNotEqualTo(other.primaryCardData).get())
+			return false;
+		if (this.secondaryCardData.isNotEqualTo(other.secondaryCardData).get())
+			return false;
+		if (this.counters.isNotEqualTo(other.counters).get())
+			return false;
+		return true;
+	}
 }
