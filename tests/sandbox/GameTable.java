@@ -2,38 +2,38 @@ package sandbox;
 
 import java.util.EventObject;
 
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.ReadOnlyListProperty;
+import javafx.beans.property.ReadOnlyListWrapper;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class GameTable {
 
-	private final StringProperty name;
+	private final ReadOnlyStringWrapper name;
 
-	private final ObjectProperty<Player> localPlayer;
+	private final ReadOnlyObjectWrapper<Player> localPlayer;
 
 	private final ObjectProperty<Player> otherPlayer;
 
-	private final ListProperty<EventObject> gameEvents;
-	
-	
-	public GameTable(String name, Player localPlayer) {
-		
-		this.name = new SimpleStringProperty(name);
-		this.localPlayer = new SimpleObjectProperty<Player>(localPlayer);
-		this.otherPlayer = new SimpleObjectProperty<Player>(null);
-		this.gameEvents = new SimpleListProperty<EventObject>(FXCollections.observableArrayList());
+	private final ReadOnlyListWrapper<EventObject> gameEvents;
+
+	public GameTable(String name, final Player localPlayer) {
+
+		this.name = new ReadOnlyStringWrapper(this, "name", name);
+		this.localPlayer = new ReadOnlyObjectWrapper<Player>(this, "localPlayer", localPlayer);
+		this.otherPlayer = new SimpleObjectProperty<Player>(this, "otherPlayer");
+		this.gameEvents = new ReadOnlyListWrapper<EventObject>(this, "gameEvents", FXCollections.observableArrayList());
 	}
-	
 
-	public final StringProperty nameProperty() {
+	public final ReadOnlyStringProperty nameProperty() {
 
-		return this.name;
+		return this.name.getReadOnlyProperty();
 	}
 
 	public final String getName() {
@@ -41,24 +41,14 @@ public class GameTable {
 		return this.name.get();
 	}
 
-	public final void setName(final String name) {
+	public final ReadOnlyObjectProperty<Player> localPlayerProperty() {
 
-		this.name.set(name);
-	}
-
-	public final ObjectProperty<Player> localPlayerProperty() {
-
-		return this.localPlayer;
+		return this.localPlayer.getReadOnlyProperty();
 	}
 
 	public final Player getLocalPlayer() {
 
 		return this.localPlayer.get();
-	}
-
-	public final void setLocalPlayer(final Player localPlayer) {
-
-		this.localPlayer.set(localPlayer);
 	}
 
 	public final ObjectProperty<Player> otherPlayerProperty() {
@@ -76,19 +66,13 @@ public class GameTable {
 		this.otherPlayer.set(otherPlayer);
 	}
 
-	public final ListProperty<EventObject> gameEventsProperty() {
+	public final ReadOnlyListProperty<EventObject> gameEventsProperty() {
 
-		return this.gameEvents;
+		return this.gameEvents.getReadOnlyProperty();
 	}
 
 	public final ObservableList<EventObject> getGameEvents() {
 
 		return this.gameEvents.get();
 	}
-
-	public final void setGameEvents(final ObservableList<EventObject> gameEvents) {
-
-		this.gameEvents.set(gameEvents);
-	}
-
 }

@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import asenka.mtgfree.model.data.MtgCard;
-import asenka.mtgfree.model.game.Counter;
 
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import javafx.beans.property.BooleanProperty;
@@ -46,7 +45,7 @@ public class Card implements Serializable {
 
 	private ReadOnlyListWrapper<Counter> counters;
 
-	public Card(MtgCard primaryCardData) {
+	public Card(final MtgCard primaryCardData) {
 
 		this.battleId = new ReadOnlyIntegerWrapper(this, "battleId", ++battleIdCounter);
 		this.tapped = new SimpleBooleanProperty(this, "tapped", false);
@@ -64,11 +63,6 @@ public class Card implements Serializable {
 			secondaryCardData = MtgDataUtility.getInstance().getMtgCard(names[1]);
 		}
 		this.secondaryCardData = new ReadOnlyObjectWrapper<MtgCard>(this, "secondaryCardData", secondaryCardData);
-	}
-
-	public static void setBattleIdCounter(final int battleIdCounter) {
-
-		Card.battleIdCounter = battleIdCounter;
 	}
 
 	public final ReadOnlyIntegerProperty battleIdProperty() {
@@ -248,5 +242,10 @@ public class Card implements Serializable {
 		if (this.counters.isNotEqualTo(other.counters).get())
 			return false;
 		return true;
+	}
+
+	public static void setBattleIdCounter(final int battleIdCounter) {
+	
+		Card.battleIdCounter = battleIdCounter;
 	}
 }
