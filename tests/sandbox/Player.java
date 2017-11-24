@@ -7,9 +7,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -19,11 +21,11 @@ public class Player implements Serializable {
 
 	private static final long serialVersionUID = -4119416247136512680L;
 
+	private ListProperty<Card> library;
+
 	private ReadOnlyListWrapper<Card> battlefield;
 
 	private ReadOnlyListWrapper<Card> hand;
-
-	private ReadOnlyListWrapper<Card> library;
 
 	private ReadOnlyListWrapper<Card> graveyard;
 
@@ -40,11 +42,26 @@ public class Player implements Serializable {
 		this.name = new SimpleStringProperty(name);
 		this.life = new SimpleIntegerProperty(20);
 		this.poison = new SimpleIntegerProperty(0);
+		this.library = new SimpleListProperty<Card>(FXCollections.<Card>observableArrayList());
 		this.battlefield = new ReadOnlyListWrapper<Card>(FXCollections.<Card>observableArrayList());
 		this.hand = new ReadOnlyListWrapper<Card>(FXCollections.<Card>observableArrayList());
-		this.library = new ReadOnlyListWrapper<Card>(FXCollections.<Card>observableArrayList());
 		this.graveyard = new ReadOnlyListWrapper<Card>(FXCollections.<Card>observableArrayList());
 		this.exile = new ReadOnlyListWrapper<Card>(FXCollections.<Card>observableArrayList());
+	}
+
+	public final ListProperty<Card> libraryProperty() {
+	
+		return this.library;
+	}
+
+	public final ObservableList<Card> getLibrary() {
+	
+		return this.library.get();
+	}
+
+	public final void setLibrary(ObservableList<Card> library) {
+		
+		this.library.set(library);
 	}
 
 	public final ReadOnlyListProperty<Card> battlefieldProperty() {
@@ -65,16 +82,6 @@ public class Player implements Serializable {
 	public final ObservableList<Card> getHand() {
 
 		return this.hand.get();
-	}
-
-	public final ReadOnlyListProperty<Card> libraryProperty() {
-
-		return this.library.getReadOnlyProperty();
-	}
-
-	public final ObservableList<Card> getLibrary() {
-
-		return this.library.get();
 	}
 
 	public final ReadOnlyListProperty<Card> graveyardProperty() {
@@ -140,6 +147,11 @@ public class Player implements Serializable {
 	public final void setPoison(final int poison) {
 
 		this.poison.set(poison);
+	}
+	
+	public final void shuffleLibrary() {
+		
+		FXCollections.shuffle(this.library);
 	}
 	
 	private void writeObject(ObjectOutputStream out) throws IOException {

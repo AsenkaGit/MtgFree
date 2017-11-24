@@ -75,4 +75,46 @@ public class GameTable {
 
 		return this.gameEvents.get();
 	}
+	
+	@Override
+	public String toString() {
+		
+		return "GameTable [" + this.getName() + ", " + this.getLocalPlayer() + ", " + this.getOtherPlayer() + "]";
+	}
+
+	@Override
+	public int hashCode() {
+
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((gameEvents.get() == null) ? 0 : gameEvents.get().hashCode());
+		result = prime * result + ((localPlayer.get() == null) ? 0 : localPlayer.get().hashCode());
+		result = prime * result + ((name.get() == null) ? 0 : name.get().hashCode());
+		result = prime * result + ((otherPlayer.get() == null) ? 0 : otherPlayer.get().hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		GameTable other = (GameTable) obj;
+		if(name.isNotEqualTo(other.name).get())
+			return false;
+		if(localPlayer.isNotEqualTo(other.localPlayer).get())
+			return false;
+		if(otherPlayer.isNotEqualTo(other.otherPlayer).get())
+			return false;
+		if (gameEvents == null) {
+			if (other.gameEvents != null)
+				return false;
+		} else if (!gameEvents.equals(other.gameEvents))
+			return false;
+		return true;
+	}	
 }

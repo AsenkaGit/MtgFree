@@ -55,7 +55,7 @@ public class Card implements Serializable {
 		this.location = new SimpleObjectProperty<Point2D>(this, "location", new Point2D(0d, 0d));
 		this.counters = new ReadOnlyListWrapper<Counter>(this, "counters", FXCollections.<Counter> observableArrayList());
 
-		// Initialize the secondary card data if necessary
+		// Initialize the secondary card data if necessary (most of the time this value will be null)
 		MtgCard secondaryCardData = null;
 		final String[] names = primaryCardData.getNames();
 
@@ -153,6 +153,11 @@ public class Card implements Serializable {
 	public final void setLocation(final Point2D location) {
 
 		this.location.set(location);
+	}
+	
+	public final void setLocation(double x, double y) {
+		
+		setLocation(new Point2D(x, y));
 	}
 
 	public final ReadOnlyListProperty<Counter> countersProperty() {
