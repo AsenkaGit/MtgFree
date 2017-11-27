@@ -1,7 +1,5 @@
 package sandbox;
 
-import java.util.EventObject;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.ReadOnlyListWrapper;
@@ -21,14 +19,14 @@ public class GameTable {
 
 	private final ObjectProperty<Player> otherPlayer;
 
-	private final ReadOnlyListWrapper<EventObject> gameEvents;
+	private final ReadOnlyListWrapper<SynchronizationEvent> gameEvents;
 
 	public GameTable(String name, final Player localPlayer) {
 
 		this.name = new ReadOnlyStringWrapper(this, "name", name);
 		this.localPlayer = new ReadOnlyObjectWrapper<Player>(this, "localPlayer", localPlayer);
 		this.otherPlayer = new SimpleObjectProperty<Player>(this, "otherPlayer");
-		this.gameEvents = new ReadOnlyListWrapper<EventObject>(this, "gameEvents", FXCollections.observableArrayList());
+		this.gameEvents = new ReadOnlyListWrapper<SynchronizationEvent>(this, "gameEvents", FXCollections.<SynchronizationEvent>observableArrayList());
 	}
 
 	public final ReadOnlyStringProperty nameProperty() {
@@ -66,12 +64,12 @@ public class GameTable {
 		this.otherPlayer.set(otherPlayer);
 	}
 
-	public final ReadOnlyListProperty<EventObject> gameEventsProperty() {
+	public final ReadOnlyListProperty<SynchronizationEvent> gameEventsProperty() {
 
 		return this.gameEvents.getReadOnlyProperty();
 	}
 
-	public final ObservableList<EventObject> getGameEvents() {
+	public final ObservableList<SynchronizationEvent> getGameEvents() {
 
 		return this.gameEvents.get();
 	}

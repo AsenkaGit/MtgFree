@@ -209,15 +209,7 @@ public class Player implements Serializable {
 
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((battlefield == null) ? 0 : battlefield.hashCode());
-		result = prime * result + ((exile == null) ? 0 : exile.hashCode());
-		result = prime * result + ((graveyard == null) ? 0 : graveyard.hashCode());
-		result = prime * result + ((hand == null) ? 0 : hand.hashCode());
-		result = prime * result + ((library == null) ? 0 : library.hashCode());
 		result = prime * result + id.get();
-		result = prime * result + ((name.get() == null) ? 0 : name.hashCode());
-		result = prime * result + life.get();
-		result = prime * result + poison.get();
 		return result;
 	}
 	
@@ -238,40 +230,7 @@ public class Player implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Player other = (Player) obj;
-		if (this.id.isNotEqualTo(other.id).get())
-			return false;
-		if (this.name.isNotEqualTo(other.name).get())
-			return false;
-		if (this.life.isNotEqualTo(other.life).get())
-			return false;
-		if (this.poison.isNotEqualTo(other.poison).get())
-			return false;
-		if (battlefield == null) {
-			if (other.battlefield != null)
-				return false;
-		} else if (!battlefield.equals(other.battlefield))
-			return false;
-		if (exile == null) {
-			if (other.exile != null)
-				return false;
-		} else if (!exile.equals(other.exile))
-			return false;
-		if (graveyard == null) {
-			if (other.graveyard != null)
-				return false;
-		} else if (!graveyard.equals(other.graveyard))
-			return false;
-		if (hand == null) {
-			if (other.hand != null)
-				return false;
-		} else if (!hand.equals(other.hand))
-			return false;
-		if (library == null) {
-			if (other.library != null)
-				return false;
-		} else if (!library.equals(other.library))
-			return false;
-		return true;
+		return this.id.isEqualTo(other.id).get();
 	}
 	
 	
