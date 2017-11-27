@@ -10,26 +10,25 @@ import asenka.mtgfree.model.data.MtgCard;
 
 import asenka.mtgfree.model.data.utilities.MtgDataUtility;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 
 public class Card implements Serializable {
+	
+	private static final long serialVersionUID = -3454805330637228059L;
 
-	private static final long serialVersionUID = 265261525210299212L;
-
-	private static int battleIdCounter = 0;
-
-	private ReadOnlyIntegerWrapper battleId;
+	private IntegerProperty battleId;
 
 	private BooleanProperty tapped;
 
@@ -45,9 +44,9 @@ public class Card implements Serializable {
 
 	private ReadOnlyListWrapper<Counter> counters;
 
-	public Card(final MtgCard primaryCardData) {
+	public Card(final int battleId, final MtgCard primaryCardData) {
 
-		this.battleId = new ReadOnlyIntegerWrapper(this, "battleId", ++battleIdCounter);
+		this.battleId = new SimpleIntegerProperty(this, "battleId", battleId);
 		this.tapped = new SimpleBooleanProperty(this, "tapped", false);
 		this.visible = new SimpleBooleanProperty(this, "visible", true);
 		this.selected = new SimpleBooleanProperty(this, "selected", false);
@@ -65,14 +64,19 @@ public class Card implements Serializable {
 		this.secondaryCardData = new ReadOnlyObjectWrapper<MtgCard>(this, "secondaryCardData", secondaryCardData);
 	}
 
-	public final ReadOnlyIntegerProperty battleIdProperty() {
+	public final IntegerProperty battleIdProperty() {
 
-		return this.battleId.getReadOnlyProperty();
+		return this.battleId;
 	}
 
 	public final int getBattleId() {
 
 		return this.battleId.get();
+	}
+	
+	public final void setBattleId(final int battleId) {
+		
+		this.battleId.set(battleId);
 	}
 
 	public final BooleanProperty tappedProperty() {
@@ -247,10 +251,5 @@ public class Card implements Serializable {
 		if (this.counters.isNotEqualTo(other.counters).get())
 			return false;
 		return true;
-	}
-
-	public static void setBattleIdCounter(final int battleIdCounter) {
-	
-		Card.battleIdCounter = battleIdCounter;
 	}
 }

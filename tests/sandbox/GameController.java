@@ -87,7 +87,7 @@ public class GameController {
 
 			if (player.equals(this.gameTable.getLocalPlayer())) {
 				// TODO Send the Network message
-				new SynchronizationEvent(this, EventType.CHANGE_CARD_CONTEXT, player, card, origin, destination,
+				new SynchronizationEvent(EventType.CHANGE_CARD_CONTEXT, player, card, origin, destination,
 					Integer.valueOf(destinationIndex));
 
 			}
@@ -108,7 +108,7 @@ public class GameController {
 
 		if (player.equals(this.gameTable.getLocalPlayer())) {
 			// TODO Send the Network message
-			new SynchronizationEvent(this, EventType.SET_TAPPED, player, card, Boolean.valueOf(tapped));
+			new SynchronizationEvent(EventType.SET_TAPPED, player, card, Boolean.valueOf(tapped));
 		}
 	}
 
@@ -125,7 +125,7 @@ public class GameController {
 
 			if (player.equals(this.gameTable.getLocalPlayer())) {
 				// TODO Send the Network message
-				new SynchronizationEvent(this, EventType.SET_VISIBLE, player, card, Boolean.valueOf(visible));
+				new SynchronizationEvent(EventType.SET_VISIBLE, player, card, Boolean.valueOf(visible));
 			}
 		}
 	}
@@ -141,7 +141,7 @@ public class GameController {
 
 		if (player.equals(this.gameTable.getLocalPlayer())) {
 			// TODO Send the Network message
-			new SynchronizationEvent(this, EventType.SET_SELECTED, player, card, Boolean.valueOf(selected));
+			new SynchronizationEvent(EventType.SET_SELECTED, player, card, Boolean.valueOf(selected));
 		}
 	}
 
@@ -156,7 +156,7 @@ public class GameController {
 
 		if (player.equals(this.gameTable.getLocalPlayer())) {
 			// TODO Send the Network message
-			new SynchronizationEvent(this, EventType.SET_LOCATION, player, card, Double.valueOf(x), Double.valueOf(y));
+			new SynchronizationEvent(EventType.SET_LOCATION, player, card, Double.valueOf(x), Double.valueOf(y));
 		}
 	}
 
@@ -171,7 +171,7 @@ public class GameController {
 
 		if (player.equals(this.gameTable.getLocalPlayer())) {
 			// TODO Send the Network message
-			new SynchronizationEvent(this, EventType.ADD_COUNTER, player, card, counter);
+			new SynchronizationEvent(EventType.ADD_COUNTER, player, card, counter);
 		}
 	}
 
@@ -186,7 +186,7 @@ public class GameController {
 
 		if (player.equals(this.gameTable.getLocalPlayer())) {
 			// TODO Send the Network message
-			new SynchronizationEvent(this, EventType.REMOVE_COUNTER, player, card, counter);
+			new SynchronizationEvent(EventType.REMOVE_COUNTER, player, card, counter);
 		}
 	}
 

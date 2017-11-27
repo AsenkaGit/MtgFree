@@ -19,7 +19,7 @@ import javafx.collections.ObservableList;
 
 public class Player implements Serializable {
 
-	private static final long serialVersionUID = -4119416247136512680L;
+	private static final long serialVersionUID = -6085712796619122606L;
 
 	private ListProperty<Card> library;
 
@@ -30,6 +30,8 @@ public class Player implements Serializable {
 	private ReadOnlyListWrapper<Card> graveyard;
 
 	private ReadOnlyListWrapper<Card> exile;
+	
+	private IntegerProperty id;
 
 	private StringProperty name;
 
@@ -37,8 +39,9 @@ public class Player implements Serializable {
 
 	private IntegerProperty poison;
 	
-	public Player(String name) {
+	public Player(int id, String name) {
 		
+		this.id = new SimpleIntegerProperty(id);
 		this.name = new SimpleStringProperty(name);
 		this.life = new SimpleIntegerProperty(20);
 		this.poison = new SimpleIntegerProperty(0);
@@ -103,8 +106,23 @@ public class Player implements Serializable {
 
 		return this.exile.get();
 	}
+	
+	public final IntegerProperty idProperty() {
+		
+		return this.id;
+	}
+	
+	public final int getId() {
+		
+		return this.id.get();
+	}
+	
+	public final void setId(final int id) {
+		
+		this.id.set(id);
+	}
 
-	public final StringProperty namePropertyProperty() {
+	public final StringProperty nameProperty() {
 
 		return this.name;
 	}
@@ -156,6 +174,7 @@ public class Player implements Serializable {
 	
 	private void writeObject(ObjectOutputStream out) throws IOException {
 		
+		out.writeInt(this.id.get());
 		out.writeUTF(this.name.get());
 		out.writeInt(this.life.get());
 		out.writeInt(this.poison.get());
@@ -169,6 +188,7 @@ public class Player implements Serializable {
 	@SuppressWarnings("unchecked")
 	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
 
+		this.id = new SimpleIntegerProperty(this, "id", in.readInt());
 		this.name = new SimpleStringProperty(this, "name", in.readUTF());
 		this.life = new SimpleIntegerProperty(this, "life", in.readInt());
 		this.poison = new SimpleIntegerProperty(this, "poison", in.readInt());
@@ -194,8 +214,9 @@ public class Player implements Serializable {
 		result = prime * result + ((graveyard == null) ? 0 : graveyard.hashCode());
 		result = prime * result + ((hand == null) ? 0 : hand.hashCode());
 		result = prime * result + ((library == null) ? 0 : library.hashCode());
-		result = prime * result + life.get();
+		result = prime * result + id.get();
 		result = prime * result + ((name.get() == null) ? 0 : name.hashCode());
+		result = prime * result + life.get();
 		result = prime * result + poison.get();
 		return result;
 	}
@@ -204,7 +225,7 @@ public class Player implements Serializable {
 	@Override
 	public String toString() {
 		
-		return "Player [" + this.getName() + " ]";
+		return "Player [" + this.getId() + ", " + this.getName() + " ]";
 	}
 
 	@Override
@@ -217,6 +238,8 @@ public class Player implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Player other = (Player) obj;
+		if (this.id.isNotEqualTo(other.id).get())
+			return false;
 		if (this.name.isNotEqualTo(other.name).get())
 			return false;
 		if (this.life.isNotEqualTo(other.life).get())
