@@ -22,6 +22,7 @@ public abstract class MtgFreeTest {
 	 */
 	@Before 
 	public void beforeTest() {
+		System.out.println("-------------------------------------------");
 		System.out.println("Perform " + testName.getMethodName() + "   ");
 		System.out.println("-------------------------------------------");
 	}

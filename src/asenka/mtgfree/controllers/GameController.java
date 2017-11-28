@@ -83,18 +83,19 @@ public class GameController {
 		}
 	}
 
-	public void draw() throws GameException {
+	public Card draw() throws GameException {
 
-		draw(this.gameTable.getLocalPlayer());
+		return draw(this.gameTable.getLocalPlayer());
 	}
 
-	void draw(final Player player) throws GameException {
+	Card draw(final Player player) throws GameException {
 
 		final List<Card> library = getContextList(Context.LIBRARY, player);
 		final Card card = library.size() > 0 ? library.get(TOP) : null;
 
 		if (card != null) {
 			changeCardContext(player, card, Context.LIBRARY, Context.HAND, TOP);
+			return card;
 		} else {
 			throw new GameException("Unable to draw a card.");
 		}
