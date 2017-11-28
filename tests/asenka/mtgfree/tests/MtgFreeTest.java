@@ -21,10 +21,9 @@ public abstract class MtgFreeTest {
 	 * Method called before each test
 	 */
 	@Before 
-	public void setUp() {
-		System.out.println("==========================================");
-		System.out.println("Perform " + testName.getMethodName() + "    ");
-		System.out.println("==========================================");
+	public void beforeTest() {
+		System.out.println("Perform " + testName.getMethodName() + "   ");
+		System.out.println("-------------------------------------------");
 	}
 	
 }
