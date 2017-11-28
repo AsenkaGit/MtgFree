@@ -24,7 +24,7 @@ public class GameController {
 
 	private final CommunicationManager communicationManager;
 
-	public GameController(final GameTable gameTable) throws Exception {
+	public GameController(final GameTable gameTable) {
 
 		this.gameTable = gameTable;
 		this.communicationManager = new CommunicationManager(this);
@@ -91,7 +91,7 @@ public class GameController {
 	void draw(final Player player) throws GameException {
 
 		final List<Card> library = getContextList(Context.LIBRARY, player);
-		final Card card = library.remove(0);
+		final Card card = library.size() > 0 ? library.get(TOP) : null;
 
 		if (card != null) {
 			changeCardContext(player, card, Context.LIBRARY, Context.HAND, TOP);
