@@ -20,7 +20,8 @@ public enum EventType {
 	SHUFFLE("updateOpponentLibrary"), 
 	ADD_COUNTER("addCounter"), 
 	REMOVE_COUNTER("removeCounter"), 
-	PLAYER_JOIN("addOpponent"),
+	PLAYER_JOIN("addOpponent"), 
+	TABLE_CREATOR_RESPONSE("addOpponent"), 
 	
 	;
 

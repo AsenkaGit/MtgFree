@@ -1,6 +1,7 @@
 package asenka.mtgfree.controllers.communication;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 
 public class SynchronizationEvent implements Serializable {
@@ -25,5 +26,11 @@ public class SynchronizationEvent implements Serializable {
 	public Object[] getParameters() {
 		
 		return this.parameters;
+	}
+	
+	@Override
+	public String toString() {
+		
+		return "SynchronizationEvent [" + this.eventType + ", " + Arrays.toString(this.parameters) + "]";
 	}
 }

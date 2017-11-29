@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.apache.log4j.Logger;
+
 import asenka.mtgfree.controllers.communication.CommunicationException;
 import asenka.mtgfree.controllers.communication.EventType;
 import asenka.mtgfree.controllers.communication.SynchronizationEvent;
@@ -62,7 +64,10 @@ public class CommunicationManager {
 			parametersToSend[0] = player;
 			System.arraycopy(parameters, 0, parametersToSend, 1, parameters.length);
 
-			this.brokerManager.send(new SynchronizationEvent(eventType, parametersToSend));
+			SynchronizationEvent event = new SynchronizationEvent(eventType, parametersToSend);
+			
+			this.brokerManager.send(event);
+			Logger.getLogger(CommunicationManager.class).info(">>> " + player.getName() + " send " + event);
 		} else {
 			throw new IllegalStateException("The broker manager is not started yet.");
 		}
@@ -79,13 +84,16 @@ public class CommunicationManager {
 
 			// The events from the local player are not managed
 			if (!localPlayer.equals(parameters[0])) {
+				
+				Logger.getLogger(CommunicationManager.class).info(">>> " + localPlayer.getName() + " read " + event);
 
 				try {
 					EventType eventType = event.getEventType();
 				
 					if (eventType == EventType.PLAYER_JOIN) {
 						CardsManager.getInstance().addCardsFromPlayer((Player) parameters[0]);
-					} else {
+						send(EventType.TABLE_CREATOR_RESPONSE, localPlayer);
+					} else if (eventType != EventType.TABLE_CREATOR_RESPONSE){
 						replaceSerializedObjectsByLocalObjects(parameters);
 					}
 					final Method method = getGameControllerMethod(eventType);

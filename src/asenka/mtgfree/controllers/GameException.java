@@ -13,4 +13,9 @@ public class GameException extends RuntimeException {
 		super(e);
 	}
 
+	public GameException(Throwable exception) {
+
+		// TODO Auto-generated constructor stub
+	}
+
 }
