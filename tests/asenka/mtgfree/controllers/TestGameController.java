@@ -236,27 +236,52 @@ public class TestGameController extends MtgFreeTest {
 				System.out.println("BEGIN PLAYER 1 GAME COMMUNICATION");
 
 				try {
+					final GameTable player1GameTable = getGameTable();	
+					assertSame("Test 0.1", player1, player1GameTable.getLocalPlayer());
+					assertNull("Test 0.2", player1GameTable.getOtherPlayer());
 					
-
-					final GameTable gameTable = getGameTable();
+					// STEP 1 [Player 1] Create the game
+					perform("createGame", 1000);
 					
-					assertSame(player1, gameTable.getLocalPlayer());
-					assertNull(gameTable.getOtherPlayer());
+					// STEP 2 [Player 2] Join the game
+					Thread.sleep(1000);
+					assertNotNull("Test 2.1", player1GameTable.getOtherPlayer());
+					assertEquals("Test 2.2", player2, player1GameTable.getOtherPlayer());
 					
-					perform("createGame", 2000);
+					// STEP 3 [Player 1] Draws a card
+					Card card = (Card) perform("draw", 1000);
+					assertEquals("Test 3.1", 1, player1.getHand().size());
+					assertSame("Test 3.2", card, player1.getHand().get(0));
 					
-					assertNotNull(gameTable.getOtherPlayer());
-					assertEquals(player2, gameTable.getOtherPlayer());
+					// STEP 4 [Player 2] Draws a card
+					Thread.sleep(500);
+					assertEquals("Test 4", 1, player1GameTable.getOtherPlayer().getHand().size());
+					Thread.sleep(500);
 					
-					Card card = (Card) perform("draw", 500);
-					card = (Card) perform("draw", 500);
+					// STEP 5 [Player 2] Exit game table
+					Thread.sleep(1000);
+					assertNull("Test 5", player1GameTable.getOtherPlayer());
 					
-					assertEquals(2, gameTable.getLocalPlayer().getHand().size());
+					// STEP 6 [Player 1] Play a card on battlefield
+					perform("changeCardContext", 1000, card, Context.HAND, Context.BATTLEFIELD, 0);
+					assertEquals("Test 6.1", 0, player1.getHand().size());
+					assertEquals("Test 6.2", 1, player1.getBattlefield().size());
+					
+					// STEP 7 [Player 2] Re-join the game table
+					Thread.sleep(1000);
+					assertNotNull("Test 7.1", player1GameTable.getOtherPlayer());
+					assertEquals("Test 7.2", player2, player1GameTable.getOtherPlayer());
+					
+					// STEP 8 [ALL] Tempo
+					Thread.sleep(1000);
+					
+					// STEP 9 [Player 1] tap the card on the battlefield
+					perform("setTapped", 1000, card, true);
 		
 				} catch (AssertionError e) {
-					fail("One assertion test is wrong.");
+					fail("[PLAYER 1] One assertion test is wrong: " + e.getMessage());
 				} catch (Throwable e) {
-					fail("FATAL ERROR: " + e.getMessage());
+					fail("[PLAYER 1] FATAL ERROR: " + e.toString());
 				} finally {
 					System.out.println("END PLAYER 1 GAME COMMUNICATION");
 				}
@@ -273,28 +298,53 @@ public class TestGameController extends MtgFreeTest {
 
 				System.err.println("BEGIN PLAYER 2 GAME COMMUNICATION");
 
-				try {
+				try {	
+					final GameTable player2GameTable = getGameTable();
+					assertSame("Test 0.1", player2, player2GameTable.getLocalPlayer());
+					assertNull("Test 0.2", player2GameTable.getOtherPlayer());
 					
-					final GameTable gameTable = getGameTable();
-					
-					assertSame(player2, gameTable.getLocalPlayer());
-					assertNull(gameTable.getOtherPlayer());
+					// STEP 1 [Player 1] Create the game
 					Thread.sleep(1000);
 					
-					perform("joinGame", 2000);
+					// STEP 2 [Player 2] Join the game
+					perform("joinGame", 1000);
+					assertNotNull("Test 2.1", player2GameTable.getOtherPlayer());
+					assertEquals("Test 2.2", player1, player2GameTable.getOtherPlayer());
 					
-					assertNotNull(gameTable.getOtherPlayer());
-					assertEquals(player1, gameTable.getOtherPlayer());
+					// STEP 3 [Player 1] Draws a card
+					Thread.sleep(1000);
+					assertEquals(1, player2GameTable.getOtherPlayer().getHand().size());
 					
-					assertEquals(2, gameTable.getOtherPlayer().getHand().size());
+					// STEP 4 [Player 2] Draws a card
+					Card card = (Card) perform("draw", 1000);
+					assertEquals(1, player2.getHand().size());
+					assertSame(card, player2.getHand().get(0));
 					
-					Card card = (Card) perform("draw", 500);
-					perform("changeCardContext", 500, card, Context.HAND, Context.BATTLEFIELD, 0);
+					// STEP 5 [Player 2] Exit game table
+					perform("exitGame", 1000);
+					assertNull(player2GameTable.getOtherPlayer());
+					
+					// STEP 6 [Player 1] Play a card on battlefield
+					Thread.sleep(1000);
+					
+					// STEP 7 [Player 2] Re-join the game table
+					perform("joinGame", 1000);
+					
+					// STEP 8 [ALL] Tempo
+					Thread.sleep(1000);
+					assertNotNull("Test 8.1", player2GameTable.getOtherPlayer());
+					assertEquals("Test 8.2", player1, player2GameTable.getOtherPlayer());
+					assertEquals("Test 8.3", 1, player2GameTable.getOtherPlayer().getBattlefield().size());
+					
+					// STEP 9 [Player 1] tap the card on the battlefield
+					Thread.sleep(1000);
+					assertEquals("Test 9", true, player2GameTable.getOtherPlayer().getBattlefield().get(0).isTapped());
+					
 					
 				} catch (AssertionError e) {
-					fail("One assertion test is wrong.");
+					fail("[PLAYER 2] One assertion test is wrong: " + e.getMessage());
 				} catch (Throwable e) {
-					fail("FATAL ERROR: " + e.getMessage());
+					fail("[PLAYER 2] FATAL ERROR: " + e.getMessage());
 				} finally {
 					System.err.println("END PLAYER 2 GAME COMMUNICATION");
 				}
@@ -333,6 +383,7 @@ public class TestGameController extends MtgFreeTest {
 			final GameTable gameTable = this.getGameTable();
 			final Player localPlayer = gameTable.getLocalPlayer();
 			Object result = null;
+			
 			switch(action) {
 				
 				case "createGame": 
@@ -343,12 +394,20 @@ public class TestGameController extends MtgFreeTest {
 					System.out.println("> " + localPlayer.getName() + " join the table " + gameTable);
 					this.joinGame(); 
 					break;
+				case "exitGame" : 
+					System.out.println("> " + localPlayer.getName() + " exit the table " + gameTable);
+					this.exitGame(); 
+					break;
 				case "draw" : 
 					System.out.println("> " + localPlayer.getName() + " draws a card");
 					result = this.draw();
 					break;
+				case "setTapped" : 
+					System.out.println("> " + localPlayer.getName() + " set the tap value of " + (Card)parameters[0] + " to " + (Boolean)parameters[1]);
+					this.setTapped((Card)parameters[0], (Boolean)parameters[1]);
+					break;
 				case "changeCardContext" : 
-					System.out.println("> " + localPlayer.getName() + " move the card " + (Card)parameters[0] 
+					System.out.println("> " + localPlayer.getName() + " moves the card " + (Card)parameters[0] 
 						+ " from " + (Context)parameters[1] + " to " + (Context)parameters[2]);
 					this.changeCardContext((Card)parameters[0], (Context)parameters[1], (Context)parameters[2], (Integer)parameters[3]);
 					break;

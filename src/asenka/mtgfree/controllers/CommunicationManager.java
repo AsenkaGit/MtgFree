@@ -29,7 +29,7 @@ public class CommunicationManager {
 		this.brokerManager = null;
 	}
 
-	public void createGame() throws CommunicationException, IllegalStateException {
+	public void createGame() throws IllegalStateException , CommunicationException {
 
 		if (this.brokerManager == null) {
 			this.brokerManager = new ActiveMQManager(this.gameController.getGameTable().getName(), this);
@@ -39,7 +39,7 @@ public class CommunicationManager {
 		}
 	}
 
-	public void joinGame() throws CommunicationException, IllegalStateException {
+	public void joinGame() throws IllegalStateException, CommunicationException  {
 
 		if (this.brokerManager == null) {
 
@@ -53,9 +53,19 @@ public class CommunicationManager {
 			throw new IllegalStateException("The broker manager is already started.");
 		}
 	}
+	
+	public void exitGame() throws IllegalStateException, CommunicationException {
+		
+		
+		final GameTable localGameTable = this.gameController.getGameTable();
+		
+		send(EventType.PLAYER_EXIT, localGameTable.getLocalPlayer());
+		localGameTable.setOtherPlayer(null);
+		this.brokerManager.close();
+		this.brokerManager = null;
+	}
 
-	public void send(EventType eventType, final Player player, final Serializable... parameters)
-		throws CommunicationException, IllegalStateException {
+	public void send(EventType eventType, final Player player, final Serializable... parameters) throws IllegalStateException, CommunicationException  {
 
 		if (this.brokerManager != null) {
 
@@ -66,8 +76,9 @@ public class CommunicationManager {
 
 			SynchronizationEvent event = new SynchronizationEvent(eventType, parametersToSend);
 			
-			this.brokerManager.send(event);
 			Logger.getLogger(CommunicationManager.class).info(">>> " + player.getName() + " send " + event);
+			this.brokerManager.send(event);
+			
 		} else {
 			throw new IllegalStateException("The broker manager is not started yet.");
 		}
@@ -76,10 +87,11 @@ public class CommunicationManager {
 
 	public void receive(final SynchronizationEvent event) throws CommunicationException {
 
-		Object[] parameters = event.getParameters();
+		final Object[] parameters = event.getParameters();
 
 		if (parameters.length > 0 && parameters[0] instanceof Player) {
-
+			
+			this.gameController.getGameTable().getGameEvents().add(event);
 			final Player localPlayer = this.gameController.getGameTable().getLocalPlayer();
 
 			// The events from the local player are not managed
@@ -93,7 +105,7 @@ public class CommunicationManager {
 					if (eventType == EventType.PLAYER_JOIN) {
 						CardsManager.getInstance().addCardsFromPlayer((Player) parameters[0]);
 						send(EventType.TABLE_CREATOR_RESPONSE, localPlayer);
-					} else if (eventType != EventType.TABLE_CREATOR_RESPONSE){
+					} else if (eventType != EventType.TABLE_CREATOR_RESPONSE && eventType != EventType.PLAYER_EXIT){
 						replaceSerializedObjectsByLocalObjects(parameters);
 					}
 					final Method method = getGameControllerMethod(eventType);
@@ -107,8 +119,8 @@ public class CommunicationManager {
 			}
 		} else {
 			throw new CommunicationException(parameters.length > 0 ? 
-				("Unexpected first parameter type: " + parameters[0].getClass() + " instead of " + Player.class) :
-				("The parameters array is empty."));
+				"Unexpected first parameter type: " + parameters[0].getClass() + " instead of " + Player.class :
+				"The parameters array is empty.");
 		}
 	}
 

@@ -29,23 +29,23 @@ public class GameController {
 		this.gameTable = gameTable;
 		this.communicationManager = new CommunicationManager(this);
 	}
-	
+
 	public GameTable getGameTable() {
-		
+
 		return this.gameTable;
 	}
-	
+
 	public void createGame() throws GameException {
-		
+
 		try {
 			this.communicationManager.createGame();
 		} catch (IllegalStateException | CommunicationException e) {
 			throw new GameException(e);
 		}
 	}
-	
+
 	public void joinGame() throws GameException {
-		
+
 		try {
 			this.communicationManager.joinGame();
 		} catch (IllegalStateException | CommunicationException e) {
@@ -59,6 +59,25 @@ public class GameController {
 			this.gameTable.setOtherPlayer(opponentPlayer);
 		} else {
 			throw new GameException("The table " + this.gameTable + " has already an opponent.");
+		}
+	}
+	
+	public void exitGame() throws GameException {
+		
+		try {
+			this.communicationManager.exitGame();
+		} catch (IllegalStateException | CommunicationException e) {
+			throw new GameException(e);
+		}
+	}
+
+	void removeOpponent(final Player opponentPlayer) throws GameException {
+
+		if (this.gameTable.getOtherPlayer() != null) {
+			this.gameTable.setOtherPlayer(null);
+		} else {
+			throw new GameException("The player " + opponentPlayer + " tries to exit the table " + this.gameTable
+				+ " but he is not an opponent on this table.");
 		}
 	}
 
@@ -76,7 +95,7 @@ public class GameController {
 
 	void updateOpponentLibrary(final Player player, final List<Card> library) throws GameException {
 
-		if(player.equals(this.gameTable.getOtherPlayer())) {
+		if (player.equals(this.gameTable.getOtherPlayer())) {
 			player.setLibrary(FXCollections.observableList(library));
 		} else {
 			throw new GameException("Unexpected player for library update: " + player);
@@ -107,8 +126,8 @@ public class GameController {
 		changeCardContext(this.gameTable.getLocalPlayer(), card, origin, destination, destinationIndex);
 	}
 
-	void changeCardContext(final Player player, final Card card, final Context origin, final Context destination,
-		int destinationIndex) throws GameException {
+	void changeCardContext(final Player player, final Card card, final Context origin, final Context destination, int destinationIndex)
+		throws GameException {
 
 		final List<Card> originList = getContextList(origin, player);
 		final List<Card> destinationList = getContextList(destination, player);

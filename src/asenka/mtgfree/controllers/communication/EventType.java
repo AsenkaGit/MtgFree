@@ -22,6 +22,7 @@ public enum EventType {
 	REMOVE_COUNTER("removeCounter"), 
 	PLAYER_JOIN("addOpponent"), 
 	TABLE_CREATOR_RESPONSE("addOpponent"), 
+	PLAYER_EXIT("removeOpponent"), 
 	
 	;
 
