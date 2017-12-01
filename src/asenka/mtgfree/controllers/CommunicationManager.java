@@ -76,7 +76,7 @@ public class CommunicationManager {
 
 			SynchronizationEvent event = new SynchronizationEvent(eventType, parametersToSend);
 			
-			Logger.getLogger(CommunicationManager.class).info(">>> " + player.getName() + " send " + event);
+			Logger.getLogger(CommunicationManager.class).trace(">>> " + player.getName() + " send " + event);
 			this.brokerManager.send(event);
 			
 		} else {
@@ -97,7 +97,7 @@ public class CommunicationManager {
 			// The events from the local player are not managed
 			if (!localPlayer.equals(parameters[0])) {
 				
-				Logger.getLogger(CommunicationManager.class).info(">>> " + localPlayer.getName() + " read " + event);
+				Logger.getLogger(CommunicationManager.class).trace(">>> " + localPlayer.getName() + " read " + event);
 
 				try {
 					EventType eventType = event.getEventType();
@@ -131,12 +131,13 @@ public class CommunicationManager {
 			if (parameters[i] instanceof Card) {
 				parameters[i] = CardsManager.getInstance().getLocalCard((Card) parameters[i]);
 			} else if (parameters[i] instanceof Player) {
-				final GameTable gameTable = this.gameController.getGameTable();
-
-				if (gameTable.getOtherPlayer().equals((Player) parameters[i])) {
-					parameters[i] = gameTable.getOtherPlayer();
+				final GameTable localGameTable = this.gameController.getGameTable();
+				final Player player = (Player) parameters[i];
+				
+				if (player.equals(localGameTable.getOtherPlayer())) {
+					parameters[i] = localGameTable.getOtherPlayer();
 				} else {
-					throw new CommunicationException("Unexpected player: " + parameters[i]);
+					throw new CommunicationException("Unexpected player: " + player + " for the " + localGameTable);
 				}
 			}
 		}
