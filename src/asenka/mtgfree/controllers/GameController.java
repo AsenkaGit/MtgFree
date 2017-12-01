@@ -53,7 +53,7 @@ public class GameController {
 		}
 	}
 
-	void addOpponent(final Player opponentPlayer) throws GameException {
+	synchronized void addOpponent(final Player opponentPlayer) throws GameException {
 
 		if (this.gameTable.getOtherPlayer() == null) {
 			this.gameTable.setOtherPlayer(opponentPlayer);
@@ -71,7 +71,7 @@ public class GameController {
 		}
 	}
 
-	void removeOpponent(final Player opponentPlayer) throws GameException {
+	synchronized void removeOpponent(final Player opponentPlayer) throws GameException {
 
 		if (this.gameTable.getOtherPlayer() != null) {
 			this.gameTable.setOtherPlayer(null);
@@ -93,7 +93,7 @@ public class GameController {
 		}
 	}
 
-	void updateOpponentLibrary(final Player player, final List<Card> library) throws GameException {
+	synchronized void updateOpponentLibrary(final Player player, final List<Card> library) throws GameException {
 
 		if (player.equals(this.gameTable.getOtherPlayer())) {
 			player.setLibrary(FXCollections.observableList(library));
@@ -107,7 +107,7 @@ public class GameController {
 		return draw(this.gameTable.getLocalPlayer());
 	}
 
-	Card draw(final Player player) throws GameException {
+	synchronized Card draw(final Player player) throws GameException {
 
 		final List<Card> library = getContextList(Context.LIBRARY, player);
 		final Card card = library.size() > 0 ? library.get(TOP) : null;
@@ -126,7 +126,7 @@ public class GameController {
 		changeCardContext(this.gameTable.getLocalPlayer(), card, origin, destination, destinationIndex);
 	}
 
-	void changeCardContext(final Player player, final Card card, final Context origin, final Context destination, int destinationIndex)
+	synchronized void changeCardContext(final Player player, final Card card, final Context origin, final Context destination, int destinationIndex)
 		throws GameException {
 
 		final List<Card> originList = getContextList(origin, player);
@@ -159,7 +159,7 @@ public class GameController {
 		setTapped(this.gameTable.getLocalPlayer(), card, tapped);
 	}
 
-	void setTapped(final Player player, final Card card, boolean tapped) throws GameException {
+	synchronized void setTapped(final Player player, final Card card, boolean tapped) throws GameException {
 
 		card.setTapped(tapped);
 
@@ -177,7 +177,7 @@ public class GameController {
 		setVisible(this.gameTable.getLocalPlayer(), card, visible);
 	}
 
-	void setVisible(final Player player, final Card card, boolean visible) throws GameException {
+	synchronized void setVisible(final Player player, final Card card, boolean visible) throws GameException {
 
 		if (visible != card.isVisible()) {
 
@@ -198,7 +198,7 @@ public class GameController {
 		setSelected(this.gameTable.getLocalPlayer(), card, selected);
 	}
 
-	void setSelected(final Player player, final Card card, boolean selected) throws GameException {
+	synchronized void setSelected(final Player player, final Card card, boolean selected) throws GameException {
 
 		card.setSelected(selected);
 
@@ -216,7 +216,7 @@ public class GameController {
 		setLocation(this.gameTable.getLocalPlayer(), card, x, y);
 	}
 
-	void setLocation(final Player player, final Card card, double x, double y) throws GameException {
+	synchronized void setLocation(final Player player, final Card card, double x, double y) throws GameException {
 
 		card.setLocation(x, y);
 
@@ -234,7 +234,7 @@ public class GameController {
 		addCounter(this.gameTable.getLocalPlayer(), card, counter);
 	}
 
-	void addCounter(final Player player, final Card card, final Counter counter) throws GameException {
+	synchronized void addCounter(final Player player, final Card card, final Counter counter) throws GameException {
 
 		card.getCounters().add(counter);
 
@@ -252,7 +252,7 @@ public class GameController {
 		removeCounter(this.gameTable.getLocalPlayer(), card, counter);
 	}
 
-	void removeCounter(final Player player, final Card card, final Counter counter) throws GameException {
+	synchronized void removeCounter(final Player player, final Card card, final Counter counter) throws GameException {
 
 		card.getCounters().remove(counter);
 
