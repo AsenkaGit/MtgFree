@@ -200,6 +200,35 @@ public class TestGameController extends MtgFreeTest {
 	}
 	
 	@Test
+	public void testWith1Player() {
+		
+		gameController.createGame();
+		Player localPlayer = gameController.getGameTable().getLocalPlayer();
+		
+		Card card = gameController.draw();
+		assertNotNull(card);
+		assertEquals(1, localPlayer.getHand().size());
+		assertSame(card, localPlayer.getHand().get(0));
+		assertFalse(card.isTapped());
+		assertTrue(card.isVisible());
+		
+		
+		gameController.changeCardContext(card, Context.HAND, Context.BATTLEFIELD, 0);
+		assertEquals(0, localPlayer.getHand().size());
+		assertEquals(1, localPlayer.getBattlefield().size());
+		assertSame(card, localPlayer.getBattlefield().get(0));
+		
+		gameController.setTapped(card, true);
+		assertTrue(localPlayer.getBattlefield().get(0).isTapped());
+		assertTrue(card.isTapped());
+		
+		gameController.setVisible(card, false);
+		assertFalse(card.isVisible());
+		
+		gameController.exitGame();
+	}
+	
+	@Test
 	public void testCommunication() {
 		
 		CardsManager cm = CardsManager.getInstance();
