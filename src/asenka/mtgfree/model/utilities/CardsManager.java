@@ -48,7 +48,6 @@ public final class CardsManager {
 				battleId = owner.getId() * PLAYER_ID_MULTIPLICATOR;
 				this.battleIdCounters.put(owner, battleId);
 			}
-			@SuppressWarnings("deprecation")
 			final Card card = new Card(battleId, cardData);
 
 			if (this.cards.put(battleId, card) == null) {

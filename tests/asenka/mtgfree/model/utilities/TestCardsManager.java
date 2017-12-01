@@ -58,7 +58,6 @@ public class TestCardsManager extends MtgFreeTest {
 		assertEquals(cardsManager.getCards().get(0).getPrimaryCardData().getName(), "Always Watching");
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void testGetLocalCard() {
 		
@@ -109,7 +108,6 @@ public class TestCardsManager extends MtgFreeTest {
 		
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void testAddCardFromPlayer() {
 		

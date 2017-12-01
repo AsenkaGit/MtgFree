@@ -72,7 +72,7 @@ public class JFXMagicText extends VBox {
 		MTG_SYMBOLS.put("{W}", new Image("file:./resources/images/mtg/icons/w.jpg"));
 		MTG_SYMBOLS.put("{T}", new Image("file:./resources/images/mtg/icons/tap.jpg"));
 	}
-
+	
 	/**
 	 * Build an empty magic text
 	 */

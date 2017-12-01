@@ -3,9 +3,10 @@ package asenka.mtgfree.views.javafx;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 
+import asenka.mtgfree.model.Player;
+import asenka.mtgfree.model.utilities.CardsManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
 public class MainApplication extends Application {
@@ -14,12 +15,17 @@ public class MainApplication extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		initProxy(true);
+
+		CardsManager cm = CardsManager.getInstance();
 		
-//		JFXCard card = new JFXCard(new Card(MtgDataUtility.getInstance().getMtgCard("chalice of life")), null, CardImageSize.LARGE);
-//		JFXCard card2 = new JFXCard(new Card(MtgDataUtility.getInstance().getMtgCard("glorybringer")), null, CardImageSize.MEDIUM);
-//		JFXCard card3 = new JFXCard(new Card(MtgDataUtility.getInstance().getMtgCard("always watching")), null, CardImageSize.SMALL);
-//		
-		Scene scene = new Scene(new FlowPane());
+		final Player player1 = new Player(1, "Player_1");
+		
+		player1.getLibrary().addAll(
+			cm.createCard(player1, "glorybringer"),
+			cm.createCard(player1, "glorybringer"),
+			cm.createCard(player1, "glorybringer"));
+		
+		Scene scene = new Scene(new JFXPlayerHand(player1.getLibrary()));
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

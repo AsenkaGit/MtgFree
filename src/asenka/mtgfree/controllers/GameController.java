@@ -193,23 +193,20 @@ public class GameController {
 		}
 	}
 
-	public void setSelected(final Card card, boolean selected) throws GameException {
+	
 
-		setSelected(this.gameTable.getLocalPlayer(), card, selected);
-	}
-
-	synchronized void setSelected(final Player player, final Card card, boolean selected) throws GameException {
-
-		card.setSelected(selected);
-
-		if (player.equals(this.gameTable.getLocalPlayer())) {
-			try {
-				this.communicationManager.send(EventType.SET_SELECTED, player, card, Boolean.valueOf(selected));
-			} catch (IllegalStateException | CommunicationException e) {
-				throw new GameException(e);
-			}
-		}
-	}
+//	synchronized void setSelected(final Player player, final Card card, boolean selected) throws GameException {
+//
+//		card.setSelected(selected);
+//
+//		if (player.equals(this.gameTable.getLocalPlayer())) {
+//			try {
+//				this.communicationManager.send(EventType.SET_SELECTED, player, card, Boolean.valueOf(selected));
+//			} catch (IllegalStateException | CommunicationException e) {
+//				throw new GameException(e);
+//			}
+//		}
+//	}
 
 	public void setLocation(final Card card, double x, double y) throws GameException {
 
@@ -263,6 +260,11 @@ public class GameController {
 				throw new GameException(e);
 			}
 		}
+	}
+
+	public void setSelected(final Card card, boolean selected) {
+	
+		card.setSelected(selected);
 	}
 
 	private static List<Card> getContextList(final Context origin, final Player player) throws GameException {

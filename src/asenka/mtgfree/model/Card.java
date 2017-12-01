@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import asenka.mtgfree.model.data.MtgCard;
-import asenka.mtgfree.model.utilities.CardsManager;
 import asenka.mtgfree.model.utilities.MtgDataUtility;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -45,11 +44,9 @@ public class Card implements Serializable {
 	private ReadOnlyListWrapper<Counter> counters;
 
 	/**
-	 * @deprecated use {@link CardsManager#createCard(Player, String)} instead
 	 * @param battleId
 	 * @param primaryCardData
 	 */
-	@Deprecated(forRemoval=false)
 	public Card(final int battleId, final MtgCard primaryCardData) {
 
 		this.battleId = new SimpleIntegerProperty(this, "battleId", battleId);

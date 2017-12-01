@@ -191,7 +191,7 @@ public class TestGameController extends MtgFreeTest {
 		assertEquals(false, card.isVisible());
 		
 		assertEquals(false, card.isSelected());
-		gameController.setSelected(opponent, card, true);
+		gameController.setSelected(card, true);
 		assertEquals(true, card.isSelected());
 		
 		assertEquals(new Point2D(0d, 0d), card.getLocation());
