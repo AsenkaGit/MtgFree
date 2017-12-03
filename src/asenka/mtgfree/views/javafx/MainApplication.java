@@ -14,7 +14,7 @@ public class MainApplication extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		initProxy(true);
+		initProxy(false);
 
 		CardsManager cm = CardsManager.getInstance();
 		
@@ -22,12 +22,18 @@ public class MainApplication extends Application {
 		
 		player1.getLibrary().addAll(
 			cm.createCard(player1, "glorybringer"),
-			cm.createCard(player1, "glorybringer"),
-			cm.createCard(player1, "glorybringer"));
+			cm.createCard(player1, "forest"),
+			cm.createCard(player1, "plains"),
+			cm.createCard(player1, "black lotus"),
+			cm.createCard(player1, "always watching"));
+		
+		
+		
 		
 		Scene scene = new Scene(new JFXPlayerHand(player1.getLibrary()));
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		
 	}
 
 	public static void main(String[] args) {
