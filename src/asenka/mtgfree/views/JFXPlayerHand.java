@@ -194,6 +194,7 @@ public class JFXPlayerHand extends ScrollPane {
 	private static String createTextForTooltip(final Card card) {
 
 		StringBuffer buf = new StringBuffer();
+		buf.append("[" + card.getBattleId() + "]\n");
 		buf.append(createTextForTooltip(card.getPrimaryCardData()));
 
 		final MtgCard secondaryCardData = card.getSecondaryCardData();

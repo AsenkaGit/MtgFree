@@ -10,7 +10,6 @@ import asenka.mtgfree.model.Player;
 import asenka.mtgfree.model.utilities.CardsManager;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ListChangeListener;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
