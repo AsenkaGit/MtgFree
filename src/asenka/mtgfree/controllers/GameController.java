@@ -1,5 +1,6 @@
 package asenka.mtgfree.controllers;
 
+import java.util.Arrays;
 import java.util.List;
 
 import asenka.mtgfree.controllers.communication.EventType;
@@ -261,10 +262,12 @@ public class GameController {
 			}
 		}
 	}
-
-	public void setSelected(final Card card, boolean selected) {
-
-		card.setSelected(selected);
+	
+	public void setSelectedCards(Card... cards) {
+		
+		this.gameTable.getSelectedCards().clear();
+		this.gameTable.getSelectedCards().addAll(Arrays.<Card>asList(cards));
+		Arrays.stream(cards).forEach(card -> card.setSelected(true));
 	}
 
 	private static List<Card> getContextList(final Context origin, final Player player) throws GameException {

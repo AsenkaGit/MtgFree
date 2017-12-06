@@ -191,7 +191,7 @@ public class TestGameController extends MtgFreeTest {
 		assertEquals(false, card.isVisible());
 		
 		assertEquals(false, card.isSelected());
-		gameController.setSelected(card, true);
+		gameController.setSelectedCards(card);
 		assertEquals(true, card.isSelected());
 		
 		assertEquals(new Point2D(0d, 0d), card.getLocation());
@@ -204,6 +204,8 @@ public class TestGameController extends MtgFreeTest {
 		
 		gameController.createGame();
 		Player localPlayer = gameController.getGameTable().getLocalPlayer();
+		
+		Thread.sleep(1000);
 		
 		Card card = gameController.draw();
 		assertNotNull(card);
@@ -221,12 +223,14 @@ public class TestGameController extends MtgFreeTest {
 		
 		Thread.sleep(200);
 		
+		assertFalse(card.isTapped());
 		gameController.setTapped(card, true);
 		assertTrue(localPlayer.getBattlefield().get(0).isTapped());
 		assertTrue(card.isTapped());
 		
 		Thread.sleep(200);
 		
+		assertTrue(card.isVisible());
 		gameController.setVisible(card, false);
 		assertFalse(card.isVisible());
 		

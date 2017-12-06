@@ -98,6 +98,9 @@ public class JFXPlayerHand extends ScrollPane {
 		}
 
 		addContextMenuForCardNode(cardImageView, card);
+		
+		// Add action to set the selected card
+		cardImageView.setOnMouseClicked(event -> this.gameController.setSelectedCards(card));
 
 		// Add the tooltip on the card image view
 		Tooltip tooltip = new Tooltip(createTextForTooltip(card));

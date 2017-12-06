@@ -10,6 +10,7 @@ import asenka.mtgfree.model.Player;
 import asenka.mtgfree.model.utilities.CardsManager;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ListChangeListener;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
@@ -74,14 +75,11 @@ public class MainApplication extends Application {
 		
 		// Close the connection with the broker on exit
 		primaryStage.setOnCloseRequest(event -> gameController.exitGame());
-		
 	}
 
 	public static void main(String[] args) {
 
 		Application.launch(MainApplication.class);
-		
-
 	}
 
 	private void initProxy(boolean needProxy) {
