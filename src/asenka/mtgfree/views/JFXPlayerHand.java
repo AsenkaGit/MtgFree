@@ -1,5 +1,8 @@
 package asenka.mtgfree.views;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.controlsfx.control.InfoOverlay;
 
 import asenka.mtgfree.controllers.GameController;
@@ -9,7 +12,6 @@ import asenka.mtgfree.model.Player;
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.views.utilities.ImagesManager;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -24,6 +26,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
+
+/**
+ * 
+ * 
+ * 
+ * @author asenka
+ * 
+ */
 public class JFXPlayerHand extends ScrollPane {
 
 	/**
@@ -32,14 +42,14 @@ public class JFXPlayerHand extends ScrollPane {
 	private ObservableList<Card> cards;
 
 	/**
-	 * The pane display the cards horizontaly
+	 * The pane display the cards horizontally
 	 */
 	private HBox horizontalLayout;
 
 	/**
 	 * The list of card panes
 	 */
-	private ObservableList<Pane> cardPanes;
+	private List<Pane> cardPanes;
 
 	/**
 	 * Flag indicating if the hand is from the local player or another player
@@ -62,9 +72,9 @@ public class JFXPlayerHand extends ScrollPane {
 		this.cards = player.getHand();
 		this.gameController = gameController;
 		this.isLocalPlayerHand = player.equals(gameController.getGameTable().getLocalPlayer());
-		this.cardPanes = FXCollections.<Pane> observableArrayList();
+		this.cardPanes = new ArrayList<Pane>();
 		this.horizontalLayout = new HBox();
-		this.horizontalLayout.setPadding(new Insets(10, 10, 10, 10));
+		this.horizontalLayout.setPadding(new Insets(15, 10, 15, 10));
 
 		this.cards.forEach(card -> this.cardPanes.add(createCardPane(card)));
 		this.horizontalLayout.getChildren().addAll(this.cardPanes);
@@ -96,7 +106,7 @@ public class JFXPlayerHand extends ScrollPane {
 			cardImageView.setFitHeight(CardImageSize.SMALL.getHeigth());
 			cardImageView.setFitWidth(CardImageSize.SMALL.getWidth());
 		}
-
+		// Add the context menu on the card
 		addContextMenuForCardNode(cardImageView, card);
 		
 		// Add action to set the selected card
@@ -194,7 +204,7 @@ public class JFXPlayerHand extends ScrollPane {
 	private static String createTextForTooltip(final Card card) {
 
 		StringBuffer buf = new StringBuffer();
-		buf.append("[" + card.getBattleId() + "]\n");
+//		buf.append("[" + card.getBattleId() + "]\n");
 		buf.append(createTextForTooltip(card.getPrimaryCardData()));
 
 		final MtgCard secondaryCardData = card.getSecondaryCardData();
