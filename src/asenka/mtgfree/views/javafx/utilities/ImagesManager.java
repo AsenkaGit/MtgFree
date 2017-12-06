@@ -24,6 +24,11 @@ public abstract class ImagesManager {
 	 * The image of the back of a MTG card. Only one instance of this image is needed for the whole application
 	 */
 	public static final Image IMAGE_MTG_CARD_BACK = new Image("file:./resources/images/mtg/cards/back.png");
+	
+	/**
+	 * The image returned when it does not find any image.
+	 */
+	private static final Image IMAGE_NOT_FOUND = new Image("file:./resources/images/mtg/cards/image_not_found.png");
 
 	/**
 	 * The string to replace by a real multiver ID of a card
@@ -77,7 +82,7 @@ public abstract class ImagesManager {
 				saveImageInLocalCache(cardImage, multiverseId);
 			}
 		}
-		return cardImage;
+		return cardImage != null ? cardImage : IMAGE_NOT_FOUND;
 	}
 
 	/**

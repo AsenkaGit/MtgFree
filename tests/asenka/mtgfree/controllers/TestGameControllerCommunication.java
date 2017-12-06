@@ -93,8 +93,8 @@ public class TestGameControllerCommunication extends MtgFreeTest {
 					card = (Card) perform("draw", 100);
 					card = (Card) perform("draw", 100);
 					
-					perform("changeCardContext", 100, card, Context.HAND, Context.BATTLEFIELD, 0);
-					perform("changeCardContext", 100, card, Context.BATTLEFIELD, Context.EXILE, 0);
+					perform("changeCardContext", 100, card, Context.HAND, Context.BATTLEFIELD, 0, false);
+					perform("changeCardContext", 100, card, Context.BATTLEFIELD, Context.EXILE, 0, false);
 
 					Thread.sleep(5000);
 		
@@ -201,7 +201,7 @@ public class TestGameControllerCommunication extends MtgFreeTest {
 				case "changeCardContext" : 
 					System.out.println("> " + localPlayer.getName() + " moves the card " + parameters[0] 
 						+ " from " + parameters[1] + " to " + parameters[2]);
-					this.changeCardContext((Card)parameters[0], (Context)parameters[1], (Context)parameters[2], (Integer)parameters[3]);
+					this.changeCardContext((Card)parameters[0], (Context)parameters[1], (Context)parameters[2], (Integer)parameters[3], (Boolean)parameters[4]);
 					break;
 			}
 			try {

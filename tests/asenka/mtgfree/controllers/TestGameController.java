@@ -126,13 +126,13 @@ public class TestGameController extends MtgFreeTest {
 		Card card = gameController.draw(opponent);
 		
 		try {
-			gameController.changeCardContext(opponent, card, Context.BATTLEFIELD, Context.HAND, GameController.TOP);
+			gameController.changeCardContext(opponent, card, Context.BATTLEFIELD, Context.HAND, GameController.TOP, false);
 			fail("Exception expected here");
 		} catch(GameException e) {
 			System.out.println("Expected exception catched : " + e);
 		}
 		
-		gameController.changeCardContext(opponent, card, Context.HAND, Context.BATTLEFIELD, GameController.TOP);
+		gameController.changeCardContext(opponent, card, Context.HAND, Context.BATTLEFIELD, GameController.TOP, false);
 		
 		assertEquals(9, opponent.getLibrary().size());
 		assertEquals(0, opponent.getHand().size());
@@ -140,7 +140,7 @@ public class TestGameController extends MtgFreeTest {
 		assertEquals(0, opponent.getExile().size());
 		assertEquals(0, opponent.getGraveyard().size());
 		
-		gameController.changeCardContext(opponent, card, Context.BATTLEFIELD, Context.LIBRARY, GameController.BOTTOM);
+		gameController.changeCardContext(opponent, card, Context.BATTLEFIELD, Context.LIBRARY, GameController.BOTTOM, false);
 		
 		assertEquals(10, opponent.getLibrary().size());
 		assertEquals(0, opponent.getHand().size());
@@ -150,13 +150,13 @@ public class TestGameController extends MtgFreeTest {
 		assertSame(card, opponent.getLibrary().get(opponent.getLibrary().size() - 1));
 		
 		card = gameController.draw(opponent);
-		gameController.changeCardContext(opponent, card, Context.HAND, Context.LIBRARY, GameController.TOP);
+		gameController.changeCardContext(opponent, card, Context.HAND, Context.LIBRARY, GameController.TOP, false);
 		
 		assertSame(card, gameController.draw(opponent));
 		
-		gameController.changeCardContext(opponent, card, Context.HAND, Context.BATTLEFIELD, GameController.TOP);
-		gameController.changeCardContext(opponent, card, Context.BATTLEFIELD, Context.GRAVEYARD, GameController.TOP);
-		gameController.changeCardContext(opponent, card, Context.GRAVEYARD, Context.EXILE, GameController.TOP);
+		gameController.changeCardContext(opponent, card, Context.HAND, Context.BATTLEFIELD, GameController.TOP, false);
+		gameController.changeCardContext(opponent, card, Context.BATTLEFIELD, Context.GRAVEYARD, GameController.TOP, false);
+		gameController.changeCardContext(opponent, card, Context.GRAVEYARD, Context.EXILE, GameController.TOP, false);
 		
 		assertEquals(9, opponent.getLibrary().size());
 		assertEquals(0, opponent.getHand().size());
@@ -166,7 +166,7 @@ public class TestGameController extends MtgFreeTest {
 		assertSame(card, opponent.getExile().get(0));
 		
 		card = opponent.getLibrary().get(0);
-		gameController.changeCardContext(opponent, card, Context.LIBRARY, Context.LIBRARY, GameController.BOTTOM);
+		gameController.changeCardContext(opponent, card, Context.LIBRARY, Context.LIBRARY, GameController.BOTTOM, false);
 		
 		assertEquals(9, opponent.getLibrary().size());
 		assertEquals(0, opponent.getHand().size());
@@ -186,7 +186,7 @@ public class TestGameController extends MtgFreeTest {
 		gameController.setTapped(opponent, card, true);
 		assertEquals(true, card.isTapped());
 		
-		assertEquals(true, card.isVisible());
+		assertEquals(false, card.isVisible());
 		gameController.setVisible(opponent, card, false);
 		assertEquals(false, card.isVisible());
 		
@@ -210,11 +210,11 @@ public class TestGameController extends MtgFreeTest {
 		assertEquals(1, localPlayer.getHand().size());
 		assertSame(card, localPlayer.getHand().get(0));
 		assertFalse(card.isTapped());
-		assertTrue(card.isVisible());
+		assertFalse(card.isVisible());
 		
 		Thread.sleep(200);
 		
-		gameController.changeCardContext(card, Context.HAND, Context.BATTLEFIELD, 0);
+		gameController.changeCardContext(card, Context.HAND, Context.BATTLEFIELD, 0, false);
 		assertEquals(0, localPlayer.getHand().size());
 		assertEquals(1, localPlayer.getBattlefield().size());
 		assertSame(card, localPlayer.getBattlefield().get(0));

@@ -61,9 +61,9 @@ public class GameController {
 			throw new GameException("The table " + this.gameTable + " has already an opponent.");
 		}
 	}
-	
+
 	public void exitGame() throws GameException {
-		
+
 		try {
 			this.communicationManager.exitGame();
 		} catch (IllegalStateException | CommunicationException e) {
@@ -113,26 +113,28 @@ public class GameController {
 		final Card card = library.size() > 0 ? library.get(TOP) : null;
 
 		if (card != null) {
-			changeCardContext(player, card, Context.LIBRARY, Context.HAND, TOP);
+			changeCardContext(player, card, Context.LIBRARY, Context.HAND, TOP, true);
 			return card;
 		} else {
 			throw new GameException("Unable to draw a card.");
 		}
 	}
 
-	public void changeCardContext(final Card card, final Context origin, final Context destination, int destinationIndex)
+	public void changeCardContext(final Card card, final Context origin, final Context destination, int destinationIndex, boolean hidden)
 		throws GameException {
 
-		changeCardContext(this.gameTable.getLocalPlayer(), card, origin, destination, destinationIndex);
+		changeCardContext(this.gameTable.getLocalPlayer(), card, origin, destination, destinationIndex, hidden);
 	}
 
-	synchronized void changeCardContext(final Player player, final Card card, final Context origin, final Context destination, int destinationIndex)
-		throws GameException {
+	synchronized void changeCardContext(final Player player, final Card card, final Context origin, final Context destination,
+		int destinationIndex, boolean hidden) throws GameException {
 
 		final List<Card> originList = getContextList(origin, player);
 		final List<Card> destinationList = getContextList(destination, player);
 
 		if (originList.remove(card)) {
+			
+			card.setVisible(!hidden);
 
 			if (destinationIndex == BOTTOM) {
 				destinationList.add(card);
@@ -143,7 +145,7 @@ public class GameController {
 			if (player.equals(this.gameTable.getLocalPlayer())) {
 				try {
 					this.communicationManager.send(EventType.CHANGE_CARD_CONTEXT, player, card, origin, destination,
-						Integer.valueOf(destinationIndex));
+						Integer.valueOf(destinationIndex), Boolean.valueOf(hidden));
 				} catch (IllegalStateException | CommunicationException e) {
 					throw new GameException(e);
 				}
@@ -193,20 +195,18 @@ public class GameController {
 		}
 	}
 
-	
-
-//	synchronized void setSelected(final Player player, final Card card, boolean selected) throws GameException {
-//
-//		card.setSelected(selected);
-//
-//		if (player.equals(this.gameTable.getLocalPlayer())) {
-//			try {
-//				this.communicationManager.send(EventType.SET_SELECTED, player, card, Boolean.valueOf(selected));
-//			} catch (IllegalStateException | CommunicationException e) {
-//				throw new GameException(e);
-//			}
-//		}
-//	}
+	// synchronized void setSelected(final Player player, final Card card, boolean selected) throws GameException {
+	//
+	// card.setSelected(selected);
+	//
+	// if (player.equals(this.gameTable.getLocalPlayer())) {
+	// try {
+	// this.communicationManager.send(EventType.SET_SELECTED, player, card, Boolean.valueOf(selected));
+	// } catch (IllegalStateException | CommunicationException e) {
+	// throw new GameException(e);
+	// }
+	// }
+	// }
 
 	public void setLocation(final Card card, double x, double y) throws GameException {
 
@@ -263,7 +263,7 @@ public class GameController {
 	}
 
 	public void setSelected(final Card card, boolean selected) {
-	
+
 		card.setSelected(selected);
 	}
 

@@ -51,7 +51,7 @@ public class Card implements Serializable {
 
 		this.battleId = new SimpleIntegerProperty(this, "battleId", battleId);
 		this.tapped = new SimpleBooleanProperty(this, "tapped", false);
-		this.visible = new SimpleBooleanProperty(this, "visible", true);
+		this.visible = new SimpleBooleanProperty(this, "visible", false);
 		this.selected = new SimpleBooleanProperty(this, "selected", false);
 		this.primaryCardData = new ReadOnlyObjectWrapper<MtgCard>(this, "primaryCardData", primaryCardData);
 		this.location = new SimpleObjectProperty<Point2D>(this, "location", new Point2D(0d, 0d));
