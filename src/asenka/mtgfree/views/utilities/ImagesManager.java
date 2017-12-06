@@ -1,4 +1,4 @@
-package asenka.mtgfree.views.javafx.utilities;
+package asenka.mtgfree.views.utilities;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

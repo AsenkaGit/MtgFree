@@ -108,15 +108,9 @@ public class Deck {
 			return false;
 		if (this.description.isNotEqualTo(other.description).get())
 			return false;
-		if (main == null) {
-			if (other.main != null)
-				return false;
-		} else if (!main.equals(other.main))
+		if(this.main.isNotEqualTo(other.main).get()) 
 			return false;
-		if (sideboard == null) {
-			if (other.sideboard != null)
-				return false;
-		} else if (!sideboard.equals(other.sideboard))
+		if(this.sideboard.isNotEqualTo(other.sideboard).get()) 
 			return false;
 		return true;
 	}

@@ -1,4 +1,4 @@
-package asenka.mtgfree.views.javafx;
+package asenka.mtgfree.views;
 
 import org.controlsfx.control.InfoOverlay;
 
@@ -7,8 +7,7 @@ import asenka.mtgfree.controllers.GameController.Context;
 import asenka.mtgfree.model.Card;
 import asenka.mtgfree.model.Player;
 import asenka.mtgfree.model.data.MtgCard;
-import asenka.mtgfree.views.CardImageSize;
-import asenka.mtgfree.views.javafx.utilities.ImagesManager;
+import asenka.mtgfree.views.utilities.ImagesManager;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;

@@ -1,4 +1,4 @@
-package asenka.mtgfree.views.javafx;
+package asenka.mtgfree.views;
 
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
