@@ -11,7 +11,6 @@ import asenka.mtgfree.model.utilities.CardsManager;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
@@ -23,57 +22,83 @@ public class MainApplication extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		initProxy(false);
+		initProxy(true);
 
 		CardsManager cm = CardsManager.getInstance();
-		
-		
+
 		final Player player1 = new Player(1, "Player_1");
+//		final Player player2 = new Player(2, "Player_2");
 		final GameController gameController = new GameController(new GameTable("Main", player1));
 		gameController.createGame();
+
+		Card cardVisible = cm.createCard(player1, "Legion's Landing");
+		cardVisible.setVisible(true);
 		
-		player1.getHand().addAll(
-			cm.createCard(player1, "glorybringer"),
-			cm.createCard(player1, "forest"),
-			cm.createCard(player1, "plains"),
-			cm.createCard(player1, "black lotus"),
-			cm.createCard(player1, "Gaea's Liege"),
-			cm.createCard(player1, "Sage of Ancient Lore"),
-			cm.createCard(player1, "Sage of Ancient Lore"),
-			cm.createCard(player1, "Sage of Ancient Lore"),
-			cm.createCard(player1, "Sage of Ancient Lore"),
-			cm.createCard(player1, "Sylvan Yeti"),
-			cm.createCard(player1, "Shapeshifter"),
-			cm.createCard(player1, "Sarkhan Unbroken"),
-			cm.createCard(player1, "Legion's Landing"),
+		player1.getHand().addAll(cardVisible, cm.createCard(player1, "glorybringer"), cm.createCard(player1, "forest"), cm.createCard(player1, "plains"),
+			cm.createCard(player1, "black lotus"), cm.createCard(player1, "Gaea's Liege"), cm.createCard(player1, "Sage of Ancient Lore"),
+			cm.createCard(player1, "Sage of Ancient Lore"), cm.createCard(player1, "Sage of Ancient Lore"),
+			cm.createCard(player1, "Sage of Ancient Lore"), cm.createCard(player1, "Sylvan Yeti"), cm.createCard(player1, "Shapeshifter"),
+			cm.createCard(player1, "Sarkhan Unbroken"), cm.createCard(player1, "Legion's Landing"),
 			cm.createCard(player1, "always watching"));
-		
+
 		JFXPlayerHand hand = new JFXPlayerHand(gameController, player1);
-		
+
 		TableView<Card> battlefield = new TableView<Card>();
 		TableColumn<Card, String> cardNameColumn = new TableColumn<Card, String>("Battlefield");
 		cardNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().toString()));
 		battlefield.getColumns().add(cardNameColumn);
 		battlefield.itemsProperty().bind(gameController.getGameTable().getLocalPlayer().battlefieldProperty());
-		
+
 		TableView<Card> graveyard = new TableView<Card>();
 		TableColumn<Card, String> cardNameColumn2 = new TableColumn<Card, String>("Graveyard");
 		cardNameColumn2.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().toString()));
 		graveyard.getColumns().add(cardNameColumn2);
 		graveyard.itemsProperty().bind(gameController.getGameTable().getLocalPlayer().graveyardProperty());
-		
+
 		TableView<Card> exile = new TableView<Card>();
 		TableColumn<Card, String> cardNameColumn3 = new TableColumn<Card, String>("Exile");
 		cardNameColumn3.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().toString()));
 		exile.getColumns().add(cardNameColumn3);
 		exile.itemsProperty().bind(gameController.getGameTable().getLocalPlayer().exileProperty());
-		
-		Scene scene = new Scene(new VBox(new HBox(battlefield, graveyard, exile), new ScrollPane(hand)));
+
+		JFXCardView cardView = new JFXCardView(CardImageSize.SMALL);
+
+		Scene scene = new Scene(
+			new VBox(
+				new HBox(battlefield, graveyard, exile, new JFXSelectedCardInfoPane(gameController.getGameTable().getSelectedCards())), 
+					hand));
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		
+
 		// Close the connection with the broker on exit
 		primaryStage.setOnCloseRequest(event -> gameController.exitGame());
+
+		new Thread(() -> {
+			try {
+				Thread.sleep(2000);
+
+				cardView.setCard(cm.createCard(player1, "always watching"));
+
+				Thread.sleep(2000);
+				
+				cardVisible.setVisible(false);
+				
+				Thread.sleep(2000);
+
+				cardView.setCard(cm.createCard(player1, "Legion's Landing"));
+
+				Thread.sleep(2000);
+
+				cardView.setCard(null);
+				
+				Thread.sleep(2000);
+				
+				cardVisible.setVisible(true);
+
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}).start();
 	}
 
 	public static void main(String[] args) {

@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 /**
@@ -72,6 +73,10 @@ public class JFXMagicText extends VBox {
 		MTG_SYMBOLS.put("{W}", new Image("file:./resources/images/mtg/icons/w.jpg"));
 		MTG_SYMBOLS.put("{T}", new Image("file:./resources/images/mtg/icons/tap.jpg"));
 	}
+
+	private Font font;
+	
+	private String text;
 	
 	/**
 	 * Build an empty magic text
@@ -89,6 +94,8 @@ public class JFXMagicText extends VBox {
 	public JFXMagicText(String textWithSymbols) {
 
 		super();
+		this.text = textWithSymbols;
+		this.font = Font.getDefault();
 		this.setText(textWithSymbols);
 	}
 
@@ -128,6 +135,7 @@ public class JFXMagicText extends VBox {
 				currentFlowPane = new FlowPane();
 			} else {
 				Text text = new Text(textOrSymbol + SPACE_SEPARATOR);
+				text.setFont(this.font);
 				currentFlowPane.getChildren().add(text);
 			}
 		}
@@ -170,5 +178,11 @@ public class JFXMagicText extends VBox {
 		}
 		rulesTextList.addAll(Arrays.asList(buffer.toString().split(SPACE_SEPARATOR)));
 		return rulesTextList;
+	}
+
+	public void setFont(Font font) {
+
+		this.font = font;
+		this.setText(this.text);
 	}
 }

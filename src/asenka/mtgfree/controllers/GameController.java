@@ -265,6 +265,7 @@ public class GameController {
 	
 	public void setSelectedCards(Card... cards) {
 		
+		this.gameTable.getSelectedCards().forEach(card -> card.setSelected(false));
 		this.gameTable.getSelectedCards().clear();
 		this.gameTable.getSelectedCards().addAll(Arrays.<Card>asList(cards));
 		Arrays.stream(cards).forEach(card -> card.setSelected(true));
