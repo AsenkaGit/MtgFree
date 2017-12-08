@@ -69,7 +69,7 @@ public class JFXMagicText extends VBox {
 	/**
 	 * The alignement of the text (horizontally)
 	 */
-	private Pos horizontalAlignement;
+	private Pos alignement;
 
 	/**
 	 * Build an empty magic text
@@ -89,7 +89,7 @@ public class JFXMagicText extends VBox {
 		super();
 		this.text = textWithSymbols;
 		this.font = Font.getDefault();
-		this.horizontalAlignement = Pos.CENTER_LEFT;
+		this.alignement = Pos.CENTER_LEFT;
 		this.setText(textWithSymbols);
 	}
 
@@ -108,7 +108,7 @@ public class JFXMagicText extends VBox {
 		// The currentFlowPane variable is used to display a line. If the text does not contains line break, only one flow
 		// pane will be used
 		FlowPane currentFlowPane = new FlowPane();
-		currentFlowPane.setAlignment(this.horizontalAlignement);
+		currentFlowPane.setAlignment(this.alignement);
 
 		// Object used to add the flow pane(s) to the JFXMagicText
 		ObservableList<Node> children = super.getChildren();
@@ -138,7 +138,7 @@ public class JFXMagicText extends VBox {
 	}
 
 	/**
-	 * Set the font of the text displayed
+	 * Set the font of the text displayed. Be careful, the icons keep the same size.
 	 * @param font
 	 */
 	public void setFont(Font font) {
@@ -147,9 +147,13 @@ public class JFXMagicText extends VBox {
 		this.setText(this.text);
 	}
 
+	/**
+	 * Set the alignement of the text (center, left or right)
+	 * @param hAlignement
+	 */
 	public void setHAlignment(Pos hAlignement) {
 
-		this.horizontalAlignement = hAlignement;
+		this.alignement = hAlignement;
 		this.setText(this.text);
 	}
 
