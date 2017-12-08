@@ -29,7 +29,7 @@ import javafx.scene.layout.Pane;
  * @author asenka
  * @see ScrollPane
  */
-public class JFXPlayerHand extends ScrollPane {
+public class JFXHand extends ScrollPane {
 
 	/**
 	 * The list of cards in the player hand
@@ -62,7 +62,7 @@ public class JFXPlayerHand extends ScrollPane {
 	 * @param gameController the controller used to manipulate the cards
 	 * @param player the player
 	 */
-	public JFXPlayerHand(final GameController gameController, final Player player) {
+	public JFXHand(final GameController gameController, final Player player) {
 
 		super();
 		this.cards = player.getHand();
@@ -200,7 +200,7 @@ public class JFXPlayerHand extends ScrollPane {
 			this.horizontalLayout.getChildren().clear();
 			this.cardPanes.clear();
 
-			this.cards.forEach(card -> JFXPlayerHand.this.cardPanes.add(createCardPane(card)));
+			this.cards.forEach(card -> JFXHand.this.cardPanes.add(createCardPane(card)));
 			this.horizontalLayout.getChildren().addAll(this.cardPanes);
 		});
 	}

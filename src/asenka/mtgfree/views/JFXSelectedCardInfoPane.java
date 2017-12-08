@@ -1,7 +1,5 @@
 package asenka.mtgfree.views;
 
-import java.util.Optional;
-
 import asenka.mtgfree.model.Card;
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.views.JFXCardView.Side;
@@ -13,7 +11,6 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -198,7 +195,7 @@ public class JFXSelectedCardInfoPane extends StackPane { // The StackPane reacts
 	private void updateCardViewContextMenu() {
 
 		// Find the menu item if it exists (most of the time it will be null)
-		final MenuItem otherSideMenuItem = findMenuItemByID(this.cardView.getContextMenu(), JFXCardView.OTHER_SIDE_MENU_ITEM_ID);
+		final MenuItem otherSideMenuItem = JFXCardView.findMenuItemByID(this.cardView.getContextMenu(), JFXCardView.OTHER_SIDE_MENU_ITEM_ID);
 
 		if (otherSideMenuItem != null) {
 
@@ -225,17 +222,5 @@ public class JFXSelectedCardInfoPane extends StackPane { // The StackPane reacts
 		}
 	}
 
-	/**
-	 * Look for a menu item with a specific ID in a context menu
-	 * 
-	 * @param contextMenu the context menu
-	 * @param id the id of the menu item in the context menu to look for
-	 * @return the menu item id with the desired ID or <code>null</code>
-	 */
-	private static MenuItem findMenuItemByID(final ContextMenu contextMenu, String id) {
-
-		// Return one and only one menu item matching the ID
-		final Optional<MenuItem> result = contextMenu.getItems().stream().filter(item -> id.equals(item.getId())).findFirst();
-		return result.isPresent() ? result.get() : null;
-	}
+	
 }

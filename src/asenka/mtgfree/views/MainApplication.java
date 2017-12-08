@@ -4,15 +4,19 @@ import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 
 import asenka.mtgfree.controllers.GameController;
+import asenka.mtgfree.controllers.GameController.Context;
 import asenka.mtgfree.model.Card;
 import asenka.mtgfree.model.GameTable;
 import asenka.mtgfree.model.Player;
 import asenka.mtgfree.model.utilities.CardsManager;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -41,60 +45,41 @@ public class MainApplication extends Application {
 			cm.createCard(player1, "Sylvan Yeti"), cm.createCard(player1, "Shapeshifter"), cm.createCard(player1, "Sarkhan Unbroken"),
 			cm.createCard(player1, "Legion's Landing"), cm.createCard(player1, "always watching"));
 
-		JFXPlayerHand hand = new JFXPlayerHand(gameController, player1);
-
-		TableView<Card> battlefield = new TableView<Card>();
-		TableColumn<Card, String> cardNameColumn = new TableColumn<Card, String>("Battlefield");
-		cardNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().toString()));
-		battlefield.getColumns().add(cardNameColumn);
-		battlefield.itemsProperty().bind(gameController.getGameTable().getLocalPlayer().battlefieldProperty());
-
-		TableView<Card> graveyard = new TableView<Card>();
-		TableColumn<Card, String> cardNameColumn2 = new TableColumn<Card, String>("Graveyard");
-		cardNameColumn2.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().toString()));
-		graveyard.getColumns().add(cardNameColumn2);
-		graveyard.itemsProperty().bind(gameController.getGameTable().getLocalPlayer().graveyardProperty());
-
-		TableView<Card> exile = new TableView<Card>();
-		TableColumn<Card, String> cardNameColumn3 = new TableColumn<Card, String>("Exile");
-		cardNameColumn3.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().toString()));
-		exile.getColumns().add(cardNameColumn3);
-		exile.itemsProperty().bind(gameController.getGameTable().getLocalPlayer().exileProperty());
-
-		Scene scene = new Scene(new VBox(
-			new HBox(battlefield, graveyard, exile, new JFXSelectedCardInfoPane(gameController.getGameTable().getSelectedCards())), hand));
+		JFXHand hand = new JFXHand(gameController, player1);
+		JFXBattlefield battlefield = new JFXBattlefield(gameController, player1.getBattlefield());
+		JFXSelectedCardInfoPane selectionPane = new JFXSelectedCardInfoPane(gameController.getGameTable().getSelectedCards());
+		
+		BorderPane rootPane = new BorderPane(new ScrollPane(battlefield), null, selectionPane, hand, null);		
+		
+		Scene scene = new Scene(rootPane);
 		primaryStage.setScene(scene);
+		primaryStage.setOnCloseRequest(event -> gameController.exitGame());
 		primaryStage.show();
 
-		// Close the connection with the broker on exit
-		primaryStage.setOnCloseRequest(event -> gameController.exitGame());
+		new Thread(() -> {
+			try {
+				Thread.sleep(2000);
+				
+				Platform.runLater(() -> {
+					gameController.changeCardContext(cardVisible, Context.HAND, Context.BATTLEFIELD, 0, true);
+				});
 
-//		new Thread(() -> {
-//			try {
-//				Thread.sleep(2000);
-//
-//				cardView.setCard(cm.createCard(player1, "always watching"));
-//
-//				Thread.sleep(2000);
-//
-//				cardVisible.setVisible(false);
-//
-//				Thread.sleep(2000);
-//
-//				cardView.setCard(cm.createCard(player1, "Legion's Landing"));
-//
-//				Thread.sleep(2000);
-//
-//				cardView.setCard(null);
-//
-//				Thread.sleep(2000);
-//
-//				cardVisible.setVisible(true);
-//
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}).start();
+				Thread.sleep(2000);
+
+				Platform.runLater(() -> {
+					cardVisible.setVisible(true);
+				});
+				
+				Thread.sleep(2000);
+
+				Platform.runLater(() -> {
+					cardVisible.setLocation(50, 50);
+				});
+
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 
 	public static void main(String[] args) {

@@ -219,13 +219,6 @@ public class Card implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + battleId.get();
-		result = prime * result + ((location.get() == null) ? 0 : location.get().hashCode());
-		result = prime * result + ((primaryCardData.get() == null) ? 0 : primaryCardData.get().hashCode());
-		result = prime * result + ((secondaryCardData.get() == null) ? 0 : secondaryCardData.get().hashCode());
-		result = prime * result + ((counters.get() == null) ? 0 : counters.get().hashCode());
-		result = prime * result + (selected.get() ? 1231 : 1237);
-		result = prime * result + (tapped.get() ? 1231 : 1237);
-		result = prime * result + (visible.get() ? 1231 : 1237);
 		return result;
 	}
 
@@ -240,18 +233,6 @@ public class Card implements Serializable {
 			return false;
 		final Card other = (Card) obj;
 		if (this.battleId.isNotEqualTo(other.battleId).get())
-			return false;
-		if (this.tapped.isNotEqualTo(other.tapped).get())
-			return false;
-		if (this.visible.isNotEqualTo(other.visible).get())
-			return false;
-		if (this.selected.isNotEqualTo(other.selected).get())
-			return false;
-		if (this.primaryCardData.isNotEqualTo(other.primaryCardData).get())
-			return false;
-		if (this.secondaryCardData.isNotEqualTo(other.secondaryCardData).get())
-			return false;
-		if (this.counters.isNotEqualTo(other.counters).get())
 			return false;
 		return true;
 	}

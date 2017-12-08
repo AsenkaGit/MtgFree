@@ -1,5 +1,7 @@
 package asenka.mtgfree.views;
 
+import java.util.Optional;
+
 import asenka.mtgfree.model.Card;
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.views.utilities.ImagesManager;
@@ -116,9 +118,17 @@ public class JFXCardView extends ImageView {
 	/**
 	 * @return the property of the displayed card
 	 */
-	public ObjectProperty<Card> cardProperty() {
+	protected final ObjectProperty<Card> cardProperty() {
 
 		return this.cardProperty;
+	}
+	
+	/**
+	 * @return the card displayed by the card view
+	 */
+	protected final Card getCard() {
+		
+		return this.cardProperty.get();
 	}
 
 	/**
@@ -126,7 +136,7 @@ public class JFXCardView extends ImageView {
 	 * 
 	 * @param card the new card (<code>null</code> is allowed)
 	 */
-	public void setCard(final Card card) {
+	public final void setCard(final Card card) {
 
 		this.cardProperty.set(card);
 	}
@@ -137,7 +147,7 @@ public class JFXCardView extends ImageView {
 	 * @param side the side of the card to display
 	 * @throws IllegalStateException if you try to display a side that can not be displayed at this moment
 	 */
-	public void selectSide(Side side) throws IllegalStateException {
+	public final void selectSide(Side side) throws IllegalStateException {
 
 		// If you try to display the FRONT or the OTHER_SIDE when the card property is null, an exception is raised
 		if (this.cardProperty.get() == null && side != Side.BACK) {
@@ -165,7 +175,7 @@ public class JFXCardView extends ImageView {
 	 * Use this method if you need to update or change the update menu of the card view.
 	 * @return the existing context menu already installed on the card view (do not create a new one)
 	 */
-	protected ContextMenu getContextMenu() {
+	protected final ContextMenu getContextMenu() {
 		
 		return this.contextMenu;
 	}
@@ -239,7 +249,7 @@ public class JFXCardView extends ImageView {
 	 * @return <code>true</code> if the card is double-faced, <code>false</code> otherwise
 	 * @see MtgCard#layout
 	 */
-	private static boolean isDoubleFaced(final Card card) {
+	protected static final boolean isDoubleFaced(final Card card) {
 
 		return card != null ? DOUBLE_FACED_LAYOUT.equals(card.getPrimaryCardData().getLayout()) : false;
 	}
@@ -325,4 +335,18 @@ public class JFXCardView extends ImageView {
 		return buf.toString();
 	}
 
+	
+	/**
+	 * Look for a menu item with a specific ID in a context menu
+	 * 
+	 * @param contextMenu the context menu
+	 * @param id the id of the menu item in the context menu to look for
+	 * @return the menu item id with the desired ID or <code>null</code>
+	 */
+	public static final MenuItem findMenuItemByID(final ContextMenu contextMenu, String id) {
+
+		// Return one and only one menu item matching the ID
+		final Optional<MenuItem> result = contextMenu.getItems().stream().filter(item -> id.equals(item.getId())).findFirst();
+		return result.isPresent() ? result.get() : null;
+	}
 }
