@@ -54,35 +54,7 @@ public class JFXMagicText extends VBox {
 	/**
 	 * Contains the image symbols (values) associated with their text representation (keys)
 	 */
-	private static final Map<String, Image> MTG_SYMBOLS;
-
-	static {
-		// TODO Improves the symbols loading images. This is only a basic implementation (a preferences file would be better)
-
-		MTG_SYMBOLS = new HashMap<String, Image>();
-
-		for (int i = 0; i <= 16; i++) {
-			MTG_SYMBOLS.put("{" + i + "}", new Image("file:./resources/images/mtg/icons/" + i + ".jpg"));
-		}
-		MTG_SYMBOLS.put("{X}", new Image("file:./resources/images/mtg/icons/x.jpg"));
-		MTG_SYMBOLS.put("{Y}", new Image("file:./resources/images/mtg/icons/y.jpg"));
-		MTG_SYMBOLS.put("{Z}", new Image("file:./resources/images/mtg/icons/z.jpg"));
-		MTG_SYMBOLS.put("{G}", new Image("file:./resources/images/mtg/icons/g.jpg"));
-		MTG_SYMBOLS.put("{B}", new Image("file:./resources/images/mtg/icons/b.jpg"));
-		MTG_SYMBOLS.put("{U}", new Image("file:./resources/images/mtg/icons/u.jpg"));
-		MTG_SYMBOLS.put("{R}", new Image("file:./resources/images/mtg/icons/r.jpg"));
-		MTG_SYMBOLS.put("{W}", new Image("file:./resources/images/mtg/icons/w.jpg"));
-		MTG_SYMBOLS.put("{T}", new Image("file:./resources/images/mtg/icons/tap.jpg"));
-		MTG_SYMBOLS.put("{E}", new Image("file:./resources/images/mtg/icons/e.jpg"));
-		MTG_SYMBOLS.put("{B/R}", new Image("file:./resources/images/mtg/icons/br.jpg"));
-		MTG_SYMBOLS.put("{R/W}", new Image("file:./resources/images/mtg/icons/rw.jpg"));
-		MTG_SYMBOLS.put("{R/G}", new Image("file:./resources/images/mtg/icons/rg.jpg"));
-		MTG_SYMBOLS.put("{G/U}", new Image("file:./resources/images/mtg/icons/gu.jpg"));
-		MTG_SYMBOLS.put("{G/W}", new Image("file:./resources/images/mtg/icons/gw.jpg"));
-		MTG_SYMBOLS.put("{G/U}", new Image("file:./resources/images/mtg/icons/gu.jpg"));
-		MTG_SYMBOLS.put("{U/B}", new Image("file:./resources/images/mtg/icons/ub.jpg"));
-		MTG_SYMBOLS.put("{U/R}", new Image("file:./resources/images/mtg/icons/ur.jpg"));
-	}
+	private static final Map<String, Image> MTG_SYMBOLS = getSymbols();
 
 	/**
 	 * The font used to display the text.
@@ -166,43 +138,9 @@ public class JFXMagicText extends VBox {
 	}
 
 	/**
-	 * Use a text to build a list of string elements that separates the regular text of the MTG symbols alias (<code>"{G}"</code>
-	 * for green mana for example).
-	 * 
-	 * @param textWithSymbols a string that may contains symbols (e.g. <code>"{2}", "{U}"</code>)
-	 * @return a list where every words and mtg symbols are separated. The size of the list is equal to the number of symbols and
-	 *         the number of words in the original string
+	 * Set the font of the text displayed
+	 * @param font
 	 */
-	private static List<String> splitTextAndSymbols(String textWithSymbols) {
-
-		List<String> rulesTextList = new ArrayList<String>();
-		StringBuffer buffer = new StringBuffer();
-
-		// Prepare the string to easily detect the line breaks (add spaces around the line brakes)
-		// The line breaks are double to have more space between paragraphs when the text is displayed
-		String preparedString = textWithSymbols.replaceAll(LINE_BREAK,
-			(SPACE_SEPARATOR + LINE_BREAK + SPACE_SEPARATOR + LINE_BREAK + SPACE_SEPARATOR));
-
-		// for each character in the prepared string
-		for (char c : preparedString.toCharArray()) {
-
-			if (c == OPENING_CHAR && buffer.length() > 0) {
-				rulesTextList.addAll(Arrays.asList(buffer.toString().split(SPACE_SEPARATOR)));
-				buffer = new StringBuffer();
-				buffer.append(c);
-
-			} else if (c == CLOSING_CHAR) {
-				buffer.append(c);
-				rulesTextList.add(buffer.toString());
-				buffer = new StringBuffer();
-			} else {
-				buffer.append(c);
-			}
-		}
-		rulesTextList.addAll(Arrays.asList(buffer.toString().split(SPACE_SEPARATOR)));
-		return rulesTextList;
-	}
-
 	public void setFont(Font font) {
 
 		this.font = font;
@@ -213,5 +151,77 @@ public class JFXMagicText extends VBox {
 
 		this.horizontalAlignement = hAlignement;
 		this.setText(this.text);
+	}
+
+	/**
+	 * Method during the class loading. It loads the symbols and the images of those symbols
+	 * and return then as a map.
+	 * @return a map of String and JavaFX Image
+	 */
+	private static Map<String, Image> getSymbols() {
+		
+		// TODO Improves the symbols loading images. This is only a basic implementation (a preferences file would be better)
+		final Map<String, Image> symbols = new HashMap<String, Image>();
+	
+		for (int i = 0; i <= 16; i++) {
+			symbols.put("{" + i + "}", new Image("file:./resources/images/mtg/icons/" + i + ".jpg"));
+		}
+		symbols.put("{X}", new Image("file:./resources/images/mtg/icons/x.jpg"));
+		symbols.put("{Y}", new Image("file:./resources/images/mtg/icons/y.jpg"));
+		symbols.put("{Z}", new Image("file:./resources/images/mtg/icons/z.jpg"));
+		symbols.put("{G}", new Image("file:./resources/images/mtg/icons/g.jpg"));
+		symbols.put("{B}", new Image("file:./resources/images/mtg/icons/b.jpg"));
+		symbols.put("{U}", new Image("file:./resources/images/mtg/icons/u.jpg"));
+		symbols.put("{R}", new Image("file:./resources/images/mtg/icons/r.jpg"));
+		symbols.put("{W}", new Image("file:./resources/images/mtg/icons/w.jpg"));
+		symbols.put("{T}", new Image("file:./resources/images/mtg/icons/tap.jpg"));
+		symbols.put("{E}", new Image("file:./resources/images/mtg/icons/e.jpg"));
+		symbols.put("{B/R}", new Image("file:./resources/images/mtg/icons/br.jpg"));
+		symbols.put("{R/W}", new Image("file:./resources/images/mtg/icons/rw.jpg"));
+		symbols.put("{R/G}", new Image("file:./resources/images/mtg/icons/rg.jpg"));
+		symbols.put("{G/U}", new Image("file:./resources/images/mtg/icons/gu.jpg"));
+		symbols.put("{G/W}", new Image("file:./resources/images/mtg/icons/gw.jpg"));
+		symbols.put("{G/U}", new Image("file:./resources/images/mtg/icons/gu.jpg"));
+		symbols.put("{U/B}", new Image("file:./resources/images/mtg/icons/ub.jpg"));
+		symbols.put("{U/R}", new Image("file:./resources/images/mtg/icons/ur.jpg"));
+		return symbols;
+	}
+
+	/**
+	 * Use a text to build a list of string elements that separates the regular text of the MTG symbols alias (<code>"{G}"</code>
+	 * for green mana for example).
+	 * 
+	 * @param textWithSymbols a string that may contains symbols (e.g. <code>"{2}", "{U}"</code>)
+	 * @return a list where every words and mtg symbols are separated. The size of the list is equal to the number of symbols and
+	 *         the number of words in the original string
+	 */
+	private static List<String> splitTextAndSymbols(String textWithSymbols) {
+	
+		List<String> rulesTextList = new ArrayList<String>();
+		StringBuffer buffer = new StringBuffer();
+	
+		// Prepare the string to easily detect the line breaks (add spaces around the line brakes)
+		// The line breaks are double to have more space between paragraphs when the text is displayed
+		String preparedString = textWithSymbols.replaceAll(LINE_BREAK,
+			(SPACE_SEPARATOR + LINE_BREAK + SPACE_SEPARATOR + LINE_BREAK + SPACE_SEPARATOR));
+	
+		// for each character in the prepared string
+		for (char c : preparedString.toCharArray()) {
+	
+			if (c == OPENING_CHAR && buffer.length() > 0) {
+				rulesTextList.addAll(Arrays.asList(buffer.toString().split(SPACE_SEPARATOR)));
+				buffer = new StringBuffer();
+				buffer.append(c);
+	
+			} else if (c == CLOSING_CHAR) {
+				buffer.append(c);
+				rulesTextList.add(buffer.toString());
+				buffer = new StringBuffer();
+			} else {
+				buffer.append(c);
+			}
+		}
+		rulesTextList.addAll(Arrays.asList(buffer.toString().split(SPACE_SEPARATOR)));
+		return rulesTextList;
 	}
 }

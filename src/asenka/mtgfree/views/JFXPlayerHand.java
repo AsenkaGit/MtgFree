@@ -24,10 +24,10 @@ import javafx.scene.layout.Pane;
 
 /**
  * JavaFX component displaying the hand of a player. The display changes if the player is the local player or not.
- * 
+ * The player hand is embedded in an horizontal ScrollPane.
  * 
  * @author asenka
- * 
+ * @see ScrollPane
  */
 public class JFXPlayerHand extends ScrollPane {
 
