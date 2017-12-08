@@ -81,7 +81,7 @@ public class JFXCardView extends ImageView {
 	/**
 	 * The context menu of the card
 	 */
-	protected ContextMenu contextMenu;
+	private ContextMenu contextMenu;
 
 	/**
 	 * Create a card view without a card. The regular back of a card is displayed
@@ -162,20 +162,62 @@ public class JFXCardView extends ImageView {
 	}
 
 	/**
-	 * Create the context menu on the card view. You can overwrite this method to modify the menu item on the card
+	 * Use this method if you need to update or change the update menu of the card view.
+	 * @return the existing context menu already installed on the card view (do not create a new one)
+	 */
+	protected ContextMenu getContextMenu() {
+		
+		return this.contextMenu;
+	}
+
+	/**
+	 * Load the images according to the current value of the card property. If it is <code>null</code>, the regular back of a card
+	 * is displayed. You can overwride this method if you want to change the way the card view is displayed.
+	 */
+	protected void intializeCardView() {
+
+		final Card card = this.cardProperty.get();
+
+		if (card != null) {
+			this.primaryCardImage = ImagesManager.getImage(card.getPrimaryCardData());
+			this.secondaryCardImage = isDoubleFaced(card) ? ImagesManager.getImage(card.getSecondaryCardData()) : null;
+			this.contextMenu = createDefaultContextMenu();
+			setOnContextMenuRequested(event -> this.contextMenu.show(this, event.getScreenX(), event.getScreenY()));
+
+			Tooltip.install(this, createTooltip(card));
+			selectSide(Side.FRONT);
+
+		} else {
+			this.primaryCardImage = null;
+			this.secondaryCardImage = null;
+			this.contextMenu = null;
+			setOnContextMenuRequested(null);
+			selectSide(Side.BACK);
+		}
+	}
+
+	/**
+	 * Create the context menu on the card view.
 	 * 
 	 * @return a new context menu based on the card property values
 	 */
-	protected ContextMenu createContextMenu() {
-
+	private ContextMenu createDefaultContextMenu() {
+	
 		final ContextMenu contextMenu = new ContextMenu();
 		final MenuItem detailedInfoMenuItem = new MenuItem("Details");
-
+	
 		// TODO Create de details action about a card.
 		detailedInfoMenuItem.setOnAction(null);
 		detailedInfoMenuItem.setDisable(true);
 		contextMenu.getItems().add(detailedInfoMenuItem);
-
+		
+//		// This code create a menu displaying all the sets of the cards
+//		Menu setMenus = new Menu("Sets");
+//		MtgCard cardData = this.cardProperty.get().getPrimaryCardData();
+//		final MtgDataUtility du = MtgDataUtility.getInstance();
+//		Arrays.stream(cardData.getPrintings()).forEach(set -> setMenus.getItems().add(new MenuItem(du.getMtgSet(set).getName())));
+//		contextMenu.getItems().add(setMenus);
+	
 		// If the card displayed is double-faced, another menu item is added to view the other side of the card
 		if (isDoubleFaced(this.cardProperty.get())) {
 			final MenuItem otherSideMenuItem = new MenuItem("Other Side");
@@ -190,32 +232,6 @@ public class JFXCardView extends ImageView {
 			contextMenu.getItems().add(otherSideMenuItem);
 		}
 		return contextMenu;
-	}
-
-	/**
-	 * Load the images according to the current value of the card property. If it is <code>null</code>, the regular back of a card
-	 * is displayed
-	 */
-	protected void intializeCardView() {
-
-		final Card card = this.cardProperty.get();
-
-		if (card != null) {
-			this.primaryCardImage = ImagesManager.getImage(card.getPrimaryCardData());
-			this.secondaryCardImage = isDoubleFaced(card) ? ImagesManager.getImage(card.getSecondaryCardData()) : null;
-			this.contextMenu = createContextMenu();
-			setOnContextMenuRequested(event -> this.contextMenu.show(this, event.getScreenX(), event.getScreenY()));
-
-			Tooltip.install(this, createTooltip(card));
-			selectSide(Side.FRONT);
-
-		} else {
-			this.primaryCardImage = null;
-			this.secondaryCardImage = null;
-			this.contextMenu = null;
-			setOnContextMenuRequested(null);
-			selectSide(Side.BACK);
-		}
 	}
 
 	/**
@@ -278,7 +294,12 @@ public class JFXCardView extends ImageView {
 		buf.append(cardData.getName() + "\t");
 
 		// replaceAll("\\", "") => replace all special characters in the string
-		buf.append(cardData.getManaCost() != null ? "( " + cardData.getManaCost().replaceAll("\\W", "") + " )" : "");
+		String manaCost = cardData.getManaCost() != null ? cardData.getManaCost() : " ";
+		manaCost = manaCost.replace('}', ',');
+		manaCost = manaCost.replace('{', Character.MIN_VALUE);
+		manaCost = manaCost.substring(0, manaCost.length()-1);
+		
+		buf.append(manaCost.isEmpty() ? "" : "( " + manaCost + " )");
 		buf.append("\n\n");
 		buf.append(cardData.getType());
 

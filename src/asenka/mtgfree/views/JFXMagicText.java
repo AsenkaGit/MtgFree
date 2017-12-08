@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -72,12 +73,32 @@ public class JFXMagicText extends VBox {
 		MTG_SYMBOLS.put("{R}", new Image("file:./resources/images/mtg/icons/r.jpg"));
 		MTG_SYMBOLS.put("{W}", new Image("file:./resources/images/mtg/icons/w.jpg"));
 		MTG_SYMBOLS.put("{T}", new Image("file:./resources/images/mtg/icons/tap.jpg"));
+		MTG_SYMBOLS.put("{E}", new Image("file:./resources/images/mtg/icons/e.jpg"));
+		MTG_SYMBOLS.put("{B/R}", new Image("file:./resources/images/mtg/icons/br.jpg"));
+		MTG_SYMBOLS.put("{R/W}", new Image("file:./resources/images/mtg/icons/rw.jpg"));
+		MTG_SYMBOLS.put("{R/G}", new Image("file:./resources/images/mtg/icons/rg.jpg"));
+		MTG_SYMBOLS.put("{G/U}", new Image("file:./resources/images/mtg/icons/gu.jpg"));
+		MTG_SYMBOLS.put("{G/W}", new Image("file:./resources/images/mtg/icons/gw.jpg"));
+		MTG_SYMBOLS.put("{G/U}", new Image("file:./resources/images/mtg/icons/gu.jpg"));
+		MTG_SYMBOLS.put("{U/B}", new Image("file:./resources/images/mtg/icons/ub.jpg"));
+		MTG_SYMBOLS.put("{U/R}", new Image("file:./resources/images/mtg/icons/ur.jpg"));
 	}
 
+	/**
+	 * The font used to display the text.
+	 */
 	private Font font;
-	
+
+	/**
+	 * The text displayed
+	 */
 	private String text;
-	
+
+	/**
+	 * The alignement of the text (horizontally)
+	 */
+	private Pos horizontalAlignement;
+
 	/**
 	 * Build an empty magic text
 	 */
@@ -96,6 +117,7 @@ public class JFXMagicText extends VBox {
 		super();
 		this.text = textWithSymbols;
 		this.font = Font.getDefault();
+		this.horizontalAlignement = Pos.CENTER_LEFT;
 		this.setText(textWithSymbols);
 	}
 
@@ -114,7 +136,8 @@ public class JFXMagicText extends VBox {
 		// The currentFlowPane variable is used to display a line. If the text does not contains line break, only one flow
 		// pane will be used
 		FlowPane currentFlowPane = new FlowPane();
-		
+		currentFlowPane.setAlignment(this.horizontalAlignement);
+
 		// Object used to add the flow pane(s) to the JFXMagicText
 		ObservableList<Node> children = super.getChildren();
 
@@ -183,6 +206,12 @@ public class JFXMagicText extends VBox {
 	public void setFont(Font font) {
 
 		this.font = font;
+		this.setText(this.text);
+	}
+
+	public void setHAlignment(Pos hAlignement) {
+
+		this.horizontalAlignement = hAlignement;
 		this.setText(this.text);
 	}
 }

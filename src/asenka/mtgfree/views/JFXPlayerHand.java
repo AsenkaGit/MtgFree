@@ -159,7 +159,7 @@ public class JFXPlayerHand extends ScrollPane {
 	private void addContextMenuForCardNode(final JFXCardView cardView, final Card card) {
 
 		// Create the context menu
-		final ContextMenu contextMenu = cardView.createContextMenu();
+		final ContextMenu contextMenu = cardView.getContextMenu();
 		final Menu playMenu = new Menu("Play");
 		final MenuItem playVisibleMenuItem = new MenuItem("Visible");
 		final MenuItem playHiddenMenuItem = new MenuItem("Hidden");
@@ -170,22 +170,21 @@ public class JFXPlayerHand extends ScrollPane {
 		final MenuItem bottomLibraryMenuItem = new MenuItem("Bottom");
 		playMenu.getItems().addAll(playVisibleMenuItem, playHiddenMenuItem);
 		libraryMenuItem.getItems().addAll(topLibraryMenuItem, bottomLibraryMenuItem);
-		contextMenu.getItems().addAll(new SeparatorMenuItem(), playMenu, exileMenuItem, libraryMenuItem);
+		contextMenu.getItems().addAll(new SeparatorMenuItem(), playMenu, exileMenuItem, destroyMenuItem, libraryMenuItem);
 
 		// Set the actions associated with the menu items
 		destroyMenuItem
 			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.GRAVEYARD, GameController.TOP, false));
-		exileMenuItem.setOnAction(
-			event -> this.gameController.changeCardContext(card, Context.HAND, Context.EXILE, GameController.TOP, card.isVisible()));
-		playVisibleMenuItem.setOnAction(
-			event -> this.gameController.changeCardContext(card, Context.HAND, Context.BATTLEFIELD, GameController.TOP, false));
+		exileMenuItem
+			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.EXILE, GameController.TOP, card.isVisible()));
+		playVisibleMenuItem
+			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.BATTLEFIELD, GameController.TOP, false));
 		playHiddenMenuItem
 			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.BATTLEFIELD, GameController.TOP, true));
 		topLibraryMenuItem
 			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.LIBRARY, GameController.TOP, true));
 		bottomLibraryMenuItem
 			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.LIBRARY, GameController.BOTTOM, true));
-
 
 		// Add the context menu to the card view
 		cardView.setOnContextMenuRequested(event -> contextMenu.show(cardView, event.getScreenX(), event.getScreenY()));
