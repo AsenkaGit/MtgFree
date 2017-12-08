@@ -31,7 +31,7 @@ public class MainApplication extends Application {
 		CardsManager cm = CardsManager.getInstance();
 
 		final Player player1 = new Player(1, "Player_1");
-		// final Player player2 = new Player(2, "Player_2");
+		final Player player2 = new Player(2, "Player_2");
 		final GameController gameController = new GameController(new GameTable("Main", player1));
 		gameController.createGame();
 
@@ -44,12 +44,16 @@ public class MainApplication extends Application {
 			cm.createCard(player1, "Tunneling Geopede"), cm.createCard(player1, "Ashenmoor Liege"),
 			cm.createCard(player1, "Sylvan Yeti"), cm.createCard(player1, "Shapeshifter"), cm.createCard(player1, "Sarkhan Unbroken"),
 			cm.createCard(player1, "Legion's Landing"), cm.createCard(player1, "always watching"));
+		
+		player2.getHand().addAll(cardVisible, cm.createCard(player2, "glorybringer"), cm.createCard(player2, "Architect of the Untamed"),
+			cm.createCard(player2, "plains"), cm.createCard(player2, "black lotus"));
 
 		JFXHand hand = new JFXHand(gameController, player1);
+		JFXHand hand2 = new JFXHand(gameController, player2);
 		JFXBattlefield battlefield = new JFXBattlefield(gameController, player1.getBattlefield());
 		JFXSelectedCardInfoPane selectionPane = new JFXSelectedCardInfoPane(gameController.getGameTable().getSelectedCards());
 		
-		BorderPane rootPane = new BorderPane(new ScrollPane(battlefield), null, selectionPane, hand, null);		
+		BorderPane rootPane = new BorderPane(new ScrollPane(battlefield), hand2, selectionPane, hand, null);		
 		
 		Scene scene = new Scene(rootPane);
 		primaryStage.setScene(scene);

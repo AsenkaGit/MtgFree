@@ -216,11 +216,11 @@ public class JFXBattlefield extends Pane {
 				final double newLayoutY = event.getSceneY() - this.deltaY;
 
 				if (newLayoutX > 0) {
-					super.setLayoutX(newLayoutX);
+					super.setLayoutX(newLayoutX - super.getLayoutBounds().getMinX());
 				}
 
 				if (newLayoutY > 0) {
-					super.setLayoutY(newLayoutY);
+					super.setLayoutY(newLayoutY - super.getLayoutBounds().getMaxY());
 				}
 			});
 
