@@ -1,5 +1,6 @@
 package asenka.mtgfree.views;
 
+import asenka.mtgfree.controllers.GameController;
 import asenka.mtgfree.model.Card;
 import asenka.mtgfree.model.data.MtgCard;
 import asenka.mtgfree.views.JFXCardView.Side;
@@ -80,11 +81,11 @@ public class JFXSelectedCardInfoPane extends StackPane { // The StackPane reacts
 	/**
 	 * Build a component able to display the selected card
 	 * 
-	 * @param selectedCards the observable list of cards to "listen"
+	 * @param controller the observable list of cards to "listen"
 	 */
-	public JFXSelectedCardInfoPane(final ObservableList<Card> selectedCards) {
+	public JFXSelectedCardInfoPane(final GameController controller) {
 
-		this.selectedCards = selectedCards;
+		this.selectedCards = controller.getGameTable().getSelectedCards();
 		this.cardView = new JFXCardView(CardImageSize.LARGE);
 		this.cardCostText = new JFXMagicText();
 		this.cardRulesText = new JFXMagicText();

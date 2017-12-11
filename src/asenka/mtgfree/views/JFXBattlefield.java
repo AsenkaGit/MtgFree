@@ -3,6 +3,9 @@ package asenka.mtgfree.views;
 import asenka.mtgfree.controllers.GameController;
 import asenka.mtgfree.controllers.GameController.Context;
 import asenka.mtgfree.model.Card;
+import asenka.mtgfree.model.Player;
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
@@ -18,44 +21,40 @@ import javafx.geometry.Point2D;
 
 public class JFXBattlefield extends ScrollPane {
 
-	private final ObservableList<Card> battlefieldCards;
+	private ObservableList<Card> battlefieldCards;
 
 	private final ObservableMap<Card, JFXBattlefieldCardView> battlefieldCardViews;
 
 	private final GameController gameController;
-	
+
 	private final Pane battlefieldPane;
-	
+
 	private final Group cardsGroup;
 
-	public JFXBattlefield(final GameController gameController, final ObservableList<Card> battlefield) {
+	private final boolean forLocalPlayer;
+	
+	private InvalidationListener otherPlayerListener;
+	
+	private final JFXTwoPlayersBattlefields parentBattlefield;
 
-		this.battlefieldCards = battlefield;
-		this.battlefieldCardViews = FXCollections.<Card, JFXBattlefieldCardView> observableHashMap();
+	
+	public JFXBattlefield(final GameController gameController, final boolean forLocalPlayer) {
+		
+		this(null, gameController, forLocalPlayer);
+	}
+	
+	JFXBattlefield(final JFXTwoPlayersBattlefields bothBattlefield, final GameController gameController, final boolean forLocalPlayer) {
+
+		this.parentBattlefield = bothBattlefield;
+		this.forLocalPlayer = forLocalPlayer;
 		this.gameController = gameController;
+		this.battlefieldCards = getBattlefieldCards();
+		this.battlefieldCardViews = FXCollections.<Card, JFXBattlefieldCardView> observableHashMap();
 		this.battlefieldPane = new Pane();
 		this.cardsGroup = new Group();
 
 		buildComponentLayout();
-
-		this.battlefieldCards.addListener((ListChangeListener.Change<? extends Card> change) -> {
-
-			while (change.next()) {
-
-				if (change.wasAdded()) {
-					change.getAddedSubList().forEach(card -> {
-						JFXBattlefieldCardView battlefieldCardView = new JFXBattlefieldCardView(card, CardImageSize.MEDIUM);
-						this.battlefieldCardViews.put(card, battlefieldCardView);
-						this.cardsGroup.getChildren().add(battlefieldCardView);
-					});
-				} else if (change.wasRemoved()) {
-					change.getRemoved().forEach(card -> {
-						JFXBattlefieldCardView battlefieldCardView = this.battlefieldCardViews.remove(card);
-						this.cardsGroup.getChildren().remove(battlefieldCardView);
-					});
-				}
-			}
-		});
+		addListeners();
 	}
 
 	private void buildComponentLayout() {
@@ -65,6 +64,72 @@ public class JFXBattlefield extends ScrollPane {
 		super.setContent(this.battlefieldPane);
 	}
 
+	private void addListeners() {
+		
+		
+		// If the component display the battlefield of an opponent that has not join the game yet...
+		if (!this.forLocalPlayer && this.battlefieldCards == null) {
+			
+			final ObjectProperty<Player> otherPlayerProperty = this.gameController.getGameTable().otherPlayerProperty();
+			
+			// ... It adds a listeners on the otherPlayer property to update the battlefield cards list
+			this.otherPlayerListener = (observable -> {
+
+				this.battlefieldCards = this.gameController.getGameTable().getOtherPlayer().getBattlefield();
+				this.addListeners();
+				
+				// the useless listener is removed when the  other player arrives on the battlefield
+				otherPlayerProperty.removeListener(this.otherPlayerListener);
+			});
+			otherPlayerProperty.addListener(this.otherPlayerListener);
+
+		} else {
+		
+			// Listener updating the battlefield view when a card enters or leaves the battlefield
+			this.battlefieldCards.addListener((ListChangeListener.Change<? extends Card> change) -> {
+
+				while (change.next()) {
+
+					if (change.wasAdded()) {
+						change.getAddedSubList().forEach(card -> {
+							JFXBattlefieldCardView battlefieldCardView = new JFXBattlefieldCardView(card, CardImageSize.MEDIUM);
+							this.battlefieldCardViews.put(card, battlefieldCardView);
+							
+							Platform.runLater(() -> {
+								this.cardsGroup.getChildren().add(battlefieldCardView);
+							});
+						});
+					} else if (change.wasRemoved()) {
+						change.getRemoved().forEach(card -> {
+							JFXBattlefieldCardView battlefieldCardView = this.battlefieldCardViews.remove(card);
+							
+							Platform.runLater(() -> {
+								this.cardsGroup.getChildren().remove(battlefieldCardView);
+							});
+						});
+					}
+				}
+			});
+		}
+	}
+
+	/**
+	 * @return the observable list of cards to display on this component. The result depends on the forLocalPlayer flag and the
+	 *         result can be <code>null</code>.
+	 */
+	private ObservableList<Card> getBattlefieldCards() throws IllegalStateException {
+
+		// The gameController must be initialized. Also the forLocalPlayer flag must be set !
+		if (this.gameController != null) {
+			final Player player = this.forLocalPlayer ? 
+				this.gameController.getGameTable().getLocalPlayer() : 
+				this.gameController.getGameTable().getOtherPlayer();
+			return player != null ? player.getBattlefield() : null;
+		} else {
+			throw new IllegalStateException("The game controller must be initialized before calling this method.");
+		}
+	}
+	
 	private class JFXBattlefieldCardView extends JFXCardView {
 
 		private double deltaX;
@@ -75,7 +140,6 @@ public class JFXBattlefield extends ScrollPane {
 
 			super(card, size);
 			selectSide(card.isVisible() ? Side.FRONT : Side.BACK);
-			
 
 			initializeMouvementListeners();
 			initializeCardListeners();
@@ -89,12 +153,11 @@ public class JFXBattlefield extends ScrollPane {
 
 			final Card card = super.getCard();
 			final MenuItem otherSideMenuItem = JFXCardView.findMenuItemByID(getContextMenu(), JFXCardView.OTHER_SIDE_MENU_ITEM_ID);
-			
-			if(otherSideMenuItem != null) {
+
+			if (otherSideMenuItem != null) {
 				otherSideMenuItem.setDisable(!card.isVisible());
 			}
-			
-			
+
 			final MenuItem tapMenuItem = new MenuItem("Tap");
 			tapMenuItem.setOnAction(event -> {
 
@@ -108,22 +171,21 @@ public class JFXBattlefield extends ScrollPane {
 
 			});
 
-			
 			final MenuItem visibleMenuItem = new MenuItem(card.isVisible() ? "Hide" : "Show");
 			visibleMenuItem.setOnAction(event -> {
 
 				if ("Hide".equals(visibleMenuItem.getText())) {
 					gameController.setVisible(card, false);
-					
-					if(otherSideMenuItem != null) {
+
+					if (otherSideMenuItem != null) {
 						otherSideMenuItem.setDisable(true);
 					}
 					visibleMenuItem.setText("Show");
 				} else {
 					gameController.setVisible(card, true);
 					visibleMenuItem.setText("Hide");
-					
-					if(otherSideMenuItem != null) {
+
+					if (otherSideMenuItem != null) {
 						otherSideMenuItem.setDisable(false);
 					}
 				}
@@ -135,13 +197,13 @@ public class JFXBattlefield extends ScrollPane {
 
 			final MenuItem exileMenuItem = new MenuItem("Exile");
 			exileMenuItem.setOnAction(event -> gameController.changeCardContext(card, Context.BATTLEFIELD, Context.EXILE, 0, false));
-			
+
 			final MenuItem handMenuItem = new MenuItem("Hand");
 			handMenuItem.setOnAction(event -> gameController.changeCardContext(card, Context.BATTLEFIELD, Context.HAND, 0, true));
-			
+
 			final MenuItem aboveMenuItem = new MenuItem("Above");
 			aboveMenuItem.setOnAction(event -> this.toFront());
-			
+
 			final MenuItem underMenuItem = new MenuItem("Under");
 			underMenuItem.setOnAction(event -> this.toBack());
 
@@ -149,13 +211,13 @@ public class JFXBattlefield extends ScrollPane {
 			final MenuItem topLibraryMenuItem = new MenuItem("Top");
 			final MenuItem bottomLibraryMenuItem = new MenuItem("Bottom");
 			libraryMenuItem.getItems().addAll(topLibraryMenuItem, bottomLibraryMenuItem);
-			topLibraryMenuItem
-				.setOnAction(event -> gameController.changeCardContext(card, Context.BATTLEFIELD, Context.LIBRARY, GameController.TOP, true));
-			bottomLibraryMenuItem
-				.setOnAction(event -> gameController.changeCardContext(card, Context.BATTLEFIELD, Context.LIBRARY, GameController.BOTTOM, true));
+			topLibraryMenuItem.setOnAction(
+				event -> gameController.changeCardContext(card, Context.BATTLEFIELD, Context.LIBRARY, GameController.TOP, true));
+			bottomLibraryMenuItem.setOnAction(
+				event -> gameController.changeCardContext(card, Context.BATTLEFIELD, Context.LIBRARY, GameController.BOTTOM, true));
 
-			super.getContextMenu().getItems().addAll(tapMenuItem, visibleMenuItem, destroyMenuItem, exileMenuItem, handMenuItem, libraryMenuItem,
-				aboveMenuItem, underMenuItem);
+			super.getContextMenu().getItems().addAll(tapMenuItem, visibleMenuItem, destroyMenuItem, exileMenuItem, handMenuItem,
+				libraryMenuItem, aboveMenuItem, underMenuItem);
 		}
 
 		/**
@@ -169,7 +231,7 @@ public class JFXBattlefield extends ScrollPane {
 			card.tappedProperty().addListener(observable -> {
 
 				final BooleanProperty tappedProperty = (BooleanProperty) observable;
-				
+
 				if (tappedProperty.get()) {
 					this.setRotate(90d);
 				} else {
@@ -181,7 +243,7 @@ public class JFXBattlefield extends ScrollPane {
 			card.visibleProperty().addListener(observable -> {
 
 				final BooleanProperty visibleProperty = (BooleanProperty) observable;
-				
+
 				if (visibleProperty.get()) {
 					this.selectSide(Side.FRONT);
 				} else {
@@ -219,12 +281,15 @@ public class JFXBattlefield extends ScrollPane {
 			// the mouse coordinates
 			super.setOnMouseDragged(event -> {
 
-				// Calculate the new coordinate based on the cursor location on the scene
-				//  minus the delta values calculated when the mouse button was pressed
-				//  minus the coordinates of the parent bounds
-				final double newLayoutX = event.getSceneX() - this.deltaX - JFXBattlefield.this.getBoundsInParent().getMinX();
-				final double newLayoutY = event.getSceneY() - this.deltaY - JFXBattlefield.this.getBoundsInParent().getMinY();
-
+				// The way to calculate the new coordinates depends on the way the battlefield is included in the
+				// application scene. 
+				final double newLayoutX = parentBattlefield == null ?
+					event.getSceneX() - this.deltaX - JFXBattlefield.this.getBoundsInParent().getMinX() :
+					event.getSceneX() - this.deltaX - JFXBattlefield.this.getParent().getBoundsInParent().getMinX() - parentBattlefield.getBoundsInParent().getMinX();
+				final double newLayoutY = parentBattlefield == null ?
+					event.getSceneY() - this.deltaY - JFXBattlefield.this.getBoundsInParent().getMinY() :
+					event.getSceneY() - this.deltaY - JFXBattlefield.this.getParent().getBoundsInParent().getMinY() - parentBattlefield.getBoundsInParent().getMinY();
+				
 				if (newLayoutX > 0) {
 					super.setLayoutX(newLayoutX);
 				}

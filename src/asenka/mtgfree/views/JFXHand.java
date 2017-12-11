@@ -11,6 +11,8 @@ import asenka.mtgfree.model.Card;
 import asenka.mtgfree.model.Player;
 import asenka.mtgfree.views.JFXCardView.Side;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -23,8 +25,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
 /**
- * JavaFX component displaying the hand of a player. The display changes if the player is the local player or not.
- * The player hand is embedded in an horizontal ScrollPane.
+ * JavaFX component displaying the hand of a player. The display changes if the player is the local player or not. The player hand
+ * is embedded in an horizontal ScrollPane.
  * 
  * @author asenka
  * @see ScrollPane
@@ -32,12 +34,12 @@ import javafx.scene.layout.Pane;
 public class JFXHand extends ScrollPane {
 
 	/**
-	 * The list of cards in the player hand
+	 * The list of handCards in the player hand
 	 */
-	private final ObservableList<Card> cards;
+	private ObservableList<Card> handCards;
 
 	/**
-	 * The pane display the cards horizontally
+	 * The pane display the handCards horizontally
 	 */
 	private final HBox horizontalLayout;
 
@@ -49,46 +51,81 @@ public class JFXHand extends ScrollPane {
 	/**
 	 * Flag indicating if the hand is from the local player or another player
 	 */
-	private final boolean isLocalPlayerHand;
+	private final boolean forLocalPlayer;
 
 	/**
-	 * The game controller used to perform actions on the cards
+	 * The game controller used to perform actions on the handCards
 	 */
 	private final GameController gameController;
 
 	/**
-	 * Build a JFX component displaying the cards in the player's hand
 	 * 
-	 * @param gameController the controller used to manipulate the cards
+	 */
+	private InvalidationListener otherPlayerListener;
+
+	/**
+	 * Build a JFX component displaying the handCards in the player's hand
+	 * 
+	 * @param gameController the controller used to manipulate the handCards
 	 * @param player the player
 	 */
-	public JFXHand(final GameController gameController, final Player player) {
+	public JFXHand(final GameController gameController, final boolean forLocalPlayer) {
 
 		super();
-		this.cards = player.getHand();
 		this.gameController = gameController;
-		this.isLocalPlayerHand = player.equals(gameController.getGameTable().getLocalPlayer());
+		this.forLocalPlayer = forLocalPlayer;
+		this.handCards = getHandCards();
 		this.cardPanes = new ArrayList<Pane>();
 		this.horizontalLayout = new HBox();
+
+		buildComponentLayout();
+		addListeners();
+	}
+
+	private void buildComponentLayout() {
+
 		this.horizontalLayout.setPadding(new Insets(15, 10, 15, 10));
-
-		// Add the cards from the player hand.
-		this.cards.forEach(card -> this.cardPanes.add(createCardPane(card)));
-		this.horizontalLayout.getChildren().addAll(this.cardPanes);
-
-		// TODO Naive implementation : remove all and add all again... Can do better.
-		// Even though this component should not contain more than 7 or 8 cards most of the time
-		this.cards.addListener((ListChangeListener.Change<? extends Card> change) -> refreshHand());
-
-		// If the player is not the local player, the cards are equipped with another listener
-		// It refresh the player hand whenever a card from its hand change visibility.
-		if (!this.isLocalPlayerHand) {
-			this.cards.forEach(card -> card.visibleProperty().addListener(observable -> refreshHand()));
-		}
 
 		super.setContent(this.horizontalLayout);
 		super.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
 		super.setVbarPolicy(ScrollBarPolicy.NEVER);
+	}
+
+	private void addListeners() {
+
+		// If the component display the hand of an opponent that has not join the game yet...
+		if (!this.forLocalPlayer && this.handCards == null) {
+
+			final ObjectProperty<Player> otherPlayerProperty = this.gameController.getGameTable().otherPlayerProperty();
+
+			// ... It adds a listeners on the otherPlayer property to update the handCards list
+			this.otherPlayerListener = (observable -> {
+
+				System.out.println("Player join ? " + observable);
+				
+				this.handCards = this.gameController.getGameTable().getOtherPlayer().getHand();
+				this.addListeners();
+
+				// the useless listener is removed when the other player arrives on the battlefield
+				otherPlayerProperty.removeListener(this.otherPlayerListener);
+			});
+			otherPlayerProperty.addListener(this.otherPlayerListener);
+
+		} else {
+			
+			// TODO Naive implementation : remove all and add all again... Can do better.
+			// Even though this component should not contain more than 7 or 8 handCards most of the time
+			this.handCards.addListener((ListChangeListener.Change<? extends Card> change) -> refreshHand());
+
+			// If the player is NOT the local player, the handCards are equipped with another listener
+			// It refresh the player hand whenever a card from its hand change visibility.
+			if (!this.forLocalPlayer) {
+				this.handCards.forEach(card -> card.visibleProperty().addListener(observable -> refreshHand()));
+			}
+			
+			// Draws the hand
+			this.refreshHand();
+		}
 	}
 
 	/**
@@ -103,7 +140,7 @@ public class JFXHand extends ScrollPane {
 		final InfoOverlay cardViewWithInfoOverlay;
 
 		// If the hand displayed is the one of the local player...
-		if (this.isLocalPlayerHand) {
+		if (this.forLocalPlayer) {
 
 			cardView = new JFXCardView(card, CardImageSize.MEDIUM);
 
@@ -151,7 +188,7 @@ public class JFXHand extends ScrollPane {
 	}
 
 	/**
-	 * Add a context menu to a card view
+	 * Add a context menu to a card view. This method is called only of the component displays the handCards of the local player.
 	 * 
 	 * @param cardView the card view where the context menu will be added
 	 * @param card the card related to the node where the context menu is created
@@ -175,10 +212,10 @@ public class JFXHand extends ScrollPane {
 		// Set the actions associated with the menu items
 		destroyMenuItem
 			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.GRAVEYARD, GameController.TOP, false));
-		exileMenuItem
-			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.EXILE, GameController.TOP, card.isVisible()));
-		playVisibleMenuItem
-			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.BATTLEFIELD, GameController.TOP, false));
+		exileMenuItem.setOnAction(
+			event -> this.gameController.changeCardContext(card, Context.HAND, Context.EXILE, GameController.TOP, card.isVisible()));
+		playVisibleMenuItem.setOnAction(
+			event -> this.gameController.changeCardContext(card, Context.HAND, Context.BATTLEFIELD, GameController.TOP, false));
 		playHiddenMenuItem
 			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.BATTLEFIELD, GameController.TOP, true));
 		topLibraryMenuItem
@@ -191,7 +228,7 @@ public class JFXHand extends ScrollPane {
 	}
 
 	/**
-	 * Refresh the whole hand by redrawing all the cards inside. This behavior may be improved...
+	 * Refresh the whole hand by redrawing all the handCards inside. This behavior may be improved...
 	 */
 	private void refreshHand() {
 
@@ -200,8 +237,24 @@ public class JFXHand extends ScrollPane {
 			this.horizontalLayout.getChildren().clear();
 			this.cardPanes.clear();
 
-			this.cards.forEach(card -> JFXHand.this.cardPanes.add(createCardPane(card)));
+			this.handCards.forEach(card -> JFXHand.this.cardPanes.add(createCardPane(card)));
 			this.horizontalLayout.getChildren().addAll(this.cardPanes);
 		});
+	}
+
+	/**
+	 * @return the observable list of handCards to display on this component. The result depends on the forLocalPlayer flag and the
+	 *         result can be <code>null</code>.
+	 */
+	private ObservableList<Card> getHandCards() throws IllegalStateException {
+
+		// The gameController must be initialized. Also the forLocalPlayer flag must be set !
+		if (this.gameController != null) {
+			final Player player = this.forLocalPlayer ? this.gameController.getGameTable().getLocalPlayer()
+				: this.gameController.getGameTable().getOtherPlayer();
+			return player != null ? player.getHand() : null;
+		} else {
+			throw new IllegalStateException("The game controller must be initialized before calling this method.");
+		}
 	}
 }

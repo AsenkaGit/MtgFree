@@ -14,7 +14,6 @@ import asenka.mtgfree.controllers.CommunicationManager;
 import asenka.mtgfree.controllers.communication.CommunicationException;
 import asenka.mtgfree.controllers.communication.SynchronizationEvent;
 
-
 /**
  * Object used by the NetworkEventManager to used the ActiveMQ broker to send and receive messages
  * 
@@ -57,7 +56,8 @@ public class ActiveMQManager implements Closeable {
 
 		// TODO Use a preference file to load the broker url
 		// this.brokerUrl = "tcp://192.168.1.20:61616"; // Adapt this value to your ActiveMQ URL
-		this.brokerUrl = "vm://localhost"; // Adapt this value to your ActiveMQ URL
+		this.brokerUrl = "tcp://localhost:61616"; // Adapt this value to your ActiveMQ URL
+		// this.brokerUrl = "vm://localhost"; // Adapt this value to your ActiveMQ URL
 
 		this.writer = new TopicWriter(this.brokerUrl, TABLE_NAME_PREFIX + tableName);
 		this.reader = new TopicReader(this.brokerUrl, TABLE_NAME_PREFIX + tableName, communicationManager);
@@ -81,12 +81,12 @@ public class ActiveMQManager implements Closeable {
 
 		this.reader.listen();
 	}
-	
+
 	/**
 	 * @return <code>true</code> if the reader is currently listening the messages from the broker
 	 */
 	public boolean isListening() {
-		
+
 		return this.reader.isListening();
 	}
 
@@ -105,7 +105,7 @@ public class ActiveMQManager implements Closeable {
 	 * by ActiveMQ)
 	 * 
 	 * @return the topics from the broker where the name start with the game table prefix
-	 * @throws CommunicationException 
+	 * @throws CommunicationException
 	 * @see ActiveMQManager#TABLE_NAME_PREFIX
 	 */
 	public Set<ActiveMQTopic> getGameTopics() throws CommunicationException {
