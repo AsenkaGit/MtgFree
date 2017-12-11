@@ -52,8 +52,9 @@ public class MainApplication extends Application {
 		JFXHand hand2 = new JFXHand(gameController, player2);
 		JFXBattlefield battlefield = new JFXBattlefield(gameController, player1.getBattlefield());
 		JFXSelectedCardInfoPane selectionPane = new JFXSelectedCardInfoPane(gameController.getGameTable().getSelectedCards());
+		JFXSelectedCardInfoPane selectionPane2 = new JFXSelectedCardInfoPane(gameController.getGameTable().getSelectedCards());
 		
-		BorderPane rootPane = new BorderPane(new ScrollPane(battlefield), hand2, selectionPane, hand, null);		
+		BorderPane rootPane = new BorderPane(battlefield, hand2, selectionPane, hand, selectionPane2);		
 		
 		Scene scene = new Scene(rootPane);
 		primaryStage.setScene(scene);

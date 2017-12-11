@@ -12,10 +12,11 @@ import javafx.collections.ObservableMap;
 import javafx.scene.Group;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import javafx.geometry.Point2D;
 
-public class JFXBattlefield extends Pane {
+public class JFXBattlefield extends ScrollPane {
 
 	private final ObservableList<Card> battlefieldCards;
 
@@ -23,14 +24,17 @@ public class JFXBattlefield extends Pane {
 
 	private final GameController gameController;
 	
-	private final Group cardsArea;
+	private final Pane battlefieldPane;
+	
+	private final Group cardsGroup;
 
 	public JFXBattlefield(final GameController gameController, final ObservableList<Card> battlefield) {
 
 		this.battlefieldCards = battlefield;
 		this.battlefieldCardViews = FXCollections.<Card, JFXBattlefieldCardView> observableHashMap();
 		this.gameController = gameController;
-		this.cardsArea = new Group();
+		this.battlefieldPane = new Pane();
+		this.cardsGroup = new Group();
 
 		buildComponentLayout();
 
@@ -42,12 +46,12 @@ public class JFXBattlefield extends Pane {
 					change.getAddedSubList().forEach(card -> {
 						JFXBattlefieldCardView battlefieldCardView = new JFXBattlefieldCardView(card, CardImageSize.MEDIUM);
 						this.battlefieldCardViews.put(card, battlefieldCardView);
-						this.cardsArea.getChildren().add(battlefieldCardView);
+						this.cardsGroup.getChildren().add(battlefieldCardView);
 					});
 				} else if (change.wasRemoved()) {
 					change.getRemoved().forEach(card -> {
 						JFXBattlefieldCardView battlefieldCardView = this.battlefieldCardViews.remove(card);
-						this.cardsArea.getChildren().remove(battlefieldCardView);
+						this.cardsGroup.getChildren().remove(battlefieldCardView);
 					});
 				}
 			}
@@ -56,8 +60,9 @@ public class JFXBattlefield extends Pane {
 
 	private void buildComponentLayout() {
 
-		super.getChildren().add(this.cardsArea);
-		super.setStyle("-fx-border-color: blue");
+		this.battlefieldPane.getChildren().add(this.cardsGroup);
+		this.battlefieldPane.setStyle("-fx-border-color: blue");
+		super.setContent(this.battlefieldPane);
 	}
 
 	private class JFXBattlefieldCardView extends JFXCardView {
@@ -163,7 +168,8 @@ public class JFXBattlefield extends Pane {
 			// Rotate the card view when the tap property is updated on the card
 			card.tappedProperty().addListener(observable -> {
 
-				BooleanProperty tappedProperty = (BooleanProperty) observable;
+				final BooleanProperty tappedProperty = (BooleanProperty) observable;
+				
 				if (tappedProperty.get()) {
 					this.setRotate(90d);
 				} else {
@@ -174,7 +180,8 @@ public class JFXBattlefield extends Pane {
 			// Show/hide the card when the visible property of the card is updated
 			card.visibleProperty().addListener(observable -> {
 
-				BooleanProperty visibleProperty = (BooleanProperty) observable;
+				final BooleanProperty visibleProperty = (BooleanProperty) observable;
+				
 				if (visibleProperty.get()) {
 					this.selectSide(Side.FRONT);
 				} else {
@@ -186,7 +193,7 @@ public class JFXBattlefield extends Pane {
 			card.locationProperty().addListener(observable -> {
 
 				@SuppressWarnings("unchecked")
-				ObjectProperty<Point2D> locationProperty = (ObjectProperty<Point2D>) observable;
+				final ObjectProperty<Point2D> locationProperty = (ObjectProperty<Point2D>) observable;
 
 				this.setLayoutX(locationProperty.get().getX());
 				this.setLayoutY(locationProperty.get().getY());
@@ -212,21 +219,24 @@ public class JFXBattlefield extends Pane {
 			// the mouse coordinates
 			super.setOnMouseDragged(event -> {
 
-				final double newLayoutX = event.getSceneX() - this.deltaX;
-				final double newLayoutY = event.getSceneY() - this.deltaY;
+				// Calculate the new coordinate based on the cursor location on the scene
+				//  minus the delta values calculated when the mouse button was pressed
+				//  minus the coordinates of the parent bounds
+				final double newLayoutX = event.getSceneX() - this.deltaX - JFXBattlefield.this.getBoundsInParent().getMinX();
+				final double newLayoutY = event.getSceneY() - this.deltaY - JFXBattlefield.this.getBoundsInParent().getMinY();
 
 				if (newLayoutX > 0) {
-					super.setLayoutX(newLayoutX - super.getLayoutBounds().getMinX());
+					super.setLayoutX(newLayoutX);
 				}
 
 				if (newLayoutY > 0) {
-					super.setLayoutY(newLayoutY - super.getLayoutBounds().getMaxY());
+					super.setLayoutY(newLayoutY);
 				}
 			});
 
 			// When the mouse is released, the game controller update the location of the card
 			super.setOnMouseReleased(event -> {
-				gameController.setLocation(card, getLayoutX(), getLayoutY());
+				JFXBattlefield.this.gameController.setLocation(card, super.getLayoutX(), super.getLayoutY());
 			});
 		}
 	}
