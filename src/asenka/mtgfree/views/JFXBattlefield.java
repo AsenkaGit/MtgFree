@@ -13,6 +13,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.Group;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -154,12 +155,15 @@ public class JFXBattlefield extends ScrollPane {
 		private void initializeContextMenu() {
 
 			final Card card = super.getCard();
-			final MenuItem otherSideMenuItem = JFXCardView.findMenuItemByID(getContextMenu(), JFXCardView.OTHER_SIDE_MENU_ITEM_ID);
-
+			final ContextMenu defaultContextMenu = getContextMenu();
+			
+			// If the card is a double-faced card, the otherSideMenuItem is disabled
+			final MenuItem otherSideMenuItem = JFXCardView.findMenuItemByID(defaultContextMenu, JFXCardView.OTHER_SIDE_MENU_ITEM_ID);
 			if (otherSideMenuItem != null) {
 				otherSideMenuItem.setDisable(!card.isVisible());
 			}
 
+			// Menu item managing the tapping of the card
 			final MenuItem tapMenuItem = new MenuItem("Tap");
 			tapMenuItem.setOnAction(event -> {
 
@@ -173,6 +177,7 @@ public class JFXBattlefield extends ScrollPane {
 
 			});
 
+			// Menu item managing the visibility of the card
 			final MenuItem visibleMenuItem = new MenuItem(card.isVisible() ? "Hide" : "Show");
 			visibleMenuItem.setOnAction(event -> {
 
@@ -194,21 +199,27 @@ public class JFXBattlefield extends ScrollPane {
 
 			});
 
+			// Destroy menu item
 			final MenuItem destroyMenuItem = new MenuItem("Destroy");
 			destroyMenuItem.setOnAction(event -> gameController.changeCardContext(card, Context.BATTLEFIELD, Context.GRAVEYARD, 0, false));
 
+			// Exile menu item
 			final MenuItem exileMenuItem = new MenuItem("Exile");
 			exileMenuItem.setOnAction(event -> gameController.changeCardContext(card, Context.BATTLEFIELD, Context.EXILE, 0, false));
 
+			// Back to hand menu item
 			final MenuItem handMenuItem = new MenuItem("Hand");
 			handMenuItem.setOnAction(event -> gameController.changeCardContext(card, Context.BATTLEFIELD, Context.HAND, 0, true));
 
+			// Send to the front the selected card (only local operation)
 			final MenuItem aboveMenuItem = new MenuItem("Above");
 			aboveMenuItem.setOnAction(event -> this.toFront());
 
+			// Send to back the selected card (only local operation)
 			final MenuItem underMenuItem = new MenuItem("Under");
 			underMenuItem.setOnAction(event -> this.toBack());
 
+			// 
 			final Menu libraryMenuItem = new Menu("To Library");
 			final MenuItem topLibraryMenuItem = new MenuItem("Top");
 			final MenuItem bottomLibraryMenuItem = new MenuItem("Bottom");
@@ -218,7 +229,7 @@ public class JFXBattlefield extends ScrollPane {
 			bottomLibraryMenuItem.setOnAction(
 				event -> gameController.changeCardContext(card, Context.BATTLEFIELD, Context.LIBRARY, GameController.BOTTOM, true));
 
-			super.getContextMenu().getItems().addAll(tapMenuItem, visibleMenuItem, destroyMenuItem, exileMenuItem, handMenuItem,
+			defaultContextMenu.getItems().addAll(tapMenuItem, visibleMenuItem, destroyMenuItem, exileMenuItem, handMenuItem,
 				libraryMenuItem, aboveMenuItem, underMenuItem);
 		}
 

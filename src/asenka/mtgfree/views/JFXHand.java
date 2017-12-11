@@ -114,13 +114,7 @@ public class JFXHand extends ScrollPane {
 			// TODO Naive implementation : remove all and add all again... Can do better.
 			// Even though this component should not contain more than 7 or 8 handCards most of the time
 			this.handCards.addListener((ListChangeListener.Change<? extends Card> change) -> refreshHand());
-
-			// If the player is NOT the local player, the handCards are equipped with another listener
-			// It refresh the player hand whenever a card from its hand change visibility.
-			if (!this.forLocalPlayer) {
-				this.handCards.forEach(card -> card.visibleProperty().addListener(observable -> refreshHand()));
-			}
-			
+		
 			// Draws the hand
 			this.refreshHand();
 		}
@@ -164,19 +158,11 @@ public class JFXHand extends ScrollPane {
 			});
 		} else {
 
+			cardViewWithInfoOverlay = null;
 			cardView = new JFXCardView(card, CardImageSize.SMALL);
-
-			if (card.isVisible()) {
-
-				// The card is added in an info overlay (see controlfx library) that display the card name
-				cardViewWithInfoOverlay = new InfoOverlay(cardView, card.getPrimaryCardData().getName());
-				cardViewWithInfoOverlay.setStyle("-fx-font-size:9px;");
-				cardView.selectSide(Side.FRONT);
-			} else {
-				cardViewWithInfoOverlay = null;
-				cardView.setOnContextMenuRequested(null);
-				cardView.selectSide(Side.BACK);
-			}
+			cardView.selectSide(card.isVisible() ? Side.FRONT : Side.BACK);
+			cardView.setOnContextMenuRequested(null);
+			card.visibleProperty().addListener(observable -> Platform.runLater(() -> cardView.selectSide(card.isVisible() ? Side.FRONT : Side.BACK)));
 		}
 
 		// Create and return the pane to put the card view in
