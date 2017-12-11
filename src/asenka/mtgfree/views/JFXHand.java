@@ -59,9 +59,9 @@ public class JFXHand extends ScrollPane {
 	private final GameController gameController;
 
 	/**
-	 * 
+	 * The listener used to update the cards list in the hand when the other player join the game.
 	 */
-	private InvalidationListener otherPlayerListener;
+	private InvalidationListener otherPlayerJoiningListener;
 
 	/**
 	 * Build a JFX component displaying the handCards in the player's hand
@@ -99,17 +99,15 @@ public class JFXHand extends ScrollPane {
 			final ObjectProperty<Player> otherPlayerProperty = this.gameController.getGameTable().otherPlayerProperty();
 
 			// ... It adds a listeners on the otherPlayer property to update the handCards list
-			this.otherPlayerListener = (observable -> {
+			this.otherPlayerJoiningListener = (observable -> {
 
-				System.out.println("Player join ? " + observable);
-				
 				this.handCards = this.gameController.getGameTable().getOtherPlayer().getHand();
 				this.addListeners();
 
-				// the useless listener is removed when the other player arrives on the battlefield
-				otherPlayerProperty.removeListener(this.otherPlayerListener);
+				// As soon as the other player has join, we don't need anymore to perform this operation. The listener is removed
+				otherPlayerProperty.removeListener(this.otherPlayerJoiningListener);
 			});
-			otherPlayerProperty.addListener(this.otherPlayerListener);
+			otherPlayerProperty.addListener(this.otherPlayerJoiningListener);
 
 		} else {
 			
@@ -202,26 +200,28 @@ public class JFXHand extends ScrollPane {
 		final MenuItem playHiddenMenuItem = new MenuItem("Hidden");
 		final MenuItem destroyMenuItem = new MenuItem("Destroy");
 		final MenuItem exileMenuItem = new MenuItem("Exile");
+		final MenuItem revealMenuItem = new MenuItem("Toggle Reveal");
 		final Menu libraryMenuItem = new Menu("To Library");
 		final MenuItem topLibraryMenuItem = new MenuItem("Top");
 		final MenuItem bottomLibraryMenuItem = new MenuItem("Bottom");
 		playMenu.getItems().addAll(playVisibleMenuItem, playHiddenMenuItem);
 		libraryMenuItem.getItems().addAll(topLibraryMenuItem, bottomLibraryMenuItem);
-		contextMenu.getItems().addAll(new SeparatorMenuItem(), playMenu, exileMenuItem, destroyMenuItem, libraryMenuItem);
+		contextMenu.getItems().addAll(new SeparatorMenuItem(), playMenu, exileMenuItem, destroyMenuItem, libraryMenuItem, revealMenuItem);
 
 		// Set the actions associated with the menu items
 		destroyMenuItem
 			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.GRAVEYARD, GameController.TOP, false));
-		exileMenuItem.setOnAction(
-			event -> this.gameController.changeCardContext(card, Context.HAND, Context.EXILE, GameController.TOP, card.isVisible()));
-		playVisibleMenuItem.setOnAction(
-			event -> this.gameController.changeCardContext(card, Context.HAND, Context.BATTLEFIELD, GameController.TOP, false));
+		exileMenuItem
+			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.EXILE, GameController.TOP, card.isVisible()));
+		playVisibleMenuItem
+			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.BATTLEFIELD, GameController.TOP, false));
 		playHiddenMenuItem
 			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.BATTLEFIELD, GameController.TOP, true));
 		topLibraryMenuItem
 			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.LIBRARY, GameController.TOP, true));
 		bottomLibraryMenuItem
 			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.LIBRARY, GameController.BOTTOM, true));
+		revealMenuItem.setOnAction(event -> this.gameController.setVisible(card, !card.isVisible()));
 
 		// Add the context menu to the card view
 		cardView.setOnContextMenuRequested(event -> contextMenu.show(cardView, event.getScreenX(), event.getScreenY()));
@@ -230,7 +230,7 @@ public class JFXHand extends ScrollPane {
 	/**
 	 * Refresh the whole hand by redrawing all the handCards inside. This behavior may be improved...
 	 */
-	private void refreshHand() {
+	private synchronized void refreshHand() {
 
 		// To update the JavaFX components, you have to perform the operations in the JavaFX Application Thread
 		Platform.runLater(() -> {
@@ -250,8 +250,9 @@ public class JFXHand extends ScrollPane {
 
 		// The gameController must be initialized. Also the forLocalPlayer flag must be set !
 		if (this.gameController != null) {
-			final Player player = this.forLocalPlayer ? this.gameController.getGameTable().getLocalPlayer()
-				: this.gameController.getGameTable().getOtherPlayer();
+			final Player player = this.forLocalPlayer ? 
+				this.gameController.getGameTable().getLocalPlayer() : 
+				this.gameController.getGameTable().getOtherPlayer();
 			return player != null ? player.getHand() : null;
 		} else {
 			throw new IllegalStateException("The game controller must be initialized before calling this method.");

@@ -101,23 +101,23 @@ public final class CardsManager {
 	
 		final IntegerProperty maxBattleId = new SimpleIntegerProperty(0);
 		
-		player.getLibrary().stream().forEach(card -> {
+		player.getLibrary().forEach(card -> {
 			this.cards.putIfAbsent(card.getBattleId(), card);
 			maxBattleId.set(card.getBattleId() > maxBattleId.get() ? card.getBattleId() : maxBattleId.get());
 		});
-		player.getHand().stream().forEach(card -> {
+		player.getHand().forEach(card -> {
 			this.cards.putIfAbsent(card.getBattleId(), card);
 			maxBattleId.set(card.getBattleId() > maxBattleId.get() ? card.getBattleId() : maxBattleId.get());
 		});
-		player.getBattlefield().stream().forEach(card -> {
+		player.getBattlefield().forEach(card -> {
 			this.cards.putIfAbsent(card.getBattleId(), card);
 			maxBattleId.set(card.getBattleId() > maxBattleId.get() ? card.getBattleId() : maxBattleId.get());
 		});
-		player.getGraveyard().stream().forEach(card -> {
+		player.getGraveyard().forEach(card -> {
 			this.cards.putIfAbsent(card.getBattleId(), card);
 			maxBattleId.set(card.getBattleId() > maxBattleId.get() ? card.getBattleId() : maxBattleId.get());
 		});
-		player.getExile().stream().forEach(card -> {
+		player.getExile().forEach(card -> {
 			this.cards.putIfAbsent(card.getBattleId(), card);
 			maxBattleId.set(card.getBattleId() > maxBattleId.get() ? card.getBattleId() : maxBattleId.get());
 		});

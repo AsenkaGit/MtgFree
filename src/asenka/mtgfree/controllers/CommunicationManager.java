@@ -97,7 +97,7 @@ public class CommunicationManager {
 			// The events from the local player are not managed
 			if (!localPlayer.equals(parameters[0])) {
 				
-				Logger.getLogger(CommunicationManager.class).trace(">>> " + localPlayer.getName() + " read " + event);
+				Logger.getLogger(CommunicationManager.class).info(">>> " + localPlayer.getName() + " read " + event);
 
 				try {
 					EventType eventType = event.getEventType();

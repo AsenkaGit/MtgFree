@@ -84,6 +84,11 @@ public class JFXCardView extends ImageView {
 	 * The context menu of the card
 	 */
 	private ContextMenu contextMenu;
+	
+	/**
+	 * 
+	 */
+	private Tooltip tooltip;
 
 	/**
 	 * Create a card view without a card. The regular back of a card is displayed
@@ -94,10 +99,14 @@ public class JFXCardView extends ImageView {
 
 		this.cardProperty = new SimpleObjectProperty<Card>(this, "card");
 		this.backCardImage = ImagesManager.IMAGE_MTG_CARD_BACK;
-
+		this.tooltip = createTooltip();
+		Tooltip.install(this, this.tooltip);
+		
 		setFitHeight(size.getHeigth());
 		setFitWidth(size.getWidth());
 		selectSide(Side.BACK);
+		
+		
 
 		// Add the listener that update the card view when the card is changed and set the default card
 		this.cardProperty.addListener(observable -> intializeCardView());
@@ -139,6 +148,7 @@ public class JFXCardView extends ImageView {
 	public final void setCard(final Card card) {
 
 		this.cardProperty.set(card);
+		this.tooltip.setText(card != null ? createTextForTooltip(card) : "");
 	}
 
 	/**
@@ -156,13 +166,16 @@ public class JFXCardView extends ImageView {
 			switch (side) {
 				case FRONT:
 					setImage(this.primaryCardImage);
+					this.tooltip.setText(createTextForTooltip(this.cardProperty.get()));
 					break;
 				case BACK:
 					setImage(this.backCardImage);
+					this.tooltip.setText("Card hidden");
 					break;
 				case OTHER_SIDE:
 					if (isDoubleFaced(this.cardProperty.get())) {
 						setImage(this.secondaryCardImage);
+						this.tooltip.setText(createTextForTooltip(this.cardProperty.get()));
 					} else {
 						throw new IllegalStateException("Cannot display the other side of a card if it is not double faced.");
 					}
@@ -193,8 +206,9 @@ public class JFXCardView extends ImageView {
 			this.secondaryCardImage = isDoubleFaced(card) ? ImagesManager.getImage(card.getSecondaryCardData()) : null;
 			this.contextMenu = createDefaultContextMenu();
 			setOnContextMenuRequested(event -> this.contextMenu.show(this, event.getScreenX(), event.getScreenY()));
-
-			Tooltip.install(this, createTooltip(card));
+			
+			
+			
 			selectSide(Side.FRONT);
 
 		} else {
@@ -259,9 +273,9 @@ public class JFXCardView extends ImageView {
 	 * @param card the card
 	 * @return the tooltip to install with the text about the card
 	 */
-	private static Tooltip createTooltip(final Card card) {
+	private static Tooltip createTooltip() {
 
-		Tooltip tooltip = new Tooltip(createTextForTooltip(card));
+		Tooltip tooltip = new Tooltip("");
 		tooltip.setWrapText(true);
 		tooltip.setMaxWidth(300);
 		tooltip.setStyle("-fx-font-size:12px;");

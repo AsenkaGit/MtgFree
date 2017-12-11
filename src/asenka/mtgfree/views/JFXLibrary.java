@@ -23,8 +23,8 @@ public class JFXLibrary extends GridPane {
 		super();
 		this.gameController = controller;
 		this.backCardImageView = new ImageView(ImagesManager.IMAGE_MTG_CARD_BACK);
-		this.backCardImageView.setFitHeight(CardImageSize.LARGE.getHeigth());
-		this.backCardImageView.setFitWidth(CardImageSize.LARGE.getWidth());
+		this.backCardImageView.setFitHeight(CardImageSize.MEDIUM.getHeigth());
+		this.backCardImageView.setFitWidth(CardImageSize.MEDIUM.getWidth());
 		
 		buildComponentLayout();
 		addListeners();

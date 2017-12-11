@@ -33,7 +33,7 @@ public class JFXBattlefield extends ScrollPane {
 
 	private final boolean forLocalPlayer;
 	
-	private InvalidationListener otherPlayerListener;
+	private InvalidationListener otherPlayerJoiningListener;
 	
 	private final JFXTwoPlayersBattlefields parentBattlefield;
 
@@ -73,15 +73,15 @@ public class JFXBattlefield extends ScrollPane {
 			final ObjectProperty<Player> otherPlayerProperty = this.gameController.getGameTable().otherPlayerProperty();
 			
 			// ... It adds a listeners on the otherPlayer property to update the battlefield cards list
-			this.otherPlayerListener = (observable -> {
+			this.otherPlayerJoiningListener = (observable -> {
 
 				this.battlefieldCards = this.gameController.getGameTable().getOtherPlayer().getBattlefield();
 				this.addListeners();
 				
-				// the useless listener is removed when the  other player arrives on the battlefield
-				otherPlayerProperty.removeListener(this.otherPlayerListener);
+				// As soon as the other player has join, we don't need anymore to perform this operation. The listener is removed
+				otherPlayerProperty.removeListener(this.otherPlayerJoiningListener);
 			});
-			otherPlayerProperty.addListener(this.otherPlayerListener);
+			otherPlayerProperty.addListener(this.otherPlayerJoiningListener);
 
 		} else {
 		
@@ -90,22 +90,21 @@ public class JFXBattlefield extends ScrollPane {
 
 				while (change.next()) {
 
+					// A card enters the battlefield component...
 					if (change.wasAdded()) {
+						
 						change.getAddedSubList().forEach(card -> {
 							JFXBattlefieldCardView battlefieldCardView = new JFXBattlefieldCardView(card, CardImageSize.MEDIUM);
 							this.battlefieldCardViews.put(card, battlefieldCardView);
-							
-							Platform.runLater(() -> {
-								this.cardsGroup.getChildren().add(battlefieldCardView);
-							});
+							Platform.runLater(() -> this.cardsGroup.getChildren().add(battlefieldCardView));
 						});
+						
+					// A card leaves the battlefield component...
 					} else if (change.wasRemoved()) {
+						
 						change.getRemoved().forEach(card -> {
 							JFXBattlefieldCardView battlefieldCardView = this.battlefieldCardViews.remove(card);
-							
-							Platform.runLater(() -> {
-								this.cardsGroup.getChildren().remove(battlefieldCardView);
-							});
+							Platform.runLater(() -> this.cardsGroup.getChildren().remove(battlefieldCardView));
 						});
 					}
 				}
@@ -143,7 +142,10 @@ public class JFXBattlefield extends ScrollPane {
 
 			initializeMouvementListeners();
 			initializeCardListeners();
-			initializeContextMenu();
+			
+			if(JFXBattlefield.this.forLocalPlayer) {
+				initializeContextMenu();
+			}
 		}
 
 		/**
@@ -272,7 +274,11 @@ public class JFXBattlefield extends ScrollPane {
 			// When the mouse button is pressed, the selected cards list is updated
 			super.setOnMousePressed(event -> {
 
-				JFXBattlefield.this.gameController.setSelectedCards(card);
+				if(JFXBattlefield.this.forLocalPlayer || card.isVisible()) {
+					JFXBattlefield.this.gameController.setSelectedCards(card);
+				} else {
+					JFXBattlefield.this.gameController.setSelectedCards();
+				}
 				this.deltaX = event.getX();
 				this.deltaY = event.getY();
 			});
