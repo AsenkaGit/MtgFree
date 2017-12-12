@@ -56,6 +56,16 @@ public class JFXCardView extends ImageView {
 	public static final String OTHER_SIDE_MENU_ITEM_ID = "otherSideMenuItem";
 
 	/**
+	 * The property containing the card to display. The value of the property can be <code>null</code> if no card is displayed.
+	 */
+	private final ObjectProperty<Card> cardProperty;
+
+	/**
+	 * The back side of all the magic cards (except those with double-faced layout)
+	 */
+	private final Image backCardImage;
+
+	/**
 	 * The front side of any magic card.
 	 */
 	private Image primaryCardImage;
@@ -66,19 +76,9 @@ public class JFXCardView extends ImageView {
 	private Image secondaryCardImage;
 
 	/**
-	 * The back side of all the magic cards (except those with double-faced layout)
-	 */
-	private final Image backCardImage;
-
-	/**
 	 * The side of the card currently displayed
 	 */
 	private Side currentSide;
-
-	/**
-	 * The property containing the card to display. The value of the property can be <code>null</code> if no card is displayed.
-	 */
-	private final ObjectProperty<Card> cardProperty;
 
 	/**
 	 * The context menu of the card
@@ -86,7 +86,7 @@ public class JFXCardView extends ImageView {
 	private ContextMenu contextMenu;
 	
 	/**
-	 * 
+	 * The tooltip text
 	 */
 	private Tooltip tooltip;
 
@@ -105,8 +105,6 @@ public class JFXCardView extends ImageView {
 		setFitHeight(size.getHeigth());
 		setFitWidth(size.getWidth());
 		selectSide(Side.BACK);
-		
-		
 
 		// Add the listener that update the card view when the card is changed and set the default card
 		this.cardProperty.addListener(observable -> intializeCardView());
@@ -122,33 +120,6 @@ public class JFXCardView extends ImageView {
 
 		this(size);
 		setCard(card);
-	}
-
-	/**
-	 * @return the property of the displayed card
-	 */
-	protected final ObjectProperty<Card> cardProperty() {
-
-		return this.cardProperty;
-	}
-	
-	/**
-	 * @return the card displayed by the card view
-	 */
-	protected final Card getCard() {
-		
-		return this.cardProperty.get();
-	}
-
-	/**
-	 * Change the displayed card
-	 * 
-	 * @param card the new card (<code>null</code> is allowed)
-	 */
-	public final void setCard(final Card card) {
-
-		this.cardProperty.set(card);
-		this.tooltip.setText(card != null ? createTextForTooltip(card) : "");
 	}
 
 	/**
@@ -185,6 +156,33 @@ public class JFXCardView extends ImageView {
 	}
 
 	/**
+	 * Change the displayed card
+	 * 
+	 * @param card the new card (<code>null</code> is allowed)
+	 */
+	public final void setCard(final Card card) {
+	
+		this.cardProperty.set(card);
+		this.tooltip.setText(card != null ? createTextForTooltip(card) : "");
+	}
+
+	/**
+	 * @return the property of the displayed card
+	 */
+	protected final ObjectProperty<Card> cardProperty() {
+	
+		return this.cardProperty;
+	}
+
+	/**
+	 * @return the card displayed by the card view
+	 */
+	protected final Card getCard() {
+		
+		return this.cardProperty.get();
+	}
+
+	/**
 	 * Use this method if you need to update or change the update menu of the card view.
 	 * @return the existing context menu already installed on the card view (do not create a new one)
 	 */
@@ -206,11 +204,7 @@ public class JFXCardView extends ImageView {
 			this.secondaryCardImage = isDoubleFaced(card) ? ImagesManager.getImage(card.getSecondaryCardData()) : null;
 			this.contextMenu = createDefaultContextMenu();
 			setOnContextMenuRequested(event -> this.contextMenu.show(this, event.getScreenX(), event.getScreenY()));
-			
-			
-			
 			selectSide(Side.FRONT);
-
 		} else {
 			this.primaryCardImage = null;
 			this.secondaryCardImage = null;
@@ -256,6 +250,20 @@ public class JFXCardView extends ImageView {
 			contextMenu.getItems().add(otherSideMenuItem);
 		}
 		return contextMenu;
+	}
+
+	/**
+	 * Look for a menu item with a specific ID in a context menu
+	 * 
+	 * @param contextMenu the context menu
+	 * @param id the id of the menu item in the context menu to look for
+	 * @return the menu item id with the desired ID or <code>null</code>
+	 */
+	public static final MenuItem findMenuItemByID(final ContextMenu contextMenu, String id) {
+	
+		// Return one and only one menu item matching the ID
+		final Optional<MenuItem> result = contextMenu.getItems().stream().filter(item -> id.equals(item.getId())).findFirst();
+		return result.isPresent() ? result.get() : null;
 	}
 
 	/**
@@ -347,20 +355,5 @@ public class JFXCardView extends ImageView {
 			buf.append("Loyalty: " + loyalty);
 		}
 		return buf.toString();
-	}
-
-	
-	/**
-	 * Look for a menu item with a specific ID in a context menu
-	 * 
-	 * @param contextMenu the context menu
-	 * @param id the id of the menu item in the context menu to look for
-	 * @return the menu item id with the desired ID or <code>null</code>
-	 */
-	public static final MenuItem findMenuItemByID(final ContextMenu contextMenu, String id) {
-
-		// Return one and only one menu item matching the ID
-		final Optional<MenuItem> result = contextMenu.getItems().stream().filter(item -> id.equals(item.getId())).findFirst();
-		return result.isPresent() ? result.get() : null;
 	}
 }

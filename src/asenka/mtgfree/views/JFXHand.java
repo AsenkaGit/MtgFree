@@ -186,7 +186,7 @@ public class JFXHand extends ScrollPane {
 		final MenuItem playHiddenMenuItem = new MenuItem("Hidden");
 		final MenuItem destroyMenuItem = new MenuItem("Destroy");
 		final MenuItem exileMenuItem = new MenuItem("Exile");
-		final MenuItem revealMenuItem = new MenuItem("Toggle Reveal");
+		final MenuItem revealMenuItem = new MenuItem(card.isVisible() ? "Hide" : "Reveal");
 		final Menu libraryMenuItem = new Menu("To Library");
 		final MenuItem topLibraryMenuItem = new MenuItem("Top");
 		final MenuItem bottomLibraryMenuItem = new MenuItem("Bottom");
@@ -207,7 +207,10 @@ public class JFXHand extends ScrollPane {
 			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.LIBRARY, GameController.TOP, true));
 		bottomLibraryMenuItem
 			.setOnAction(event -> this.gameController.changeCardContext(card, Context.HAND, Context.LIBRARY, GameController.BOTTOM, true));
-		revealMenuItem.setOnAction(event -> this.gameController.setVisible(card, !card.isVisible()));
+		revealMenuItem.setOnAction(event -> {
+			this.gameController.setVisible(card, !card.isVisible());
+			revealMenuItem.setText(card.isVisible() ? "Hide" : "Reveal");
+		});
 
 		// Add the context menu to the card view
 		cardView.setOnContextMenuRequested(event -> contextMenu.show(cardView, event.getScreenX(), event.getScreenY()));
@@ -216,7 +219,7 @@ public class JFXHand extends ScrollPane {
 	/**
 	 * Refresh the whole hand by redrawing all the handCards inside. This behavior may be improved...
 	 */
-	private synchronized void refreshHand() {
+	private void refreshHand() {
 
 		// To update the JavaFX components, you have to perform the operations in the JavaFX Application Thread
 		Platform.runLater(() -> {

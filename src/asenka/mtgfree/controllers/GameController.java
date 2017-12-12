@@ -94,10 +94,10 @@ public class GameController {
 		}
 	}
 
-	synchronized void updateOpponentLibrary(final Player player, final List<Card> library) throws GameException {
+	synchronized void updateOpponentLibrary(final Player player) throws GameException {
 
 		if (player.equals(this.gameTable.getOtherPlayer())) {
-			player.setLibrary(FXCollections.observableList(library));
+			player.setLibrary(FXCollections.<Card>observableList(player.getLibrary()));
 		} else {
 			throw new GameException("Unexpected player for library update: " + player);
 		}

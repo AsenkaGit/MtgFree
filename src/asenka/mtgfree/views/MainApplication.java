@@ -54,10 +54,11 @@ public class MainApplication extends Application {
 		JFXTwoPlayersBattlefields bothBattlefields = new JFXTwoPlayersBattlefields(gameController);
 		JFXSelectedCardInfoPane selectedCardInfo = new JFXSelectedCardInfoPane(gameController);
 		JFXLibrary library = new JFXLibrary(gameController);
-		BorderPane rootPane = new BorderPane(bothBattlefields, handOtherPlayer, selectedCardInfo, handLocalPlayer, library);		
-		
+		BorderPane rootPane = new BorderPane(bothBattlefields, handOtherPlayer, selectedCardInfo, handLocalPlayer, library);	
+
 		Scene scene = new Scene(rootPane);
 		primaryStage.setScene(scene);
+		primaryStage.setTitle("[MTG FREE] - " + player.getName());
 		primaryStage.setOnCloseRequest(event -> gameController.exitGame());
 		primaryStage.show();
 	}
