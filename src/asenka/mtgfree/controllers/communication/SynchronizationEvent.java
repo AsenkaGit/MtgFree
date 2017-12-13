@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class SynchronizationEvent implements Serializable {
 
-	private static final long serialVersionUID = 591871669087955237L;
+	private static final long serialVersionUID = -8650464715987942583L;
 
 	private final EventType eventType;
 	
