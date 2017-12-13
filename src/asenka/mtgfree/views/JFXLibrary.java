@@ -57,13 +57,11 @@ public class JFXLibrary extends GridPane {
 	private final Button displayExileButton;
 
 	private final ObjectProperty<Player> otherPlayerProperty;
-	
-	
-	
 
 	public JFXLibrary(final GameController controller) {
 
 		super();
+		this.getStyleClass().add("mtg-pane");
 		this.gameController = controller;
 		this.otherPlayerProperty = controller.getGameTable().otherPlayerProperty();
 		this.backCardImageView = new ImageView(ImagesManager.IMAGE_MTG_CARD_BACK);
@@ -90,6 +88,8 @@ public class JFXLibrary extends GridPane {
 	}
 
 	private void buildComponentLayout() {
+		
+		
 		
 		final Text localPlayerNameText = new Text(this.gameController.getGameTable().getLocalPlayer().getName());
 		
@@ -141,7 +141,7 @@ public class JFXLibrary extends GridPane {
 		
 		GridPane.setConstraints(displayGraveyardButton, 0, 7, 2, 1, HPos.CENTER, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 		
-		GridPane.setConstraints(displayExileButton, 	0, 8, 2, 1, HPos.CENTER, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
+		GridPane.setConstraints(displayExileButton, 	2, 7, 2, 1, HPos.CENTER, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 	}
 
 	private void addListeners() {

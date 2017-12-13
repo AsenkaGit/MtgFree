@@ -5,7 +5,6 @@ import java.net.PasswordAuthentication;
 import java.util.Scanner;
 
 import asenka.mtgfree.controllers.GameController;
-import asenka.mtgfree.model.Card;
 import asenka.mtgfree.model.GameTable;
 import asenka.mtgfree.model.Player;
 import asenka.mtgfree.model.utilities.CardsManager;
@@ -47,8 +46,12 @@ public class MainApplication extends Application {
 		JFXSelectedCardInfoPane selectedCardInfo = new JFXSelectedCardInfoPane(gameController);
 		JFXLibrary library = new JFXLibrary(gameController);
 		BorderPane rootPane = new BorderPane(bothBattlefields, handOtherPlayer, selectedCardInfo, handLocalPlayer, new VBox(library, new JFXGameEventLogger(gameController)));
-
+		rootPane.setPrefSize(1200, 800);
+		
+		
 		Scene scene = new Scene(rootPane);
+		scene.getStylesheets().add("DarkTheme.css");
+		
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("[MTG FREE] - " + player.getName());
 		primaryStage.setOnCloseRequest(event -> gameController.exitGame());
@@ -124,10 +127,10 @@ public class MainApplication extends Application {
 
 	}
 
-	private static void setLibraryB(final Player player) {
-
-		CardsManager cm = CardsManager.getInstance();
-	}
+//	private static void setLibraryB(final Player player) {
+//
+//		CardsManager cm = CardsManager.getInstance();
+//	}
 
 	private void initProxy(boolean needProxy) {
 

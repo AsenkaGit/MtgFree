@@ -72,6 +72,9 @@ public class JFXHand extends ScrollPane {
 	public JFXHand(final GameController gameController, final boolean forLocalPlayer) {
 
 		super();
+		this.getStyleClass().add("mtg-pane");
+		this.getStyleClass().add("JFXHand");
+		this.getStyleClass().add(forLocalPlayer ? "localPlayer" : "opponentPlayer");
 		this.gameController = gameController;
 		this.forLocalPlayer = forLocalPlayer;
 		this.handCards = getHandCards();
@@ -85,7 +88,8 @@ public class JFXHand extends ScrollPane {
 	private void buildComponentLayout() {
 
 		this.horizontalLayout.setPadding(new Insets(15, 10, 15, 10));
-
+		this.horizontalLayout.setMinHeight(CardImageSize.MEDIUM.getHeigth() + 30d);
+		super.setMinHeight((forLocalPlayer ? CardImageSize.MEDIUM.getHeigth() : CardImageSize.SMALL.getHeigth()) + 30d);
 		super.setContent(this.horizontalLayout);
 		super.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
 		super.setVbarPolicy(ScrollBarPolicy.NEVER);

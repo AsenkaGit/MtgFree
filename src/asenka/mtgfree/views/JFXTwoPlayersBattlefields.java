@@ -12,6 +12,8 @@ public class JFXTwoPlayersBattlefields extends SplitPane {
 	
 	public JFXTwoPlayersBattlefields(final GameController controller) {
 		
+		super();
+		this.getStyleClass().add("mtg-pane");
 		this.localPlayerBattlefield = new JFXBattlefield(this, controller, true);
 		this.otherPlayerBattlefield = new JFXBattlefield(this, controller, false);
 		

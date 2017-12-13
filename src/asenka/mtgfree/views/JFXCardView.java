@@ -97,6 +97,8 @@ public class JFXCardView extends ImageView {
 	 */
 	public JFXCardView(CardImageSize size) {
 
+		super();
+		this.getStyleClass().add("JFXCardView");
 		this.cardProperty = new SimpleObjectProperty<Card>(this, "card");
 		this.backCardImage = ImagesManager.IMAGE_MTG_CARD_BACK;
 		this.tooltip = createTooltip();
@@ -108,6 +110,7 @@ public class JFXCardView extends ImageView {
 
 		// Add the listener that update the card view when the card is changed and set the default card
 		this.cardProperty.addListener(observable -> intializeCardView());
+		super.setSmooth(true);
 	}
 
 	/**

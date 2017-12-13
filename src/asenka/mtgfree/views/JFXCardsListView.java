@@ -26,6 +26,8 @@ public class JFXCardsListView extends FlowPane {
 
 	public JFXCardsListView(final GameController controller, Context context, final int displayXFirst) {
 
+		super();
+		this.getStyleClass().add("mtg-pane");
 		this.gameController = controller;
 		this.count = displayXFirst;
 		this.context = context;

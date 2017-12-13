@@ -96,6 +96,9 @@ public class JFXBattlefield extends ScrollPane {
 	 */
 	JFXBattlefield(final JFXTwoPlayersBattlefields parentBattlefield, final GameController gameController, final boolean forLocalPlayer) {
 
+		this.getStyleClass().add("mtg-pane");
+		this.getStyleClass().add("JFXBattlefield");
+		this.getStyleClass().add(forLocalPlayer ? "localPlayer" : "opponentPlayer");
 		this.parentBattlefield = parentBattlefield;
 		this.forLocalPlayer = forLocalPlayer;
 		this.gameController = gameController;

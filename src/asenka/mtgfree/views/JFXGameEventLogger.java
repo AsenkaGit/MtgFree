@@ -27,8 +27,11 @@ public class JFXGameEventLogger extends ScrollPane {
 
 	public JFXGameEventLogger(final GameController controller) {
 
+		super();
+		this.getStyleClass().add("JFXGameEventLogger");
 		this.gameController = controller;
 		this.logsTextFlow = new TextFlow();
+		this.logsTextFlow.getStyleClass().add("logsTextFlow");
 		this.logsPane = new Pane(this.logsTextFlow);
 
 		buildComponentLayout();
