@@ -12,6 +12,7 @@ import asenka.mtgfree.model.utilities.CardsManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class MainApplication extends Application {
@@ -45,7 +46,7 @@ public class MainApplication extends Application {
 		JFXTwoPlayersBattlefields bothBattlefields = new JFXTwoPlayersBattlefields(gameController);
 		JFXSelectedCardInfoPane selectedCardInfo = new JFXSelectedCardInfoPane(gameController);
 		JFXLibrary library = new JFXLibrary(gameController);
-		BorderPane rootPane = new BorderPane(bothBattlefields, handOtherPlayer, selectedCardInfo, handLocalPlayer, library);
+		BorderPane rootPane = new BorderPane(bothBattlefields, handOtherPlayer, selectedCardInfo, handLocalPlayer, new VBox(library, new JFXGameEventLogger(gameController)));
 
 		Scene scene = new Scene(rootPane);
 		primaryStage.setScene(scene);

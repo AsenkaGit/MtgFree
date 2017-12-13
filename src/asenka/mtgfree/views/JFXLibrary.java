@@ -140,6 +140,7 @@ public class JFXLibrary extends GridPane {
 		GridPane.setConstraints(backCardImageView, 		0, 6, 4, 1, HPos.CENTER, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 		
 		GridPane.setConstraints(displayGraveyardButton, 0, 7, 2, 1, HPos.CENTER, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
+		
 		GridPane.setConstraints(displayExileButton, 	0, 8, 2, 1, HPos.CENTER, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 	}
 
