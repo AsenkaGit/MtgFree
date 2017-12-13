@@ -22,7 +22,8 @@ public enum EventType {
 	PLAYER_JOIN("addOpponent"), 
 	TABLE_CREATOR_RESPONSE("addOpponent"), 
 	PLAYER_EXIT("removeOpponent"), 
-	
+	SET_LIFE("setPlayerLife"), 
+	SET_POISON("setPlayerPoison"), 
 	;
 
 	private String methodName;

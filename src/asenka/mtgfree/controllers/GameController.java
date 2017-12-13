@@ -1,6 +1,5 @@
 package asenka.mtgfree.controllers;
 
-import java.util.Arrays;
 import java.util.List;
 
 import asenka.mtgfree.controllers.communication.EventType;
@@ -263,12 +262,48 @@ public class GameController {
 		}
 	}
 	
+	public void setPlayerLife(final int life) {
+		
+		setPlayerLife(this.gameTable.getLocalPlayer(), life);
+	}
+	
+	synchronized void setPlayerLife(final Player player, final int life) {
+		
+		player.setLife(life);
+		
+		if (player.equals(this.gameTable.getLocalPlayer())) {
+			try {
+				this.communicationManager.send(EventType.SET_LIFE, player, Integer.valueOf(life));
+			} catch (IllegalStateException | CommunicationException e) {
+				throw new GameException(e);
+			}
+		}
+	}
+	
+	public void setPlayerPoison(final int poison) {
+		
+		setPlayerPoison(this.gameTable.getLocalPlayer(), poison);
+	}
+	
+	synchronized void setPlayerPoison(final Player player, final int poison) {
+		
+		player.setPoison(poison);
+		
+		if (player.equals(this.gameTable.getLocalPlayer())) {
+			try {
+				this.communicationManager.send(EventType.SET_POISON, player, Integer.valueOf(poison));
+			} catch (IllegalStateException | CommunicationException e) {
+				throw new GameException(e);
+			}
+		}
+	}
+	
 	public void setSelectedCards(Card... cards) {
 		
 		this.gameTable.getSelectedCards().forEach(card -> card.setSelected(false));
 		this.gameTable.getSelectedCards().clear();
-		this.gameTable.getSelectedCards().addAll(Arrays.<Card>asList(cards));
-		Arrays.stream(cards).forEach(card -> card.setSelected(true));
+		this.gameTable.getSelectedCards().addAll(cards);
+		this.gameTable.getSelectedCards().forEach(card -> card.setSelected(true));
 	}
 
 	private static List<Card> getContextList(final Context origin, final Player player) throws GameException {

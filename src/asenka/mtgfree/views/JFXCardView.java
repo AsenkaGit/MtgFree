@@ -228,13 +228,6 @@ public class JFXCardView extends ImageView {
 		detailedInfoMenuItem.setOnAction(null);
 		detailedInfoMenuItem.setDisable(true);
 		contextMenu.getItems().add(detailedInfoMenuItem);
-		
-//		// This code create a menu displaying all the sets of the cards
-//		Menu setMenus = new Menu("Sets");
-//		MtgCard cardData = this.cardProperty.get().getPrimaryCardData();
-//		final MtgDataUtility du = MtgDataUtility.getInstance();
-//		Arrays.stream(cardData.getPrintings()).forEach(set -> setMenus.getItems().add(new MenuItem(du.getMtgSet(set).getName())));
-//		contextMenu.getItems().add(setMenus);
 	
 		// If the card displayed is double-faced, another menu item is added to view the other side of the card
 		if (isDoubleFaced(this.cardProperty.get())) {
@@ -249,6 +242,14 @@ public class JFXCardView extends ImageView {
 			});
 			contextMenu.getItems().add(otherSideMenuItem);
 		}
+		
+//		// This code create a menu displaying all the sets of the cards
+//		Menu setMenus = new Menu("Sets");
+//		MtgCard cardData = this.cardProperty.get().getPrimaryCardData();
+//		final MtgDataUtility du = MtgDataUtility.getInstance();
+//		Arrays.stream(cardData.getPrintings()).forEach(set -> setMenus.getItems().add(new MenuItem(du.getMtgSet(set).getName())));
+//		contextMenu.getItems().add(setMenus);
+		
 		return contextMenu;
 	}
 
@@ -259,7 +260,7 @@ public class JFXCardView extends ImageView {
 	 * @param id the id of the menu item in the context menu to look for
 	 * @return the menu item id with the desired ID or <code>null</code>
 	 */
-	public static final MenuItem findMenuItemByID(final ContextMenu contextMenu, String id) {
+	protected static final MenuItem findMenuItemByID(final ContextMenu contextMenu, String id) {
 	
 		// Return one and only one menu item matching the ID
 		final Optional<MenuItem> result = contextMenu.getItems().stream().filter(item -> id.equals(item.getId())).findFirst();
@@ -308,9 +309,7 @@ public class JFXCardView extends ImageView {
 			buf.append("\n--------------------------------------------------------\n");
 			buf.append(createTextForTooltip(secondaryCardData));
 		}
-
 		return buf.toString();
-
 	}
 
 	/**
@@ -325,7 +324,6 @@ public class JFXCardView extends ImageView {
 
 		buf.append(cardData.getName() + "\t");
 
-		// replaceAll("\\", "") => replace all special characters in the string
 		String manaCost = cardData.getManaCost() != null ? cardData.getManaCost() : " ";
 		manaCost = manaCost.replace('}', ',');
 		manaCost = manaCost.replace('{', Character.MIN_VALUE);
@@ -347,12 +345,11 @@ public class JFXCardView extends ImageView {
 			buf.append("\n\n");
 			buf.append(power + " / " + toughness);
 		}
-
 		int loyalty = cardData.getLoyalty();
 
 		if (loyalty > 0) {
 			buf.append("\n\n");
-			buf.append("Loyalty: " + loyalty);
+			buf.append("Loyalty: " + Integer.toString(loyalty));
 		}
 		return buf.toString();
 	}
