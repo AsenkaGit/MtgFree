@@ -9,6 +9,7 @@ import asenka.mtgfree.model.Counter;
 import asenka.mtgfree.model.GameTable;
 import asenka.mtgfree.model.Player;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class GameController {
 
@@ -306,7 +307,7 @@ public class GameController {
 		this.gameTable.getSelectedCards().forEach(card -> card.setSelected(true));
 	}
 
-	private static List<Card> getContextList(final Context origin, final Player player) throws GameException {
+	public static ObservableList<Card> getContextList(final Context origin, final Player player) throws GameException {
 
 		switch (origin) {
 			case LIBRARY:

@@ -1,6 +1,7 @@
 package asenka.mtgfree.views;
 
 import asenka.mtgfree.controllers.GameController;
+import asenka.mtgfree.controllers.GameController.Context;
 import asenka.mtgfree.model.Player;
 import asenka.mtgfree.views.utilities.ImagesManager;
 import javafx.beans.InvalidationListener;
@@ -50,6 +51,10 @@ public class JFXLibrary extends GridPane {
 	private final Button addPoisonButton;
 	
 	private final Button removePoisonButton;
+	
+	private final Button displayGraveyardButton;;
+	
+	private final Button displayExileButton;
 
 	private final ObjectProperty<Player> otherPlayerProperty;
 	
@@ -76,6 +81,8 @@ public class JFXLibrary extends GridPane {
 		this.addPoisonButton = new Button("+");
 		this.removePoisonButton = new Button("-");
 		this.otherPlayerNameText = new Text("");
+		this.displayExileButton = new Button("Check Exile");
+		this.displayGraveyardButton = new Button("Check Graveyard");
 
 		buildComponentLayout();
 		buildContextMenu();
@@ -85,7 +92,6 @@ public class JFXLibrary extends GridPane {
 	private void buildComponentLayout() {
 		
 		final Text localPlayerNameText = new Text(this.gameController.getGameTable().getLocalPlayer().getName());
-		
 		
 		this.addLifeButton.setMaxSize(50d, 50d);
 		this.removeLifeButton.setMaxSize(50d, 50d);
@@ -104,7 +110,9 @@ public class JFXLibrary extends GridPane {
 			otherPlayerNameText,
 			otherPlayerLifeLabel, otherPlayerLifeText,
 			otherPlayerPoisonLabel, otherPlayerPoisonText,
-			this.backCardImageView);
+			this.backCardImageView,
+			this.displayGraveyardButton, 
+			this.displayExileButton);
 		
 		final Insets cellInsets = new Insets(5);
 		
@@ -130,6 +138,9 @@ public class JFXLibrary extends GridPane {
 		GridPane.setConstraints(otherPlayerPoisonText, 	1, 5, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 		
 		GridPane.setConstraints(backCardImageView, 		0, 6, 4, 1, HPos.CENTER, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
+		
+		GridPane.setConstraints(displayGraveyardButton, 0, 7, 2, 1, HPos.CENTER, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
+		GridPane.setConstraints(displayExileButton, 	0, 8, 2, 1, HPos.CENTER, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 	}
 
 	private void addListeners() {
@@ -170,6 +181,22 @@ public class JFXLibrary extends GridPane {
 			this.otherPlayerLifeText.textProperty().bind(otherPlayerProperty.get().lifeProperty().asString());
 			this.otherPlayerPoisonText.textProperty().bind(otherPlayerProperty.get().poisonProperty().asString());
 		}
+		
+		this.displayGraveyardButton.setOnAction(event -> {
+
+			final Stage stage = new Stage();
+			stage.setScene(new Scene(new JFXCardsListView(this.gameController, Context.GRAVEYARD, JFXCardsListView.ALL)));
+			stage.setTitle("Graveyard");
+			stage.show();
+		});
+		
+		this.displayExileButton.setOnAction(event -> {
+			
+			final Stage stage = new Stage();
+			stage.setScene(new Scene(new JFXCardsListView(this.gameController, Context.EXILE, JFXCardsListView.ALL)));
+			stage.setTitle("Exile");
+			stage.show();
+		});
 	}
 
 	private void buildContextMenu() {
@@ -188,14 +215,38 @@ public class JFXLibrary extends GridPane {
 
 		drawMenuItem.setOnAction(event -> this.gameController.draw());
 		shuffleMenuItem.setOnAction(event -> this.gameController.shuffle());
+		
+		scry1MenuItem.setOnAction(event -> {
+
+			final Stage stage = new Stage();
+			stage.setScene(new Scene(new JFXCardsListView(this.gameController, Context.LIBRARY, 1)));
+			stage.setTitle("Library");
+			stage.show();
+		});
+		
+		scry2MenuItem.setOnAction(event -> {
+
+			final Stage stage = new Stage();
+			stage.setScene(new Scene(new JFXCardsListView(this.gameController, Context.LIBRARY, 2)));
+			stage.setTitle("Library");
+			stage.show();
+		});
+		
+		scry3MenuItem.setOnAction(event -> {
+
+			final Stage stage = new Stage();
+			stage.setScene(new Scene(new JFXCardsListView(this.gameController, Context.LIBRARY, 3)));
+			stage.setTitle("Library");
+			stage.show();
+		});
+		
+		scryXMenuItem.setDisable(true);
+		
 		searchMenuItem.setOnAction(event -> {
 
 			final Stage stage = new Stage();
-			stage.setScene(new Scene(new JFXLibraryView(this.gameController)));
+			stage.setScene(new Scene(new JFXCardsListView(this.gameController, Context.LIBRARY, JFXCardsListView.ALL)));
 			stage.setTitle("Library");
-			stage.setMaxWidth(250d);
-			stage.setMaxHeight(800d);
-			stage.setMinHeight(250d);
 			stage.show();
 		});
 

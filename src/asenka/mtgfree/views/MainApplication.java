@@ -5,6 +5,7 @@ import java.net.PasswordAuthentication;
 import java.util.Scanner;
 
 import asenka.mtgfree.controllers.GameController;
+import asenka.mtgfree.model.Card;
 import asenka.mtgfree.model.GameTable;
 import asenka.mtgfree.model.Player;
 import asenka.mtgfree.model.utilities.CardsManager;
@@ -19,33 +20,23 @@ public class MainApplication extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		initProxy(true);
-		CardsManager cm = CardsManager.getInstance();
+
 		final Player player;
 		final GameController gameController;
-		
+
 		System.out.println("Launch as table creator (c) ? or join (whatever...) ?");
-		
+
 		@SuppressWarnings("resource")
 		String input = new Scanner(System.in).nextLine();
-		
-		if("c".equals(input)) {
+
+		if ("c".equals(input)) {
 			player = new Player(1, "Player_1");
-			player.getLibrary().addAll(cm.createCard(player, "glorybringer"), cm.createCard(player, "Architect of the Untamed"),
-				cm.createCard(player, "plains"), cm.createCard(player, "black lotus"), cm.createCard(player, "Gaea's Liege"),
-				cm.createCard(player, "Sage of Ancient Lore"), cm.createCard(player, "Sage of Ancient Lore"),
-				cm.createCard(player, "Tunneling Geopede"), cm.createCard(player, "Ashenmoor Liege"),
-				cm.createCard(player, "Sylvan Yeti"), cm.createCard(player, "Shapeshifter"), cm.createCard(player, "Sarkhan Unbroken"),
-				cm.createCard(player, "Legion's Landing"), cm.createCard(player, "always watching"));
+			setLibraryA(player);
 			gameController = new GameController(new GameTable("Main", player));
 			gameController.createGame();
 		} else {
 			player = new Player(2, "Player_2");
-			player.getLibrary().addAll(cm.createCard(player, "glorybringer"), cm.createCard(player, "Architect of the Untamed"),
-				cm.createCard(player, "plains"), cm.createCard(player, "black lotus"), cm.createCard(player, "Gaea's Liege"),
-				cm.createCard(player, "Sage of Ancient Lore"), cm.createCard(player, "Sage of Ancient Lore"),
-				cm.createCard(player, "Tunneling Geopede"), cm.createCard(player, "Ashenmoor Liege"),
-				cm.createCard(player, "Sylvan Yeti"), cm.createCard(player, "Shapeshifter"), cm.createCard(player, "Sarkhan Unbroken"),
-				cm.createCard(player, "Legion's Landing"), cm.createCard(player, "always watching"));
+			setLibraryA(player);
 			gameController = new GameController(new GameTable("Main", player));
 			gameController.joinGame();
 		}
@@ -54,7 +45,7 @@ public class MainApplication extends Application {
 		JFXTwoPlayersBattlefields bothBattlefields = new JFXTwoPlayersBattlefields(gameController);
 		JFXSelectedCardInfoPane selectedCardInfo = new JFXSelectedCardInfoPane(gameController);
 		JFXLibrary library = new JFXLibrary(gameController);
-		BorderPane rootPane = new BorderPane(bothBattlefields, handOtherPlayer, selectedCardInfo, handLocalPlayer, library);	
+		BorderPane rootPane = new BorderPane(bothBattlefields, handOtherPlayer, selectedCardInfo, handLocalPlayer, library);
 
 		Scene scene = new Scene(rootPane);
 		primaryStage.setScene(scene);
@@ -66,6 +57,75 @@ public class MainApplication extends Application {
 	public static void main(String[] args) {
 
 		Application.launch(MainApplication.class);
+	}
+
+	private static void setLibraryA(final Player player) {
+
+		CardsManager cm = CardsManager.getInstance();
+
+		player.getLibrary().addAll(
+			cm.createCard(player, "plains"),
+			cm.createCard(player, "plains"),
+			cm.createCard(player, "plains"),
+			cm.createCard(player, "plains"),
+			cm.createCard(player, "plains"),
+			cm.createCard(player, "plains"),
+			cm.createCard(player, "plains"),
+			cm.createCard(player, "plains"),
+			cm.createCard(player, "plains"),
+			cm.createCard(player, "plains"),
+			cm.createCard(player, "plains"),
+			cm.createCard(player, "plains"),
+			cm.createCard(player, "plains"),
+			cm.createCard(player, "plains"),
+			cm.createCard(player, "plains"),
+			cm.createCard(player, "mountain"),
+			cm.createCard(player, "mountain"),
+			cm.createCard(player, "mountain"),
+			cm.createCard(player, "mountain"),
+			cm.createCard(player, "mountain"),
+			cm.createCard(player, "mountain"),
+			cm.createCard(player, "mountain"),
+			cm.createCard(player, "mountain"),
+			cm.createCard(player, "mountain"),
+			cm.createCard(player, "mountain"),
+			cm.createCard(player, "mountain"),
+			cm.createCard(player, "mountain"),
+			cm.createCard(player, "mountain"),
+			cm.createCard(player, "mountain"),
+			cm.createCard(player, "mountain"),
+			cm.createCard(player, "glorybringer"), 
+			cm.createCard(player, "glorybringer"), 
+			cm.createCard(player, "glorybringer"), 
+			cm.createCard(player, "glorybringer"),
+			cm.createCard(player, "Appeal"),
+			cm.createCard(player, "Appeal"),
+			cm.createCard(player, "Appeal"),
+			cm.createCard(player, "Appeal"),
+			cm.createCard(player, "Release the Gremlins"),
+			cm.createCard(player, "Release the Gremlins"),
+			cm.createCard(player, "Harnessed Lightning"),
+			cm.createCard(player, "Harnessed Lightning"),
+			cm.createCard(player, "Harnessed Lightning"),
+			cm.createCard(player, "Harnessed Lightning"),
+			cm.createCard(player, "Eddytrail Hawk"),
+			cm.createCard(player, "Eddytrail Hawk"),
+			cm.createCard(player, "Eddytrail Hawk"),
+			cm.createCard(player, "Eddytrail Hawk"),
+			cm.createCard(player, "Aviary Mechanic"),
+			cm.createCard(player, "Aviary Mechanic"),
+			cm.createCard(player, "Aviary Mechanic"),
+			cm.createCard(player, "Aviary Mechanic"),
+			cm.createCard(player, "In Oketra's Name"),
+			cm.createCard(player, "In Oketra's Name"),
+			cm.createCard(player, "Anointer Priest")
+			);
+
+	}
+
+	private static void setLibraryB(final Player player) {
+
+		CardsManager cm = CardsManager.getInstance();
 	}
 
 	private void initProxy(boolean needProxy) {
