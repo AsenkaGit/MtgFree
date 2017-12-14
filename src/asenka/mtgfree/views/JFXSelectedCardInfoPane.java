@@ -84,6 +84,7 @@ public class JFXSelectedCardInfoPane extends StackPane { // The StackPane reacts
 
 		super();
 		this.getStyleClass().add("mtg-pane");
+		this.getStyleClass().add("JFXSelectedCardInfoPane");
 		this.selectedCards = controller.getGameTable().getSelectedCards();
 		this.cardView = new JFXCardView(CardImageSize.LARGE);
 		this.cardCostText = new JFXMagicText();

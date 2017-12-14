@@ -6,16 +6,6 @@
 	-fx-text-fill: white;
 }
 
-.text {
-	
-	-fx-fill: white;
-}
-
-.JFXLibrary .label  {
-	-fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
-	-fx-text-fill: white;
-	
-}
 
 .JFXLibrary .strong  {
 	-fx-font-size: 20px;
@@ -55,9 +45,42 @@
 	-fx-background-image:url("/images/mtg/backgrounds/battlefield_background_1.jpg");
 }
 
-.mtg-text {
+.JFXSelectedCardInfoPane .mtg-text {
 	
 	-fx-fill: white;
+	-fx-font-size:16px;
+}
+
+
+.JFXLibrary .label  {
+	-fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+	-fx-text-fill: white;
+}
+
+.JFXLibrary .mtg-text {
+	
+	-fx-fill: white;
+	-fx-font-size:16px;
+}
+
+.JFXLibrary .text {
+	
+	-fx-fill: white;
+	-fx-font-size:16px;
+}
+
+.strong{
+	-fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.light{
+	-fx-font-size: 14px;
+    -fx-font-style: italic;
+}
+
+.type {
+    -fx-font-style: italic;
 }
 
 .opponentPlayer .viewport {
@@ -71,23 +94,15 @@
 
 .JFXCardView {
 	
+	-fx-text-fill: black;
+	-fx-fill: black;
 	-fx-effect: dropshadow( one-pass-box, white, 10, 0.6, 0, 0);
 }
 
-.JFXCardView .viewport {
+ .JFXGameEventLogger .viewport {
 	
-	-fx-effect: dropshadow( three-pass-box, black, 10, 0, 5, 5);
+	-fx-effect: innershadow( gaussian , black , 30,0.4,0,0 );
 }
-
-.JFXGameEventLogger {
-	
-	
-}
-
-/* .JFXGameEventLogger .viewport {
-	
-	-fx-background-color: lightgray;
-}*/
 
 /* 
  * Metro style Push Button
