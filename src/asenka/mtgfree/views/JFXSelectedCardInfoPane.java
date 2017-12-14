@@ -16,9 +16,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.Priority;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
@@ -162,13 +159,19 @@ public class JFXSelectedCardInfoPane extends StackPane { // The StackPane reacts
 		final Insets paneInsets = new Insets(10, 10, 10, 10);
 
 		// Set the properties of the text components
-		this.cardNameText.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
-		this.cardTypeText.setFont(Font.font("Verdana", FontPosture.ITALIC, 12));
-		this.cardRulesText.setFont(Font.font("Verdana", FontPosture.REGULAR, 12));
-		this.cardFlavorText.setFont(Font.font("Verdana", FontPosture.ITALIC, 10));
 		this.cardTypeText.setWrappingWidth(CardImageSize.LARGE.getWidth());
 		this.cardFlavorText.setWrappingWidth(CardImageSize.LARGE.getWidth());
 		this.cardCostText.setHAlignment(Pos.CENTER);
+		
+		this.cardView.getStyleClass().add("mtg-text");
+		this.cardCostText.getStyleClass().add("mtg-text");
+		this.cardRulesText.getStyleClass().add("mtg-text");
+		this.cardNameText.getStyleClass().add("mtg-text");
+		this.cardNameText.getStyleClass().add("strong");
+		this.cardTypeText.getStyleClass().add("mtg-text");
+		this.cardTypeText.getStyleClass().add("type");
+		this.cardFlavorText.getStyleClass().add("mtg-text");
+		this.cardFlavorText.getStyleClass().add("light");
 
 		// Prepare the grid pane that contains and organizes the components
 		final GridPane gridPane = new GridPane();

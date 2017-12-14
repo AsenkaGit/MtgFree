@@ -30,12 +30,12 @@ public class MainApplication extends Application {
 		String input = new Scanner(System.in).nextLine();
 
 		if ("c".equals(input)) {
-			player = new Player(1, "Player_1");
+			player = new Player(1, "Asenka");
 			setLibraryA(player);
 			gameController = new GameController(new GameTable("Main", player));
 			gameController.createGame();
 		} else {
-			player = new Player(2, "Player_2");
+			player = new Player(2, "Gros Bébé");
 			setLibraryA(player);
 			gameController = new GameController(new GameTable("Main", player));
 			gameController.joinGame();

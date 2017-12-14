@@ -11,9 +11,6 @@ import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
@@ -28,10 +25,11 @@ public class JFXGameEventLogger extends ScrollPane {
 	public JFXGameEventLogger(final GameController controller) {
 
 		super();
+		this.getStyleClass().add("mtg-pane");
 		this.getStyleClass().add("JFXGameEventLogger");
 		this.gameController = controller;
 		this.logsTextFlow = new TextFlow();
-		this.logsTextFlow.getStyleClass().add("logsTextFlow");
+		
 		this.logsPane = new Pane(this.logsTextFlow);
 
 		buildComponentLayout();
@@ -40,13 +38,13 @@ public class JFXGameEventLogger extends ScrollPane {
 
 	private void buildComponentLayout() {
 
+		this.logsTextFlow.getStyleClass().add("logsTextFlow");
+		this.logsTextFlow.setPadding(new Insets(10));
 		super.setPadding(new Insets(10));
 		super.setHbarPolicy(ScrollBarPolicy.NEVER);
 		super.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
-		this.logsTextFlow.setMaxWidth(CardImageSize.MEDIUM.getWidth() + 40d);
-		this.logsTextFlow.setMinHeight(350d);
-
-//		super.vvalueProperty().bind(this.logsTextFlow.heightProperty());
+//		this.logsTextFlow.setMaxWidth(CardImageSize.MEDIUM.getWidth() + 40d);
+		this.logsTextFlow.setMinHeight(300d);
 
 		super.setContent(this.logsPane);
 	}
@@ -72,16 +70,16 @@ public class JFXGameEventLogger extends ScrollPane {
 			
 			Text playerText = new Text(player.getName() + " - ");
 			Text typeEventText = new Text(createEventText(event) + "\n\n");
-			playerText.setWrappingWidth(CardImageSize.MEDIUM.getWidth() + 40d);
-			typeEventText.setWrappingWidth(CardImageSize.MEDIUM.getWidth() + 40d);
+			playerText.setWrappingWidth(CardImageSize.MEDIUM.getWidth() *2);
+			typeEventText.setWrappingWidth(CardImageSize.MEDIUM.getWidth() *2);
 			
-			playerText.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
-			typeEventText.setFont(Font.font("Verdana", FontWeight.NORMAL, 10));
+			playerText.getStyleClass().add("logPlayer");
+			typeEventText.getStyleClass().add("logEvent");
 			
 			if (player.equals(this.gameController.getGameTable().getLocalPlayer())) {
-				playerText.setFill(Color.RED);
+				playerText.getStyleClass().add("logLocal");
 			} else {
-				playerText.setFill(Color.BLUE);
+				playerText.getStyleClass().add("logOpponent");
 			}
 			
 			Platform.runLater(() -> {

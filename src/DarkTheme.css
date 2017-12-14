@@ -6,9 +6,48 @@
 	-fx-text-fill: white;
 }
 
-.mtg-pane {
+.text {
 	
-	-fx-background-color: grey;
+	-fx-fill: white;
+}
+
+.JFXLibrary .label  {
+	-fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+	-fx-text-fill: white;
+	
+}
+
+.JFXLibrary .strong  {
+	-fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow( three-pass-box , white , 5, 0.0 , 0 , 1 );
+}
+
+.mtg-pane {
+	-fx-background-color: black;
+	-fx-effect: innershadow( gaussian , black , 30,0.4,0,0 );
+}
+
+.logsTextFlow {
+	
+	-fx-effect: innershadow( gaussian , black , 30,0,0,0 );
+}
+
+.logLocal {
+	-fx-fill:red;
+}
+
+.logOpponent {
+	-fx-fill:blue;
+}
+
+.logPlayer {
+	-fx-font-weight:bold;
+	-fx-font-size:15px;
+}
+
+.logEvent {
+	-fx-font-size:10px;
 }
 
 .localPlayer .viewport {
@@ -16,20 +55,39 @@
 	-fx-background-image:url("/images/mtg/backgrounds/battlefield_background_1.jpg");
 }
 
+.mtg-text {
+	
+	-fx-fill: white;
+}
+
 .opponentPlayer .viewport {
 	
 	-fx-background-image:url("/images/mtg/backgrounds/battlefield_background_2.jpg");
 }
 
-.JFXCardView {
-	
-	-fx-effect: dropshadow(three-pass-box, white, 10, 0, 0, 0);
+.JFXHand {
+	-fx-fill:black;
 }
 
-.JFXGameEventLogger .viewport {
+.JFXCardView {
+	
+	-fx-effect: dropshadow( one-pass-box, white, 10, 0.6, 0, 0);
+}
+
+.JFXCardView .viewport {
+	
+	-fx-effect: dropshadow( three-pass-box, black, 10, 0, 5, 5);
+}
+
+.JFXGameEventLogger {
+	
+	
+}
+
+/* .JFXGameEventLogger .viewport {
 	
 	-fx-background-color: lightgray;
-}
+}*/
 
 /* 
  * Metro style Push Button
@@ -39,7 +97,8 @@
 .button { 
     -fx-border-color: #e2e2e2;
     -fx-border-width: 2;
-    -fx-background-radius: 0;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10, 10;
     -fx-background-color: #1d1d1d;
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 11pt;
@@ -60,7 +119,7 @@
     -fx-border-color: white, white;
     -fx-border-width: 1, 1;
     -fx-border-style: solid, segments(1, 1);
-    -fx-border-radius: 0, 0;
+    -fx-border-radius: 10, 10;
     -fx-border-insets: 1 1 1 1, 0;
 }
 

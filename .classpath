@@ -10,6 +10,7 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="tests"/>
+	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="lib" path="lib/gson-2.6.2.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.17.jar"/>
 	<classpathentry kind="lib" path="lib/activemq-all-5.15.2.jar">

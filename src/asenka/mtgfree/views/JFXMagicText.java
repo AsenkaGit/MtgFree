@@ -13,7 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 /**
@@ -57,11 +56,6 @@ public class JFXMagicText extends VBox {
 	private static final Map<String, Image> MTG_SYMBOLS = getSymbols();
 
 	/**
-	 * The font used to display the text.
-	 */
-	private Font font;
-
-	/**
 	 * The text displayed
 	 */
 	private String text;
@@ -88,7 +82,6 @@ public class JFXMagicText extends VBox {
 
 		super();
 		this.text = textWithSymbols;
-		this.font = Font.getDefault();
 		this.alignement = Pos.CENTER_LEFT;
 		this.setText(textWithSymbols);
 	}
@@ -130,21 +123,11 @@ public class JFXMagicText extends VBox {
 				currentFlowPane = new FlowPane();
 			} else {
 				Text text = new Text(textOrSymbol + SPACE_SEPARATOR);
-				text.setFont(this.font);
+				text.getStyleClass().add("mtg-text");
 				currentFlowPane.getChildren().add(text);
 			}
 		}
 		children.add(currentFlowPane);
-	}
-
-	/**
-	 * Set the font of the text displayed. Be careful, the icons keep the same size.
-	 * @param font
-	 */
-	public void setFont(Font font) {
-
-		this.font = font;
-		this.setText(this.text);
 	}
 
 	/**

@@ -62,6 +62,7 @@ public class JFXLibrary extends GridPane {
 
 		super();
 		this.getStyleClass().add("mtg-pane");
+		this.getStyleClass().add("JFXLibrary");
 		this.gameController = controller;
 		this.otherPlayerProperty = controller.getGameTable().otherPlayerProperty();
 		this.backCardImageView = new ImageView(ImagesManager.IMAGE_MTG_CARD_BACK);
@@ -89,27 +90,36 @@ public class JFXLibrary extends GridPane {
 
 	private void buildComponentLayout() {
 		
+		this.backCardImageView.getStyleClass().add("JFXCardView");
 		
-		
-		final Text localPlayerNameText = new Text(this.gameController.getGameTable().getLocalPlayer().getName());
+		final Label localPlayerNameLabel = new Label(this.gameController.getGameTable().getLocalPlayer().getName());
+		localPlayerNameLabel.getStyleClass().add("strong");
+		localPlayerNameLabel.getStyleClass().add("text");
 		
 		this.addLifeButton.setMaxSize(50d, 50d);
 		this.removeLifeButton.setMaxSize(50d, 50d);
 		this.addPoisonButton.setMaxSize(50d, 50d);
 		this.removePoisonButton.setMaxSize(50d, 50d);
 		
-		Label localPlayerLifeLabel = new Label("Life: ");
-		Label otherPlayerLifeLabel = new Label("Life: ");
-		Label localPlayerPoisonLabel = new Label("Poison: ");
-		Label otherPlayerPoisonLabel = new Label("Poison: ");
+		Label labelLocalPlayerLifeLabel = new Label("Life: ");
+		Label labelOtherPlayerLifeLabel = new Label("Life: ");
+		Label labelLocalPlayerPoisonLabel = new Label("Poison: ");
+		Label labelOtherPlayerPoisonLabel = new Label("Poison: ");
+		
+		this.localPlayerLifeText.getStyleClass().add("text");
+		this.localPlayerPoisonText.getStyleClass().add("text");
+		this.otherPlayerNameText.getStyleClass().add("text");
+		this.otherPlayerNameText.getStyleClass().add("strong");
+		this.otherPlayerLifeText.getStyleClass().add("text");
+		this.otherPlayerPoisonText.getStyleClass().add("text");
 
 		super.getChildren().addAll(
-			localPlayerNameText, 
-			localPlayerLifeLabel, localPlayerLifeText, addLifeButton, removeLifeButton,
-			localPlayerPoisonLabel, localPlayerPoisonText, addPoisonButton, removePoisonButton,
+			localPlayerNameLabel, 
+			labelLocalPlayerLifeLabel, localPlayerLifeText, addLifeButton, removeLifeButton,
+			labelLocalPlayerPoisonLabel, localPlayerPoisonText, addPoisonButton, removePoisonButton,
 			otherPlayerNameText,
-			otherPlayerLifeLabel, otherPlayerLifeText,
-			otherPlayerPoisonLabel, otherPlayerPoisonText,
+			labelOtherPlayerLifeLabel, otherPlayerLifeText,
+			labelOtherPlayerPoisonLabel, otherPlayerPoisonText,
 			this.backCardImageView,
 			this.displayGraveyardButton, 
 			this.displayExileButton);
@@ -117,24 +127,24 @@ public class JFXLibrary extends GridPane {
 		final Insets cellInsets = new Insets(5);
 		
 		super.setPadding(new Insets(10));
-		GridPane.setConstraints(localPlayerNameText, 	0, 0, 4, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
+		GridPane.setConstraints(localPlayerNameLabel, 	0, 0, 4, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 		
-		GridPane.setConstraints(localPlayerLifeLabel, 	0, 1, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
+		GridPane.setConstraints(labelLocalPlayerLifeLabel, 	0, 1, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 		GridPane.setConstraints(localPlayerLifeText, 	1, 1, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 		GridPane.setConstraints(addLifeButton, 			2, 1, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 		GridPane.setConstraints(removeLifeButton, 		3, 1, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 		
-		GridPane.setConstraints(localPlayerPoisonLabel, 0, 2, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
+		GridPane.setConstraints(labelLocalPlayerPoisonLabel, 0, 2, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 		GridPane.setConstraints(localPlayerPoisonText, 	1, 2, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 		GridPane.setConstraints(addPoisonButton, 		2, 2, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 		GridPane.setConstraints(removePoisonButton, 	3, 2, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 		
 		GridPane.setConstraints(otherPlayerNameText, 	0, 3, 4, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 		
-		GridPane.setConstraints(otherPlayerLifeLabel, 	0, 4, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
+		GridPane.setConstraints(labelOtherPlayerLifeLabel, 	0, 4, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 		GridPane.setConstraints(otherPlayerLifeText, 	1, 4, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 		
-		GridPane.setConstraints(otherPlayerPoisonLabel, 0, 5, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
+		GridPane.setConstraints(labelOtherPlayerPoisonLabel, 0, 5, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 		GridPane.setConstraints(otherPlayerPoisonText, 	1, 5, 1, 1, HPos.LEFT, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
 		
 		GridPane.setConstraints(backCardImageView, 		0, 6, 4, 1, HPos.CENTER, VPos.CENTER, Priority.NEVER, Priority.NEVER, cellInsets);
