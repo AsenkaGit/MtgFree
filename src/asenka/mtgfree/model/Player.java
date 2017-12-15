@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import asenka.mtgfree.model.utilities.CardsManager;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyListProperty;
@@ -17,53 +18,113 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/**
+ * This class contains the player data used during a game :
+ * <ul>
+ * <li>life points,</li>
+ * <li>poison points,</li>
+ * <li>cards lists:
+ * <ul>
+ * <li>library</li>
+ * <li>hand</li>
+ * <li>graveyard</li>
+ * <li>exile</li>
+ * <li>battlefield</li>
+ * </ul>
+ * </li>
+ * <li>...</li>
+ * <ul>
+ * 
+ * @author asenka
+ * @see Serializable
+ */
 public class Player implements Serializable {
 
+	/**
+	 * The serialized ID of the class. It must be updated each time the class is updated.
+	 */
 	private static final long serialVersionUID = -6085712796619122606L;
 
+	/**
+	 * The list of cards in the player's library. This list can be fully updated when the opponent shuffles its library.
+	 * @see Card
+	 */
 	private ListProperty<Card> library;
 
+	/**
+	 * The list of cards in the player's battlefield area. This property is read-only because the reference cannot be changed.
+	 * @see Card
+	 */
 	private ReadOnlyListWrapper<Card> battlefield;
 
+	/**
+	 * The list of cards in the player's hand. This property is read-only because the reference cannot be changed.
+	 * @see Card
+	 */
 	private ReadOnlyListWrapper<Card> hand;
 
+	/**
+	 * The list of cards in the player's graveyard area. This property is read-only because the reference cannot be changed.
+	 * @see Card
+	 */
 	private ReadOnlyListWrapper<Card> graveyard;
 
+	/**
+	 * The list of cards in the player's exile area. This property is read-only because the reference cannot be changed.
+	 * @see Card
+	 */
 	private ReadOnlyListWrapper<Card> exile;
-	
+
+	/**
+	 * The player ID. This ID is used by the {@link CardsManager} to build the {@link Card} and their battleID.
+	 */
 	private IntegerProperty id;
 
+	/**
+	 * The player name.
+	 */
 	private StringProperty name;
 
+	/**
+	 * The number of remaining life points.
+	 */
 	private IntegerProperty life;
 
+	/**
+	 * The number of poison counters on the players.
+	 */
 	private IntegerProperty poison;
-	
+
+	/**
+	 * Build a player
+	 * @param id {@link Player#id}
+	 * @param name {@link Player#name}
+	 */
 	public Player(int id, String name) {
-		
+
 		this.id = new SimpleIntegerProperty(id);
 		this.name = new SimpleStringProperty(name);
 		this.life = new SimpleIntegerProperty(20);
 		this.poison = new SimpleIntegerProperty(0);
-		this.library = new SimpleListProperty<Card>(FXCollections.<Card>observableArrayList());
-		this.battlefield = new ReadOnlyListWrapper<Card>(FXCollections.<Card>observableArrayList());
-		this.hand = new ReadOnlyListWrapper<Card>(FXCollections.<Card>observableArrayList());
-		this.graveyard = new ReadOnlyListWrapper<Card>(FXCollections.<Card>observableArrayList());
-		this.exile = new ReadOnlyListWrapper<Card>(FXCollections.<Card>observableArrayList());
+		this.library = new SimpleListProperty<Card>(FXCollections.<Card> observableArrayList());
+		this.battlefield = new ReadOnlyListWrapper<Card>(FXCollections.<Card> observableArrayList());
+		this.hand = new ReadOnlyListWrapper<Card>(FXCollections.<Card> observableArrayList());
+		this.graveyard = new ReadOnlyListWrapper<Card>(FXCollections.<Card> observableArrayList());
+		this.exile = new ReadOnlyListWrapper<Card>(FXCollections.<Card> observableArrayList());
 	}
 
 	public final ListProperty<Card> libraryProperty() {
-	
+
 		return this.library;
 	}
 
 	public final ObservableList<Card> getLibrary() {
-	
+
 		return this.library.get();
 	}
 
 	public final void setLibrary(ObservableList<Card> library) {
-		
+
 		this.library.set(library);
 	}
 
@@ -106,19 +167,19 @@ public class Player implements Serializable {
 
 		return this.exile.get();
 	}
-	
+
 	public final IntegerProperty idProperty() {
-		
+
 		return this.id;
 	}
-	
+
 	public final int getId() {
-		
+
 		return this.id.get();
 	}
-	
+
 	public final void setId(final int id) {
-		
+
 		this.id.set(id);
 	}
 
@@ -166,14 +227,14 @@ public class Player implements Serializable {
 
 		this.poison.set(poison);
 	}
-	
-	public final void shuffleLibrary() {
-		
-		FXCollections.shuffle(this.library);
-	}
-	
+
+	/**
+	 * Method called to serializes the Player object.
+	 * @param out the output stream used to serialize the player
+	 * @throws IOException 
+	 */
 	private void writeObject(ObjectOutputStream out) throws IOException {
-		
+
 		out.writeInt(this.id.get());
 		out.writeUTF(this.name.get());
 		out.writeInt(this.life.get());
@@ -184,7 +245,13 @@ public class Player implements Serializable {
 		out.writeObject(new ArrayList<Card>(this.exile.get()));
 		out.writeObject(new ArrayList<Card>(this.battlefield.get()));
 	}
-	
+
+	/**
+	 * Method called to create a Player from serialized data.
+	 * @param in the input stream used to read the serialized data
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	@SuppressWarnings("unchecked")
 	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
 
@@ -205,33 +272,39 @@ public class Player implements Serializable {
 	}
 
 	@Override
-	public int hashCode() {
+	public String toString() {
 
+		return "Player [" + this.getId() + ", " + this.getName() + " ]";
+	}
+
+	/**
+	 * Calculate the hash code of a player based on the player ID.
+	 * @return the hash code of the player 
+	 */
+	@Override
+	public int hashCode() {
+	
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + id.get();
 		return result;
 	}
-	
-	
-	@Override
-	public String toString() {
-		
-		return "Player [" + this.getId() + ", " + this.getName() + " ]";
-	}
 
+	/**
+	 * Compare two players. The result is only based on the player ID.
+	 * @param player the player compared
+	 * @return <code>true</code> if the two players have the same ID
+	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object player) {
 
-		if (this == obj)
+		if (this == player)
 			return true;
-		if (obj == null)
+		if (player == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (getClass() != player.getClass())
 			return false;
-		Player other = (Player) obj;
-		return this.id.isEqualTo(other.id).get();
+		Player other = (Player) player;
+		return this.id.get() == other.id.get();
 	}
-	
-	
 }

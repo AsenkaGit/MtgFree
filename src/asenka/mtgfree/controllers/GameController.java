@@ -85,7 +85,7 @@ public class GameController {
 	public void shuffle() throws GameException {
 
 		final Player localPlayer = this.gameTable.getLocalPlayer();
-		this.gameTable.getLocalPlayer().shuffleLibrary();
+		FXCollections.shuffle(localPlayer.getLibrary());
 
 		try {
 			this.communicationManager.send(EventType.SHUFFLE, localPlayer);
