@@ -39,7 +39,8 @@ public class Card implements Serializable {
 	/**
 	 * The ID of the card. During a game, each card must have a unique ID. If a card is used several times by one or several players
 	 * each instance of this card have a single battle ID. The ID is normally based on the player ID.
-	 * @see Player#idProperty() 
+	 * @see Player#idProperty()
+	 * @see CardsManager
 	 */
 	private IntegerProperty battleId;
 
@@ -60,14 +61,14 @@ public class Card implements Serializable {
 
 	/**
 	 * The primary card data. It is basically the main information about the card displayed (name, text, mana cost, colors, etc...). Each Card must 
-	 * have a primary card data.
+	 * have a primary card data. This property is read-only because there is no reason to change the card data of a card.
 	 * @see MtgCard
 	 */
 	private ReadOnlyObjectWrapper<MtgCard> primaryCardData;
 
 	/**
 	 * The secondary card data. Most of the cards do not need this data and this field will be <code>null</code> most of the time. It can be used for
-	 * special layouts cards such as "double-faced" cards.
+	 * special layouts cards such as "double-faced" cards. This property is read-only because there is no reason to change the card data of a card.
 	 * @see MtgCard
 	 */
 	private ReadOnlyObjectWrapper<MtgCard> secondaryCardData;
@@ -227,7 +228,6 @@ public class Card implements Serializable {
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException {
 
-		// out.defaultWriteObject(); Do not use the default write method
 		out.writeInt(this.getBattleId()); 			// BattleId
 		out.writeBoolean(this.isTapped());			// isTapped
 		out.writeBoolean(this.isVisible());			// isVisible
@@ -247,7 +247,6 @@ public class Card implements Serializable {
 	 */
 	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
 
-		// in.defaultReadObject(); Do not use the default read method
 		this.battleId = new ReadOnlyIntegerWrapper(this, "battleId", in.readInt());
 		this.tapped = new SimpleBooleanProperty(this, "tapped", in.readBoolean());
 		this.visible = new SimpleBooleanProperty(this, "visible", in.readBoolean());
