@@ -12,18 +12,47 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/**
+ * A game table contains all the data about a mtg game : the players, the events, the game name. From the 
+ * players, you have access to the player data and cards.
+ * 
+ * @author asenka
+ * @see Player
+ */
 public class GameTable {
 
+	/**
+	 * The name of the game table. This property is read-only because the table name should not change.
+	 */
 	private final ReadOnlyStringWrapper name;
 
+	/**
+	 * The local player on the game table. This property is read-only because the local player never changes during a game.
+	 */
 	private final ReadOnlyObjectWrapper<Player> localPlayer;
 
+	/**
+	 * The other player (i.e. the opponent). This value is initially <code>null</code> until another player joins the table.
+	 */
 	private final ObjectProperty<Player> otherPlayer;
 
+	/**
+	 * The events occuring during a game. The list content can be updated but this list remains always the same.
+	 * @see SynchronizationEvent
+	 */
 	private final ReadOnlyListWrapper<SynchronizationEvent> gameEvents;
 	
+	/**
+	 * The list of selected cards. This property is read-only because the reference to the list of card should never change even though the c
+	 * content of the list is often updated. Also, the list of selected card is only used locally.
+	 */
 	private final ReadOnlyListWrapper<Card> selectedCards;
 
+	/**
+	 * Build a new game table
+	 * @param name {@link GameTable#name}
+	 * @param localPlayer {@link GameTable#localPlayer}
+	 */
 	public GameTable(String name, final Player localPlayer) {
 
 		this.name = new ReadOnlyStringWrapper(this, "name", name);
