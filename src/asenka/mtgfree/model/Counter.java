@@ -11,14 +11,35 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
 
+/**
+ * A counter is an elements used to mark a card during a game. 
+ * 
+ * @author asenka
+ * @see Card
+ * @see Serializable
+ */
 public class Counter implements Serializable {
 
+	/**
+	 * The serialized ID of the class. It must be updated each time the class is updated.
+	 */
 	private static final long serialVersionUID = 4252899014767527491L;
 
+	/**
+	 * A text to display (or not) giving a meaning to this counter (not mandatory)
+	 */
 	private StringProperty value;
 
+	/**
+	 * The color of the counter (mandatory)
+	 */
 	private ObjectProperty<Color> color;
 
+	/**
+	 * Build a new counter
+	 * @param value {@link Counter#value}
+	 * @param color {@link Counter#color}
+	 */
 	public Counter(String value, final Color color) {
 
 		this.value = new SimpleStringProperty(this, "value", value);
@@ -55,6 +76,11 @@ public class Counter implements Serializable {
 		this.colorProperty().set(color);
 	}
 
+	/**
+	 * Method called to serializes the Counter object.
+	 * @param out the output stream used to serialize the counter
+	 * @throws IOException 
+	 */
 	private void writeObject(ObjectOutputStream out) throws IOException {
 
 		out.writeUTF(this.value.get());
@@ -64,6 +90,12 @@ public class Counter implements Serializable {
 		out.writeDouble(this.color.get().getOpacity());
 	}
 
+	/**
+	 * Method called to create a Counter from serialized data.
+	 * @param in the input stream used to read the serialized data
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
 		
 		this.value = new SimpleStringProperty(this, "value", in.readUTF());
