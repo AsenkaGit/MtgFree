@@ -136,21 +136,7 @@ public class MainApplication extends Application {
 
 		if (needProxy) {
 
-			// Uses a proxy for Internet connection
-			final String authUser = "AESN1\bourrero";
-			final String authPassword = "Welcome2019";
-			Authenticator.setDefault(new Authenticator() {
 
-				@Override
-				public PasswordAuthentication getPasswordAuthentication() {
-
-					return new PasswordAuthentication(authUser, authPassword.toCharArray());
-				}
-			});
-			System.setProperty("http.proxyHost", "140.9.9.249");
-			System.setProperty("http.proxyPort", "8080");
-			System.setProperty("http.proxyUser", authUser);
-			System.setProperty("http.proxyPassword", authPassword);
 		}
 	}
 }
