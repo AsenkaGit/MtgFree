@@ -23,29 +23,72 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 
+/**
+ * This class represents a card played during a game.
+ * 
+ * @author asenka
+ * @see Serializable
+ */
 public class Card implements Serializable {
 	
+	/**
+	 * The serialized ID of the class. It must be updated each time the class is updated.
+	 */
 	private static final long serialVersionUID = -3454805330637228059L;
 
+	/**
+	 * The ID of the card. During a game, each card must have a unique ID. If a card is used several times by one or several players
+	 * each instance of this card have a single battle ID. The ID is normally based on the player ID.
+	 * @see Player#idProperty() 
+	 */
 	private IntegerProperty battleId;
 
+	/**
+	 * The boolean property indicating whether or not the card is tapped.
+	 */
 	private BooleanProperty tapped;
 
+	/**
+	 * The boolean property indicating whether or not the card is visible. 
+	 */
 	private BooleanProperty visible;
 
+	/**
+	 * The boolean property indicating whether or not the card is selected.
+	 */
 	private BooleanProperty selected;
 
+	/**
+	 * The primary card data. It is basically the main information about the card displayed (name, text, mana cost, colors, etc...). Each Card must 
+	 * have a primary card data.
+	 * @see MtgCard
+	 */
 	private ReadOnlyObjectWrapper<MtgCard> primaryCardData;
 
+	/**
+	 * The secondary card data. Most of the cards do not need this data and this field will be <code>null</code> most of the time. It can be used for
+	 * special layouts cards such as "double-faced" cards.
+	 * @see MtgCard
+	 */
 	private ReadOnlyObjectWrapper<MtgCard> secondaryCardData;
 
+	/**
+	 * The location of the card. This value is used on the battlefield to move the card.
+	 * @see Point2D
+	 */
 	private ObjectProperty<Point2D> location;
 
+	/**
+	 * The list of counters on the card.
+	 * @see Counter
+	 */
 	private ReadOnlyListWrapper<Counter> counters;
 
 	/**
-	 * @param battleId
-	 * @param primaryCardData
+	 * Build a new card.
+	 * 
+	 * @param battleId {@link Card#battleId}
+	 * @param primaryCardData {@link Card#primaryCardData}
 	 */
 	public Card(final int battleId, final MtgCard primaryCardData) {
 
@@ -177,21 +220,34 @@ public class Card implements Serializable {
 		return this.counters.get();
 	}
 
+	/**
+	 * Method called to serializes the Card object.
+	 * @param out the output stream used to serialize the card
+	 * @throws IOException 
+	 */
 	private void writeObject(ObjectOutputStream out) throws IOException {
 
-		out.writeInt(this.getBattleId());
-		out.writeBoolean(this.isTapped());
-		out.writeBoolean(this.isVisible());
-		out.writeBoolean(this.isSelected());
-		out.writeObject(this.getPrimaryCardData());
-		out.writeObject(this.getSecondaryCardData());
-		out.writeDouble(this.getLocation().getX());
-		out.writeDouble(this.getLocation().getY());
-		out.writeObject(new ArrayList<Counter>(this.counters));
+		// out.defaultWriteObject(); Do not use the default write method
+		out.writeInt(this.getBattleId()); 			// BattleId
+		out.writeBoolean(this.isTapped());			// isTapped
+		out.writeBoolean(this.isVisible());			// isVisible
+		out.writeBoolean(this.isSelected());		// isSelected
+		out.writeObject(this.getPrimaryCardData());	// primaryCardData
+		out.writeObject(this.getSecondaryCardData());// secondaryCardData
+		out.writeDouble(this.getLocation().getX());	// location.x
+		out.writeDouble(this.getLocation().getY());	// location.y
+		out.writeObject(new ArrayList<Counter>(this.counters));	// counters
 	}
 
+	/**
+	 * Method called to create a Card from serialized data.
+	 * @param in the input stream used to read the serialized data
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
 
+		// in.defaultReadObject(); Do not use the default read method
 		this.battleId = new ReadOnlyIntegerWrapper(this, "battleId", in.readInt());
 		this.tapped = new SimpleBooleanProperty(this, "tapped", in.readBoolean());
 		this.visible = new SimpleBooleanProperty(this, "visible", in.readBoolean());
@@ -213,6 +269,11 @@ public class Card implements Serializable {
 			+ this.getLocation() + ", " + this.getPrimaryCardData().getName() + "]";
 	}
 
+	/**
+	 * Calculate the hash code of a card. It is only based on the battle ID. Because this
+	 * battle id must be unique during a game.
+	 * @return the hash code of this card.
+	 */
 	@Override
 	public int hashCode() {
 
@@ -222,18 +283,21 @@ public class Card implements Serializable {
 		return result;
 	}
 
+	/**
+	 * Compare two cards. The result is only based on the battle ID.
+	 * @param card the card compared
+	 * @return <code>true</code> if the two cards have the same battleID
+	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object card) {
 
-		if (this == obj)
+		if (this == card)
 			return true;
-		if (obj == null)
+		if (card == null)
 			return false;
-		if (!(obj instanceof Card))
+		if (!(card instanceof Card))
 			return false;
-		final Card other = (Card) obj;
-		if (this.battleId.isNotEqualTo(other.battleId).get())
-			return false;
-		return true;
+		final Card other = (Card) card;
+		return this.battleId.get() == other.battleId.get();
 	}
 }
