@@ -80,8 +80,8 @@ public class JFXLibrary extends GridPane {
 		this.addPoisonButton = new Button("+");
 		this.removePoisonButton = new Button("-");
 		this.otherPlayerNameText = new Text("");
-		this.displayExileButton = new Button("Check Exile");
-		this.displayGraveyardButton = new Button("Check Graveyard");
+		this.displayExileButton = new Button("Exile");
+		this.displayGraveyardButton = new Button("Graveyard");
 
 		buildComponentLayout();
 		buildContextMenu();
