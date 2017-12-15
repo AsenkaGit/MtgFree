@@ -34,7 +34,7 @@ public class Card implements Serializable {
 	/**
 	 * The serialized ID of the class. It must be updated each time the class is updated.
 	 */
-	private static final long serialVersionUID = -3454805330637228059L;
+	private static final long serialVersionUID = 1010934970663852193L;
 
 	/**
 	 * The ID of the card. During a game, each card must have a unique ID. If a card is used several times by one or several players
@@ -53,11 +53,6 @@ public class Card implements Serializable {
 	 * The boolean property indicating whether or not the card is visible. 
 	 */
 	private BooleanProperty visible;
-
-	/**
-	 * The boolean property indicating whether or not the card is selected.
-	 */
-	private BooleanProperty selected;
 
 	/**
 	 * The primary card data. It is basically the main information about the card displayed (name, text, mana cost, colors, etc...). Each Card must 
@@ -96,7 +91,6 @@ public class Card implements Serializable {
 		this.battleId = new SimpleIntegerProperty(this, "battleId", battleId);
 		this.tapped = new SimpleBooleanProperty(this, "tapped", false);
 		this.visible = new SimpleBooleanProperty(this, "visible", false);
-		this.selected = new SimpleBooleanProperty(this, "selected", false);
 		this.primaryCardData = new ReadOnlyObjectWrapper<MtgCard>(this, "primaryCardData", primaryCardData);
 		this.location = new SimpleObjectProperty<Point2D>(this, "location", new Point2D(0d, 0d));
 		this.counters = new ReadOnlyListWrapper<Counter>(this, "counters", FXCollections.<Counter> observableArrayList());
@@ -154,21 +148,6 @@ public class Card implements Serializable {
 	public final void setVisible(final boolean visible) {
 
 		this.visible.set(visible);
-	}
-
-	public final BooleanProperty selectedProperty() {
-
-		return this.selected;
-	}
-
-	public final boolean isSelected() {
-
-		return this.selected.get();
-	}
-
-	public final void setSelected(final boolean selected) {
-
-		this.selected.set(selected);
 	}
 
 	public final ReadOnlyObjectProperty<MtgCard> primaryCardDataProperty() {
@@ -231,7 +210,6 @@ public class Card implements Serializable {
 		out.writeInt(this.getBattleId()); 			// BattleId
 		out.writeBoolean(this.isTapped());			// isTapped
 		out.writeBoolean(this.isVisible());			// isVisible
-		out.writeBoolean(this.isSelected());		// isSelected
 		out.writeObject(this.getPrimaryCardData());	// primaryCardData
 		out.writeObject(this.getSecondaryCardData());// secondaryCardData
 		out.writeDouble(this.getLocation().getX());	// location.x
@@ -250,7 +228,6 @@ public class Card implements Serializable {
 		this.battleId = new ReadOnlyIntegerWrapper(this, "battleId", in.readInt());
 		this.tapped = new SimpleBooleanProperty(this, "tapped", in.readBoolean());
 		this.visible = new SimpleBooleanProperty(this, "visible", in.readBoolean());
-		this.selected = new SimpleBooleanProperty(this, "selected", in.readBoolean());
 		this.primaryCardData = new ReadOnlyObjectWrapper<MtgCard>(this, "primaryCardData", (MtgCard) in.readObject());
 		this.secondaryCardData = new ReadOnlyObjectWrapper<MtgCard>(this, "secondaryCardData", (MtgCard) in.readObject());
 		final double x = in.readDouble();
@@ -264,7 +241,7 @@ public class Card implements Serializable {
 	@Override
 	public String toString() {
 
-		return "Card [" + this.getBattleId() + ", " + this.isTapped() + ", " + this.isVisible() + ", " + this.isSelected() + ", "
+		return "Card [" + this.getBattleId() + ", " + this.isTapped() + ", " + this.isVisible() + ", "
 			+ this.getLocation() + ", " + this.getPrimaryCardData().getName() + "]";
 	}
 

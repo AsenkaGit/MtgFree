@@ -301,10 +301,8 @@ public class GameController {
 	
 	public void setSelectedCards(Card... cards) {
 		
-		this.gameTable.getSelectedCards().forEach(card -> card.setSelected(false));
 		this.gameTable.getSelectedCards().clear();
 		this.gameTable.getSelectedCards().addAll(cards);
-		this.gameTable.getSelectedCards().forEach(card -> card.setSelected(true));
 	}
 
 	public static ObservableList<Card> getContextList(final Context origin, final Player player) throws GameException {
