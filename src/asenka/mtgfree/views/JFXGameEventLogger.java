@@ -70,8 +70,8 @@ public class JFXGameEventLogger extends ScrollPane {
 			
 			Text playerText = new Text(player.getName() + " - ");
 			Text typeEventText = new Text(createEventText(event) + "\n\n");
-			playerText.setWrappingWidth(CardImageSize.MEDIUM.getWidth() *2);
-			typeEventText.setWrappingWidth(CardImageSize.MEDIUM.getWidth() *2);
+			playerText.setWrappingWidth(CardImageSize.MEDIUM.getWidth());
+			typeEventText.setWrappingWidth(CardImageSize.MEDIUM.getWidth());
 			
 			playerText.getStyleClass().add("logPlayer");
 			typeEventText.getStyleClass().add("logEvent");

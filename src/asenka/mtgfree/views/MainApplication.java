@@ -1,7 +1,5 @@
 package asenka.mtgfree.views;
 
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
 import java.util.Scanner;
 
 import asenka.mtgfree.controllers.GameController;
@@ -43,6 +41,7 @@ public class MainApplication extends Application {
 		JFXHand handLocalPlayer = new JFXHand(gameController, true);
 		JFXHand handOtherPlayer = new JFXHand(gameController, false);
 		JFXTwoPlayersBattlefields bothBattlefields = new JFXTwoPlayersBattlefields(gameController);
+//		JFXBattlefield localBattlefield = new JFXBattlefield(gameController, true);
 		JFXSelectedCardInfoPane selectedCardInfo = new JFXSelectedCardInfoPane(gameController);
 		JFXLibrary library = new JFXLibrary(gameController);
 		BorderPane rootPane = new BorderPane(bothBattlefields, handOtherPlayer, selectedCardInfo, handLocalPlayer, new VBox(library, new JFXGameEventLogger(gameController)));
@@ -108,6 +107,8 @@ public class MainApplication extends Application {
 			cm.createCard(player, "Appeal"),
 			cm.createCard(player, "Release the Gremlins"),
 			cm.createCard(player, "Release the Gremlins"),
+			cm.createCard(player, "Release the Gremlins"),
+			cm.createCard(player, "Release the Gremlins"),
 			cm.createCard(player, "Harnessed Lightning"),
 			cm.createCard(player, "Harnessed Lightning"),
 			cm.createCard(player, "Harnessed Lightning"),
@@ -122,21 +123,21 @@ public class MainApplication extends Application {
 			cm.createCard(player, "Aviary Mechanic"),
 			cm.createCard(player, "In Oketra's Name"),
 			cm.createCard(player, "In Oketra's Name"),
+			cm.createCard(player, "In Oketra's Name"),
+			cm.createCard(player, "In Oketra's Name"),
+			cm.createCard(player, "Anointer Priest"),
+			cm.createCard(player, "Anointer Priest"),
+			cm.createCard(player, "Anointer Priest"),
 			cm.createCard(player, "Anointer Priest")
 			);
 
 	}
 
-//	private static void setLibraryB(final Player player) {
-//
-//		CardsManager cm = CardsManager.getInstance();
-//	}
-
 	private void initProxy(boolean needProxy) {
 
 		if (needProxy) {
 
-
+			// TODO
 		}
 	}
 }

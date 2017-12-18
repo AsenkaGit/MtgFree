@@ -72,34 +72,16 @@ public class JFXBattlefield extends ScrollPane {
 	private InvalidationListener otherPlayerJoiningListener;
 
 	/**
-	 * The parent battlefield. This value is not mandatory and can be <code>null</code>.
-	 */
-	private final JFXTwoPlayersBattlefields parentBattlefield;
-
-	/**
-	 * Build a simple battlefield that is not included into a {@link JFXTwoPlayersBattlefields}
-	 * 
-	 * @param gameController {@link JFXBattlefield#gameController}
-	 * @param forLocalPlayer {@link JFXBattlefield#forLocalPlayer}
-	 */
-	public JFXBattlefield(final GameController gameController, final boolean forLocalPlayer) {
-
-		this(null, gameController, forLocalPlayer);
-	}
-
-	/**
 	 * Build a battlefield that may be included into a {@link JFXTwoPlayersBattlefields}
 	 * 
-	 * @param parentBattlefield {@link JFXBattlefield#parentBattlefield}
 	 * @param gameController {@link JFXBattlefield#gameController}
 	 * @param forLocalPlayer {@link JFXBattlefield#forLocalPlayer}
 	 */
-	JFXBattlefield(final JFXTwoPlayersBattlefields parentBattlefield, final GameController gameController, final boolean forLocalPlayer) {
+	JFXBattlefield(final GameController gameController, final boolean forLocalPlayer) {
 
 		this.getStyleClass().add("mtg-pane");
 		this.getStyleClass().add("JFXBattlefield");
 		this.getStyleClass().add(forLocalPlayer ? "localPlayer" : "opponentPlayer");
-		this.parentBattlefield = parentBattlefield;
 		this.forLocalPlayer = forLocalPlayer;
 		this.gameController = gameController;
 		this.battlefieldCards = getBattlefieldCards(this.gameController.getGameTable(), forLocalPlayer);
@@ -261,6 +243,7 @@ public class JFXBattlefield extends ScrollPane {
 			super(card, CardImageSize.MEDIUM);
 			selectSide(card.isVisible() ? Side.FRONT : Side.BACK);
 
+			
 			initializeMouvementListeners();
 			initializeCardListeners();
 			initializeContextMenu();
@@ -416,36 +399,34 @@ public class JFXBattlefield extends ScrollPane {
 				} else {
 					gameController.setSelectedCards(); // clear the selection list.
 				}
-				this.deltaX = event.getX();
-				this.deltaY = event.getY();
-			});
-
-			// When the mouse moves while the button is pressed, the card view component position follow the
-			// the mouse coordinates
-			super.setOnMouseDragged(event -> {
-
-				// Calculate the new layout coordinates of the card view
-				final double newLayoutX = parentBattlefield == null
-					? event.getSceneX() - this.deltaX - JFXBattlefield.this.getBoundsInParent().getMinX()
-					: event.getSceneX() - this.deltaX - JFXBattlefield.this.getParent().getBoundsInParent().getMinX()
-						- parentBattlefield.getBoundsInParent().getMinX();
-				final double newLayoutY = parentBattlefield == null
-					? event.getSceneY() - this.deltaY - JFXBattlefield.this.getBoundsInParent().getMinY()
-					: event.getSceneY() - this.deltaY - JFXBattlefield.this.getParent().getBoundsInParent().getMinY()
-						- parentBattlefield.getBoundsInParent().getMinY();
-
-				// Update the card view coordinates
-				if (newLayoutX > 0) {
-					super.setLayoutX(newLayoutX);
-				}
-				if (newLayoutY > 0) {
-					super.setLayoutY(newLayoutY);
-				}
 				
+				if(forLocalPlayer) {
+					this.deltaX = event.getX();
+					this.deltaY = event.getY();
+				}
 			});
 
-			// When the mouse is released, the game controller update the location of the card
-			super.setOnMouseReleased(event -> gameController.setLocation(card, super.getLayoutX(), super.getLayoutY()));
+			if (forLocalPlayer) {
+				// When the mouse moves while the button is pressed, the card view component position follow the
+				// the mouse coordinates
+				super.setOnMouseDragged(event -> {
+			
+					final Point2D newLocation = JFXBattlefield.this.sceneToLocal(event.getSceneX(), event.getSceneY());
+
+					// Update the card view coordinates
+					if (newLocation.getX() > 0) {
+						super.setLayoutX(newLocation.getX() - deltaX);
+					}
+					if (newLocation.getY() > 0) {
+						super.setLayoutY(newLocation.getY() - deltaY);
+					}
+					
+				});
+
+				// When the mouse is released, the game controller update the location of the card
+				super.setOnMouseReleased(event -> gameController.setLocation(card, super.getLayoutX(), super.getLayoutY()));
+			}
+			
 		}
 	}
 }
