@@ -35,7 +35,7 @@ import asenka.mtgfree.model.data.MtgSet;
  * <p>
  * This object takes care of the MTG data loading (sets and cards) from a JSON file (from the web site
  * <a href="https://mtgjson.com">MTG JSON</a>) and stores in inside the objects in the package
- * <code>asenka.mtgfree.model.pojo</code>
+ * <code>asenka.mtgfree.model.data</code>
  * </p>
  * 
  * @author asenka
@@ -73,7 +73,7 @@ public class MtgDataUtility {
 	 * @see Collator
 	 */
 	private static final Comparator<Object> SEARCH_CARD_BY_NAME_COMPARATOR = (Object card, Object name) -> Collator
-			.getInstance(Locale.ENGLISH).compare(((MtgCard) card).getName().toLowerCase(), ((String) name).toLowerCase());
+		.getInstance(Locale.ENGLISH).compare(((MtgCard) card).getName().toLowerCase(), ((String) name).toLowerCase());
 
 	/**
 	 * The unique instance of this class on a JVM. You cannot create more than 1 instance of this object.
@@ -99,8 +99,10 @@ public class MtgDataUtility {
 	 */
 	public static MtgDataUtility getInstance() {
 
-		if (singleton == null) {
-			singleton = new MtgDataUtility(DEFAULT_JSON_FILEPATH);
+		synchronized (singleton) {
+			if (singleton == null) {
+				singleton = new MtgDataUtility(DEFAULT_JSON_FILEPATH);
+			}
 		}
 		return singleton;
 	}
@@ -167,7 +169,7 @@ public class MtgDataUtility {
 
 			// Use the standard binarySearch with a custom Comparator to compare an instance of MtgCard with an instance of
 			// String
-			int index = Collections.binarySearch(this.cards, name, SEARCH_CARD_BY_NAME_COMPARATOR);
+			final int index = Collections.binarySearch(this.cards, name, SEARCH_CARD_BY_NAME_COMPARATOR);
 			return index > 0 ? this.cards.get(index) : null;
 		} else {
 			throw new IllegalArgumentException("null value is not supported for the method parameter 'name'");
@@ -182,7 +184,7 @@ public class MtgDataUtility {
 	 */
 	public List<MtgCard> getListOfCardsFromSet(String code) {
 
-		MtgSet set = getMtgSet(code);
+		final MtgSet set = getMtgSet(code);
 		return set != null ? Arrays.asList(set.getCards()) : null;
 	}
 
@@ -238,7 +240,7 @@ public class MtgDataUtility {
 			// TODO Optimization would be nice here (it is this part that take quite a while to load)
 			jsonFileReader = new FileReader(new File(jsonFilePath));
 			bufferedJsonFileReader = new BufferedReader(jsonFileReader);
-			JsonArray jsonContent = jsonParser.fromJson(bufferedJsonFileReader, JsonArray.class);
+			final JsonArray jsonContent = jsonParser.fromJson(bufferedJsonFileReader, JsonArray.class);
 
 			// Go through the array to create all the MtgSet with all the MtgCards inside
 			for (JsonElement jsonSet : jsonContent) {
