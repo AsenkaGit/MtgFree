@@ -243,7 +243,6 @@ public class JFXBattlefield extends ScrollPane {
 			super(card, CardImageSize.MEDIUM);
 			selectSide(card.isVisible() ? Side.FRONT : Side.BACK);
 
-			
 			initializeMouvementListeners();
 			initializeCardListeners();
 			initializeContextMenu();
@@ -277,7 +276,6 @@ public class JFXBattlefield extends ScrollPane {
 						gameController.setTapped(card, false);
 						tapMenuItem.setText("Tap");
 					}
-
 				});
 
 				// Menu item managing the visibility of the card
@@ -299,7 +297,6 @@ public class JFXBattlefield extends ScrollPane {
 							otherSideMenuItem.setDisable(false);
 						}
 					}
-
 				});
 
 				// Destroy menu item
@@ -378,7 +375,6 @@ public class JFXBattlefield extends ScrollPane {
 
 				@SuppressWarnings("unchecked")
 				final ObjectProperty<Point2D> locationProperty = (ObjectProperty<Point2D>) observable;
-
 				this.setLayoutX(locationProperty.get().getX());
 				this.setLayoutY(locationProperty.get().getY());
 			});
@@ -400,12 +396,14 @@ public class JFXBattlefield extends ScrollPane {
 					gameController.setSelectedCards(); // clear the selection list.
 				}
 				
+				// For the local player who can moves the card, we store the delta values from the top left corner of the card
 				if(forLocalPlayer) {
 					this.deltaX = event.getX();
 					this.deltaY = event.getY();
 				}
 			});
 
+			// Only the local player can move its cards on its battlefield.
 			if (forLocalPlayer) {
 				// When the mouse moves while the button is pressed, the card view component position follow the
 				// the mouse coordinates
@@ -420,13 +418,11 @@ public class JFXBattlefield extends ScrollPane {
 					if (newLocation.getY() > 0) {
 						super.setLayoutY(newLocation.getY() - deltaY);
 					}
-					
 				});
 
 				// When the mouse is released, the game controller update the location of the card
 				super.setOnMouseReleased(event -> gameController.setLocation(card, super.getLayoutX(), super.getLayoutY()));
 			}
-			
 		}
 	}
 }
